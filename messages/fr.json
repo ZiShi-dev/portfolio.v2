@@ -35,9 +35,38 @@
     "bio": "Je conçois des sites web et applications sur-mesure — design soigné, technique fiable, mise en ligne accompagnée. Un interlocuteur unique du brief au lancement."
   },
   "heroCube": {
-    "dragHint": "Glissez pour pivoter",
-    "themeHint": "Le thème suit la face jour / nuit",
-    "ariaLabel": "Cube interactif — faces jour et nuit"
+    "storyLabel": "De l’idée au site",
+    "dragHint": "Glissez ou utilisez les points pour explorer",
+    "ariaLabel": "Parcours client en cube interactif — six étapes de votre projet",
+    "roleDescription": "Cube 3D interactif",
+    "stagesNavLabel": "Étapes du parcours",
+    "stepLabel": "Étape {current} sur {total}",
+    "stages": {
+      "idea": {
+        "title": "Votre idée",
+        "desc": "On clarifie votre activité, vos objectifs et ce que vos clients doivent comprendre en 5 secondes."
+      },
+      "design": {
+        "title": "Design",
+        "desc": "Une apparence soignée et lisible, qui inspire confiance et donne envie de vous contacter."
+      },
+      "build": {
+        "title": "Création",
+        "desc": "Je construis votre site pièce par pièce — clair, rapide, prêt à accueillir vos visiteurs."
+      },
+      "launch": {
+        "title": "Mise en ligne",
+        "desc": "Votre site est publié, testé et accessible. Vous pouvez enfin montrer votre activité en ligne."
+      },
+      "growth": {
+        "title": "Croissance",
+        "desc": "On améliore ce qui convertit : pages, messages, parcours — pour attirer plus de demandes."
+      },
+      "support": {
+        "title": "Accompagnement",
+        "desc": "Je reste disponible après le lancement pour corriger, faire évoluer et vous conseiller."
+      }
+    }
   },
   "services": {
     "eyebrow": "Services",

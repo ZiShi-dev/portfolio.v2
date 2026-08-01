@@ -88,7 +88,7 @@ export function HomeSection() {
               delay: reduceMotion ? 0 : 0.12,
               ease: enterEase,
             }}
-            className="relative mx-auto w-full max-w-[16rem] overflow-visible sm:max-w-2xl lg:mx-0 lg:max-w-none"
+            className="relative mx-auto w-full max-w-[18rem] overflow-visible sm:max-w-2xl lg:mx-0 lg:max-w-none"
           >
             <HeroBanner3D />
           </motion.div>

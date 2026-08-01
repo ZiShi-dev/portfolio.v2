@@ -35,9 +35,38 @@
     "bio": "I design custom websites and applications — polished design, reliable tech, guided launch. One point of contact from brief to go-live."
   },
   "heroCube": {
-    "dragHint": "Drag to rotate",
-    "themeHint": "Theme follows the light / dark face",
-    "ariaLabel": "Interactive cube — light and dark faces"
+    "storyLabel": "From idea to website",
+    "dragHint": "Drag or use the dots to explore",
+    "ariaLabel": "Interactive client journey cube — six stages of your project",
+    "roleDescription": "Interactive 3D cube",
+    "stagesNavLabel": "Journey stages",
+    "stepLabel": "Step {current} of {total}",
+    "stages": {
+      "idea": {
+        "title": "Your idea",
+        "desc": "We clarify your business, goals, and what clients should understand in five seconds."
+      },
+      "design": {
+        "title": "Design",
+        "desc": "A polished, readable look that builds trust and makes people want to reach out."
+      },
+      "build": {
+        "title": "Creation",
+        "desc": "I build your site piece by piece — clear, fast, ready to welcome visitors."
+      },
+      "launch": {
+        "title": "Go live",
+        "desc": "Your site is published, tested and reachable. You can finally show your business online."
+      },
+      "growth": {
+        "title": "Growth",
+        "desc": "We improve what converts: pages, messaging, journeys — to attract more inquiries."
+      },
+      "support": {
+        "title": "Support",
+        "desc": "I stay available after launch to fix issues, evolve the site, and advise you."
+      }
+    }
   },
   "services": {
     "eyebrow": "Services",

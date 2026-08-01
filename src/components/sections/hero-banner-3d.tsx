@@ -1,32 +1,115 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  animate,
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useTransform,
+} from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Move3D } from "lucide-react";
-import { useTheme } from "@/components/theme-provider";
+import {
+  Lightbulb,
+  Move3D,
+  Palette,
+  Rocket,
+  Sparkles,
+  TrendingUp,
+  HeartHandshake,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type HeroBanner3DProps = {
   className?: string;
 };
 
+/** Parcours client — 6 faces, langage non technique. */
+const JOURNEY_FACES = [
+  "idea",
+  "design",
+  "build",
+  "launch",
+  "growth",
+  "support",
+] as const;
+
+type JourneyFace = (typeof JOURNEY_FACES)[number];
+
+const FACE_ICONS: Record<JourneyFace, LucideIcon> = {
+  idea: Lightbulb,
+  design: Palette,
+  build: Sparkles,
+  launch: Rocket,
+  growth: TrendingUp,
+  support: HeartHandshake,
+};
+
 const DRAG_SENSITIVITY = 0.55;
 const DRAG_SENSITIVITY_COMPACT = 0.72;
-const INITIAL_ROTATE_X = -14;
-const INITIAL_ROTATE_X_COMPACT = -8;
-const INITIAL_ROTATE_Y_LIGHT = 22;
-const INITIAL_ROTATE_Y_DARK = INITIAL_ROTATE_Y_LIGHT + 180;
-const CUBE_BLEED_COMPACT = 0.72;
-const CUBE_BLEED_DESKTOP = 0.9;
+const TILT_X = -14;
+const TILT_X_COMPACT = -8;
+const YAW_BIAS = 16;
+const CUBE_BLEED_COMPACT = 0.7;
+const CUBE_BLEED_DESKTOP = 0.86;
+const IDLE_ADVANCE_MS = 4200;
+const IDLE_RESUME_MS = 7000;
 
-type FaceVariant = "light" | "dark";
+type FaceDef = {
+  id: JourneyFace;
+  normal: [number, number, number];
+  transform: (half: number) => string;
+  /** Orientation qui met la face face à la caméra. */
+  pose: (tiltX: number) => { rx: number; ry: number };
+};
+
+const FACES: FaceDef[] = [
+  {
+    id: "idea",
+    normal: [0, 0, 1],
+    transform: (h) => `translateZ(${h}px)`,
+    pose: (tiltX) => ({ rx: tiltX, ry: YAW_BIAS }),
+  },
+  {
+    id: "design",
+    normal: [1, 0, 0],
+    transform: (h) => `rotateY(90deg) translateZ(${h}px)`,
+    pose: (tiltX) => ({ rx: tiltX, ry: -90 + YAW_BIAS }),
+  },
+  {
+    id: "build",
+    normal: [0, 0, -1],
+    transform: (h) => `rotateY(180deg) translateZ(${h}px)`,
+    pose: (tiltX) => ({ rx: tiltX, ry: -180 + YAW_BIAS }),
+  },
+  {
+    id: "launch",
+    normal: [-1, 0, 0],
+    transform: (h) => `rotateY(-90deg) translateZ(${h}px)`,
+    pose: (tiltX) => ({ rx: tiltX, ry: 90 + YAW_BIAS }),
+  },
+  {
+    id: "growth",
+    normal: [0, 1, 0],
+    transform: (h) => `rotateX(-90deg) translateZ(${h}px)`,
+    pose: () => ({ rx: 90 - YAW_BIAS * 0.35, ry: YAW_BIAS }),
+  },
+  {
+    id: "support",
+    normal: [0, -1, 0],
+    transform: (h) => `rotateX(90deg) translateZ(${h}px)`,
+    pose: () => ({ rx: -90 + YAW_BIAS * 0.35, ry: YAW_BIAS }),
+  },
+];
 
 function degToRad(degrees: number) {
   return (degrees * Math.PI) / 180;
 }
 
-/** Applique rotateZ → rotateY → rotateX (ordre CSS, appliqué de droite à gauche). */
+/** rotateZ → rotateY → rotateX (ordre CSS). */
 function rotateVector(x: number, y: number, z: number, rx: number, ry: number, rz: number) {
   const cz = Math.cos(degToRad(rz));
   const sz = Math.sin(degToRad(rz));
@@ -42,74 +125,96 @@ function rotateVector(x: number, y: number, z: number, rx: number, ry: number, r
 
   const cx = Math.cos(degToRad(rx));
   const sx = Math.sin(degToRad(rx));
-  const x3 = x2;
-  const y3 = y2 * cx - z2 * sx;
-  const z3 = y2 * sx + z2 * cx;
-
-  return { x: x3, y: y3, z: z3 };
+  return {
+    x: x2,
+    y: y2 * cx - z2 * sx,
+    z: y2 * sx + z2 * cx,
+  };
 }
 
-/** Face la plus visible vers la caméra (normale avec z maximal). */
-function getDominantFaceVariant(rx: number, ry: number, rz: number): FaceVariant {
-  const faces: { normal: [number, number, number]; variant: FaceVariant }[] = [
-    { normal: [0, 0, 1], variant: "light" },
-    { normal: [0, 0, -1], variant: "dark" },
-    { normal: [1, 0, 0], variant: "dark" },
-    { normal: [-1, 0, 0], variant: "light" },
-  ];
-
+function getDominantFace(rx: number, ry: number, rz: number): JourneyFace {
   let bestZ = -Infinity;
-  let variant: FaceVariant = "light";
+  let best: JourneyFace = "idea";
 
-  for (const face of faces) {
-    const n = rotateVector(face.normal[0], face.normal[1], face.normal[2], rx, ry, rz);
+  for (const face of FACES) {
+    const n = rotateVector(
+      face.normal[0],
+      face.normal[1],
+      face.normal[2],
+      rx,
+      ry,
+      rz
+    );
     if (n.z > bestZ) {
       bestZ = n.z;
-      variant = face.variant;
+      best = face.id;
     }
   }
 
-  return variant;
+  return best;
 }
 
-const LIGHT_FACE_CLASS =
-  "border-2 border-black/15 bg-gradient-to-br from-step-surface via-card to-step-accent/20 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]";
-const DARK_FACE_CLASS =
-  "border-2 border-black/25 bg-gradient-to-br from-zinc-800 via-zinc-900 to-step-accent/30 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]";
+function shortestAngleDelta(from: number, to: number) {
+  let delta = ((to - from + 540) % 360) - 180;
+  if (delta < -180) delta += 360;
+  return delta;
+}
 
-type CubeColorFaceProps = {
+type CubeJourneyFaceProps = {
   size: number;
   transform: string;
-  variant: FaceVariant;
-  emphasizeDayHint?: boolean;
+  faceId: JourneyFace;
+  title: string;
+  active: boolean;
+  Icon: LucideIcon;
 };
 
-function CubeColorFace({
+function CubeJourneyFace({
   size,
   transform,
-  variant,
-  emphasizeDayHint = false,
-}: CubeColorFaceProps) {
+  faceId,
+  title,
+  active,
+  Icon,
+}: CubeJourneyFaceProps) {
+  const iconSize = Math.max(18, Math.round(size * 0.14));
+  const titleSize = Math.max(11, Math.round(size * 0.095));
+
   return (
     <div
       aria-hidden
+      data-face={faceId}
       className={cn(
-        "absolute left-0 top-0 overflow-hidden [backface-visibility:hidden]",
-        variant === "light" ? LIGHT_FACE_CLASS : DARK_FACE_CLASS
+        "absolute left-0 top-0 flex flex-col items-center justify-center gap-2 overflow-hidden p-3 text-center [backface-visibility:hidden] transition-[box-shadow,border-color,background-color] duration-300",
+        active
+          ? "border-2 border-step-accent/70 bg-gradient-to-br from-step-surface via-card to-step-accent/35 shadow-[0_0_28px_-6px_var(--color-step-accent)]"
+          : "border-2 border-step-accent/20 bg-gradient-to-br from-step-surface via-card to-step-accent/10"
       )}
       style={{ width: size, height: size, transform }}
     >
-      {variant === "light" ? (
+      <div
+        className={cn(
+          "flex items-center justify-center rounded-xl border transition-colors duration-300",
+          active
+            ? "border-step-accent/50 bg-background/70 text-step-accent"
+            : "border-step-accent/25 bg-background/50 text-foreground/55"
+        )}
+        style={{ width: iconSize * 1.85, height: iconSize * 1.85 }}
+      >
+        <Icon style={{ width: iconSize, height: iconSize }} strokeWidth={1.5} />
+      </div>
+      <span
+        className={cn(
+          "max-w-[90%] font-display-serif font-semibold leading-tight tracking-tight transition-colors duration-300",
+          active ? "text-foreground" : "text-foreground/70"
+        )}
+        style={{ fontSize: titleSize }}
+      >
+        {title}
+      </span>
+      {active && (
         <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(251,191,36,0.22),transparent_58%)]"
-          aria-hidden
-        />
-      ) : (
-        <div
-          className={cn(
-            "pointer-events-none absolute -right-[8%] -top-[8%] size-[42%] rounded-full bg-[radial-gradient(circle,rgba(251,191,36,0.28),transparent_68%)]",
-            emphasizeDayHint && "bg-[radial-gradient(circle,rgba(251,191,36,0.42),transparent_62%)]"
-          )}
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,var(--color-step-accent),transparent_62%)] opacity-20"
           aria-hidden
         />
       )}
@@ -119,30 +224,25 @@ function CubeColorFace({
 
 export function HeroBanner3D({ className }: HeroBanner3DProps) {
   const t = useTranslations("heroCube");
-  const { resolvedTheme, setTheme } = useTheme();
   const cubeSizerRef = useRef<HTMLDivElement>(null);
-  const hintRef = useRef<HTMLParagraphElement>(null);
   const reduceMotion = useReducedMotion();
   const [cubeSize, setCubeSize] = useState(0);
   const [isCompact, setIsCompact] = useState(false);
   const isCompactRef = useRef(false);
-  const prevThemeRef = useRef(resolvedTheme);
-  const syncingThemeFromCube = useRef(false);
-  const lastSyncedVariant = useRef<FaceVariant | null>(null);
-  const resolvedThemeRef = useRef(resolvedTheme);
-
-  useEffect(() => {
-    resolvedThemeRef.current = resolvedTheme;
-  }, [resolvedTheme]);
+  const [activeFace, setActiveFace] = useState<JourneyFace>("idea");
+  const activeFaceRef = useRef<JourneyFace>("idea");
+  const userInteractedRef = useRef(false);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isInteractive = !reduceMotion;
-  const tiltX = isCompact ? INITIAL_ROTATE_X_COMPACT : INITIAL_ROTATE_X;
+  const tiltX = isCompact ? TILT_X_COMPACT : TILT_X;
+  const tiltXRef = useRef(tiltX);
+  tiltXRef.current = tiltX;
 
-  const isDarkTheme = resolvedTheme === "dark";
-  const themeRotateY = isDarkTheme ? INITIAL_ROTATE_Y_DARK : INITIAL_ROTATE_Y_LIGHT;
-
-  const rotateX = useMotionValue(tiltX);
-  const rotateY = useMotionValue(themeRotateY);
+  const initialPose = FACES[0].pose(tiltX);
+  const rotateX = useMotionValue(initialPose.rx);
+  const rotateY = useMotionValue(initialPose.ry);
   const rotateZ = useMotionValue(0);
 
   const dragging = useRef(false);
@@ -152,11 +252,114 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
   const activePointerId = useRef<number | null>(null);
   const dragListenersTarget = useRef<HTMLDivElement | null>(null);
   const lastPointer = useRef({ x: 0, y: 0 });
+  const snapping = useRef(false);
+
+  const stopInertia = useCallback(() => {
+    if (inertiaFrame.current !== null) {
+      cancelAnimationFrame(inertiaFrame.current);
+      inertiaFrame.current = null;
+    }
+  }, []);
 
   const transform = useTransform(
     [rotateX, rotateY, rotateZ],
     ([x, y, z]) => `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`
   );
+
+  const updateActiveFace = useCallback((face: JourneyFace) => {
+    if (activeFaceRef.current === face) return;
+    activeFaceRef.current = face;
+    setActiveFace(face);
+  }, []);
+
+  const syncFaceFromRotation = useCallback(() => {
+    const face = getDominantFace(rotateX.get(), rotateY.get(), rotateZ.get());
+    updateActiveFace(face);
+  }, [rotateX, rotateY, rotateZ, updateActiveFace]);
+
+  useMotionValueEvent(rotateX, "change", syncFaceFromRotation);
+  useMotionValueEvent(rotateY, "change", syncFaceFromRotation);
+  useMotionValueEvent(rotateZ, "change", syncFaceFromRotation);
+
+  const clearIdleTimers = useCallback(() => {
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = null;
+    }
+    if (advanceTimerRef.current) {
+      clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  }, []);
+
+  const snapToFace = useCallback(
+    (faceId: JourneyFace, opts?: { immediate?: boolean }) => {
+      const face = FACES.find((f) => f.id === faceId);
+      if (!face) return;
+
+      stopInertia();
+      snapping.current = true;
+
+      const pose = face.pose(tiltXRef.current);
+      const currentY = rotateY.get();
+      const targetY = currentY + shortestAngleDelta(currentY, pose.ry);
+
+      updateActiveFace(faceId);
+
+      if (opts?.immediate || reduceMotion) {
+        rotateX.set(pose.rx);
+        rotateY.set(targetY);
+        rotateZ.set(0);
+        snapping.current = false;
+        return;
+      }
+
+      animate(rotateX, pose.rx, {
+        type: "spring",
+        stiffness: 120,
+        damping: 20,
+      });
+      animate(rotateY, targetY, {
+        type: "spring",
+        stiffness: 120,
+        damping: 20,
+      });
+      animate(rotateZ, 0, {
+        type: "spring",
+        stiffness: 120,
+        damping: 20,
+        onComplete: () => {
+          snapping.current = false;
+        },
+      });
+    },
+    [reduceMotion, rotateX, rotateY, rotateZ, stopInertia, updateActiveFace]
+  );
+
+  const scheduleIdleAdvance = useCallback(() => {
+    if (reduceMotion || userInteractedRef.current) return;
+    clearIdleTimers();
+
+    advanceTimerRef.current = setTimeout(() => {
+      if (dragging.current || snapping.current) {
+        scheduleIdleAdvance();
+        return;
+      }
+      const idx = JOURNEY_FACES.indexOf(activeFaceRef.current);
+      const next = JOURNEY_FACES[(idx + 1) % JOURNEY_FACES.length];
+      snapToFace(next);
+      scheduleIdleAdvance();
+    }, IDLE_ADVANCE_MS);
+  }, [clearIdleTimers, reduceMotion, snapToFace]);
+
+  const markInteracted = useCallback(() => {
+    userInteractedRef.current = true;
+    clearIdleTimers();
+    idleTimerRef.current = setTimeout(() => {
+      userInteractedRef.current = false;
+      scheduleIdleAdvance();
+    }, IDLE_RESUME_MS);
+  }, [clearIdleTimers, scheduleIdleAdvance]);
 
   useEffect(() => {
     const el = cubeSizerRef.current;
@@ -178,102 +381,46 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
 
   useEffect(() => {
     const compactMq = window.matchMedia("(max-width: 639px)");
-
     const update = () => {
       const compact = compactMq.matches;
       setIsCompact(compact);
       isCompactRef.current = compact;
     };
-
     update();
     compactMq.addEventListener("change", update);
     return () => compactMq.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
-    if (dragging.current) return;
-    rotateX.set(tiltX);
+    if (dragging.current || snapping.current) return;
+    const face = FACES.find((f) => f.id === activeFaceRef.current) ?? FACES[0];
+    const pose = face.pose(tiltX);
+    rotateX.set(pose.rx);
   }, [tiltX, rotateX]);
 
   useEffect(() => {
+    scheduleIdleAdvance();
     return () => {
-      if (inertiaFrame.current !== null) {
-        cancelAnimationFrame(inertiaFrame.current);
-      }
+      clearIdleTimers();
+      stopInertia();
       detachDragListeners();
     };
+    // Mount / unmount only — timers + listeners cleaned via refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (!resolvedTheme || prevThemeRef.current === resolvedTheme) return;
-
-    if (syncingThemeFromCube.current) {
-      syncingThemeFromCube.current = false;
-      prevThemeRef.current = resolvedTheme;
-      lastSyncedVariant.current = resolvedTheme === "dark" ? "dark" : "light";
-      return;
-    }
-
-    prevThemeRef.current = resolvedTheme;
-    lastSyncedVariant.current = resolvedTheme === "dark" ? "dark" : "light";
-    if (dragging.current) return;
-
-    stopInertia();
-
-    const targetY =
-      resolvedTheme === "dark" ? INITIAL_ROTATE_Y_DARK : INITIAL_ROTATE_Y_LIGHT;
-
-    if (reduceMotion) {
-      rotateX.set(tiltX);
-      rotateY.set(targetY);
-      rotateZ.set(0);
-      return;
-    }
-
-    animate(rotateX, tiltX, { type: "spring", stiffness: 140, damping: 22 });
-    animate(rotateY, targetY, { type: "spring", stiffness: 140, damping: 22 });
-    animate(rotateZ, 0, { type: "spring", stiffness: 140, damping: 22 });
-  }, [resolvedTheme, reduceMotion, rotateX, rotateY, rotateZ, tiltX]);
-
-  function syncThemeFromCubeRotation() {
-    if (reduceMotion) return;
-
-    const variant = getDominantFaceVariant(
-      rotateX.get(),
-      rotateY.get(),
-      rotateZ.get()
-    );
-
-    if (variant === lastSyncedVariant.current) return;
-    lastSyncedVariant.current = variant;
-
-    const targetTheme = variant === "dark" ? "dark" : "light";
-    if (resolvedThemeRef.current === targetTheme) return;
-
-    syncingThemeFromCube.current = true;
-    prevThemeRef.current = targetTheme;
-    setTheme(targetTheme);
-  }
-
-  function stopInertia() {
-    if (inertiaFrame.current !== null) {
-      cancelAnimationFrame(inertiaFrame.current);
-      inertiaFrame.current = null;
-    }
-  }
-
-  function setHintVisible(visible: boolean) {
-    hintRef.current?.classList.toggle("opacity-0", !visible);
-  }
 
   function detachDragListeners() {
     const target = dragListenersTarget.current;
     if (!target) return;
-
     target.removeEventListener("pointermove", onPointerMove);
     target.removeEventListener("pointerup", onPointerUp);
     target.removeEventListener("pointercancel", onPointerUp);
     dragListenersTarget.current = null;
+  }
+
+  function snapToDominantFace() {
+    const face = getDominantFace(rotateX.get(), rotateY.get(), rotateZ.get());
+    snapToFace(face);
   }
 
   function startInertia() {
@@ -284,9 +431,9 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
     let vz = velocity.current.z;
 
     const step = () => {
-      if (Math.abs(vx) < 0.02 && Math.abs(vy) < 0.02 && Math.abs(vz) < 0.02) {
+      if (Math.abs(vx) < 0.035 && Math.abs(vy) < 0.035 && Math.abs(vz) < 0.035) {
         inertiaFrame.current = null;
-        syncThemeFromCubeRotation();
+        snapToDominantFace();
         return;
       }
 
@@ -294,11 +441,9 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
       rotateX.set(rotateX.get() + vy);
       rotateZ.set(rotateZ.get() + vz);
 
-      syncThemeFromCubeRotation();
-
-      vx *= 0.92;
-      vy *= 0.92;
-      vz *= 0.92;
+      vx *= 0.9;
+      vy *= 0.9;
+      vz *= 0.9;
 
       inertiaFrame.current = requestAnimationFrame(step);
     };
@@ -312,7 +457,6 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
 
   function onPointerMove(event: PointerEvent) {
     if (!dragging.current || activePointerId.current !== event.pointerId) return;
-
     event.preventDefault();
 
     const sensitivity = getDragSensitivity();
@@ -332,14 +476,11 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
       event.movementY !== 0 ? event.movementY : event.clientY - lastPointer.current.y;
 
     lastPointer.current = { x: event.clientX, y: event.clientY };
-
     velocity.current = {
       x: mx * sensitivity,
       y: -my * sensitivity,
       z: event.shiftKey ? mx * sensitivity : 0,
     };
-
-    syncThemeFromCubeRotation();
   }
 
   function onPointerUp(event: PointerEvent) {
@@ -355,17 +496,28 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
 
     target?.classList.remove("cursor-grabbing");
     target?.classList.add("cursor-grab");
-    setHintVisible(true);
     detachDragListeners();
-    syncThemeFromCubeRotation();
-    startInertia();
+
+    const speed =
+      Math.abs(velocity.current.x) +
+      Math.abs(velocity.current.y) +
+      Math.abs(velocity.current.z);
+
+    if (speed > 0.4) {
+      startInertia();
+    } else {
+      snapToDominantFace();
+    }
   }
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
     if (!isInteractive) return;
+    if ((event.target as HTMLElement).closest("[data-stage-control]")) return;
 
     event.preventDefault();
+    markInteracted();
     stopInertia();
+    snapping.current = false;
 
     const target = event.currentTarget;
     dragging.current = true;
@@ -376,7 +528,6 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
     target.setPointerCapture(event.pointerId);
     target.classList.remove("cursor-grab");
     target.classList.add("cursor-grabbing");
-    setHintVisible(false);
 
     dragStart.current = {
       x: event.clientX,
@@ -385,7 +536,6 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
       rotateY: rotateY.get(),
       rotateZ: rotateZ.get(),
     };
-
     velocity.current = { x: 0, y: 0, z: 0 };
 
     const passiveOpts = { passive: false } as const;
@@ -394,39 +544,66 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
     target.addEventListener("pointercancel", onPointerUp, passiveOpts);
   }
 
+  function goToFace(faceId: JourneyFace) {
+    markInteracted();
+    snapToFace(faceId);
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    const idx = JOURNEY_FACES.indexOf(activeFace);
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      goToFace(JOURNEY_FACES[(idx + 1) % JOURNEY_FACES.length]);
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      goToFace(JOURNEY_FACES[(idx - 1 + JOURNEY_FACES.length) % JOURNEY_FACES.length]);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      goToFace("idea");
+    } else if (event.key === "End") {
+      event.preventDefault();
+      goToFace("support");
+    }
+  }
+
   const half = cubeSize / 2;
   const ready = cubeSize > 0;
-  const hintText = t("dragHint");
-  const cubeFaceProps = {
-    size: cubeSize,
-    emphasizeDayHint: isDarkTheme,
-  };
+  const stepIndex = JOURNEY_FACES.indexOf(activeFace) + 1;
+  const liveCaption = `${t(`stages.${activeFace}.title`)}. ${t(`stages.${activeFace}.desc`)}`;
 
   return (
     <div
       className={cn(
-        "relative w-full select-none overflow-visible px-1 py-2 sm:px-3 sm:py-10",
+        "relative w-full select-none overflow-visible px-1 py-2 sm:px-3 sm:py-6",
         className
       )}
     >
       {!reduceMotion && (
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_55%,var(--color-step-accent),transparent_62%)] opacity-25 blur-3xl"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,var(--color-step-accent),transparent_62%)] opacity-20 blur-3xl"
         />
       )}
 
-      <div className="relative mx-auto aspect-square w-full max-w-[min(100%,14rem)] overflow-visible sm:max-w-none sm:aspect-[16/10] [perspective:1000px]">
+      <p className="mb-3 text-center text-[0.65rem] font-medium uppercase tracking-[0.2em] text-step-accent/90 sm:mb-4 sm:text-xs">
+        {t("storyLabel")}
+      </p>
+
+      <div className="relative mx-auto aspect-square w-full max-w-[min(100%,15rem)] overflow-visible sm:max-w-none sm:aspect-[16/11] [perspective:1000px]">
         <div
           ref={cubeSizerRef}
           className={cn(
-            "absolute inset-[6%] flex items-center justify-center sm:inset-[5%]",
+            "absolute inset-[4%] flex items-center justify-center sm:inset-[6%]",
             isInteractive && "touch-none cursor-grab active:cursor-grabbing"
           )}
           style={isInteractive ? { touchAction: "none" } : undefined}
           onPointerDown={handlePointerDown}
-          role="img"
+          onKeyDown={handleKeyDown}
+          role="group"
+          tabIndex={0}
+          aria-roledescription={t("roleDescription")}
           aria-label={t("ariaLabel")}
+          aria-describedby="hero-cube-caption"
         >
           {ready && (
             <motion.div
@@ -435,57 +612,98 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
                 width: cubeSize,
                 height: cubeSize,
                 transform: reduceMotion
-                  ? `rotateX(${tiltX}deg) rotateY(${themeRotateY}deg)`
+                  ? `rotateX(${FACES.find((f) => f.id === activeFace)!.pose(tiltX).rx}deg) rotateY(${FACES.find((f) => f.id === activeFace)!.pose(tiltX).ry}deg)`
                   : transform,
               }}
             >
-              <CubeColorFace
-                {...cubeFaceProps}
-                variant="light"
-                transform={`translateZ(${half}px)`}
-              />
-
-              <CubeColorFace
-                {...cubeFaceProps}
-                variant="dark"
-                transform={`rotateY(180deg) translateZ(${half}px)`}
-              />
-
-              <CubeColorFace
-                {...cubeFaceProps}
-                variant="dark"
-                transform={`rotateY(90deg) translateZ(${half}px)`}
-              />
-
-              <CubeColorFace
-                {...cubeFaceProps}
-                variant="light"
-                transform={`rotateY(-90deg) translateZ(${half}px)`}
-              />
-
-              <CubeColorFace
-                {...cubeFaceProps}
-                variant="light"
-                transform={`rotateX(90deg) translateZ(${half}px)`}
-              />
-
-              <CubeColorFace
-                {...cubeFaceProps}
-                variant="dark"
-                transform={`rotateX(-90deg) translateZ(${half}px)`}
-              />
+              {FACES.map((face) => {
+                const Icon = FACE_ICONS[face.id];
+                return (
+                  <CubeJourneyFace
+                    key={face.id}
+                    size={cubeSize}
+                    transform={face.transform(half)}
+                    faceId={face.id}
+                    title={t(`stages.${face.id}.title`)}
+                    active={activeFace === face.id}
+                    Icon={Icon}
+                  />
+                );
+              })}
             </motion.div>
           )}
         </div>
       </div>
 
-      <p
-        ref={hintRef}
-        className="mx-auto mt-2 flex items-center justify-center gap-1.5 text-center text-xs text-foreground/45 transition-opacity duration-200 sm:text-sm"
+      <div
+        id="hero-cube-caption"
+        className="mx-auto mt-4 min-h-[5.5rem] max-w-sm text-center sm:mt-5 sm:min-h-[5rem]"
+        aria-live="polite"
+        aria-atomic="true"
       >
-        <Move3D className="size-3.5 shrink-0 opacity-70" aria-hidden />
-        <span>{hintText}</span>
-      </p>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeFace}
+            initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <p className="text-[0.65rem] uppercase tracking-[0.18em] text-foreground/40">
+              {t("stepLabel", { current: stepIndex, total: JOURNEY_FACES.length })}
+            </p>
+            <p className="mt-1.5 font-display-serif text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+              {t(`stages.${activeFace}.title`)}
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-foreground/60">
+              {t(`stages.${activeFace}.desc`)}
+            </p>
+            <span className="sr-only">{liveCaption}</span>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div
+        data-stage-control
+        className="mt-4 flex flex-wrap items-center justify-center gap-1.5 sm:mt-5"
+        role="tablist"
+        aria-label={t("stagesNavLabel")}
+      >
+        {JOURNEY_FACES.map((faceId) => {
+          const selected = activeFace === faceId;
+          return (
+            <button
+              key={faceId}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              aria-label={t(`stages.${faceId}.title`)}
+              data-stage-control
+              onClick={() => goToFace(faceId)}
+              className={cn(
+                "min-h-11 min-w-11 rounded-full px-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                "flex items-center justify-center"
+              )}
+            >
+              <span
+                className={cn(
+                  "block rounded-full transition-all duration-300",
+                  selected
+                    ? "h-2 w-6 bg-step-accent"
+                    : "h-2 w-2 bg-foreground/25 hover:bg-foreground/45"
+                )}
+              />
+            </button>
+          );
+        })}
+      </div>
+
+      {isInteractive && (
+        <p className="mx-auto mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-foreground/40 sm:text-sm">
+          <Move3D className="size-3.5 shrink-0 opacity-70" aria-hidden />
+          <span>{t("dragHint")}</span>
+        </p>
+      )}
     </div>
   );
 }
