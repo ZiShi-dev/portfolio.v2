@@ -33,10 +33,12 @@ export function Projects({ projects }: ProjectsProps) {
     <>
       <section
         id="projets"
-        className="relative bg-step-surface py-20 sm:py-24 lg:py-28"
+        aria-labelledby="projects-heading"
+        className="relative scroll-mt-28 bg-step-surface py-16 sm:py-24 lg:py-28"
       >
         <div className="px-4 sm:px-6">
           <SectionHeading
+            id="projects-heading"
             eyebrow={t("eyebrow")}
             title={
               <>
@@ -66,10 +68,10 @@ export function Projects({ projects }: ProjectsProps) {
         {hasMore && (
           <Reveal delay={0.15}>
             <div className="mt-10 flex justify-center px-4 sm:mt-12">
-              <Button asChild variant="outline" size="lg" className="w-full max-w-sm sm:w-auto">
+              <Button asChild variant="outline" size="lg" className="min-h-12 w-full max-w-sm sm:w-auto">
                 <Link href={routes.projects} onClick={markHomeForScrollRestore}>
                   {t("seeMore")}
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
               </Button>
             </div>

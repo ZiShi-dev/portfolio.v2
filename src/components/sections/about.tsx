@@ -13,7 +13,8 @@ export async function About() {
   return (
     <section
       id="a-propos"
-      className="relative scroll-mt-28 bg-step-surface px-4 py-20 sm:px-6 sm:py-24 lg:py-28"
+      aria-labelledby="about-heading"
+      className="relative scroll-mt-28 bg-step-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
@@ -23,18 +24,21 @@ export async function About() {
             </span>
           </Reveal>
           <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display-serif text-3xl font-semibold tracking-tight sm:mt-5 sm:text-4xl md:text-5xl">
+            <h2
+              id="about-heading"
+              className="mt-4 font-display-serif text-3xl font-semibold tracking-tight sm:mt-5 sm:text-4xl md:text-5xl"
+            >
               {t("title")}{" "}
               <span className="text-gradient">{t("titleHighlight")}</span>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-4 text-base leading-relaxed text-foreground/60 sm:mt-5 sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-foreground/65 sm:mt-5 sm:text-lg">
               {t("p1", { name: brand.name })}
             </p>
           </Reveal>
           <Reveal delay={0.12}>
-            <p className="mt-3 text-base leading-relaxed text-foreground/60 sm:mt-4 sm:text-lg">
+            <p className="mt-3 text-base leading-relaxed text-foreground/65 sm:mt-4 sm:text-lg">
               {t("p2")}
             </p>
           </Reveal>
@@ -47,7 +51,7 @@ export async function About() {
         </Reveal>
 
         <Reveal delay={0.2}>
-          <div className="mx-auto mt-14 grid max-w-3xl grid-cols-2 gap-4 sm:mt-16 lg:mt-20">
+          <div className="mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-3 sm:mt-16 sm:gap-4 lg:mt-20">
             {stats.map((s) => (
               <div
                 key={s.id}
@@ -60,7 +64,7 @@ export async function About() {
                     suffix={s.suffix ?? ""}
                   />
                 </div>
-                <div className="mt-2 text-sm text-foreground/55">
+                <div className="mt-2 text-sm text-foreground/60">
                   {t(`stats.${s.id}`)}
                 </div>
               </div>

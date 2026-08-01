@@ -54,19 +54,40 @@ export function HomeSection() {
               }}
               className="mt-5 flex w-full max-w-sm flex-col gap-2.5 sm:mt-9 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center sm:gap-3 lg:justify-start rtl:lg:justify-end"
             >
-              <Button asChild size="lg" className="w-full sm:w-auto">
+              <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
                 <ContactOpenLink>{t("contact")}</ContactOpenLink>
               </Button>
-              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="min-h-12 w-full sm:w-auto"
+              >
                 <Link href={routes.projects}>{t("projects")}</Link>
               </Button>
             </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                ...enterTransition,
+                delay: reduceMotion ? 0 : 0.7,
+              }}
+              className="mt-4 max-w-sm text-center text-xs leading-relaxed text-foreground/45 sm:mt-5 sm:max-w-none sm:text-start lg:text-sm rtl:lg:text-end"
+            >
+              {t("trustLine")}
+            </motion.p>
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, delay: 0.12, ease: enterEase }}
+            transition={{
+              duration: reduceMotion ? 0.2 : 0.85,
+              delay: reduceMotion ? 0 : 0.12,
+              ease: enterEase,
+            }}
             className="relative mx-auto w-full max-w-[16rem] overflow-visible sm:max-w-2xl lg:mx-0 lg:max-w-none"
           >
             <HeroBanner3D />
@@ -86,11 +107,14 @@ export function HomeSection() {
         >
           <a
             href={homeAnchors.services}
-            className="mx-auto mt-6 flex flex-col items-center gap-1 text-foreground/40 transition-colors hover:text-foreground sm:mt-12"
+            className="mx-auto mt-6 flex min-h-11 flex-col items-center justify-center gap-1 text-foreground/40 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:mt-12"
             aria-label={t("scroll")}
           >
             <span className="text-xs uppercase tracking-widest">{t("scroll")}</span>
-            <ArrowDown className="h-4 w-4 animate-bounce" />
+            <ArrowDown
+              className={`h-4 w-4 ${reduceMotion ? "" : "animate-bounce"}`}
+              aria-hidden
+            />
           </a>
         </motion.div>
       </div>

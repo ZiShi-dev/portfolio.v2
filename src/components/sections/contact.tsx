@@ -247,16 +247,25 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
             />
           )}
 
-          <Button type="submit" size="lg" className="w-full" disabled={loading}>
+          <Button type="submit" size="lg" className="min-h-12 w-full" disabled={loading}>
             {loading ? t("sending") : t("send")}
             <Send className="h-4 w-4" aria-hidden />
           </Button>
+
+          <p className="text-center text-xs leading-relaxed text-foreground/45">
+            {t("privacy")}
+          </p>
         </form>
       )}
 
-      <p className="mt-6 text-center text-xs text-foreground/50 break-all sm:text-sm sm:break-normal">
+      <p className="mt-6 text-center text-xs text-foreground/50 sm:text-sm">
         {t("orEmail")}{" "}
-        <span className="font-medium text-primary">{contactEmail}</span>
+        <a
+          href={`mailto:${contactEmail}`}
+          className="break-all font-medium text-primary underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:break-normal"
+        >
+          {contactEmail}
+        </a>
       </p>
     </>
   );
@@ -272,7 +281,8 @@ export function Contact({ contactEmail }: ContactProps) {
   return (
     <section
       id="contact"
-      className="relative bg-step-surface px-4 py-20 sm:px-6 sm:py-24 lg:py-28"
+      aria-labelledby="contact-heading"
+      className="relative scroll-mt-28 bg-step-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
       <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[min(400px,80vw)] w-[min(700px,120vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--color-step-accent),transparent_60%)] opacity-15 blur-3xl" />
 
@@ -281,24 +291,35 @@ export function Contact({ contactEmail }: ContactProps) {
           <span className="inline-flex items-center gap-2 rounded-full border border-step-accent/30 bg-background/60 px-4 py-1 text-xs font-medium uppercase tracking-widest text-step-accent">
             <Mail className="h-3.5 w-3.5" aria-hidden /> {t("eyebrow")}
           </span>
-          <h2 className="mt-4 font-display-serif text-3xl font-semibold tracking-tight sm:mt-5 sm:text-4xl md:text-5xl">
+          <h2
+            id="contact-heading"
+            className="mt-4 font-display-serif text-3xl font-semibold tracking-tight sm:mt-5 sm:text-4xl md:text-5xl"
+          >
             {t("title")}{" "}
             <span className="text-gradient">{t("titleHighlight")}</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-foreground/60 sm:mt-5 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-foreground/65 sm:mt-5 sm:text-lg">
             {t("subtitle")}
           </p>
 
-          <Button asChild size="lg" className="mt-8 w-full sm:mt-10 sm:w-auto">
+          <Button asChild size="lg" className="mt-8 min-h-12 w-full sm:mt-10 sm:w-auto">
             <ContactOpenLink>
               <MessageSquare className="h-4 w-4" aria-hidden />
               {t("openForm")}
             </ContactOpenLink>
           </Button>
 
-          <p className="mt-6 text-xs text-foreground/50 break-all sm:text-sm sm:break-normal">
+          <p className="mt-6 text-xs text-foreground/50 sm:text-sm">
             {t("orEmail")}{" "}
-            <span className="font-medium text-primary">{contactEmail}</span>
+            <a
+              href={`mailto:${contactEmail}`}
+              className="break-all font-medium text-primary underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:break-normal"
+            >
+              {contactEmail}
+            </a>
+          </p>
+          <p className="mt-3 text-xs leading-relaxed text-foreground/40">
+            {t("privacy")}
           </p>
         </div>
       </Reveal>

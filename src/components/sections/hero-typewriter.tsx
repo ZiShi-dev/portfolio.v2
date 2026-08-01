@@ -7,8 +7,8 @@ import { BrandName } from "@/components/brand-name";
 import { brand } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
-const CHAR_MS = 42;
-const LINE_PAUSE_MS = 520;
+const CHAR_MS = 34;
+const LINE_PAUSE_MS = 380;
 
 function TypewriterCursor({ active }: { active: boolean }) {
   if (!active) return null;

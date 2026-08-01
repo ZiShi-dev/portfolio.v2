@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Développeur Web",
-    "description": "Développeur web, back-end & designer freelance. Sites et applications sur-mesure par Vignes Ibrahim.",
+    "description": "Développeur web & designer freelance. Sites et applications sur-mesure, design soigné et mise en ligne accompagnée — par Vignes Ibrahim.",
     "jobTitle": "Développeur web freelance"
   },
   "nav": {
@@ -25,70 +25,72 @@
     "socialConfig": "{label} — lien à configurer"
   },
   "home": {
-    "contact": "Me contacter",
-    "projects": "Voir mes projets",
-    "scroll": "Défiler"
+    "contact": "Discutons de votre projet",
+    "projects": "Voir le portfolio",
+    "scroll": "Découvrir",
+    "trustLine": "Réponse sous 48h · Devis clair · Sans engagement"
   },
   "hero": {
-    "tagline": "Sites web sur-mesure",
-    "bio": "Développeur web, back-end & designer. 2 ans et demi à coder par passion — et mon premier client récemment. Je transforme vos idées en sites modernes."
+    "tagline": "Sites & apps qui convertissent",
+    "bio": "Je conçois des sites web et applications sur-mesure — design soigné, technique fiable, mise en ligne accompagnée. Un interlocuteur unique du brief au lancement."
   },
   "heroCube": {
-    "dragHint": "Glissez ou touchez pour pivoter · le thème suit la face visible",
-    "themeHint": "Le thème change avec la face jour / nuit du cube",
+    "dragHint": "Glissez pour pivoter",
+    "themeHint": "Le thème suit la face jour / nuit",
     "ariaLabel": "Cube interactif — faces jour et nuit"
   },
   "services": {
     "eyebrow": "Services",
     "title": "Ce que je peux",
     "titleHighlight": "faire pour vous",
-    "subtitle": "Du design à la mise en ligne, des solutions claires pensées pour votre activité.",
+    "subtitle": "Des livrables concrets pour attirer des clients, clarifier votre offre et faire grandir votre activité en ligne.",
+    "cta": "Parler de mon besoin",
     "page": {
       "metaTitle": "Services — {brand}",
       "metaDescription": "Création de sites web, design, backend, SEO et maintenance par {brand}. Des solutions claires pour votre activité."
     },
     "items": {
       "web": {
-        "title": "Création de sites web",
-        "desc": "Votre site vitrine ou application, moderne et facile à utiliser. Rapide, clair et pensé pour transformer vos visiteurs en clients."
+        "title": "Site ou application web",
+        "desc": "Une présence en ligne claire et rapide, conçue pour présenter votre offre et générer des demandes de contact."
       },
       "backend": {
-        "title": "Systèmes & données",
-        "desc": "Tout ce qui fait fonctionner votre site en coulisses : comptes, formulaires, gestion des informations. Fiable et prêt à évoluer avec vous."
+        "title": "Back-office & automatisation",
+        "desc": "Comptes, formulaires, données et outils métier fiables — pour que votre site travaille vraiment pour vous."
       },
       "design": {
-        "title": "Design sur-mesure",
-        "desc": "Une identité visuelle qui vous ressemble. Mise en page soignée et parcours simple pour donner envie à vos visiteurs de vous contacter."
+        "title": "Design UX/UI",
+        "desc": "Une interface élégante et lisible : vos visiteurs comprennent vite qui vous êtes et quoi faire ensuite."
       },
       "mobile": {
-        "title": "Adapté à tous les écrans",
-        "desc": "Votre site s'affiche parfaitement sur téléphone, tablette et ordinateur. Vos clients vous trouvent où qu'ils soient."
+        "title": "Expérience mobile-first",
+        "desc": "Un rendu impeccable sur téléphone — là où la majorité de vos clients vous découvrent."
       },
       "seo": {
-        "title": "Visible sur Google",
-        "desc": "Votre site est optimisé pour être trouvé facilement sur les moteurs de recherche. Plus de visibilité, plus de contacts qualifiés."
+        "title": "Référencement de base",
+        "desc": "Structure, perf et balises prêtes pour Google : plus de chances d’être trouvé sur les bonnes recherches."
       },
       "maintenance": {
-        "title": "Suivi & maintenance",
-        "desc": "Un site toujours rapide et à jour. Je reste disponible après la mise en ligne pour corriger, améliorer et vous accompagner."
+        "title": "Suivi après lancement",
+        "desc": "Corrections, améliorations et conseils après mise en ligne — votre site reste stable et évolutif."
       }
     }
   },
   "about": {
     "eyebrow": "À propos",
-    "title": "Un partenaire de confiance pour votre",
+    "title": "Une méthode claire pour votre",
     "titleHighlight": "présence en ligne",
-    "p1": "Je m'appelle {name}. Développeur web, back-end et designer freelance, je code depuis 2 ans et demi par passion — des projets perso, des essais, de la veille : c'est comme ça que j'ai construit mon niveau technique.",
-    "p2": "J'ai récemment accompagné mon premier client. Aujourd'hui, je propose mes services pour créer des sites et applications sur-mesure, clairs et efficaces.",
+    "p1": "Je m'appelle {name}. Développeur web et designer freelance, je construis des sites et apps sur-mesure avec une obsession : clarté, performance et livraison propre.",
+    "p2": "Vous avez un seul interlocuteur — du cadrage au lancement. Communication simple, priorités partagées, résultat utilisable rapidement.",
     "page": {
       "metaTitle": "À propos — {brand}",
       "metaDescription": "Découvrez {brand}, développeur web freelance : parcours, méthode de travail et accompagnement pour votre présence en ligne."
     },
     "stats": {
-      "years": "Ans à coder",
+      "years": "Ans d'expérience",
       "clients": "Client accompagné",
-      "projects": "Projets personnels",
-      "response": "Délai de réponse"
+      "projects": "Réalisations",
+      "response": "Réponse max."
     }
   },
   "process": {
@@ -109,7 +111,8 @@
     "eyebrow": "Réalisations",
     "title": "Mes derniers",
     "titleHighlight": "projets",
-    "subtitle": "Un aperçu de mes réalisations — ouvrez une carte pour voir le détail.",
+    "subtitle": "Des cas concrets : type de projet, stack et détails au clic.",
+    "openDetails": "Voir le détail du projet {title}",
     "seeMore": "Voir plus",
     "seeSite": "Voir le site",
     "screens": "écrans",
@@ -187,13 +190,14 @@
     "eyebrow": "Témoignages",
     "title": "Ils me font",
     "titleHighlight": "confiance",
-    "empty": "Soyez le premier à laisser un avis.",
-    "one": "Un avis publié — partagez le vôtre après validation.",
-    "many": "avis publiés{suffix}.",
+    "empty": "Les avis clients apparaîtront ici. Travaillez avec moi, puis partagez votre expérience.",
+    "one": "Un avis vérifié — chaque retour est lu avant publication.",
+    "many": "avis vérifiés{suffix}.",
     "previewSuffix": " — aperçu ci-dessous",
-    "seeMore": "Voir plus",
+    "seeMore": "Tous les avis",
     "leaveReview": "Laisser un avis",
-    "nonePublished": "Aucun avis publié pour le moment.",
+    "nonePublished": "Pas encore d’avis public — parlons de votre projet, le résultat parlera ensuite.",
+    "verifiedNote": "Avis validés avant publication",
     "prev": "Précédent",
     "next": "Suivant",
     "page": "Page {current} sur {total}",
@@ -207,23 +211,23 @@
     "eyebrow": "Contact",
     "title": "Donnons vie à",
     "titleHighlight": "votre projet",
-    "subtitle": "Parlez-moi de votre idée. Je vous réponds sous 48h avec une proposition claire.",
+    "subtitle": "Décrivez votre besoin en 2 minutes. Je réponds sous 48h avec une proposition claire — sans jargon.",
     "name": "Votre nom",
     "email": "Votre email",
     "message": "Votre message",
     "namePlaceholder": "Jean Dupont",
     "emailPlaceholder": "vous@exemple.fr",
-    "messagePlaceholder": "Décrivez votre projet, vos objectifs, votre délai...",
+    "messagePlaceholder": "Objectif, public, délai, budget approximatif…",
     "send": "Envoyer ma demande",
-    "openForm": "Me contacter",
+    "openForm": "Obtenir un retour sous 48h",
     "sending": "Envoi en cours...",
     "successTitle": "Message envoyé !",
-    "successBody": "Je vous réponds sous 48h.",
-    "orEmail": "Ou écrivez-moi directement à",
+    "successBody": "Je vous réponds sous 48h avec les prochaines étapes.",
+    "orEmail": "Préférez l’email ?",
     "formAria": "Formulaire de contact",
     "turnstileError": "Complétez la vérification anti-spam avant d'envoyer.",
     "error": "Impossible d'envoyer le message. Réessayez.",
-    "privacy": "En envoyant ce formulaire, vous acceptez d'être recontacté par email."
+    "privacy": "Vos infos servent uniquement à vous recontacter à propos de votre projet."
   },
   "reviewForm": {
     "eyebrow": "Avis client",

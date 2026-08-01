@@ -42,8 +42,8 @@ export default async function Home() {
       <HomeSection />
       <Services />
       <Projects projects={projects} />
-      <About />
       <Testimonials reviews={reviews} />
+      <About />
       <Contact contactEmail={contactEmail} />
     </>
   );

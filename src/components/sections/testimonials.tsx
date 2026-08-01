@@ -41,9 +41,11 @@ export function Testimonials({ reviews }: TestimonialsProps) {
   return (
     <section
       id="avis"
-      className="relative bg-step-surface px-4 py-20 sm:px-6 sm:py-24 lg:py-28"
+      aria-labelledby="reviews-heading"
+      className="relative scroll-mt-28 bg-step-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
       <SectionHeading
+        id="reviews-heading"
         eyebrow={t("eyebrow")}
         title={
           <>
@@ -53,9 +55,15 @@ export function Testimonials({ reviews }: TestimonialsProps) {
         subtitle={subtitle}
       />
 
+      <Reveal delay={0.05}>
+        <p className="mx-auto mt-4 max-w-md text-center text-xs text-foreground/45 sm:text-sm">
+          {t("verifiedNote")}
+        </p>
+      </Reveal>
+
       {reviews.length === 0 ? (
         <Reveal>
-          <p className="mx-auto mt-10 max-w-md text-center text-sm text-foreground/50 sm:mt-14">
+          <p className="mx-auto mt-8 max-w-md text-center text-sm text-foreground/55 sm:mt-12">
             {t("nonePublished")}
           </p>
         </Reveal>
@@ -74,21 +82,26 @@ export function Testimonials({ reviews }: TestimonialsProps) {
       <Reveal delay={0.12}>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:mt-12 sm:flex-row">
           {hasMore && (
-            <Button asChild variant="default" size="lg" className="w-full max-w-sm sm:w-auto">
+            <Button
+              asChild
+              variant="default"
+              size="lg"
+              className="min-h-12 w-full max-w-sm sm:w-auto"
+            >
               <Link href={routes.reviews} onClick={markHomeForScrollRestore}>
                 {t("seeMore")}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
             </Button>
           )}
           <Button
             variant="outline"
             size="lg"
-            className="w-full max-w-sm sm:w-auto"
+            className="min-h-12 w-full max-w-sm sm:w-auto"
             onClick={() => openLeaveReviewModal()}
           >
             {t("leaveReview")}
-            <PenLine className="h-4 w-4" />
+            <PenLine className="h-4 w-4" aria-hidden />
           </Button>
         </div>
       </Reveal>

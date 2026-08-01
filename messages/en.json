@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Web Developer",
-    "description": "Freelance web developer, backend engineer & designer. Custom websites and applications by Vignes Ibrahim.",
+    "description": "Freelance web developer & designer. Custom websites and apps — polished design, guided launch — by Vignes Ibrahim.",
     "jobTitle": "Freelance web developer"
   },
   "nav": {
@@ -25,70 +25,72 @@
     "socialConfig": "{label} — link to configure"
   },
   "home": {
-    "contact": "Contact me",
-    "projects": "View my projects",
-    "scroll": "Scroll"
+    "contact": "Let's discuss your project",
+    "projects": "View portfolio",
+    "scroll": "Explore",
+    "trustLine": "Reply within 48h · Clear quote · No commitment"
   },
   "hero": {
-    "tagline": "Custom websites",
-    "bio": "Web developer, backend & designer. Two and a half years of coding out of passion — and my first client recently. I turn your ideas into modern websites."
+    "tagline": "Sites & apps that convert",
+    "bio": "I design custom websites and applications — polished design, reliable tech, guided launch. One point of contact from brief to go-live."
   },
   "heroCube": {
-    "dragHint": "Drag or touch to rotate · theme follows the visible face",
-    "themeHint": "Theme switches with the cube's light / dark face",
+    "dragHint": "Drag to rotate",
+    "themeHint": "Theme follows the light / dark face",
     "ariaLabel": "Interactive cube — light and dark faces"
   },
   "services": {
     "eyebrow": "Services",
     "title": "What I can",
     "titleHighlight": "do for you",
-    "subtitle": "From design to launch, clear solutions built for your business.",
+    "subtitle": "Concrete deliverables to attract clients, clarify your offer, and grow your online presence.",
+    "cta": "Talk about my needs",
     "page": {
       "metaTitle": "Services — {brand}",
       "metaDescription": "Website creation, design, backend, SEO and maintenance by {brand}. Clear solutions for your business."
     },
     "items": {
       "web": {
-        "title": "Website creation",
-        "desc": "Your showcase site or app, modern and easy to use. Fast, clear and built to turn visitors into clients."
+        "title": "Website or web app",
+        "desc": "A clear, fast online presence built to present your offer and generate contact requests."
       },
       "backend": {
-        "title": "Systems & data",
-        "desc": "Everything behind the scenes: accounts, forms, data management. Reliable and ready to scale with you."
+        "title": "Back-office & automation",
+        "desc": "Accounts, forms, data and business tools that work reliably — so your site actually works for you."
       },
       "design": {
-        "title": "Custom design",
-        "desc": "A visual identity that reflects you. Polished layouts and simple journeys that encourage contact."
+        "title": "UX/UI design",
+        "desc": "An elegant, readable interface: visitors quickly understand who you are and what to do next."
       },
       "mobile": {
-        "title": "All screen sizes",
-        "desc": "Your site looks perfect on phone, tablet and desktop. Clients find you wherever they are."
+        "title": "Mobile-first experience",
+        "desc": "Impeccable on phone — where most of your clients discover you."
       },
       "seo": {
-        "title": "Visible on Google",
-        "desc": "Your site is optimized to be found on search engines. More visibility, more qualified leads."
+        "title": "Foundational SEO",
+        "desc": "Structure, performance and tags ready for Google: better odds of being found on the right searches."
       },
       "maintenance": {
-        "title": "Support & maintenance",
-        "desc": "A site that stays fast and up to date. I'm available after launch to fix, improve and support you."
+        "title": "Post-launch support",
+        "desc": "Fixes, improvements and advice after go-live — your site stays stable and ready to evolve."
       }
     }
   },
   "about": {
     "eyebrow": "About",
-    "title": "A trusted partner for your",
+    "title": "A clear method for your",
     "titleHighlight": "online presence",
-    "p1": "My name is {name}. Freelance web developer, backend engineer and designer — I've been coding for two and a half years out of passion: side projects, experiments and learning shaped my technical level.",
-    "p2": "I recently supported my first client. Today I offer my services to build custom, clear and effective websites and applications.",
+    "p1": "My name is {name}. Freelance web developer and designer — I build custom sites and apps with one obsession: clarity, performance, and clean delivery.",
+    "p2": "You get one point of contact — from scoping to launch. Simple communication, shared priorities, a usable result fast.",
     "page": {
       "metaTitle": "About — {brand}",
       "metaDescription": "Meet {brand}, freelance web developer: background, working method and support for your online presence."
     },
     "stats": {
-      "years": "Years coding",
+      "years": "Years of experience",
       "clients": "Client supported",
-      "projects": "Personal projects",
-      "response": "Response time"
+      "projects": "Deliverables",
+      "response": "Max. response"
     }
   },
   "process": {
@@ -109,7 +111,8 @@
     "eyebrow": "Work",
     "title": "My latest",
     "titleHighlight": "projects",
-    "subtitle": "A preview of my work — open a card to see details.",
+    "subtitle": "Real cases: project type, stack, and details on click.",
+    "openDetails": "View project details for {title}",
     "seeMore": "See more",
     "seeSite": "Visit site",
     "screens": "screens",
@@ -187,13 +190,14 @@
     "eyebrow": "Testimonials",
     "title": "They trust",
     "titleHighlight": "me",
-    "empty": "Be the first to leave a review.",
-    "one": "One review published — share yours after approval.",
-    "many": "reviews published{suffix}.",
+    "empty": "Client reviews will appear here. Work with me, then share your experience.",
+    "one": "One verified review — every submission is read before publishing.",
+    "many": "verified reviews{suffix}.",
     "previewSuffix": " — preview below",
-    "seeMore": "See more",
+    "seeMore": "All reviews",
     "leaveReview": "Leave a review",
-    "nonePublished": "No reviews published yet.",
+    "nonePublished": "No public reviews yet — let's talk about your project; results come first.",
+    "verifiedNote": "Reviews approved before publishing",
     "prev": "Previous",
     "next": "Next",
     "page": "Page {current} of {total}",
@@ -207,23 +211,23 @@
     "eyebrow": "Contact",
     "title": "Let's bring",
     "titleHighlight": "your project to life",
-    "subtitle": "Tell me about your idea. I'll reply within 48 hours with a clear proposal.",
+    "subtitle": "Describe your needs in 2 minutes. I reply within 48h with a clear proposal — no jargon.",
     "name": "Your name",
     "email": "Your email",
     "message": "Your message",
     "namePlaceholder": "John Smith",
     "emailPlaceholder": "you@example.com",
-    "messagePlaceholder": "Describe your project, goals and timeline...",
+    "messagePlaceholder": "Goal, audience, timeline, approximate budget…",
     "send": "Send my request",
-    "openForm": "Contact me",
+    "openForm": "Get a reply within 48h",
     "sending": "Sending...",
     "successTitle": "Message sent!",
-    "successBody": "I'll reply within 48 hours.",
-    "orEmail": "Or email me directly at",
+    "successBody": "I'll reply within 48 hours with next steps.",
+    "orEmail": "Prefer email?",
     "formAria": "Contact form",
     "turnstileError": "Complete the anti-spam check before sending.",
     "error": "Could not send the message. Please try again.",
-    "privacy": "By submitting this form, you agree to be contacted by email."
+    "privacy": "Your details are only used to get back to you about your project."
   },
   "reviewForm": {
     "eyebrow": "Client review",

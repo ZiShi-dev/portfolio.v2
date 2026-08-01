@@ -47,6 +47,21 @@ export const metadata: Metadata = {
   authors: [{ name: brand.owner }],
   creator: brand.owner,
   robots: { index: true, follow: true },
+  openGraph: {
+    title: `${brand.name} — Développeur Web`,
+    description: brand.description,
+    url: brand.siteUrl,
+    siteName: brand.name,
+    locale: "fr_FR",
+    type: "website",
+    images: [{ url: brand.heroBanner, alt: brand.heroBannerAlt }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${brand.name} — Développeur Web`,
+    description: brand.description,
+    images: [brand.heroBanner],
+  },
   icons: {
     icon: [
       { url: "/images/favicon-32.png", type: "image/png", sizes: "32x32" },

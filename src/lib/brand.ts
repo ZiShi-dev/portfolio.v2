@@ -8,7 +8,7 @@ import { getSiteSocialLinks } from "@/lib/social/store";
 export const brand = {
   name: "Vignes Ibrahim",
   owner: "Vignes Ibrahim",
-  tagline: "Sites web sur-mesure",
+  tagline: "Sites & apps qui convertissent",
   profileImage: "/images/profile.png",
   profileImageAlt: "Logo de Vignes Ibrahim",
   heroBanner: "/images/hero-banner.jpg",
@@ -20,7 +20,7 @@ export const brand = {
   email: "contact@zishi.dev", // fallback display — sourcé BDD via getPublicContactEmail()
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://zishi.dev",
   description:
-    "Développeur web, backend & designer freelance. Sites et applications sur-mesure par Vignes Ibrahim.",
+    "Développeur web & designer freelance. Sites et applications sur-mesure, design soigné et mise en ligne accompagnée — par Vignes Ibrahim.",
   preferredContactText: "Contact préféré · Discord",
 } as const;
 

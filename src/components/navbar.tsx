@@ -27,7 +27,7 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
-      className="px-3 py-2 text-sm text-foreground/70 underline-offset-4 transition-colors hover:text-step-accent hover:underline"
+      className="min-h-10 px-3 py-2 text-sm text-foreground/70 underline-offset-4 transition-colors hover:text-step-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md"
     >
       {label}
     </Link>
@@ -52,8 +52,8 @@ export function Navbar() {
   const links = [
     { label: t("services"), href: homeSectionUrl("services") },
     { label: t("projects"), href: routes.projects },
-    { label: t("about"), href: homeSectionUrl("about") },
     { label: t("reviews"), href: routes.reviews },
+    { label: t("about"), href: homeSectionUrl("about") },
     { label: t("leaveReview"), href: "#", openReview: true },
   ] as const;
 

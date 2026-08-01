@@ -29,6 +29,8 @@ export function ProjectCard({
   const t = useTranslations("projects");
   const openProject = () => onOpen(project);
 
+  const openLabel = t("openDetails", { title: project.title });
+
   const cardBody = (
     <>
       <ProjectCardPreview
@@ -39,16 +41,19 @@ export function ProjectCard({
         screensLabel={t("screens")}
       />
       <div className="relative p-4 sm:p-6">
-        <span className="absolute end-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-step-accent/25 bg-background transition-colors group-hover:border-step-accent group-hover:bg-step-accent group-hover:text-primary-foreground sm:end-4 sm:top-4 sm:h-10 sm:w-10">
+        <span
+          className="absolute end-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-step-accent/25 bg-background transition-colors group-hover:border-step-accent group-hover:bg-step-accent group-hover:text-primary-foreground sm:end-4 sm:top-4"
+          aria-hidden
+        >
           <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5" />
         </span>
         <p className="text-xs uppercase tracking-widest text-foreground/50">
           {project.category}
         </p>
-        <h3 className="mt-2 pe-10 font-display-serif text-lg font-semibold leading-snug sm:pe-12 sm:text-xl">
+        <h3 className="mt-2 pe-12 font-display-serif text-lg font-semibold leading-snug sm:text-xl">
           {project.title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-foreground/55">
+        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-foreground/60">
           {project.desc}
         </p>
         <ProjectTypeBadges
@@ -72,6 +77,7 @@ export function ProjectCard({
         <div
           role="button"
           tabIndex={0}
+          aria-label={openLabel}
           onClick={openProject}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
@@ -79,12 +85,17 @@ export function ProjectCard({
               openProject();
             }
           }}
-          className="w-full cursor-pointer text-start"
+          className="w-full cursor-pointer text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           {cardBody}
         </div>
       ) : (
-        <button type="button" onClick={openProject} className="w-full text-start">
+        <button
+          type="button"
+          onClick={openProject}
+          aria-label={openLabel}
+          className="w-full text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
           {cardBody}
         </button>
       )}
@@ -96,10 +107,10 @@ export function ProjectCard({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1.5 text-sm text-foreground/55 transition-colors hover:text-foreground"
+            className="inline-flex min-h-10 items-center gap-1.5 text-sm text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {t("seeSite")}
-            <ExternalLink className="h-3.5 w-3.5" />
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden />
           </a>
         </div>
       )}

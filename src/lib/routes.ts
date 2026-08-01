@@ -58,11 +58,18 @@ export function createPageMetadata({
       type: "website" as const,
       locale: "fr_FR",
       siteName: brand.name,
+      images: [
+        {
+          url: absoluteUrl(brand.heroBanner),
+          alt: brand.heroBannerAlt,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image" as const,
       title,
       description,
+      images: [absoluteUrl(brand.heroBanner)],
     },
     ...(index ? {} : { robots: { index: false, follow: false } }),
   };

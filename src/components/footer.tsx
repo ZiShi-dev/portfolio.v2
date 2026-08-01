@@ -52,8 +52,8 @@ export async function Footer() {
   const navLinks = [
     { label: tNav("services"), href: homeSectionUrl("services") },
     { label: tNav("projects"), href: routes.projects },
-    { label: tNav("about"), href: homeSectionUrl("about") },
     { label: tNav("reviews"), href: routes.reviews },
+    { label: tNav("about"), href: homeSectionUrl("about") },
   ];
 
   return (
