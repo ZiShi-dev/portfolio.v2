@@ -57,7 +57,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return rowToValues(data as SiteSocialRow);
 }
 
-/** Email affiché sur le site (pas la destination Resend). */
+/** Email affiché sur le site. */
 export async function getPublicContactEmail(): Promise<string> {
   const settings = await getSiteSettings();
   return settings.contactEmail;

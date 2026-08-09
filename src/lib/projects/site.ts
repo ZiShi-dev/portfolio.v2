@@ -27,12 +27,14 @@ function localizeDemo(
 ): LocalizedProjectItem[] {
   return projectCatalog.map((project) => ({
     id: project.id,
+    slug: project.id,
     categoryKey: project.categoryKey,
     title: tItems(`items.${project.id}.title`),
     category: labels[project.categoryKey],
     desc: tItems(`items.${project.id}.desc`),
     tags: [],
     businessTypeIds: project.businessTypeIds,
+    technologies: [],
     images: project.images.map((image) => ({
       src: image.src,
       label: tItems(`items.${project.id}.images.${image.labelKey}`),
@@ -53,6 +55,30 @@ export async function getSiteProjects(
 
   const tItems = await getTranslations({ locale, namespace: "projects" });
   return localizeDemo(locale, labels, tItems);
+}
+
+/** Case Study publiée par slug, ou null. */
+export async function getSiteProjectBySlug(
+  locale: Locale,
+  slug: string
+): Promise<LocalizedProjectItem | null> {
+  const labels = await categoryLabels(locale);
+  const { getPublishedProjectBySlug, projectRowToLocalized } = await import(
+    "@/lib/projects/store"
+  );
+  const row = await getPublishedProjectBySlug(slug);
+  if (row) {
+    return projectRowToLocalized(row, locale, labels[row.kind] ?? row.kind);
+  }
+
+  // Fallback démo : slug = id catalogue
+  const fromDemo = (await getSiteProjects(locale)).find(
+    (p) => p.slug === slug || p.id === slug
+  );
+  // Ne servir le démo que si la BDD n'a aucun publié
+  const fromDb = await siteProjectsFromDatabase();
+  if (fromDb) return null;
+  return fromDemo ?? null;
 }
 
 /** true si le site sert la BDD (au moins 1 publié). */

@@ -1,13 +1,13 @@
 {
   "meta": {
-    "title": "مطور ويب",
-    "description": "مطور ويب ومصمم مستقل. مواقع وتطبيقات مخصصة — تصميم أنيق وإطلاق بمرافقة — بواسطة Vignes Ibrahim.",
-    "jobTitle": "مطور ويب مستقل"
+    "title": "حلول رقمية",
+    "description": "تصمّم VORZIX مواقع وتطبيقات ومنصات رقمية مخصصة — تصميم متميز، هندسة موثوقة ومرافقة من فريق متخصص.",
+    "jobTitle": "وكالة تقنية"
   },
   "nav": {
-    "services": "الخدمات",
+    "services": "عروضنا التجارية",
     "projects": "المشاريع",
-    "about": "من أنا",
+    "about": "من نحن",
     "reviews": "الآراء",
     "leaveReview": "اترك رأياً",
     "workTogether": "لنعمل معاً",
@@ -25,14 +25,24 @@
     "socialConfig": "{label} — الرابط غير مُعدّ"
   },
   "home": {
-    "contact": "لنناقش مشروعك",
-    "projects": "عرض الأعمال",
+    "contact": "ابدأ مشروعك",
+    "projects": "عرض أعمالنا",
     "scroll": "اكتشف",
-    "trustLine": "رد خلال 48 ساعة · عرض واضح · بدون التزام"
+    "trustLine": "رد خلال 48 ساعة · عرض شفاف · فريق متخصص"
   },
   "hero": {
+    "eyebrow": "وكالة تقنية",
+    "title": "مواقع وتطبيقات ومنصات",
+    "titleHighlight": "بدقة القياس.",
+    "subtitle": "تصمّم VORZIX منتجات رقمية راقية — مواقع وتطبيقات ومنصات — بدقة أطلس سماوي.",
     "tagline": "مواقع وتطبيقات تحوّل الزوار",
-    "bio": "أصمّم مواقع وتطبيقات مخصصة — تصميم أنيق، تقنية موثوقة، وإطلاق بمرافقة. مخاطب واحد من الموجز إلى الإطلاق."
+    "bio": "نصمّم مواقع وتطبيقات ومنتجات رقمية مخصصة — تصميم متميز، تقنية موثوقة، وإطلاق بمرافقة. فريق متخصص من الموجز إلى الإطلاق."
+  },
+  "journey": {
+    "eyebrow": "المسار",
+    "title": "من الفكرة",
+    "titleHighlight": "إلى موقع حيّ",
+    "subtitle": "ست خطوات واضحة — استكشف المكعب لترى كيف نرافق مشروعك، من أول حوار وحتى ما بعده."
   },
   "heroCube": {
     "storyLabel": "من الفكرة إلى الموقع",
@@ -52,7 +62,7 @@
       },
       "build": {
         "title": "الإنشاء",
-        "desc": "أبني موقعك قطعة بقطعة — واضحاً وسريعاً وجاهزاً لاستقبال الزوار."
+        "desc": "نبني موقعك قطعة بقطعة — واضحاً وسريعاً وجاهزاً لاستقبال الزوار."
       },
       "launch": {
         "title": "الإطلاق",
@@ -64,19 +74,20 @@
       },
       "support": {
         "title": "المرافقة",
-        "desc": "أبقى متاحاً بعد الإطلاق للإصلاح والتطوير وتقديم المشورة."
+        "desc": "نبقى متاحين بعد الإطلاق للإصلاح والتطوير وتقديم المشورة."
       }
     }
   },
   "services": {
-    "eyebrow": "الخدمات",
-    "title": "ما يمكنني",
-    "titleHighlight": "تقديمه لك",
-    "subtitle": "مخرجات ملموسة لجذب العملاء، وتوضيح عرضك، وتنمية حضورك على الإنترنت.",
-    "cta": "التحدث عن احتياجي",
+    "eyebrow": "كتالوج · العروض",
+    "title": "منتجات رقمية صُمّمت بـ",
+    "titleHighlight": "دقة.",
+    "subtitle": "كل تسليم مُخطَّط: واضح، قابل للقياس، جاهز للتحويل — مواقع وتطبيقات ومنصات.",
+    "discover": "اكتشف",
+    "cta": "التحدث عن احتياجك",
     "page": {
-      "metaTitle": "الخدمات — {brand}",
-      "metaDescription": "إنشاء مواقع، تصميم، خلفية، SEO وصيانة بواسطة {brand}. حلول واضحة لنشاطك."
+      "metaTitle": "عروضنا التجارية — {brand}",
+      "metaDescription": "كتالوج عروضنا التجارية لدى {brand}: مواقع، تجارة إلكترونية، تطبيقات، SaaS وحلول مخصصة."
     },
     "items": {
       "web": {
@@ -103,17 +114,56 @@
         "title": "متابعة بعد الإطلاق",
         "desc": "إصلاحات وتحسينات ونصائح بعد النشر — يبقى موقعك مستقراً وقابلاً للتطور."
       }
-    }
+    },
+    "empty": "العروض ستتوفر قريباً.",
+    "idealFor": "مثالي لـ",
+    "included": "يشمل عادةً",
+    "learnMore": "اعرف المزيد",
+    "ctaStart": "ابدأ مشروعاً",
+    "ctaBuy": "اشترِ هذا العرض",
+    "backToServices": "العودة إلى العروض",
+    "backToCatalog": "العودة إلى العروض",
+    "detailAbout": "عن العرض",
+    "detailPricing": "التسعير",
+    "relatedProjects": "أعمال مرتبطة",
+    "viewCaseStudy": "عرض إنجاز",
+    "offerKind": {
+      "service": "خدمة",
+      "product": "للبيع"
+    },
+    "filter": {
+      "label": "تصفية العروض",
+      "all": "الكل",
+      "product": "للبيع",
+      "service": "خدمات",
+      "empty": "لا عروض في هذا التصفية."
+    },
+    "pricing": {
+      "startingAt": "ابتداءً من {price}",
+      "quoteOnly": "حسب العرض",
+      "contact": "لنتحدث عن مشروعك",
+      "disclaimer": "السعر النهائي يعتمد على النطاق والميزات واحتياجات المشروع."
+    },
+    "catalogTitle": "عروضنا",
+    "catalogTitleHighlight": "التجارية.",
+    "catalogSubtitle": "اختر الحل المناسب لاحتياجك — لكل عرض صفحة تفصيلية.",
+    "viewAll": "عرض كل العروض"
+  },
+  "engagements": {
+    "eyebrow": "الالتزامات · VORZIX",
+    "title": "التزامات",
+    "titleHighlight": "VORZIX.",
+    "subtitle": "إطار واضح للعمل معاً — من تحديد النطاق إلى المتابعة بعد الإطلاق."
   },
   "about": {
-    "eyebrow": "من أنا",
+    "eyebrow": "من نحن",
     "title": "طريقة واضحة لـ",
     "titleHighlight": "حضورك على الإنترنت",
-    "p1": "اسمي {name}. مطور ويب ومصمم مستقل، أبني مواقع وتطبيقات مخصصة بهوس واحد: الوضوح والأداء والتسليم النظيف.",
-    "p2": "مخاطب واحد — من تحديد النطاق إلى الإطلاق. تواصل بسيط، أولويات مشتركة، نتيجة قابلة للاستخدام بسرعة.",
+    "p1": "في VORZIX، نصمّم مواقع وتطبيقات ومنتجات رقمية مخصصة. هوسنا: الوضوح والأداء والتسليم بلا عيوب.",
+    "p2": "فريق متخصص يرافقك من تحديد النطاق إلى الإطلاق. تواصل بسيط، أولويات مشتركة، نتيجة قابلة للاستخدام بسرعة.",
     "page": {
-      "metaTitle": "من أنا — {brand}",
-      "metaDescription": "تعرّف على {brand}، مطور ويب مستقل: المسار، طريقة العمل والمرافقة لحضورك على الإنترنت."
+      "metaTitle": "من نحن — {brand}",
+      "metaDescription": "تعرّف على {brand}: فريقنا، منهجيتنا ومرافقتنا لحضورك الرقمي."
     },
     "stats": {
       "years": "سنوات خبرة",
@@ -133,17 +183,25 @@
     },
     "step3": {
       "title": "الإطلاق والمرافقة",
-      "desc": "النشر، الاختبارات النهائية والمتابعة بعد الإطلاق. موقعك يبقى سريعاً وموثوقاً وقابلاً للتطور — مع مسؤول متابعة واحد في كل مرحلة."
+      "desc": "النشر، الاختبارات النهائية والمتابعة بعد الإطلاق. موقعك يبقى سريعاً وموثوقاً وقابلاً للتطور — مع فريق بجانبك في كل مرحلة."
     }
   },
   "projects": {
     "eyebrow": "الأعمال",
     "title": "أحدث",
-    "titleHighlight": "مشاريعي",
-    "subtitle": "حالات ملموسة: نوع المشروع، التقنيات، والتفاصيل بالنقر.",
+    "titleHighlight": "أعمالنا",
+    "subtitle": "دراسات حالة منشورة: الحاجة، رد VORZIX والنتيجة.",
     "openDetails": "عرض تفاصيل المشروع {title}",
     "seeMore": "عرض المزيد",
+    "exploreAll": "استكشف كل المشاريع",
     "seeSite": "زيارة الموقع",
+    "seeApp": "عرض التطبيق",
+    "filters": {
+      "allTypes": "كل الأنواع",
+      "allLinks": "كل الروابط",
+      "withSite": "مع موقع",
+      "withApp": "مع تطبيق"
+    },
     "screens": "شاشات",
     "all": "الكل",
     "empty": "لا توجد مشاريع في هذه الفئة.",
@@ -161,8 +219,8 @@
       "metaDescription": "اكتشف أعمال {brand}: مواقع تعريفية، متاجر إلكترونية وتطبيقات ويب مخصصة.",
       "eyebrow": "معرض الأعمال",
       "title": "جميع",
-      "titleHighlight": "مشاريعي",
-      "subtitle": "صفِّ حسب نوع المشروع وانقر لعرض التفاصيل."
+      "titleHighlight": "أعمالنا",
+      "subtitle": "صفّ وافتح دراسة حالة كاملة."
     },
     "categories": {
       "personal": "مشروع شخصي",
@@ -181,7 +239,7 @@
     },
     "items": {
       "nova": {
-        "title": "Nova — لوحة SaaS",
+        "title": "Nova — لوحة تحكم",
         "desc": "مفهوم تطبيق تحليلات: لوحة واضحة، رسوم بيانية وتنقل مصمم للقراءة السريعة.",
         "images": {
           "home": "الصفحة الرئيسية",
@@ -213,7 +271,8 @@
           "member": "مساحة الأعضاء"
         }
       }
-    }
+    },
+    "viewCase": "→ عرض الدراسة"
   },
   "reviews": {
     "eyebrow": "الشهادات",
@@ -240,7 +299,7 @@
     "eyebrow": "التواصل",
     "title": "دعنا نُحيي",
     "titleHighlight": "مشروعك",
-    "subtitle": "صف احتياجك في دقيقتين. أرد خلال 48 ساعة باقتراح واضح — بلا مصطلحات معقدة.",
+    "subtitle": "صف احتياجك في دقيقتين. نرد خلال 48 ساعة باقتراح واضح — بلا مصطلحات معقدة.",
     "name": "اسمك",
     "email": "بريدك الإلكتروني",
     "message": "رسالتك",
@@ -248,10 +307,10 @@
     "emailPlaceholder": "you@example.com",
     "messagePlaceholder": "الهدف، الجمهور، المهلة، الميزانية التقريبية…",
     "send": "إرسال طلبي",
-    "openForm": "احصل على رد خلال 48 ساعة",
+    "openForm": "ابدأ مشروعاً",
     "sending": "جارٍ الإرسال...",
     "successTitle": "تم إرسال الرسالة!",
-    "successBody": "سأرد خلال 48 ساعة بالخطوات التالية.",
+    "successBody": "سنرد خلال 48 ساعة بالخطوات التالية.",
     "orEmail": "تفضل البريد؟",
     "formAria": "نموذج التواصل",
     "turnstileError": "أكمل التحقق المضاد للرسائل قبل الإرسال.",
@@ -262,7 +321,7 @@
     "eyebrow": "رأي عميل",
     "title": "شارك",
     "titleHighlight": "تجربتك",
-    "subtitle": "عملت مع {name}؟ اترك رأياً. سيُنشر على المعرض بعد الموافقة.",
+    "subtitle": "عملت مع {name}؟ اترك رأياً. يظهر على الموقع مباشرة.",
     "backToReviews": "العودة إلى الآراء",
     "name": "اسمك",
     "email": "بريدك الإلكتروني",
@@ -277,7 +336,7 @@
     "send": "إرسال رأيي",
     "sending": "جارٍ الإرسال...",
     "successTitle": "شكراً على رأيك!",
-    "successBody": "سأنشره قريباً في صفحة الشهادات.",
+    "successBody": "رأيك ظاهر بالفعل على الموقع. شكراً لك!",
     "consent": "بالإرسال، توافق على نشر اسمك الأول ورأيك على هذا المعرض.",
     "formAria": "نموذج رأي العميل",
     "turnstileError": "أكمل التحقق المضاد للرسائل قبل الإرسال."
@@ -308,7 +367,8 @@
     "turnstileFailed": "فشل التحقق المضاد للرسائل. حاول مرة أخرى.",
     "sendFailed": "تعذّر الإرسال حالياً. حاول لاحقاً.",
     "serviceUnavailable": "الخدمة غير متاحة مؤقتاً.",
-    "unauthorized": "طلب غير مصرح به."
+    "unauthorized": "طلب غير مصرح به.",
+    "invalidPhone": "رقم هاتف غير صالح."
   },
   "common": {
     "skipToContent": "انتقل إلى المحتوى",
@@ -316,9 +376,7 @@
     "backHome": "العودة للرئيسية",
     "closeModal": "إغلاق النافذة",
     "language": "اللغة",
-    "themeLight": "تفعيل الوضع الفاتح",
-    "themeDark": "تفعيل الوضع الداكن",
-    "themeToggle": "تغيير المظهر"
+    "whatsappFloat": "راسلنا على واتساب"
   },
   "language": {
     "fr": "Français",
@@ -339,8 +397,8 @@
     "hosting": "الاستضافة",
     "hostingText": "يستضيف هذا الموقع Vercel Inc.، 440 N Barranca Ave #4133, Covina, CA 91723، الولايات المتحدة.",
     "personalData": "البيانات الشخصية",
-    "personalDataP1": "تجمع نماذج التواصل والمراجعات اسمك وبريدك ورسالتك فقط للرد على طلبك أو نشر مراجعة بموافقتك. تُرسل عبر <resend>Resend</resend> (مزوّد أمريكي) لإبلاغي بالبريد الإلكتروني.",
-    "personalDataP2": "يعالج Resend هذه البيانات باسمي؛ راجع <privacy>سياسة الخصوصية</privacy> الخاصة بهم.",
+    "personalDataP1": "تجمع نماذج التواصل والمراجعات اسمك وبريدك ورسالتك فقط للرد على طلبك أو نشر مراجعة بموافقتك. تُحفظ هذه البيانات بأمان في قاعدتنا (Supabase) — لا يُرسل أي بريد إشعار تلقائياً.",
+    "personalDataP2": "يمكنك طلب الاطلاع أو التصحيح أو الحذف بالتواصل معنا.",
     "personalDataP3": "الأساس القانوني: تنفيذ طلبك (تواصل) أو الموافقة (نشر مراجعة). مدة الاحتفاظ: طوال المدة اللازمة للمعالجة، ثم الحذف عند الطلب.",
     "personalDataP4": "يستخدم نموذج المراجعة <turnstile>Cloudflare Turnstile</turnstile> للحد من الرسائل المزعجة. قد يضع Turnstile كوكيًا تقنيًا؛ لا تُنقل أي بيانات شخصية لأغراض إعلانية.",
     "personalDataP5": "لا تُباع هذه البيانات ولا تُنقل لأغراض تجارية، إلا عند الالتزام القانوني.",
@@ -354,11 +412,13 @@
       "title": "الإدارة",
       "dashboardTitle": "لوحة التحكم",
       "loginTitle": "تسجيل دخول الإدارة",
-      "messagesTitle": "رسائل التواصل",
       "reviewsTitle": "المراجعات المنشورة",
       "aboutStatsTitle": "إحصائيات من نحن",
       "projectsTitle": "المشاريع",
-      "settingsTitle": "الإعدادات"
+      "inquiriesTitle": "طلبات المشاريع",
+      "settingsTitle": "الإعدادات",
+      "servicesTitle": "الخدمات / العروض",
+      "engagementsTitle": "الالتزامات"
     },
     "language": {
       "label": "اللغة",
@@ -450,13 +510,13 @@
         "pendingReviewsHint": "طلبات تحتاج موافقة الإدارة",
         "projects": "مشاريع المعرض",
         "projectsHint": "قابلة للتعديل في /admin/projects",
-        "email": "بريد التواصل",
-        "emailHint": "الرسائل عبر Resend",
-        "emailHintInbox": "رسائل غير مقروءة (الصندوق)",
-        "unread": "رسائل غير مقروءة"
+        "newInquiries": "طلبات جديدة",
+        "newInquiriesHint": "العملاء المحتملون في /admin/inquiries",
+        "services": "العروض",
+        "servicesHint": "تُدار في /admin/services"
       },
       "reviewsTitle": "إدارة المراجعات",
-      "reviewsBody": "يمكن للزوار ترك مراجعة (البريد إلزامي). كل مراجعة تبدأ بحالة « بانتظار »: توافق أو تسحب أو تحذف.",
+      "reviewsBody": "يزرك الزوار رأياً (البريد إلزامي). يظهر فوراً على الموقع: تسحبه أو تحذفه لاحقاً إن لزم.",
       "reviewsEmpty": "لا توجد مراجعات منشورة حالياً.",
       "reviewsNext": "افتح الصفحة المخصصة لمراجعة الطلبات الواردة.",
       "reviewsPendingBadge": "{count} مراجعات بانتظار الموافقة",
@@ -471,11 +531,11 @@
       "aboutStatsPageTitle": "أرقام قسم من نحن",
       "aboutStatsPageSubtitle": "هذه القيم تغذي شبكة الإحصائيات في الصفحة الرئيسية.",
       "projectsTitle": "مشاريع المعرض",
-      "projectsBody": "أضف أو عدّل الأعمال (عناوين FR/EN/AR، صور Supabase، نوع التطبيق، شخصي/مباع).",
+      "projectsBody": "أدِر دراسات الحالة: قصة العميل والميزات والتقنيات والصور والنشر.",
       "projectsNext": "افتح الصفحة المخصصة لإدارة المشاريع المعروضة على الموقع.",
       "manageProjects": "إدارة المشاريع",
       "projectsPageTitle": "إدارة المشاريع",
-      "projectsPageSubtitle": "CRUD آمن · صور Storage · شارات التقنيات.",
+      "projectsPageSubtitle": "دراسات حالة · CRUD · معرض · FR/EN/AR · نشر.",
       "settingsTitle": "التواصل والشبكات",
       "settingsBody": "عدّل البريد الظاهر على الموقع وروابط Discord وواتساب وإنستغرام وتيك توك. اترك شبكة فارغة لإخفائها.",
       "settingsNext": "افتح الإعدادات للتحديث دون إعادة نشر.",
@@ -483,23 +543,32 @@
       "openSettings": "الإعدادات",
       "settingsPageTitle": "إعدادات الموقع",
       "settingsPageSubtitle": "بريد التواصل الظاهر وروابط الشبكات في التذييل.",
-      "contactTitle": "رسائل التواصل",
-      "contactBody": "تُرسل نماذج التواصل إلى {email} عبر Resend وتُحفظ في الصندوق الآمن.",
-      "contactNext": "افتح الصفحة المخصصة لقراءة الرسائل أو أرشفتها أو حذفها.",
-      "contactUnreadBadge": "{count} رسائل غير مقروءة",
-      "manageMessages": "إدارة رسائل التواصل",
-      "messagesPageTitle": "رسائل التواصل",
-      "messagesPageSubtitle": "اقرأ الرسائل الواردة، علّمها كمقروءة، أرشِفها أو احذفها.",
       "backToDashboard": "لوحة التحكم",
       "demoTitle": "محتوى تجريبي",
       "demoBody": "المشاريع والمراجعات على الموقع أمثلة. استبدلها بأعمالك وآراء عملائك قبل الإنتاج.",
-      "viewSite": "عرض الموقع"
+      "viewSite": "عرض الموقع",
+      "inquiriesTitle": "طلبات المشاريع",
+      "inquiriesBody": "أدر طلبات المسار التفاعلي.",
+      "manageInquiries": "عرض الطلبات",
+      "inquiriesNewBadge": "{count} جديدة",
+      "servicesTitle": "العروض التجارية",
+      "servicesBody": "أنشئ وانشر ورتّب العروض المعروضة في الموقع. الأسعار والترجمات ودراسات الحالة.",
+      "servicesNext": "أدِر كل شيء من /admin/services — دون تعديل الشيفرة.",
+      "manageServices": "إدارة العروض",
+      "servicesPageTitle": "إدارة العروض",
+      "servicesPageSubtitle": "CMS · FR/EN/AR · تسعير · دراسات حالة · نشر.",
+      "engagementsTitle": "التزامات VORZIX",
+      "engagementsBody": "عدّل الالتزامات المعروضة على الموقع: العناوين والنصوص FR/EN/AR والترتيب والنشر.",
+      "engagementsNext": "أدِر كل شيء من /admin/engagements — دون تعديل الشيفرة.",
+      "manageEngagements": "إدارة الالتزامات",
+      "engagementsPageTitle": "إدارة الالتزامات",
+      "engagementsPageSubtitle": "CMS · FR/EN/AR · الأيقونات · الترتيب · النشر."
     },
     "reviews": {
       "title": "مراجعة المراجعات",
-      "subtitle": "طلبات عامة → بانتظار → نشر يدوي.",
+      "subtitle": "تُنشر فوراً — اسحب أو احذف المراجعات غير المناسبة.",
       "selectHint": "اختر مراجعة لإدارتها.",
-      "moderationHint": "لا تحقق تلقائي من البريد: البريد إلزامي ثم توافق أنت (مكافحة السبام: Turnstile وhoneypot وحدّ المعدل).",
+      "moderationHint": "مكافحة السبام مفعّلة (Turnstile وhoneypot وحدّ المعدل). البريد إلزامي. ثم تقرر الإبقاء أو السحب.",
       "publishHint": "الطلبات تمر عبر {api}.",
       "notConfigured": "الإدارة معطّلة: أضف SUPABASE_SERVICE_ROLE_KEY ونفّذ npm run db:migrate (جدول reviews).",
       "filters": "الفلاتر",
@@ -518,7 +587,17 @@
       "confirmDelete": "حذف هذه المراجعة نهائياً؟",
       "confirmDeleteTitle": "حذف هذه المراجعة؟",
       "confirmDeleteAction": "نعم، احذف",
-      "confirmDeleteCancel": "إلغاء"
+      "confirmDeleteCancel": "إلغاء",
+      "projectLinkTitle": "ربط المشروع والمشاركة",
+      "projectLinkLabel": "دراسة حالة مرتبطة",
+      "projectLinkNone": "بدون مشروع",
+      "projectLinkHint": "يظهر الرأي المنشور في صفحة تفاصيل المشروع. انسخ الرابط العام للعميل، أو رابط الدعوة ليترك رأياً.",
+      "copyPublicLink": "نسخ رابط الرأي",
+      "copyInviteLink": "نسخ دعوة العميل",
+      "copyInviteLinkFirst": "نسخ دعوة (أول مشروع)",
+      "copiedPublic": "تم نسخ رابط الرأي.",
+      "copiedInvite": "تم نسخ رابط الدعوة.",
+      "copyFailed": "تعذر نسخ الرابط."
     },
     "aboutStats": {
       "loading": "جارٍ التحميل…",
@@ -558,7 +637,7 @@
         "tiktok": "TikTok"
       },
       "hints": {
-        "contactEmail": "يظهر على الموقع (التذييل، التواصل، الإشارات). لا يغيّر Resend.",
+        "contactEmail": "يظهر على الموقع (التذييل، التواصل، الإشارات).",
         "discord": "دعوة أو ملف على discord.gg / discord.com",
         "whatsapp": "رابط wa.me (رمز الدولة بدون +)",
         "instagram": "ملف instagram.com/…",
@@ -600,9 +679,21 @@
         "kind": "النوع",
         "sortOrder": "الترتيب",
         "link": "رابط الموقع",
+        "appLink": "رابط التطبيق",
         "published": "ظاهر على الموقع",
         "businessTypes": "نوع التطبيق",
-        "images": "الصور"
+        "images": "الصور",
+        "reference": "المرجع",
+        "featured": "مميز",
+        "clientNeed": "احتياج العميل",
+        "objective": "الهدف",
+        "solution": "رد VORZIX",
+        "result": "النتيجة",
+        "features": "الميزات",
+        "technologies": "التقنيات",
+        "seoTitle": "عنوان SEO",
+        "seoDescription": "وصف SEO",
+        "coverImage": "صورة الغلاف"
       },
       "businessTypesHint": "حتى {max} أنواع.",
       "businessTypesMax": "الحد الأقصى {max} أنواع تطبيقات.",
@@ -620,7 +711,7 @@
       "kindPersonal": "مشروع شخصي",
       "kindSold": "مشروع مباع / عميل",
       "upload": "رفع",
-      "imagesEmpty": "أضف صورة واحدة على الأقل.",
+      "imagesEmpty": "أضف صوراً (مطلوبة للنشر).",
       "moveUp": "أعلى",
       "moveDown": "أسفل",
       "removeImage": "إزالة الصورة",
@@ -638,7 +729,17 @@
       "noCover": "لا صورة",
       "confirmDeleteTitle": "حذف هذا المشروع؟",
       "confirmDeleteAction": "نعم، احذف",
-      "confirmDeleteCancel": "إلغاء"
+      "confirmDeleteCancel": "إلغاء",
+      "featured": "مميز",
+      "referenceHint": "يُنشأ مرجع الكتالوج (VZ—CASE …) عند الإنشاء.",
+      "hints": {
+        "appLink": "Play Store أو App Store أو رابط التطبيق (اختياري)."
+      },
+      "addFeature": "إضافة ميزة",
+      "featurePlaceholder": "مثال: لوحة تحكم",
+      "techPlaceholder": "مثال: Next.js",
+      "projectsPageSubtitle": "دراسات حالة · CRUD · معرض · FR/EN/AR · نشر.",
+      "preview": "معاينة"
     },
     "errors": {
       "unavailable": "الخدمة غير متاحة مؤقتاً.",
@@ -670,45 +771,364 @@
       "project_invalid_images": "أضف صورةً واحدةً صحيحة على الأقل.",
       "project_invalid_image": "رابط الصورة غير مسموح.",
       "project_invalid_link": "رابط الموقع غير صالح.",
+      "project_invalid_app_link": "رابط التطبيق غير صالح.",
       "project_invalid_business_types": "اختر نوع تطبيق صالح.",
       "project_too_many_business_types": "الحد الأقصى 4 أنواع تطبيقات.",
       "invalid_business_type": "نوع التطبيق غير معروف.",
       "duplicate_business_type": "نوع التطبيق مكرر.",
       "duplicate_slug": "هذا المعرّف موجود مسبقاً.",
-      "empty_patch": "لا يوجد ما يُحفظ."
+      "empty_patch": "لا يوجد ما يُحفظ.",
+      "publish_requires_title": "العنوان بالفرنسية مطلوب للنشر.",
+      "publish_requires_description": "الوصف بالفرنسية مطلوب للنشر.",
+      "publish_requires_images": "صورة واحدة على الأقل مطلوبة للنشر.",
+      "project_invalid_features": "ميزات غير صالحة.",
+      "project_invalid_technologies": "تقنيات غير صالحة.",
+      "duplicate_reference": "مرجع الكتالوج موجود مسبقاً.",
+      "service_invalid_slug": "معرّف غير صالح.",
+      "service_invalid_icon": "أيقونة غير صالحة.",
+      "service_invalid_reference": "مرجع غير صالح.",
+      "service_invalid_title": "عنوان غير صالح.",
+      "service_invalid_short_description": "وصف قصير غير صالح.",
+      "service_invalid_features": "عناصر غير صالحة.",
+      "service_invalid_pricing": "تسعير غير صالح.",
+      "service_invalid_case_studies": "دراسات حالة غير صالحة.",
+      "starting_price_required": "سعر البداية مطلوب لهذا النمط.",
+      "publish_requires_short_description": "وصف قصير بالفرنسية مطلوب للنشر.",
+      "publish_requires_reference": "المرجع مطلوب للنشر.",
+      "publish_incomplete": "العرض غير مكتمل للنشر.",
+      "duplicate_case_study": "دراسة حالة مكررة.",
+      "invalid_reorder": "إعادة ترتيب غير صالحة.",
+      "not_found": "غير موجود.",
+      "engagement_invalid_icon": "أيقونة غير صالحة.",
+      "engagement_invalid_reference": "مرجع غير صالح.",
+      "engagement_invalid_title": "عنوان غير صالح.",
+      "engagement_invalid_description": "وصف غير صالح."
     },
-    "inbox": {
-      "title": "رسائل التواصل",
-      "subtitle": "صندوق آمن (Origin · MFA · service_role · RLS).",
-      "notConfigured": "الصندوق معطّل: أضف SUPABASE_SERVICE_ROLE_KEY ونفّذ supabase/migrations/001_contact_messages.sql.",
-      "filters": "الفلاتر",
-      "filterUnread": "غير مقروءة ({count})",
-      "filterAll": "الكل",
-      "filterRead": "مقروءة",
-      "filterArchived": "مؤرشفة",
-      "loading": "جارٍ التحميل…",
-      "empty": "لا رسائل في هذا الفلتر.",
-      "selectHint": "اختر رسالة لقراءتها.",
-      "close": "إغلاق",
-      "markRead": "تعليم كمقروءة",
-      "markUnread": "تعليم كغير مقروءة",
+    "engagements": {
+      "listTitle": "الالتزامات",
+      "create": "إنشاء التزام",
+      "createTitle": "التزام جديد",
+      "editTitle": "تعديل الالتزام",
+      "formHint": "المسودة الناقصة مسموحة. النشر يتطلب عنواناً ووصفاً بالفرنسية.",
+      "edit": "تعديل",
+      "publish": "نشر",
+      "unpublish": "إلغاء النشر",
+      "saveDraft": "حفظ مسودة",
+      "savePublish": "حفظ ونشر",
+      "cancel": "إلغاء",
+      "empty": "لا التزامات حالياً.",
+      "loadError": "تعذر تحميل الالتزامات.",
+      "deleteError": "تعذر الحذف.",
+      "deleteTitle": "حذف هذا الالتزام؟",
+      "deleteBody": "نهائي. سيختفي من الموقع.",
+      "deleteConfirm": "حذف",
+      "moveUp": "أعلى",
+      "moveDown": "أسفل",
       "archive": "أرشفة",
-      "editArchiveMeta": "تعديل الملاحظة / الرابط",
-      "archiveFormTitle": "أرشفة هذه الرسالة",
-      "archiveFormHint": "أضف ملاحظة متابعة ورابط محادثة البريد (Gmail، Outlook…).",
-      "archiveNoteLabel": "ملاحظة",
-      "archiveNotePlaceholder": "مثال: أُرسل العرض، بانتظار الرد…",
-      "conversationUrlLabel": "رابط محادثة البريد",
-      "conversationUrlPlaceholder": "https://mail.google.com/mail/…",
-      "confirmArchive": "حفظ الأرشفة",
-      "cancelArchive": "إلغاء",
-      "archiveMetaTitle": "متابعة الأرشفة",
-      "openConversation": "فتح المحادثة",
-      "delete": "حذف",
-      "confirmDelete": "حذف هذه الرسالة نهائياً؟",
-      "confirmDeleteTitle": "حذف هذه الرسالة؟",
-      "confirmDeleteAction": "نعم، احذف",
-      "confirmDeleteCancel": "إلغاء"
+      "notConfiguredTitle": "غير متاح",
+      "notConfiguredBody": "أضف SUPABASE_SERVICE_ROLE_KEY ونفّذ npm run db:migrate (جدول engagements).",
+      "status": {
+        "draft": "مسودة",
+        "published": "منشور",
+        "archived": "مؤرشف"
+      },
+      "fields": {
+        "reference": "المرجع",
+        "icon": "أيقونة",
+        "status": "الحالة",
+        "sortOrder": "الترتيب",
+        "title": "العنوان",
+        "description": "الوصف"
+      }
+    },
+    "inquiries": {
+      "title": "طلبات المشاريع",
+      "subtitle": "الطلبات من مسار ابدأ مشروعاً.",
+      "empty": "لا طلبات لهذا التصفية.",
+      "notConfiguredTitle": "قاعدة البيانات غير مضبوطة",
+      "notConfiguredBody": "اضبط Supabase لإدارة الطلبات.",
+      "retry": "إعادة المحاولة",
+      "filters": {
+        "all": "الكل",
+        "new": "جديد",
+        "contacted": "تم التواصل",
+        "qualified": "مؤهل",
+        "won": "مكتسب",
+        "lost": "مفقود",
+        "spam": "مزعج"
+      },
+      "fields": {
+        "status": "الحالة",
+        "notes": "ملاحظات داخلية",
+        "type": "النوع",
+        "objective": "الهدف",
+        "budget": "الميزانية",
+        "timeline": "الجدول",
+        "launch": "الإطلاق",
+        "description": "الوصف",
+        "contact": "التواصل",
+        "company": "الشركة",
+        "website": "الموقع",
+        "locale": "اللغة",
+        "source": "المصدر"
+      },
+      "actions": {
+        "save": "حفظ",
+        "saving": "جارٍ الحفظ…",
+        "saved": "تم الحفظ.",
+        "delete": "حذف",
+        "copyEmail": "نسخ البريد",
+        "copyPhone": "نسخ الهاتف",
+        "openSite": "فتح الموقع",
+        "confirmDeleteTitle": "حذف هذا الطلب؟",
+        "confirmDelete": "هذا الإجراء نهائي.",
+        "confirmDeleteAction": "نعم، احذف",
+        "confirmDeleteCancel": "إلغاء"
+      }
+    },
+    "services": {
+      "listTitle": "العروض",
+      "create": "إنشاء عرض",
+      "createTitle": "عرض جديد",
+      "editTitle": "تعديل العرض",
+      "formHint": "المسودة يمكن أن تكون ناقصة. النشر يتطلب عنواناً ووصفاً قصيراً بالفرنسية.",
+      "edit": "تعديل",
+      "preview": "معاينة",
+      "publish": "نشر",
+      "unpublish": "إلغاء النشر",
+      "saveDraft": "حفظ مسودة",
+      "savePublish": "حفظ ونشر",
+      "cancel": "إلغاء",
+      "empty": "لا توجد عروض بعد. أنشئ الأولى.",
+      "loadError": "تعذر تحميل العروض.",
+      "duplicateError": "تعذر التكرار.",
+      "deleteError": "تعذر الحذف.",
+      "deleteTitle": "حذف هذا العرض؟",
+      "deleteBody": "نهائي. تحتفظ العملاء المحتملون بالمرجع المثبّت.",
+      "deleteConfirm": "حذف",
+      "moveUp": "أعلى",
+      "moveDown": "أسفل",
+      "addFeature": "إضافة عنصر",
+      "removeFeature": "إزالة",
+      "ctaPlaceholder": "ابدأ مشروعاً",
+      "inquiryNone": "بدون اختيار مسبق",
+      "noCaseStudies": "لا توجد دراسات حالة.",
+      "notConfiguredTitle": "غير متاح",
+      "notConfiguredBody": "أضف SUPABASE_SERVICE_ROLE_KEY ونفّذ npm run db:migrate.",
+      "cols": {
+        "reference": "مرجع",
+        "name": "الاسم",
+        "status": "الحالة",
+        "pricing": "التسعير",
+        "featured": "مميز",
+        "order": "الترتيب",
+        "updated": "تعديل",
+        "actions": "إجراءات"
+      },
+      "status": {
+        "draft": "مسودة",
+        "published": "منشور",
+        "archived": "مؤرشف"
+      },
+      "pricingMode": {
+        "starting_at": "ابتداءً من",
+        "quote_only": "حسب عرض",
+        "contact": "تواصل"
+      },
+      "offerKind": {
+        "service": "خدمة",
+        "product": "للبيع"
+      },
+      "commerceHint": "النوع يغذي فلتر الكتالوج. الخانات تتحكم بالأزرار الظاهرة على الموقع.",
+      "sections": {
+        "identity": "الهوية",
+        "commerce": "النوع والأزرار",
+        "pricing": "السعر",
+        "features": "العناصر المشمولة",
+        "caseStudies": "دراسات الحالة"
+      },
+      "fields": {
+        "reference": "المرجع",
+        "slug": "المعرّف",
+        "icon": "أيقونة",
+        "status": "الحالة",
+        "featured": "تمييز",
+        "sortOrder": "الترتيب",
+        "offerKind": "نوع العرض",
+        "showCtaBuy": "زر « اشترِ »",
+        "showCtaStart": "زر « ابدأ مشروعاً »",
+        "pricingMode": "نمط التسعير",
+        "currency": "العملة",
+        "startingPrice": "سعر البداية",
+        "inquiryType": "نوع مسبق",
+        "title": "العنوان",
+        "shortDescription": "وصف قصير",
+        "description": "الوصف",
+        "idealFor": "مثالي لـ",
+        "ctaLabel": "نص زر ابدأ"
+      },
+      "duplicate": "تكرار",
+      "archive": "أرشفة"
+    }
+  },
+  "caseStudy": {
+    "need": "الحاجة",
+    "objective": "الهدف",
+    "solution": "رد VORZIX",
+    "features": "ما تم إنجازه",
+    "result": "النتيجة",
+    "gallery": "المعرض",
+    "technologies": "التقنيات",
+    "clientReview": "رأي العميل",
+    "visitSite": "زيارة الموقع",
+    "visitApp": "فتح التطبيق",
+    "ctaTitle": "لديك مشروع مشابه؟",
+    "ctaSubtitle": "أخبرنا باحتياجك — رد واضح خلال 48 ساعة.",
+    "ctaPrimary": "ابدأ مشروعاً",
+    "ctaNext": "المشروع التالي",
+    "backToList": "كل الإنجازات"
+  },
+  "projectInquiry": {
+    "brand": "VZ—PROJECT",
+    "meta": {
+      "title": "ابدأ مشروعاً — {brand}",
+      "description": "حدّد احتياجك في بضع اختيارات. VORZIX يبني كوكبة مشروعك."
+    },
+    "intro": {
+      "title": "لنرسم ملامح مشروعك.",
+      "subtitle": "بعض الاختيارات كافية لنفهم احتياجك.",
+      "cta": "ابدأ"
+    },
+    "progress": {
+      "overview": "مسار المشروع",
+      "step": "الخطوة {current} من {total} — {label}"
+    },
+    "nodes": {
+      "type": "النوع",
+      "objective": "الهدف",
+      "budget": "الميزانية",
+      "timeline": "الجدول",
+      "description": "المشروع",
+      "contact": "التواصل"
+    },
+    "questions": {
+      "type": "ماذا تريد أن تنشئ؟",
+      "objective": "ما هدفك الأساسي؟",
+      "budget": "ما الميزانية المتوقعة؟",
+      "timeline": "متى تريد أن تبدأ؟",
+      "description": "حدّثنا عن مشروعك.",
+      "contact": "بياناتك"
+    },
+    "types": {
+      "showcase": {
+        "title": "موقع تعريفي",
+        "description": "قدّم نشاطك بوضوح."
+      },
+      "ecommerce": {
+        "title": "متجر إلكتروني",
+        "description": "بِع منتجاتك عبر الإنترنت."
+      },
+      "web_app": {
+        "title": "تطبيق ويب",
+        "description": "منتج تفاعلي من المتصفح."
+      },
+      "saas": {
+        "title": "SaaS / منصة",
+        "description": "خدمة متعددة المستخدمين."
+      },
+      "redesign": {
+        "title": "إعادة تصميم",
+        "description": "حدّث منتجاً قائماً."
+      },
+      "automation": {
+        "title": "أتمتة / خلفية",
+        "description": "بسّط عملية داخلية."
+      },
+      "other": {
+        "title": "أخرى",
+        "description": "احتياج خاص للتوضيح."
+      }
+    },
+    "objectives": {
+      "present_activity": "تقديم نشاطي",
+      "generate_leads": "توليد عملاء محتملين",
+      "sell_online": "البيع عبر الإنترنت",
+      "create_product": "إنشاء منتج رقمي",
+      "automate_process": "أتمتة عملية",
+      "modernize": "تحديث منتج قائم",
+      "other": "أخرى"
+    },
+    "budgets": {
+      "amount_150": "‎150 €",
+      "amount_350": "‎350 €",
+      "under_500": "أقل من ‎500 €",
+      "500_1000": "‎500–1 000 €",
+      "1000_3000": "‎1 000–3 000 €",
+      "3000_5000": "‎3 000–5 000 €",
+      "5000_plus": "‎5 000 €+",
+      "custom": "مبلغ مخصص",
+      "customAmount": "‎{amount} €",
+      "unknown": "لا أعرف بعد"
+    },
+    "timelines": {
+      "asap": "في أقرب وقت",
+      "this_month": "هذا الشهر",
+      "1_3_months": "خلال 1 إلى 3 أشهر",
+      "later": "لاحقاً",
+      "unknown": "لا أعرف بعد"
+    },
+    "fields": {
+      "targetLaunchDate": "تاريخ الإطلاق المرغوب",
+      "targetLaunchHint": "اختياري.",
+      "targetLaunchPlaceholder": "اختر تاريخاً",
+      "targetLaunchClear": "مسح التاريخ",
+      "typeOther": "وضّح ما تريد إنشاءه",
+      "typeOtherPlaceholder": "مثال: منصة حجوزات",
+      "objectiveOther": "وضّح هدفك",
+      "objectiveOtherPlaceholder": "مثال: الاحتفاظ بعملائي",
+      "customBudget": "ميزانيتك",
+      "customBudgetPlaceholder": "مثال: 750",
+      "customBudgetHint": "بين ‎{min} € و ‎{max} €.",
+      "descriptionHelp": "صف نشاطك وفكرتك والميزات المهمة. لا حاجة لمصطلحات تقنية.",
+      "name": "الاسم",
+      "email": "البريد",
+      "phone": "الهاتف",
+      "whatsapp": "واتساب",
+      "company": "الشركة",
+      "website": "الموقع الحالي"
+    },
+    "nav": {
+      "back": "رجوع",
+      "continue": "متابعة",
+      "review": "عرض الملخص",
+      "exit": "إغلاق"
+    },
+    "summary": {
+      "title": "مشروعك يبدأ بالتشكّل.",
+      "subtitle": "راجع الملخص، ثم أرسل طلبك.",
+      "type": "النوع",
+      "objective": "الهدف",
+      "budget": "الميزانية",
+      "timeline": "الجدول",
+      "project": "المشروع",
+      "contact": "التواصل",
+      "submit": "إرسال طلبي",
+      "sending": "جارٍ الإرسال…",
+      "edit": "تعديل إجاباتي"
+    },
+    "success": {
+      "title": "تم استلام الطلب.",
+      "body": "تم إرسال معلومات مشروعك بنجاح إلى VORZIX."
+    },
+    "errors": {
+      "description": "أضف بضعة أسطر لوصف مشروعك.",
+      "invalidWebsite": "رابط الموقع غير صالح.",
+      "invalidPhone": "رقم غير صالح. استخدم أرقاماً فقط (مثال: ‎+33…).",
+      "otherText": "أضف وصفاً قصيراً (حرفان على الأقل).",
+      "customBudget": "أدخل مبلغاً بين ‎50 € و ‎500 000 €.",
+      "timelineOrDate": "اختر جدولاً زمنياً أو تاريخ إطلاق.",
+      "submit": "تعذّر إرسال الطلب. أعد المحاولة.",
+      "turnstile": "التحقق من مكافحة الإزعاج مطلوب."
     }
   }
 }

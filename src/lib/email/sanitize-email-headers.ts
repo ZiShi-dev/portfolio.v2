@@ -2,7 +2,7 @@ import { sanitizeForMailtoHeader, isValidEmail, normalizeEmail } from "@/lib/for
 
 const SUBJECT_MAX = 200;
 
-/** Évite l'injection d'en-têtes (CR/LF) dans le sujet Resend. */
+/** Évite l'injection d'en-têtes (CR/LF) dans un sujet email. */
 export function sanitizeEmailSubject(value: string): string {
   return sanitizeForMailtoHeader(value, SUBJECT_MAX);
 }

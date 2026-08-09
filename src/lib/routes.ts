@@ -4,9 +4,11 @@ import { brand } from "@/lib/brand";
 export const routes = {
   home: "/",
   projects: "/projets",
+  services: "/offres",
   reviews: "/avis",
   leaveReview: "/laisser-un-avis",
   contact: "/contact",
+  startProject: "/demarrer-un-projet",
   legal: "/mentions-legales",
   admin: "/admin",
   adminLogin: "/admin/connexion",
@@ -15,6 +17,8 @@ export const routes = {
 /** Ancres sur la page d'accueil (scroll interne uniquement). */
 export const homeAnchors = {
   services: "#services",
+  engagements: "#engagements",
+  journey: "#parcours",
   projects: "#projets",
   about: "#a-propos",
   reviews: "#avis",
@@ -32,10 +36,51 @@ export function homeSectionUrl(section: keyof typeof homeAnchors) {
   return `${routes.home}${homeAnchors[section]}`;
 }
 
+/** URL détail d’une offre. */
+export function serviceDetailPath(slug: string) {
+  return `${routes.services}/${slug}`;
+}
+
+/** Lien public d’un avis publié. */
+export function reviewPublicPath(id: string) {
+  return `${routes.reviews}?r=${encodeURIComponent(id)}`;
+}
+
+/** Invitation client à laisser un avis lié à un projet. */
+export function reviewInvitePath(projectId: string) {
+  return `/?openReview=1&project=${encodeURIComponent(projectId)}`;
+}
+
+/** Intention commerciale depuis une offre (achat vs démarrage sur-mesure). */
+export type StartProjectIntent = "start" | "buy";
+
+/**
+ * Lien vers le parcours « Démarrer un projet » avec contexte offre.
+ * Le visiteur peut toujours modifier son choix dans le wizard.
+ */
+export function startProjectUrl(opts?: {
+  serviceSlug?: string | null;
+  serviceId?: string | null;
+  serviceReference?: string | null;
+  projectType?: string | null;
+  intent?: StartProjectIntent | null;
+}): string {
+  const params = new URLSearchParams();
+  if (opts?.serviceSlug) params.set("service", opts.serviceSlug);
+  if (opts?.serviceId) params.set("serviceId", opts.serviceId);
+  if (opts?.serviceReference) params.set("ref", opts.serviceReference);
+  if (opts?.projectType) params.set("type", opts.projectType);
+  if (opts?.intent === "buy" || opts?.intent === "start") {
+    params.set("intent", opts.intent);
+  }
+  const q = params.toString();
+  return q ? `${routes.startProject}?${q}` : routes.startProject;
+}
+
 type PageMetaInput = {
   title: string;
   description: string;
-  path: RoutePath;
+  path: RoutePath | string;
   index?: boolean;
 };
 

@@ -65,17 +65,7 @@ describe("POST /api/contact — afterValidated → saveContactMessage", () => {
           lastSaveInput = input;
           return saveResult;
         },
-        listContactMessages: async () => [],
-        countUnreadContactMessages: async () => 0,
-        updateContactMessageStatus: async () => false,
-        deleteContactMessage: async () => false,
         countContactSubmissionsInWindow: async () => null,
-      },
-    });
-
-    mock.module("@/lib/email/send-contact-email", {
-      namedExports: {
-        sendContactEmail: async () => ({ ok: false, reason: "not_configured" }),
       },
     });
   });
@@ -99,7 +89,7 @@ describe("POST /api/contact — afterValidated → saveContactMessage", () => {
     lastSaveInput = null;
   });
 
-  it("persiste via saveContactMessage et retourne stored si Resend down", async () => {
+  it("persiste via saveContactMessage et retourne stored", async () => {
     const email = `persist-${Date.now()}@example.com`;
     const res = await contactRoute.POST(formRequest(validBody(email)));
     assert.equal(res.status, 200);
@@ -126,7 +116,7 @@ describe("POST /api/contact — afterValidated → saveContactMessage", () => {
     assert.equal(lastSaveInput, null);
   });
 
-  it("si save échoue et Resend non configuré → 503", async () => {
+  it("si save échoue → 503", async () => {
     saveResult = { ok: false };
     const res = await contactRoute.POST(
       formRequest(validBody(`fail-${Date.now()}@example.com`))

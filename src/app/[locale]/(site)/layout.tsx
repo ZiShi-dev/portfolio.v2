@@ -5,11 +5,13 @@ import { Footer } from "@/components/footer";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { ScrollRestoration } from "@/components/scroll-restoration";
 import { SkipToContent } from "@/components/skip-to-content";
+import { CelestialPageSplash } from "@/components/celestial-page-loader";
+import { FloatingWhatsApp } from "@/components/floating-whatsapp";
 import { LeaveReviewModal } from "@/components/sections/leave-review-modal";
 import { ContactModal } from "@/components/sections/contact-modal";
 import { AppToastHost } from "@/components/ui/app-toast";
 import { type Locale, routing } from "@/i18n/routing";
-import { getPublicContactEmail } from "@/lib/social/store";
+import { getPublicContactEmail, getSiteSocialLinks } from "@/lib/social/store";
 
 type SiteLayoutProps = {
   children: React.ReactNode;
@@ -23,10 +25,14 @@ export default async function SiteLayout({ children, params }: SiteLayoutProps) 
     setRequestLocale(locale as Locale);
   }
 
-  const contactEmail = await getPublicContactEmail();
+  const [contactEmail, social] = await Promise.all([
+    getPublicContactEmail(),
+    getSiteSocialLinks(),
+  ]);
 
   return (
     <>
+      <CelestialPageSplash />
       <SkipToContent />
       <ScrollRestoration />
       <NavigationProgress />
@@ -37,6 +43,7 @@ export default async function SiteLayout({ children, params }: SiteLayoutProps) 
       <Footer />
       <LeaveReviewModal showCallout={false} />
       <ContactModal showCallout={false} contactEmail={contactEmail} />
+      <FloatingWhatsApp href={social.whatsapp} />
       <AppToastHost />
     </>
   );

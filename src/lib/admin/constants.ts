@@ -1,10 +1,12 @@
 export const ADMIN_ROUTES = {
   home: "/admin",
   login: "/admin/connexion",
-  messages: "/admin/messages",
   reviews: "/admin/reviews",
   about: "/admin/about",
   projects: "/admin/projects",
+  services: "/admin/services",
+  engagements: "/admin/engagements",
+  inquiries: "/admin/inquiries",
   settings: "/admin/settings",
 } as const;
 

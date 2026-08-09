@@ -52,6 +52,9 @@ export async function parseFormRequest(
 
   const parsedBody = await parseJsonBody(request);
   if (!parsedBody.ok) {
+    logFormSecurityEvent(formKind, "invalid_body", ip, {
+      reason: parsedBody.reason,
+    });
     return {
       ok: false,
       response: invalidRequestResponse(),

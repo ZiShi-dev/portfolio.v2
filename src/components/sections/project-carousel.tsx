@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -11,11 +11,10 @@ import { cn } from "@/lib/utils";
 
 type ProjectCarouselProps = {
   projects: ProjectItem[];
-  onOpen: (project: ProjectItem) => void;
   className?: string;
 };
 
-export function ProjectCarousel({ projects, onOpen, className }: ProjectCarouselProps) {
+export function ProjectCarousel({ projects, className }: ProjectCarouselProps) {
   const t = useTranslations("projects");
   const locale = useLocale() as Locale;
   const direction = getLocaleDirection(locale);
@@ -31,7 +30,6 @@ export function ProjectCarousel({ projects, onOpen, className }: ProjectCarousel
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
-  const dragged = useRef(false);
 
   const scrollTo = useCallback((index: number) => emblaApi?.scrollTo(index), [emblaApi]);
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
@@ -47,34 +45,15 @@ export function ProjectCarousel({ projects, onOpen, className }: ProjectCarousel
   useEffect(() => {
     if (!emblaApi) return;
 
-    const onPointerDown = () => {
-      dragged.current = false;
-    };
-    const onScroll = () => {
-      dragged.current = true;
-    };
-
     onSelect();
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
-    emblaApi.on("pointerDown", onPointerDown);
-    emblaApi.on("scroll", onScroll);
 
     return () => {
       emblaApi.off("select", onSelect);
       emblaApi.off("reInit", onSelect);
-      emblaApi.off("pointerDown", onPointerDown);
-      emblaApi.off("scroll", onScroll);
     };
   }, [emblaApi, onSelect]);
-
-  const handleOpen = useCallback(
-    (project: ProjectItem) => {
-      if (dragged.current) return;
-      onOpen(project);
-    },
-    [onOpen]
-  );
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -98,7 +77,6 @@ export function ProjectCarousel({ projects, onOpen, className }: ProjectCarousel
             >
               <ProjectCard
                 project={project}
-                onOpen={handleOpen}
                 priority={index === 0}
                 swipeFriendly
               />

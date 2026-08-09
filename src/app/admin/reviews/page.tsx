@@ -10,6 +10,7 @@ import {
   countReviewsByStatus,
   listReviews,
 } from "@/lib/reviews/store";
+import { listProjectsForAdmin } from "@/lib/projects/store";
 import { isSupabaseServiceConfigured } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
@@ -31,12 +32,27 @@ export default async function AdminReviewsPage() {
   await requireAdminPageUser();
 
   const configured = isSupabaseServiceConfigured();
-  const [initialReviews, initialPendingCount] = configured
+  const [initialReviews, initialPendingCount, projectsListed] = configured
     ? await Promise.all([
-        listReviews({ status: "pending", limit: 50 }),
+        listReviews({ status: "published", limit: 50 }),
         countReviewsByStatus("pending"),
+        listProjectsForAdmin(),
       ])
-    : [[], 0];
+    : [null, 0, null];
+
+  const projectOptions =
+    projectsListed &&
+    typeof projectsListed === "object" &&
+    "ok" in projectsListed &&
+    projectsListed.ok &&
+    projectsListed.configured
+      ? projectsListed.projects.map((p) => ({
+          id: p.id,
+          slug: p.slug,
+          reference: p.reference,
+          title: p.title.fr || p.title.en || p.slug,
+        }))
+      : [];
 
   return (
     <div className="space-y-6">
@@ -57,9 +73,10 @@ export default async function AdminReviewsPage() {
       </div>
 
       <AdminReviewsPanel
-        initialReviews={initialReviews}
+        initialReviews={initialReviews ?? []}
         initialPendingCount={initialPendingCount}
         initialConfigured={configured}
+        projectOptions={projectOptions}
       />
     </div>
   );

@@ -42,14 +42,14 @@ export function Testimonials({ reviews }: TestimonialsProps) {
     <section
       id="avis"
       aria-labelledby="reviews-heading"
-      className="relative scroll-mt-28 bg-step-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 bg-surface-elevated px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
       <SectionHeading
         id="reviews-heading"
         eyebrow={t("eyebrow")}
         title={
           <>
-            {t("title")} <span className="text-gradient">{t("titleHighlight")}</span>
+            {t("title")} <span className="text-primary">{t("titleHighlight")}</span>
           </>
         }
         subtitle={subtitle}
@@ -69,11 +69,15 @@ export function Testimonials({ reviews }: TestimonialsProps) {
         </Reveal>
       ) : (
         <div
-          className={`mx-auto mt-10 grid max-w-6xl gap-5 sm:mt-14 lg:mt-16 ${getHomeGridClass(preview.length)}`}
+          className={`mx-auto mt-10 grid max-w-6xl gap-4 sm:mt-14 sm:gap-5 lg:mt-16 ${getHomeGridClass(preview.length)}`}
         >
           {preview.map((r, i) => (
             <Reveal key={r.id} delay={i * 0.08}>
-              <ReviewCard review={r} onOpen={() => setOpenIndex(i)} />
+              <ReviewCard
+                review={r}
+                featured={i === 0 && preview.length > 1}
+                onOpen={() => setOpenIndex(i)}
+              />
             </Reveal>
           ))}
         </div>

@@ -149,10 +149,17 @@ describe("parseProjectWriteBody", () => {
     }
   });
 
-  it("exige au moins une image → project_invalid_images", () => {
+  it("autorise un brouillon sans image", () => {
+    const parsed = parseProjectWriteBody(
+      valid({ images: [], published: false })
+    );
+    assert.equal(parsed.ok, true);
+  });
+
+  it("refuse une publication sans image → publish_requires_images", () => {
     const parsed = parseProjectWriteBody(valid({ images: [] }));
     assert.equal(parsed.ok, false);
-    if (!parsed.ok) assert.equal(parsed.error, "project_invalid_images");
+    if (!parsed.ok) assert.equal(parsed.error, "publish_requires_images");
   });
 
   it("rejette trop d'images", () => {
@@ -191,7 +198,7 @@ describe("parseProjectWriteBody", () => {
   });
 
   it("borne maxBodyBytes / upload / mime", () => {
-    assert.ok(PROJECT_LIMITS.maxBodyBytes <= 64_000);
+    assert.ok(PROJECT_LIMITS.maxBodyBytes <= 120_000);
     assert.ok(PROJECT_LIMITS.uploadMaxBytes <= 3 * 1024 * 1024);
     assert.equal(PROJECT_LIMITS.maxBusinessTypes, 4);
     assert.ok(PROJECT_LIMITS.allowedMime.includes("image/png"));

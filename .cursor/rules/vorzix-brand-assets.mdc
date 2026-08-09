@@ -1,0 +1,80 @@
+---
+description: Images de marque VORZIX — logo, bannière et favicons (fond visuel du site)
+alwaysApply: true
+---
+
+# VORZIX — Images de marque (fond visuel)
+
+Ce fichier explique **quelles images** utiliser sur le site, **où elles sont**, et **comment les brancher**.  
+À lire par un humain ou un agent avant de changer un logo, une bannière ou un favicon.
+
+---
+
+## Principe
+
+Ces images sont le **fond visuel** de la marque VORZIX (Atlas Céleste) :
+
+- monogramme ivoire + or sur nuit
+- bannière carte céleste avec le nom VORZIX
+
+Ne pas les remplacer par des photos stock, des avatars, ou d’anciens logos personnels.
+
+Toute référence aux chemins passe par `src/lib/brand.ts` quand c’est possible.
+
+---
+
+## Fichiers officiels
+
+| Rôle | Fichier | Usage |
+|------|---------|--------|
+| Logo (navbar, footer, SEO) | `public/images/logo-vorzix.png` | Carré, fond nuit opaque `#0A0E1A`, monogramme ivoire + or |
+| Bannière hero | `public/images/hero-banner.jpg` | Visuel principal à droite du hero (accueil) |
+| Bannière (variante dark) | `public/images/hero-banner-dark.jpg` | Même motif, pour thèmes / partages sombres |
+| Favicon 32 | `public/images/favicon-32.png` | Onglet navigateur |
+| Favicon Apple | `public/images/favicon-180.png` | Écran d’accueil iOS |
+| Favicon PWA | `public/images/favicon-192.png` | Icône application |
+| Favicon racine | `public/favicon.ico` | Fallback navigateur |
+
+Chemins déclarés dans `src/lib/brand.ts` :
+
+- `brand.profileImage` → logo
+- `brand.heroBanner` / `brand.heroBannerDark` → bannières
+
+---
+
+## Où ça s’affiche sur le site
+
+1. **Logo** — `src/components/brand-logo.tsx` (navbar + footer). Utiliser `<img>` natif (pas `next/image`) pour éviter un cache SVG/PNG trop agressif.
+2. **Bannière hero** — `src/components/sections/hero-banner.tsx` (accueil, colonne droite).
+3. **Cube 3D** — reste dans la section Parcours (`#parcours`), **pas** dans le hero.
+4. **Favicons** — déclarés dans `src/app/layout.tsx` (`icons`).
+5. **Open Graph / SEO** — `brand.profileImage` (JSON-LD) + `brand.heroBanner` (métadonnées) + `src/app/opengraph-image.tsx`.
+
+---
+
+## Règles à respecter
+
+- **Toujours** mettre à jour logo **et** favicons ensemble (même monogramme).
+- Le logo PNG doit avoir un **fond nuit opaque** (pas de transparence) pour rester lisible sur Nuit Céleste.
+- La bannière hero est **widescreen** (~1024×409) : ne pas la forcer dans un carré type avatar.
+- Ne pas remettre `profile.png` (ancien portrait) comme logo de marque.
+- Ne pas inventer un nouveau logo SVG tant que le monogramme PNG officiel est en place.
+- Respecter la charte Atlas Céleste (`.cursor/rules/vorzix-design-system.mdc`) : nuit, ivoire, laiton — pas de bleu électrique SaaS.
+
+---
+
+## Remplacer une image (checklist)
+
+1. Déposer le nouveau fichier dans `public/images/` (même nom, ou mettre à jour `brand.ts`).
+2. Si c’est le logo : régénérer aussi `favicon-32`, `favicon-180`, `favicon-192` et `public/favicon.ico`.
+3. Vérifier navbar, footer, hero, onglet navigateur (Ctrl+Shift+R si cache).
+4. Vérifier navbar, footer, hero, onglet navigateur (Ctrl+Shift+R si cache) — le logo reste lisible sur fond `#070A12`.
+
+---
+
+## À ne pas faire
+
+- Remplacer la bannière Atlas Céleste par une photo d’équipe générique
+- Utiliser le logo comme fond plein écran flou / étiré
+- Mélanger plusieurs versions du monogramme (or seul vs ivoire+or) sur le même site
+- Pointer encore vers `logo-vorzix.svg` (supprimé au profit du PNG)

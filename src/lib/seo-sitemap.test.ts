@@ -5,15 +5,12 @@ import robots from "@/app/robots";
 import { createPageMetadata, routes } from "@/lib/routes";
 
 describe("SEO — sitemap & robots", () => {
-  it("sitemap inclut l’accueil et les pages indexables (sans /services ni /a-propos)", () => {
-    const entries = sitemap();
+  it("sitemap inclut l’accueil, le catalogue offres et les pages indexables (sans /a-propos)", async () => {
+    const entries = await sitemap();
     const urls = entries.map((e) => e.url);
     assert.ok(urls.some((u) => /\/projets$/.test(u)));
     assert.ok(urls.some((u) => /\/avis$/.test(u)));
-    assert.equal(
-      urls.some((u) => u.includes("/services")),
-      false
-    );
+    assert.ok(urls.some((u) => /\/offres$/.test(u)));
     assert.equal(
       urls.some((u) => u.includes("/a-propos")),
       false

@@ -6,21 +6,23 @@ import {
 import { getSiteSocialLinks } from "@/lib/social/store";
 
 export const brand = {
-  name: "Vignes Ibrahim",
-  owner: "Vignes Ibrahim",
-  tagline: "Sites & apps qui convertissent",
-  profileImage: "/images/profile.png",
-  profileImageAlt: "Logo de Vignes Ibrahim",
-  heroBanner: "/images/hero-banner.jpg",
+  name: "VORZIX",
+  owner: "VORZIX",
+  titleSuffix: "Solutions digitales",
+  tagline: "Sites, apps & produits digitaux",
+  profileImage: "/images/logo-vorzix.png",
+  profileImageAlt: "Logo VORZIX",
+  /** Atlas Céleste HD (3072×1728) — nom versionné pour éviter le cache flou. */
+  heroBanner: "/images/hero-banner-atlas.jpg",
   heroBannerAlt:
-    "Espace de travail — portfolio et création de sites web sur-mesure",
-  heroBannerDark: "/images/hero-banner-dark.jpg",
+    "VORZIX — atlas céleste au lever de soleil : sites web, applications et solutions digitales",
+  heroBannerDark: "/images/hero-banner-atlas-dark.jpg",
   heroBannerDarkAlt:
-    "Espace de travail en ambiance sombre — portfolio et sites web sur-mesure",
+    "VORZIX — atlas céleste, horizon doré et précision digitale",
   email: "contact@zishi.dev", // fallback display — sourcé BDD via getPublicContactEmail()
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://zishi.dev",
   description:
-    "Développeur web & designer freelance. Sites et applications sur-mesure, design soigné et mise en ligne accompagnée — par Vignes Ibrahim.",
+    "VORZIX conçoit des sites web, applications et plateformes digitales sur-mesure — design premium, technique fiable et accompagnement par une équipe dédiée.",
   preferredContactText: "Contact préféré · Discord",
 } as const;
 

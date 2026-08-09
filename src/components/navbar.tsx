@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { BrandLogo } from "@/components/brand-logo";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Menu, X } from "lucide-react";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { Button } from "@/components/ui/button";
@@ -36,10 +35,8 @@ function NavLink({
 
 function NavControls() {
   return (
-    <div className="flex h-9 shrink-0 items-center rounded-full border border-border/60 bg-background/70 p-0.5 shadow-sm backdrop-blur-sm">
+    <div className="flex h-9 shrink-0 items-center rounded-full border border-border/60 bg-surface/70 p-0.5 shadow-sm backdrop-blur-sm">
       <LanguageSwitcher compact embedded />
-      <span className="mx-0.5 h-4 w-px shrink-0 bg-border/70" aria-hidden />
-      <ThemeToggle embedded />
     </div>
   );
 }
@@ -50,7 +47,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { label: t("services"), href: homeSectionUrl("services") },
+    { label: t("services"), href: routes.services },
     { label: t("projects"), href: routes.projects },
     { label: t("reviews"), href: routes.reviews },
     { label: t("about"), href: homeSectionUrl("about") },
@@ -79,7 +76,7 @@ export function Navbar() {
           className={cn(
             "flex w-full min-w-0 items-center justify-between gap-2 rounded-full border border-transparent px-3 py-2.5 sm:px-5 sm:py-3 transition-all duration-300",
             scrolled &&
-              "border-border bg-card/90 backdrop-blur-xl shadow-[0_4px_24px_-8px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.35)]"
+              "border-border bg-card/90 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.35)] backdrop-blur-xl"
           )}
         >
           <Link href={routes.home} className="shrink-0 font-semibold">

@@ -1,19 +1,11 @@
 /**
- * Suite OWASP Top 10 (focus) — formulaire contact + inbox admin.
- * Complète contact-inbox-security / admin-messages-api / archive-meta.
+ * Suite OWASP Top 10 (focus) — formulaire contact public.
  */
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
 import {
-  isValidContactMessageStatus,
-  parseAdminMessagesListQuery,
-} from "@/lib/contact/admin-messages-query";
-import { parseArchiveMeta } from "@/lib/contact/archive-meta";
-import {
   countContactSubmissionsInWindow,
-  deleteContactMessage,
   saveContactMessage,
-  updateContactMessageStatus,
 } from "@/lib/contact/messages";
 import {
   CONTACT_LIMITS,
@@ -60,71 +52,7 @@ function validContact(overrides: Record<string, unknown> = {}) {
   };
 }
 
-describe("OWASP A01 — Broken Access Control (inbox admin contact)", () => {
-  beforeEach(() => {
-    setEnv("SUPABASE_SERVICE_ROLE_KEY", undefined);
-    setEnv("NEXT_PUBLIC_SUPABASE_URL", undefined);
-    setEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", undefined);
-  });
-  afterEach(restoreEnv);
-
-  it("update/delete refusent IDs non-UUID (IDOR / injection)", async () => {
-    for (const badId of [
-      "",
-      "123",
-      "not-uuid",
-      "'; DROP TABLE contact_messages;--",
-      "../../../etc/passwd",
-      "00000000-0000-0000-0000-000000000000",
-      "08d86636-9162-4aca-9fb8-b2f77ad90539' OR '1'='1",
-    ]) {
-      assert.equal(
-        await updateContactMessageStatus(badId, { status: "read" }),
-        false,
-        `update ${badId}`
-      );
-      assert.equal(await deleteContactMessage(badId), false, `delete ${badId}`);
-    }
-  });
-
-  it("whitelist status PATCH stricte (anti mass-assignment)", () => {
-    const invalid = [
-      "all",
-      "deleted",
-      "pending",
-      "READ",
-      "archived\n",
-      "unread;drop",
-      "",
-      null,
-      1,
-      {},
-    ];
-    for (const v of invalid) {
-      assert.equal(isValidContactMessageStatus(v), false, String(v));
-    }
-    for (const v of ["unread", "read", "archived"] as const) {
-      assert.equal(isValidContactMessageStatus(v), true);
-    }
-  });
-
-  it("query admin : status injection → all (défaut sûr)", () => {
-    for (const status of [
-      "unread' OR '1'='1",
-      "archived; DROP TABLE--",
-      "../../read",
-    ]) {
-      const q = parseAdminMessagesListQuery(
-        new URL(
-          `http://localhost/api/admin/messages?status=${encodeURIComponent(status)}`
-        )
-      );
-      assert.equal(q.status, "all", status);
-    }
-  });
-});
-
-describe("OWASP A03 — Injection (payload contact / HTML / archive URL)", () => {
+describe("OWASP A03 — Injection (payload contact / HTML email)", () => {
   it("sanitizePersonName retire < > CR/LF du nom", () => {
     const r = parseContactPayload(
       validContact({
@@ -171,20 +99,6 @@ describe("OWASP A03 — Injection (payload contact / HTML / archive URL)", () =>
     assert.equal(subject.includes("\r"), false);
     assert.equal(subject.includes("\n"), false);
     assert.equal(sanitizeReplyTo(content.replyTo ?? ""), undefined);
-  });
-
-  it("archive conversationUrl refuse schémas dangereux", () => {
-    for (const url of [
-      "javascript:alert(1)",
-      "data:text/html,<script>",
-      "file:///etc/passwd",
-      "vbscript:msgbox(1)",
-      "//evil.com/phishing",
-      "/relative/path",
-    ]) {
-      const r = parseArchiveMeta({ conversationUrl: url });
-      assert.equal(r.ok, false, url);
-    }
   });
 
   it("honeypot bot → honeypot sans fuite métier", () => {

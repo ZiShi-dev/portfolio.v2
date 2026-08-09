@@ -25,6 +25,7 @@ export const ValidationErrors = {
   sendFailed: "sendFailed",
   serviceUnavailable: "serviceUnavailable",
   unauthorized: "unauthorized",
+  invalidPhone: "invalidPhone",
 } as const;
 
 export type ValidationErrorKey = (typeof ValidationErrors)[keyof typeof ValidationErrors];

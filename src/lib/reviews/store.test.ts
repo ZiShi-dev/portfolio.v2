@@ -154,6 +154,19 @@ describe("reviews/store — persistance & unicité (Supabase mocké)", () => {
     assert.equal(lastOps.length, 0);
   });
 
+  it("getPublishedReviews → démos si requête Supabase en échec", async () => {
+    resultQueue = [{ data: null, error: { code: "42P01", message: "relation does not exist" } }];
+    const { reviews: demos } = await import("@/data/reviews");
+    const items = await store.getPublishedReviews();
+    assert.deepEqual(items, demos);
+  });
+
+  it("getPublishedReviews → [] si échec sans fallback démo", async () => {
+    resultQueue = [{ data: null, error: { code: "42P01", message: "relation does not exist" } }];
+    const items = await store.getPublishedReviews({ fallbackToDemo: false });
+    assert.deepEqual(items, []);
+  });
+
   it("saveReview refuse si service non configuré", async () => {
     configured = false;
     const r = await store.saveReview(saveInput);
@@ -175,7 +188,7 @@ describe("reviews/store — persistance & unicité (Supabase mocké)", () => {
     assert.deepEqual(emailEq?.args, ["email", "jean@example.com"]);
   });
 
-  it("saveReview insert pending + hashes (email normalisé)", async () => {
+  it("saveReview insert published + hashes (email normalisé)", async () => {
     resultQueue = [
       { data: null, error: null },
       { data: { id: VALID_UUID }, error: null },
@@ -187,7 +200,8 @@ describe("reviews/store — persistance & unicité (Supabase mocké)", () => {
     const insertOp = lastOps.find((o) => o.method === "insert");
     assert.ok(insertOp);
     const row = insertOp!.payload as Record<string, unknown>;
-    assert.equal(row.status, "pending");
+    assert.equal(row.status, "published");
+    assert.ok(typeof row.published_at === "string");
     assert.equal(row.email, "jean@example.com");
     assert.equal(row.ip_hash, hashForAudit("203.0.113.50"));
     assert.equal(

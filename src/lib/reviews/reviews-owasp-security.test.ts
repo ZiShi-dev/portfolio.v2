@@ -106,7 +106,7 @@ describe("OWASP A01 — Broken Access Control (avis admin / IDs)", () => {
     }
   });
 
-  it("query admin : status injection → pending (défaut sûr)", () => {
+  it("query admin : status injection → published (défaut sûr)", () => {
     const injections = [
       "pending' OR '1'='1",
       "published; DROP TABLE reviews--",
@@ -119,7 +119,7 @@ describe("OWASP A01 — Broken Access Control (avis admin / IDs)", () => {
           `http://localhost/api/admin/reviews?status=${encodeURIComponent(status)}`
         )
       );
-      assert.equal(q.status, "pending", status);
+      assert.equal(q.status, "published", status);
     }
   });
 });

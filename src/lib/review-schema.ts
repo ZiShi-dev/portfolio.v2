@@ -22,6 +22,7 @@ export type ReviewPayload = {
   role?: string;
   rating: number;
   message: string;
+  projectId?: string;
 };
 
 export type ReviewValidationResult =
@@ -86,9 +87,17 @@ export function parseReviewPayload(body: unknown): ReviewValidationResult {
     return { ok: false, error: ValidationErrors.messageTooShortMin, field: "message" };
   }
 
+  const projectIdRaw =
+    typeof raw.projectId === "string" ? raw.projectId.trim() : "";
+  const projectId = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    projectIdRaw
+  )
+    ? projectIdRaw
+    : undefined;
+
   return {
     ok: true,
-    data: { name, email, role, rating: ratingNum, message },
+    data: { name, email, role, rating: ratingNum, message, projectId },
   };
 }
 

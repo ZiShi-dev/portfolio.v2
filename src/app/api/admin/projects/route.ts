@@ -82,6 +82,10 @@ export async function POST(request: Request) {
   }
 
   logAdminAuthEvent("project_created", ip);
+  const { revalidateProjectSurfaces } = await import(
+    "@/lib/projects/revalidate"
+  );
+  revalidateProjectSurfaces(created.project.slug);
   return jsonResponse({ ok: true, project: created.project }, 201);
 }
 

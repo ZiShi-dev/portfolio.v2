@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect } from "react";
-import { openContactModal } from "@/lib/open-contact-modal";
+import { useRouter } from "@/i18n/navigation";
+import { routes } from "@/lib/routes";
 
+/** Ancienne page /contact → parcours Démarrer un projet. */
 export function ContactPageTrigger() {
+  const router = useRouter();
+
   useEffect(() => {
-    openContactModal();
-  }, []);
+    router.replace(routes.startProject);
+  }, [router]);
 
   return null;
 }

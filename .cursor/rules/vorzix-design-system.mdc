@@ -1,0 +1,710 @@
+---
+description: Charte graphique VORZIX — L'Atlas Céleste (règles absolues de design)
+alwaysApply: true
+---
+
+# VORZIX — Règles absolues de design et charte graphique
+
+Tu travailles sur le projet **VORZIX**, une marque technologique premium spécialisée dans la création de sites web, applications, plateformes SaaS et solutions digitales.
+
+Cette charte graphique est une **règle absolue du projet**.
+
+Chaque fois que tu crées, modifies, refactorises ou proposes une interface, un composant, une page, une animation ou un élément visuel, tu DOIS respecter cette charte.
+
+Ne change jamais la direction artistique sans demande explicite de l'utilisateur.
+
+---
+
+# LA DIRECTION : « L'ATLAS CÉLESTE »
+
+VORZIX ne s'inspire pas des startups. VORZIX s'inspire des grands atlas célestes : le Livre des Étoiles Fixes d'al-Soufi (964), l'Uranométrie de Bayer (1603), l'Harmonia Macrocosmica de Cellarius (1660).
+
+Chaque produit VORZIX est une étoile : cartographiée avec précision, nommée, mesurée, éternelle.
+
+Ce langage est rare : presque aucune entreprise technologique ne l'utilise. C'est voulu. VORZIX doit être reconnaissable en une seconde, et inimitable.
+
+---
+
+# 1. IDENTITÉ DE VORZIX
+
+VORZIX doit transmettre :
+
+* précision absolue (une étoile se mesure au dixième de magnitude)
+* héritage savant (astronomie arabe et cartographie céleste)
+* rareté (aucun autre site ne ressemble à VORZIX)
+* technologie
+* qualité premium
+* confiance
+* sobriété
+* performance
+
+VORZIX ne doit jamais ressembler à :
+
+* un template SaaS sombre + bleu électrique (le look « Linear / Vercel », le plus copié du web)
+* un site gaming
+* un site cyberpunk néon
+* un portfolio étudiant
+* une startup trop colorée
+* une interface remplie d'effets inutiles
+
+La philosophie générale est :
+
+**Précision Céleste + Héritage + Rareté**
+
+L'interface doit donner l'impression d'un instrument de navigation astronomique conçu par une maison d'horlogerie haut de gamme.
+
+---
+
+# 2. PALETTE OFFICIELLE
+
+## Background principal
+
+`#070A12` — Noir Nuit
+
+C'est la couleur principale de l'univers VORZIX. Un bleu-noir profond, jamais du noir pur.
+
+Exemples autorisés :
+
+* `#070A12`
+* `#0A0E1A`
+* `#0D1322`
+* `#101828`
+
+## Texte principal
+
+`#F4F1E8` — Ivoire Céleste
+
+Un blanc chaud, comme le parchemin des anciens manuscrits.
+
+## Texte secondaire
+
+Des gris bleutés froids et sobres.
+
+Exemples :
+
+* `#8B93A7`
+* `#6E7789`
+* `#4F586B`
+
+Le contraste doit toujours rester suffisant.
+
+## Accent principal VORZIX
+
+`#C9A96A` — Laiton Céleste
+
+Un or doux, comme les instruments d'astronomie en laiton.
+
+Il sert pour :
+
+* CTA principaux
+* liens actifs
+* éléments interactifs importants
+* focus
+* petites gravures et filigranes
+* certaines icônes
+* highlights
+
+Il ne doit PAS envahir toute l'interface. L'or est un filigrane, pas un remplissage.
+
+Variantes possibles :
+
+* `#C9A96A`
+* `#D4AF7A`
+* `#E5C98F` (or clair, réservé aux hairlines et aux gravures fines)
+
+Ne jamais introduire arbitrairement du rouge, vert, orange, rose ou jaune dans la charte.
+
+Les couleurs fonctionnelles comme success/error/warning sont autorisées uniquement lorsque leur signification UX le nécessite — et restent désaturées.
+
+---
+
+# 3. UTILISATION DES COULEURS
+
+La hiérarchie générale doit approximativement suivre :
+
+* 75–85 % : surfaces nuit
+* 10–20 % : ivoire / gris
+* 5 % maximum : laiton
+
+Le design reste principalement monochrome sombre avec des touches d'or.
+
+Éviter les grandes zones dorées.
+
+Éviter les gradients multicolores.
+
+Si un gradient est réellement utile, il doit rester extrêmement subtil et utiliser uniquement des nuances compatibles avec la palette VORZIX (laiton → or, ou noir nuit → azur profond).
+
+---
+
+# 4. TYPOGRAPHIE
+
+## Pour l'interface latine — titres et display
+
+Priorité :
+
+1. `Fraunces` (serif à fort contraste, rendu gravé aux grandes tailles)
+2. `Cormorant Garamond`
+
+## Pour l'interface latine — corps, formulaires, textes longs
+
+Priorité :
+
+1. `Instrument Sans`
+2. `Inter` (fallback)
+
+## Pour l'interface latine — technique (coordonnées, références de catalogue, labels)
+
+Priorité :
+
+1. `IBM Plex Mono`
+2. `JetBrains Mono`
+
+## Pour l'arabe — display (noms d'étoiles, titres)
+
+Priorité :
+
+1. `Amiri`
+2. `Aref Ruqaa`
+
+## Pour l'arabe — corps
+
+Priorité :
+
+1. `IBM Plex Sans Arabic`
+2. `Alexandria`
+
+Les noms arabes des étoiles (الدبران، النسر الواقع، رجل الجبار، قلب العقرب...) s'écrivent en Amiri : c'est un hommage direct au Livre des Étoiles Fixes.
+
+Toujours maintenir une excellente lisibilité.
+
+---
+
+# 5. TYPOGRAPHIE VISUELLE
+
+Les titres doivent être :
+
+* forts
+* courts
+* modernes
+* avec une excellente hiérarchie
+* en Fraunces, avec un contraste de graisse assumé
+
+Les étiquettes techniques (références de catalogue, coordonnées équatoriales, magnitudes) s'écrivent en IBM Plex Mono, en petites capitales ou en minuscules espacées (letter-spacing généreux).
+
+Hero H1 :
+
+* très visible
+* largeur limitée
+* line-height compact
+* jamais un énorme texte occupant tout l'écran sans raison
+
+Les paragraphes doivent avoir une largeur de lecture confortable.
+
+Éviter les textes gris trop faibles.
+
+Éviter les dizaines de tailles de police différentes.
+
+Construire une vraie échelle typographique cohérente : display / titre / sous-titre / corps / caption / étiquette technique.
+
+---
+
+# 6. ESPACEMENT
+
+VORZIX utilise beaucoup d'espace négatif.
+
+L'interface doit respirer comme un ciel.
+
+Préférer :
+
+* grandes marges entre les sections
+* padding confortable
+* contenus parfaitement alignés
+* grilles propres
+* sections visuellement séparées
+
+Ne jamais compresser énormément les éléments pour afficher plus de contenu.
+
+La qualité visuelle est prioritaire sur la densité.
+
+---
+
+# 7. GRILLE ET LAYOUT
+
+Utiliser un container central cohérent.
+
+Exemple recommandé :
+
+`max-width: 1200px–1400px`
+
+Les pages doivent utiliser une grille claire.
+
+Desktop :
+
+* alignements stricts
+* colonnes équilibrées
+* grande respiration
+
+Mobile :
+
+* design réellement responsive
+* pas simplement une version desktop compressée
+
+Toujours vérifier les interfaces pour :
+
+* mobile
+* tablette
+* desktop
+
+---
+
+# 8. CARTES
+
+Les cards doivent rester sobres, comme des fiches de catalogue astronomique.
+
+Style recommandé :
+
+* surface légèrement plus claire que le background (ex. `#0D1322` sur `#070A12`)
+* border subtile (hairline ivoire ou trait d'or très fin)
+* border-radius moderne et discret
+* pas de grosses ombres
+* contenu espacé
+* interaction légère au hover : la bordure passe au laiton et une légère lueur dorée apparaît
+
+Chaque carte peut porter une référence de catalogue en IBM Plex Mono, comme les objets Messier :
+
+ex. `M31 — NGC 224 — Andromède`
+
+Exemple visuel :
+
+background proche de :
+
+`#0D1322`
+
+border proche de :
+
+`rgba(244,241,232,0.10)`
+
+ou pour les cartes nobles :
+
+`rgba(212,175,122,0.15)`
+
+Border radius recommandé :
+
+`10px–16px`
+
+Éviter les cards flottantes avec des ombres lourdes.
+
+---
+
+# 9. BOUTONS
+
+## Primary Button
+
+Le CTA principal utilise le laiton céleste.
+
+Caractéristiques :
+
+* fond `#C9A96A`, texte `#070A12`
+* clair
+* visible
+* texte court
+* radius moderne et discret
+* hover : or clair `#E5C98F`
+* transition rapide
+
+## Variante secondaire du primary (optionnelle)
+
+* fond noir nuit
+* bordure laiton
+* texte ivoire
+* aspect « plaque gravée »
+
+## Secondary Button
+
+Préférer :
+
+* fond transparent ou surface nuit
+* bordure hairline ivoire subtile
+* texte ivoire/gris clair
+
+Ne jamais transformer chaque bouton en CTA doré.
+
+Une page doit avoir une hiérarchie claire entre actions principales et secondaires.
+
+---
+
+# 10. BORDURES
+
+Les bordures doivent être discrètes.
+
+Utiliser généralement :
+
+`rgba(244,241,232,0.08)`
+
+à
+
+`rgba(244,241,232,0.14)`
+
+Pour les éléments nobles (cartes vedettes, focus, séparateurs de section) :
+
+`rgba(212,175,122,0.15)`
+
+à
+
+`rgba(212,175,122,0.25)`
+
+Les bordures fortes ne doivent apparaître que lorsqu'elles ont une vraie fonction.
+
+---
+
+# 11. OMBRES
+
+Limiter fortement les box-shadows.
+
+VORZIX repose davantage sur :
+
+* contraste de surfaces
+* bordures
+* spacing
+* hiérarchie
+
+que sur des ombres lourdes.
+
+Si une shadow est utilisée, elle doit être très douce, sombre et jamais colorée.
+
+Seule exception : un halo doré extrêmement léger (opacité maximale 0.15) réservé aux focus et aux CTA principaux — l'idée de l'étoile qui s'allume.
+
+---
+
+# 12. ICONOGRAPHIE
+
+Utiliser principalement des icônes outline modernes.
+
+Si Lucide est disponible, utiliser :
+
+`lucide-react`
+
+Ne pas mélanger plusieurs bibliothèques d'icônes sans nécessité.
+
+Ne jamais utiliser des emojis comme icônes UI professionnelles.
+
+Les icônes doivent rester simples.
+
+Pour les éléments célestes (étoiles, cercles, anneaux d'astrolabe, lignes de constellations), dessiner si nécessaire des icônes sur mesure en trait très fin (1.25px).
+
+---
+
+# 13. ANIMATIONS
+
+Les animations VORZIX doivent être :
+
+* fluides
+* courtes
+* sophistiquées
+* discrètes
+
+Elles servent à améliorer la perception de qualité.
+
+Autorisé :
+
+* fade
+* translate léger
+* reveal progressif
+* apparition des constellations en « tracé » (dessin des lignes au scroll, via stroke-dashoffset)
+* scintillement d'étoiles très subtil (opacité 0.6 → 1, cycle de 4 à 6 secondes, jamais simultané sur toutes les étoiles)
+* micro-interactions au hover
+* transitions de couleurs
+* déplacement très doux de la voûte céleste au scroll (parallax maximal 8 %)
+
+À éviter :
+
+* bouncing excessif
+* rotations permanentes
+* effets flashy
+* animations lentes
+* éléments qui bougent sans interaction
+* parallax excessif
+
+Une animation ne doit jamais détourner l'attention du contenu.
+
+Respecter `prefers-reduced-motion`.
+
+---
+
+# 14. GLASSMORPHISM
+
+Utilisable uniquement avec modération.
+
+Ne jamais transformer toute l'interface en verre transparent.
+
+Peut être utilisé ponctuellement pour :
+
+* navbar
+* floating panel
+* overlay
+* modal
+
+Toujours maintenir un excellent contraste.
+
+---
+
+# 15. GRADIENTS
+
+Les gradients ne constituent PAS l'identité principale VORZIX.
+
+Ils peuvent apparaître uniquement comme effet secondaire subtil.
+
+Par exemple :
+
+laiton → or → transparent (halo d'étoile)
+
+ou :
+
+noir nuit → azur profond (voûte céleste)
+
+Ne jamais utiliser de rainbow gradient.
+
+Ne jamais combiner violet + rose + orange arbitrairement.
+
+---
+
+# 16. HERO SECTION
+
+Le hero doit immédiatement expliquer ce que fait VORZIX.
+
+Il doit avoir :
+
+* une proposition de valeur forte
+* un titre court
+* un texte secondaire
+* un CTA principal
+* éventuellement un CTA secondaire
+* un élément visuel premium : une carte céleste (constellation + coordonnées équatoriales + magnitude) dessinée en hairlines laiton
+
+Éviter les phrases vagues comme :
+
+"Building the future."
+
+Préférer une proposition concrète expliquant que VORZIX conçoit des sites, applications ou produits digitaux.
+
+---
+
+# 17. IMAGES
+
+Ne pas utiliser de photos stock génériques montrant :
+
+* personnes souriant devant un ordinateur
+* réunions artificielles
+* bureaux génériques
+* poignées de main corporate
+
+Préférer :
+
+* mockups de produits
+* UI
+* applications
+* dashboards
+* projets réalisés
+* cartes célestes et gravures d'instruments astronomiques
+* formes abstraites
+* compositions technologiques
+* illustrations 3D minimalistes
+
+---
+
+# 18. BACKGROUND DECORATION
+
+Les backgrounds peuvent contenir :
+
+* une voûte céleste : étoiles éparses (idéalement positions réelles issues d'un catalogue d'étoiles)
+* grille de coordonnées équatoriales très légère
+* halos dorés subtils
+* lignes de constellations discrètes
+* noise très subtil
+
+Mais ces effets doivent presque disparaître lorsque l'utilisateur ne les regarde pas directement.
+
+Le contenu reste toujours prioritaire.
+
+---
+
+# 19. ACCESSIBILITÉ
+
+Le style visuel ne doit jamais dégrader l'accessibilité.
+
+Toujours respecter :
+
+* contraste suffisant (l'ivoire sur le noir nuit dépasse largement WCAG AA)
+* focus visible (anneau laiton)
+* boutons suffisamment grands
+* textes lisibles
+* navigation clavier
+* labels de formulaire
+* aria-label lorsque nécessaire
+* reduced motion si nécessaire
+
+---
+
+# 20. COMPOSANTS
+
+Créer des composants réutilisables plutôt que de recréer le même style partout.
+
+Par exemple :
+
+* Button
+* Container
+* Section
+* SectionHeader (peut porter une constellation associée)
+* Card (fiche de catalogue)
+* Badge (magnitude : ★★☆)
+* Input
+* Modal
+* Navbar
+* Footer
+* StarField
+* CoordinateLabel (étiquette mono : ascension droite / déclinaison)
+
+La cohérence prime sur la créativité locale.
+
+---
+
+# 21. DESIGN TOKENS
+
+Centraliser autant que possible les valeurs dans des variables/tokens.
+
+Exemple :
+
+```css
+--background: #070A12;
+--surface: #0A0E1A;
+--surface-elevated: #0D1322;
+--surface-high: #101828;
+
+--foreground: #F4F1E8;
+--muted-foreground: #8B93A7;
+
+--primary: #C9A96A;
+--primary-hover: #E5C98F;
+
+--border: rgba(244,241,232,0.10);
+--border-gold: rgba(212,175,122,0.18);
+
+--radius-sm: 6px;
+--radius-md: 10px;
+--radius-lg: 14px;
+--radius-xl: 18px;
+
+--font-display: "Fraunces", serif;
+--font-body: "Instrument Sans", sans-serif;
+--font-mono: "IBM Plex Mono", monospace;
+--font-arabic-display: "Amiri", serif;
+--font-arabic-body: "IBM Plex Sans Arabic", sans-serif;
+```
+
+Si Tailwind est utilisé, intégrer ces valeurs au système de thème plutôt que d'utiliser constamment des couleurs arbitraires dans les composants.
+
+---
+
+# 22. NUIT CÉLESTE — THÈME UNIQUE
+
+Le design officiel VORZIX est **exclusivement Nuit Céleste**.
+
+Il n'existe **aucun** Light Mode, mode Jour, ni « parchemin diurne » sur le site public.
+
+* Ne jamais ajouter de toggle Light/Dark.
+* Ne jamais suivre `prefers-color-scheme: light`.
+* Ne jamais réintroduire `.light` ou des tokens clairs pour le site.
+* La profondeur se crée uniquement avec les surfaces nuit : `#070A12` → `#0A0E1A` → `#0D1322` → `#101828`.
+
+Cette décision fait partie de l'identité de marque.
+
+---
+
+# 23. COHÉRENCE
+
+Avant de créer un nouvel élément visuel, vérifier s'il existe déjà un pattern ou composant correspondant dans le projet.
+
+Réutiliser en priorité.
+
+Ne jamais introduire un nouveau style simplement pour rendre une section "différente".
+
+Toutes les pages doivent clairement appartenir au même ciel.
+
+---
+
+# 24. INTERDICTIONS VISUELLES
+
+Ne jamais introduire sans demande explicite :
+
+* le bleu électrique `#3B82F6` et les combinaisons « template SaaS » (noir pur + bleu électrique + Space Grotesk)
+* couleurs flashy multiples
+* gradients rainbow
+* néon cyberpunk excessif
+* grosses shadows
+* boutons multicolores
+* emojis comme éléments UI
+* styles cartoon
+* skeuomorphism
+* illustrations enfantines
+* bordures épaisses
+* énormes border-radius partout
+* glassmorphism excessif
+* animations gadget
+* formes décoratives excessives
+
+---
+
+# 25. RÈGLE DE DÉCISION
+
+Lorsqu'un choix esthétique n'est pas défini dans cette charte, choisir systématiquement l'option :
+
+**la plus simple, premium, rare et cohérente avec une entreprise technologique haut de gamme.**
+
+Ne jamais ajouter un effet uniquement parce qu'il "semble cool".
+
+Chaque choix visuel doit avoir une fonction — comme chaque étoile a une magnitude.
+
+---
+
+# 26. AVANT CHAQUE MODIFICATION UI
+
+Avant de modifier une page ou un composant, analyser :
+
+1. les composants existants ;
+2. les design tokens existants ;
+3. la structure visuelle actuelle ;
+4. les règles VORZIX présentes dans ce document.
+
+Puis produire une solution compatible avec ces règles.
+
+Ne pas casser les interfaces déjà cohérentes avec VORZIX.
+
+---
+
+# 27. APRÈS CHAQUE MODIFICATION UI
+
+Vérifier systématiquement :
+
+* cohérence avec VORZIX
+* responsive
+* contraste
+* spacing
+* typographie
+* hover
+* focus
+* états loading/error/empty si pertinents
+* cohérence avec les composants existants
+
+Corriger toute incohérence avant de considérer la tâche terminée.
+
+---
+
+# RÈGLE FINALE
+
+**Cette charte est la source de vérité visuelle du projet VORZIX.**
+
+Toute instruction future doit être interprétée en respectant cette charte, sauf si l'utilisateur demande explicitement de modifier la charte elle-même.
+
+En cas de conflit entre une suggestion esthétique générique et cette charte :
+
+**la charte VORZIX gagne toujours.**

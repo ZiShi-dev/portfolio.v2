@@ -1,46 +1,58 @@
 import type { Metadata } from "next";
-import { Allura, Cormorant_Garamond, Geist_Mono } from "next/font/google";
-import { cookies } from "next/headers";
+import {
+  Amiri,
+  Fraunces,
+  IBM_Plex_Mono,
+  IBM_Plex_Sans_Arabic,
+  Instrument_Sans,
+} from "next/font/google";
 import { getLocale } from "next-intl/server";
+import Script from "next/script";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { PersonJsonLd } from "@/components/json-ld";
+import { OrganizationJsonLd } from "@/components/json-ld";
 import { brand } from "@/lib/brand";
 import { getLocaleDirection, type Locale } from "@/i18n/routing";
-import {
-  getServerResolvedTheme,
-  THEME_COOKIE_NAME,
-  THEME_DEFAULT,
-  THEME_STORAGE_KEY,
-} from "@/lib/theme-storage";
 import { cn } from "@/lib/utils";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const signatureFont = Allura({
-  variable: "--font-name",
-  subsets: ["latin"],
-  weight: "400",
-});
-
-const displaySerif = Cormorant_Garamond({
-  variable: "--font-display-serif",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
+});
+
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument-sans",
+  subsets: ["latin"],
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
+const amiri = Amiri({
+  variable: "--font-amiri",
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+});
+
+const ibmPlexArabic = IBM_Plex_Sans_Arabic({
+  variable: "--font-arabic-body",
+  subsets: ["arabic"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  colorScheme: "dark" as const,
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(brand.siteUrl),
   title: {
-    default: `${brand.name} — Développeur Web`,
+    default: `${brand.name} — ${brand.titleSuffix}`,
     template: `%s · ${brand.name}`,
   },
   description: brand.description,
@@ -48,7 +60,7 @@ export const metadata: Metadata = {
   creator: brand.owner,
   robots: { index: true, follow: true },
   openGraph: {
-    title: `${brand.name} — Développeur Web`,
+    title: `${brand.name} — ${brand.titleSuffix}`,
     description: brand.description,
     url: brand.siteUrl,
     siteName: brand.name,
@@ -58,7 +70,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${brand.name} — Développeur Web`,
+    title: `${brand.name} — ${brand.titleSuffix}`,
     description: brand.description,
     images: [brand.heroBanner],
   },
@@ -79,37 +91,30 @@ export default async function RootLayout({
 }>) {
   const locale = (await getLocale()) as Locale;
   const dir = getLocaleDirection(locale);
-  const cookieStore = await cookies();
-  const resolvedTheme = getServerResolvedTheme(
-    cookieStore.get(THEME_COOKIE_NAME)?.value
-  );
 
   return (
     <html
       lang={locale}
       dir={dir}
       translate="no"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={cn(
-        geistMono.variable,
-        signatureFont.variable,
-        displaySerif.variable,
-        "h-full antialiased",
-        resolvedTheme
+        fraunces.variable,
+        instrumentSans.variable,
+        ibmPlexMono.variable,
+        amiri.variable,
+        ibmPlexArabic.variable,
+        "dark h-full antialiased"
       )}
-      style={{ colorScheme: resolvedTheme }}
+      style={{ colorScheme: "dark" }}
     >
-      <body className="min-h-dvh overflow-x-clip flex flex-col bg-background text-foreground">
-        <PersonJsonLd />
-        <ThemeProvider
-          initialResolved={resolvedTheme}
-          defaultTheme={THEME_DEFAULT}
-          enableSystem
-          disableTransitionOnChange
-          storageKey={THEME_STORAGE_KEY}
-        >
-          {children}
-        </ThemeProvider>
+      <body className="flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
+        <Script id="clear-legacy-theme" strategy="beforeInteractive">
+          {`try{localStorage.removeItem('portfolio-theme');document.cookie='portfolio-theme=;path=/;max-age=0;SameSite=Lax'}catch(e){}`}
+        </Script>
+        <OrganizationJsonLd />
+        {children}
       </body>
     </html>
   );

@@ -38,6 +38,7 @@ function valid(overrides: Record<string, unknown> = {}) {
       },
     ],
     link: null,
+    appLink: null,
     sortOrder: 0,
     published: false,
     ...overrides,
@@ -210,7 +211,7 @@ describe("OWASP A04 — Insecure Design (limites projets)", () => {
       url: "https://xyz.supabase.co/storage/v1/object/public/portfolio-projects/p.webp",
     }));
     assert.equal(parseProjectWriteBody(valid({ images })).ok, false);
-    assert.ok(PROJECT_LIMITS.maxBodyBytes <= 64_000);
+    assert.ok(PROJECT_LIMITS.maxBodyBytes <= 120_000);
     assert.ok(PROJECT_LIMITS.uploadMaxBytes <= 3 * 1024 * 1024);
   });
 

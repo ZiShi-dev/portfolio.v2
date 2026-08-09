@@ -50,14 +50,14 @@ export async function Footer() {
   const year = new Date().getFullYear();
 
   const navLinks = [
-    { label: tNav("services"), href: homeSectionUrl("services") },
+    { label: tNav("services"), href: routes.services },
     { label: tNav("projects"), href: routes.projects },
     { label: tNav("reviews"), href: routes.reviews },
     { label: tNav("about"), href: homeSectionUrl("about") },
   ];
 
   return (
-    <footer className="border-t border-step-accent/20 bg-step-surface">
+    <footer className="border-t border-border-gold bg-background">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-5">

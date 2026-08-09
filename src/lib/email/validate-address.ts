@@ -17,7 +17,7 @@ export function isValidFromAddress(value: string): boolean {
   return isValidEmail(normalizeEmail(trimmed));
 }
 
-/** Valide une adresse destinataire Resend. */
+/** Valide une adresse email destinataire. */
 export function isValidNotifyAddress(value: string): boolean {
   return isValidEmail(normalizeEmail(value));
 }

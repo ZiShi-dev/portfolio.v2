@@ -22,14 +22,30 @@ export type ProjectImage = {
 
 export type ProjectItem = {
   id: string;
+  /** Slug URL — présent pour les projets BDD ; absent en démo locale. */
+  slug?: string;
+  /** Référence catalogue VZ—CASE 001 */
+  reference?: string;
+  featured?: boolean;
   title: string;
   category: string;
   desc: string;
   tags: string[];
   /** Types métier (boutique, vitrine…). */
   businessTypeIds?: string[];
+  /** Stack technique libre. */
+  technologies?: string[];
   images: ProjectImage[];
   link?: string;
+  /** Lien application (store / app). */
+  appLink?: string;
+  clientNeed?: string;
+  objective?: string;
+  solution?: string;
+  result?: string;
+  features?: string[];
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 type ProjectModalProps = {
@@ -138,6 +154,17 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                       className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/60 transition-colors hover:border-foreground/25 hover:text-foreground"
                     >
                       {t("seeSite")}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  )}
+                  {project.appLink && isSafeHttpUrl(project.appLink) && (
+                    <a
+                      href={project.appLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-background px-3 py-1 text-xs text-primary/80 transition-colors hover:border-primary/50 hover:text-primary"
+                    >
+                      {t("seeApp")}
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   )}

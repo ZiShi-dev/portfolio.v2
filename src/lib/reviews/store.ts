@@ -22,6 +22,7 @@ export type ReviewRow = {
   status: ReviewStatus;
   fingerprint: string | null;
   ip_hash: string | null;
+  project_id: string | null;
 };
 
 export type SaveReviewInput = {
@@ -33,6 +34,7 @@ export type SaveReviewInput = {
   fingerprint: string;
   ip: string;
   userAgent?: string | null;
+  projectId?: string | null;
 };
 
 const UUID_RE =
@@ -49,15 +51,23 @@ export function reviewRowToItem(row: Pick<ReviewRow, "id" | "name" | "role" | "m
 }
 
 /**
- * Avis publiés pour le site. Si Supabase non configuré → démos locales.
- * Si configuré → uniquement les `published` (peut être vide).
+ * Avis publiés pour le site. Si Supabase non configuré ou requête en échec → démos locales.
+ * Si configuré et requête OK → uniquement les `published` (peut être vide).
  */
-export async function getPublishedReviews(): Promise<ReviewItem[]> {
+export async function getPublishedReviews(options?: {
+  fallbackToDemo?: boolean;
+}): Promise<ReviewItem[]> {
+  const fallbackToDemo = options?.fallbackToDemo !== false;
+
   if (!isSupabaseServiceConfigured()) {
-    return demoReviews;
+    return fallbackToDemo ? demoReviews : [];
   }
 
   const rows = await listReviews({ status: "published", limit: 100 });
+  if (rows === null) {
+    return fallbackToDemo ? demoReviews : [];
+  }
+
   return rows.map(reviewRowToItem);
 }
 
@@ -157,7 +167,13 @@ export async function saveReview(
     return { ok: false, reason: "duplicate_email" };
   }
 
-  const row = {
+  const now = new Date().toISOString();
+  const projectId =
+    input.projectId && UUID_RE.test(input.projectId) ? input.projectId : null;
+
+  // Ne pas envoyer project_id si absent : la colonne peut manquer tant que
+  // la migration 019 n’est pas appliquée.
+  const row: Record<string, unknown> = {
     name: input.name,
     email,
     role: input.role?.trim() || null,
@@ -168,14 +184,33 @@ export async function saveReview(
     user_agent_hash: input.userAgent
       ? hashForAudit(input.userAgent.slice(0, 256))
       : null,
-    status: "pending" as const,
+    // Publié tout de suite — l’admin retire ensuite si besoin.
+    status: "published" as const,
+    published_at: now,
   };
+  if (projectId) {
+    row.project_id = projectId;
+  }
 
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("reviews")
     .insert(row)
     .select("id")
     .maybeSingle();
+
+  // Colonne project_id absente → réessayer sans le champ.
+  if (
+    error &&
+    projectId &&
+    /project_id/i.test(String(error.message ?? error.details ?? ""))
+  ) {
+    delete row.project_id;
+    ({ data, error } = await supabase
+      .from("reviews")
+      .insert(row)
+      .select("id")
+      .maybeSingle());
+  }
 
   if (error) {
     if (error.code === "23505") {
@@ -193,33 +228,66 @@ export async function saveReview(
   return { ok: true, id: data.id };
 }
 
+const REVIEW_LIST_SELECT =
+  "id, created_at, updated_at, published_at, name, email, role, message, rating, status, fingerprint, ip_hash, project_id";
+
+/** Sans project_id — compatible DB avant migration 019. */
+const REVIEW_LIST_SELECT_LEGACY =
+  "id, created_at, updated_at, published_at, name, email, role, message, rating, status, fingerprint, ip_hash";
+
 export async function listReviews(options?: {
   status?: ReviewStatus | "all";
   limit?: number;
-}): Promise<ReviewRow[]> {
-  const supabase = createSupabaseServiceClient();
-  if (!supabase) return [];
+}): Promise<ReviewRow[] | null> {
+  const client = createSupabaseServiceClient();
+  if (!client) return null;
 
   const limit = Math.min(Math.max(options?.limit ?? 50, 1), 100);
-  let query = supabase
-    .from("reviews")
-    .select(
-      "id, created_at, updated_at, published_at, name, email, role, message, rating, status, fingerprint, ip_hash"
+  const statusFilter =
+    options?.status && options.status !== "all" ? options.status : null;
+
+  const buildQuery = (select: typeof REVIEW_LIST_SELECT | typeof REVIEW_LIST_SELECT_LEGACY) => {
+    let query = client
+      .from("reviews")
+      .select(select)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    if (statusFilter) {
+      query = query.eq("status", statusFilter);
+    }
+    return query;
+  };
+
+  let result = await buildQuery(REVIEW_LIST_SELECT);
+
+  if (
+    result.error &&
+    /project_id/i.test(
+      String(result.error.message ?? result.error.details ?? "")
     )
-    .order("created_at", { ascending: false })
-    .limit(limit);
-
-  if (options?.status && options.status !== "all") {
-    query = query.eq("status", options.status);
+  ) {
+    result = await buildQuery(REVIEW_LIST_SELECT_LEGACY);
   }
 
-  const { data, error } = await query;
-  if (error || !data) {
-    console.error("[reviews] list failed", error?.code ?? "unknown");
-    return [];
+  if (result.error) {
+    console.error(
+      "[reviews] list failed",
+      result.error.message ||
+        result.error.code ||
+        result.error.hint ||
+        "unknown"
+    );
+    return null;
   }
 
-  return data as ReviewRow[];
+  const rows = (result.data ?? []) as unknown as Array<
+    Omit<ReviewRow, "project_id"> & { project_id?: string | null }
+  >;
+
+  return rows.map((row) => ({
+    ...row,
+    project_id: row.project_id ?? null,
+  }));
 }
 
 export async function countReviewsByStatus(
@@ -254,6 +322,49 @@ export async function updateReviewStatus(
 
   const { error } = await supabase.from("reviews").update(patch).eq("id", id);
   return !error;
+}
+
+export async function updateReviewProjectId(
+  id: string,
+  projectId: string | null
+): Promise<boolean> {
+  const supabase = createSupabaseServiceClient();
+  if (!supabase || !UUID_RE.test(id)) return false;
+  if (projectId !== null && !UUID_RE.test(projectId)) return false;
+
+  const { error } = await supabase
+    .from("reviews")
+    .update({ project_id: projectId })
+    .eq("id", id);
+  return !error;
+}
+
+/** Avis publiés liés à un Case Study. */
+export async function getPublishedReviewsForProject(
+  projectId: string
+): Promise<ReviewItem[]> {
+  if (!UUID_RE.test(projectId) || !isSupabaseServiceConfigured()) return [];
+  const supabase = createSupabaseServiceClient();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("id, name, role, message, rating")
+    .eq("status", "published")
+    .eq("project_id", projectId)
+    .order("published_at", { ascending: false })
+    .limit(12);
+
+  if (error) {
+    console.error("[reviews] project reviews", error.message);
+    return [];
+  }
+
+  return (data ?? []).map((row) =>
+    reviewRowToItem(
+      row as Pick<ReviewRow, "id" | "name" | "role" | "message" | "rating">
+    )
+  );
 }
 
 export async function deleteReview(id: string): Promise<boolean> {

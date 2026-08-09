@@ -30,7 +30,7 @@ export function GlowCard({
       onPointerEnter={() => setActive(true)}
       onPointerLeave={() => setActive(false)}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-step-accent/20 bg-card/80 p-5 backdrop-blur-sm transition-colors duration-300 hover:border-step-accent/45 sm:p-6",
+        "group relative overflow-hidden rounded-xl border border-border bg-surface-elevated/90 p-5 transition-[border-color,box-shadow] duration-300 hover:border-border-gold hover:shadow-[0_0_28px_-10px_rgba(201,169,106,0.22)] sm:p-6",
         className
       )}
     >
@@ -38,7 +38,7 @@ export function GlowCard({
         className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300"
         style={{
           opacity: active ? 1 : 0,
-          background: `radial-gradient(280px circle at ${pos.x}px ${pos.y}px, color-mix(in srgb, var(--color-step-accent) 22%, transparent), transparent 70%)`,
+          background: `radial-gradient(240px circle at ${pos.x}px ${pos.y}px, color-mix(in srgb, var(--color-primary) 14%, transparent), transparent 70%)`,
         }}
       />
       <div className="relative z-10">{children}</div>

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import {
   ChevronDown,
   ChevronUp,
+  ExternalLink,
   FolderKanban,
   Loader2,
   Plus,
@@ -61,14 +62,26 @@ type LocaleTab = keyof ProjectI18n;
 type EditorState = {
   id?: string;
   slug: string;
+  reference: string;
   title: ProjectI18n;
   description: ProjectI18n;
   kind: ProjectKind;
   businessTypeIds: string[];
   images: { url: string; label?: Partial<ProjectI18n> }[];
+  coverImage: string;
   link: string;
+  appLink: string;
   sortOrder: number;
   published: boolean;
+  featured: boolean;
+  technologies: string[];
+  features: ProjectI18n[];
+  clientNeed: ProjectI18n;
+  objective: ProjectI18n;
+  solution: ProjectI18n;
+  result: ProjectI18n;
+  seoTitle: ProjectI18n;
+  seoDescription: ProjectI18n;
 };
 
 const emptyI18n = (): ProjectI18n => ({ fr: "", en: "", ar: "" });
@@ -76,14 +89,26 @@ const emptyI18n = (): ProjectI18n => ({ fr: "", en: "", ar: "" });
 function emptyEditor(): EditorState {
   return {
     slug: "",
+    reference: "",
     title: emptyI18n(),
     description: emptyI18n(),
     kind: "personal",
     businessTypeIds: [],
     images: [],
+    coverImage: "",
     link: "",
+    appLink: "",
     sortOrder: 0,
     published: false,
+    featured: false,
+    technologies: [],
+    features: [],
+    clientNeed: emptyI18n(),
+    objective: emptyI18n(),
+    solution: emptyI18n(),
+    result: emptyI18n(),
+    seoTitle: emptyI18n(),
+    seoDescription: emptyI18n(),
   };
 }
 
@@ -91,6 +116,7 @@ function rowToEditor(row: ProjectRow): EditorState {
   return {
     id: row.id,
     slug: row.slug,
+    reference: row.reference ?? "",
     title: { ...row.title },
     description: { ...row.description },
     kind: row.kind,
@@ -99,9 +125,20 @@ function rowToEditor(row: ProjectRow): EditorState {
       url: img.url,
       label: img.label ? { ...img.label } : undefined,
     })),
+    coverImage: row.cover_image ?? "",
     link: row.link ?? "",
+    appLink: row.app_link ?? "",
     sortOrder: row.sort_order,
     published: row.published,
+    featured: row.featured,
+    technologies: [...row.technologies],
+    features: row.features.map((f) => ({ ...f })),
+    clientNeed: { ...row.client_need },
+    objective: { ...row.objective },
+    solution: { ...row.solution },
+    result: { ...row.result },
+    seoTitle: { ...row.seo_title },
+    seoDescription: { ...row.seo_description },
   };
 }
 
@@ -123,6 +160,7 @@ type FieldKey =
   | "description"
   | "slug"
   | "link"
+  | "appLink"
   | "images"
   | "businessTypes"
   | "sortOrder";
@@ -136,6 +174,7 @@ const ERROR_CODE_TO_FIELD: Record<string, FieldKey> = {
   invalid_slug: "slug",
   duplicate_slug: "slug",
   project_invalid_link: "link",
+  project_invalid_app_link: "appLink",
   project_invalid_images: "images",
   project_invalid_image: "images",
   project_invalid_business_types: "businessTypes",
@@ -214,6 +253,7 @@ export function AdminProjectsPanel({
   const [submitError, setSubmitError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [techDraft, setTechDraft] = useState("");
   const { loading: saving, setLoading: setSaving, trySubmit } =
     useSubmitGuard();
 
@@ -285,6 +325,11 @@ export function AdminProjectsPanel({
       en: i18n.en.trim() || i18n.fr.trim(),
       ar: i18n.ar.trim() || i18n.fr.trim(),
     });
+    const fillOptional = (i18n: ProjectI18n): ProjectI18n => ({
+      fr: i18n.fr.trim(),
+      en: i18n.en.trim(),
+      ar: i18n.ar.trim(),
+    });
     const title = fillFromFr(editor.title);
     return {
       slug: resolveProjectSlug(editor.slug, title.fr),
@@ -297,8 +342,28 @@ export function AdminProjectsPanel({
         ...(img.label ? { label: img.label } : {}),
       })),
       link: editor.link.trim() || null,
+      appLink: editor.appLink.trim() || null,
       sortOrder: editor.sortOrder,
       published: editor.published,
+      featured: editor.featured,
+      coverImage: editor.coverImage.trim() || null,
+      technologies: editor.technologies,
+      features: editor.features
+        .filter((f) => f.fr.trim())
+        .map((f) => ({
+          fr: f.fr.trim(),
+          en: f.en.trim() || f.fr.trim(),
+          ar: f.ar.trim() || f.fr.trim(),
+        })),
+      clientNeed: fillOptional(editor.clientNeed),
+      objective: fillOptional(editor.objective),
+      solution: fillOptional(editor.solution),
+      result: fillOptional(editor.result),
+      seoTitle: fillOptional(editor.seoTitle),
+      seoDescription: fillOptional(editor.seoDescription),
+      ...(editor.reference.trim()
+        ? { reference: editor.reference.trim() }
+        : {}),
     };
   }, [editor]);
 
@@ -585,9 +650,15 @@ export function AdminProjectsPanel({
                     </span>
                   </div>
                   <div className="p-4">
+                    {p.reference ? (
+                      <p className="font-mono text-[10px] tracking-[0.16em] text-primary/80">
+                        {p.reference}
+                      </p>
+                    ) : null}
                     <p className="truncate font-medium leading-snug">{name}</p>
                     <p className="mt-1 text-xs text-foreground/50">
                       {p.kind === "sold" ? t("kindSold") : t("kindPersonal")}
+                      {p.featured ? ` · ${t("featured")}` : ""}
                     </p>
                   </div>
                 </button>
@@ -642,6 +713,7 @@ export function AdminProjectsPanel({
                 >
                   <Input
                     id="proj-title"
+                    dir={localeTab === "ar" ? "rtl" : "ltr"}
                     aria-invalid={Boolean(fieldErrors.title)}
                     aria-describedby={
                       fieldErrors.title ? "proj-title-error" : undefined
@@ -680,6 +752,7 @@ export function AdminProjectsPanel({
                   <textarea
                     id="proj-desc"
                     rows={4}
+                    dir={localeTab === "ar" ? "rtl" : "ltr"}
                     aria-invalid={Boolean(fieldErrors.description)}
                     aria-describedby={
                       fieldErrors.description ? "proj-desc-error" : undefined
@@ -781,6 +854,27 @@ export function AdminProjectsPanel({
                       }}
                     />
                   </FormField>
+                  <FormField
+                    id="proj-app-link"
+                    label={t("fields.appLink")}
+                    hint={t("hints.appLink")}
+                    error={fieldErrors.appLink}
+                  >
+                    <Input
+                      id="proj-app-link"
+                      type="url"
+                      placeholder="https://play.google.com/… ou https://apps.apple.com/…"
+                      aria-invalid={Boolean(fieldErrors.appLink)}
+                      aria-describedby={
+                        fieldErrors.appLink ? "proj-app-link-error" : undefined
+                      }
+                      value={editor.appLink}
+                      onChange={(e) => {
+                        clearFieldError("appLink");
+                        setEditor({ ...editor, appLink: e.target.value });
+                      }}
+                    />
+                  </FormField>
                 </div>
 
                 <label className="flex items-center gap-2 text-sm">
@@ -793,6 +887,257 @@ export function AdminProjectsPanel({
                   />
                   {t("fields.published")}
                 </label>
+
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={editor.featured}
+                    onChange={(e) =>
+                      setEditor({ ...editor, featured: e.target.checked })
+                    }
+                  />
+                  {t("fields.featured")}
+                </label>
+
+                {editor.reference ? (
+                  <p className="font-mono text-xs tracking-[0.16em] text-foreground/55">
+                    {t("fields.reference")}: {editor.reference}
+                  </p>
+                ) : (
+                  <p className="text-xs text-foreground/45">{t("referenceHint")}</p>
+                )}
+
+                <FormField
+                  id="proj-client-need"
+                  label={t("fields.clientNeed")}
+                >
+                  <textarea
+                    id="proj-client-need"
+                    rows={3}
+                    dir={localeTab === "ar" ? "rtl" : "ltr"}
+                    value={editor.clientNeed[localeTab]}
+                    onChange={(e) =>
+                      setEditor({
+                        ...editor,
+                        clientNeed: {
+                          ...editor.clientNeed,
+                          [localeTab]: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-step-accent/50"
+                  />
+                </FormField>
+
+                <FormField id="proj-objective" label={t("fields.objective")}>
+                  <textarea
+                    id="proj-objective"
+                    rows={3}
+                    dir={localeTab === "ar" ? "rtl" : "ltr"}
+                    value={editor.objective[localeTab]}
+                    onChange={(e) =>
+                      setEditor({
+                        ...editor,
+                        objective: {
+                          ...editor.objective,
+                          [localeTab]: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-step-accent/50"
+                  />
+                </FormField>
+
+                <FormField id="proj-solution" label={t("fields.solution")}>
+                  <textarea
+                    id="proj-solution"
+                    rows={3}
+                    dir={localeTab === "ar" ? "rtl" : "ltr"}
+                    value={editor.solution[localeTab]}
+                    onChange={(e) =>
+                      setEditor({
+                        ...editor,
+                        solution: {
+                          ...editor.solution,
+                          [localeTab]: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-step-accent/50"
+                  />
+                </FormField>
+
+                <FormField id="proj-result" label={t("fields.result")}>
+                  <textarea
+                    id="proj-result"
+                    rows={3}
+                    dir={localeTab === "ar" ? "rtl" : "ltr"}
+                    value={editor.result[localeTab]}
+                    onChange={(e) =>
+                      setEditor({
+                        ...editor,
+                        result: {
+                          ...editor.result,
+                          [localeTab]: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-step-accent/50"
+                  />
+                </FormField>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <FormField id="proj-seo-title" label={t("fields.seoTitle")}>
+                    <Input
+                      id="proj-seo-title"
+                      dir={localeTab === "ar" ? "rtl" : "ltr"}
+                      value={editor.seoTitle[localeTab]}
+                      onChange={(e) =>
+                        setEditor({
+                          ...editor,
+                          seoTitle: {
+                            ...editor.seoTitle,
+                            [localeTab]: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </FormField>
+                  <FormField
+                    id="proj-seo-desc"
+                    label={t("fields.seoDescription")}
+                  >
+                    <Input
+                      id="proj-seo-desc"
+                      dir={localeTab === "ar" ? "rtl" : "ltr"}
+                      value={editor.seoDescription[localeTab]}
+                      onChange={(e) =>
+                        setEditor({
+                          ...editor,
+                          seoDescription: {
+                            ...editor.seoDescription,
+                            [localeTab]: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </FormField>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-medium">{t("fields.features")}</p>
+                  <ul className="space-y-2">
+                    {editor.features.map((feature, index) => (
+                      <li key={index} className="flex gap-2">
+                        <Input
+                          dir={localeTab === "ar" ? "rtl" : "ltr"}
+                          value={feature[localeTab]}
+                          placeholder={t("featurePlaceholder")}
+                          onChange={(e) => {
+                            const next = [...editor.features];
+                            next[index] = {
+                              ...next[index],
+                              [localeTab]: e.target.value,
+                            };
+                            setEditor({ ...editor, features: next });
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            setEditor({
+                              ...editor,
+                              features: editor.features.filter(
+                                (_, i) => i !== index
+                              ),
+                            })
+                          }
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() =>
+                      setEditor({
+                        ...editor,
+                        features: [...editor.features, emptyI18n()],
+                      })
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                    {t("addFeature")}
+                  </Button>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-medium">
+                    {t("fields.technologies")}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {editor.technologies.map((tech) => (
+                      <button
+                        key={tech}
+                        type="button"
+                        onClick={() =>
+                          setEditor({
+                            ...editor,
+                            technologies: editor.technologies.filter(
+                              (x) => x !== tech
+                            ),
+                          })
+                        }
+                        className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 font-mono text-xs text-foreground/80 hover:border-destructive/40"
+                      >
+                        {tech}
+                        <X className="h-3 w-3" />
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-2 flex gap-2">
+                    <Input
+                      value={techDraft}
+                      placeholder={t("techPlaceholder")}
+                      onChange={(e) => setTechDraft(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key !== "Enter") return;
+                        e.preventDefault();
+                        const value = techDraft.trim();
+                        if (!value) return;
+                        if (editor.technologies.includes(value)) return;
+                        setEditor({
+                          ...editor,
+                          technologies: [...editor.technologies, value],
+                        });
+                        setTechDraft("");
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const value = techDraft.trim();
+                        if (!value) return;
+                        if (editor.technologies.includes(value)) return;
+                        setEditor({
+                          ...editor,
+                          technologies: [...editor.technologies, value],
+                        });
+                        setTechDraft("");
+                      }}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
 
                 <div>
                   <p className="mb-1 text-sm font-medium">
@@ -961,6 +1306,18 @@ export function AdminProjectsPanel({
                     </>
                   )}
                 </Button>
+                {editor.slug.trim() && editor.published ? (
+                  <Button type="button" variant="outline" asChild>
+                    <a
+                      href={`/projets/${editor.slug.trim()}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      {t("preview")}
+                    </a>
+                  </Button>
+                ) : null}
                 <Button type="button" variant="outline" onClick={closeModal}>
                   {t("cancel")}
                 </Button>

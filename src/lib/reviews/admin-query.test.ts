@@ -6,9 +6,9 @@ import {
 } from "@/lib/reviews/admin-query";
 
 describe("parseAdminReviewsListQuery", () => {
-  it("défaut status=pending", () => {
+  it("défaut status=published", () => {
     const q = parseAdminReviewsListQuery(new URL("http://localhost/api/admin/reviews"));
-    assert.equal(q.status, "pending");
+    assert.equal(q.status, "published");
     assert.equal(q.limit, 50);
   });
 
@@ -21,11 +21,11 @@ describe("parseAdminReviewsListQuery", () => {
     }
   });
 
-  it("status injection → pending", () => {
+  it("status injection → published", () => {
     const q = parseAdminReviewsListQuery(
       new URL("http://localhost/api/admin/reviews?status=pending;drop")
     );
-    assert.equal(q.status, "pending");
+    assert.equal(q.status, "published");
   });
 
   it("limit invalide / <=0 → 50", () => {

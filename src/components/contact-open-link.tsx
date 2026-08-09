@@ -1,26 +1,55 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { openContactModal } from "@/lib/open-contact-modal";
-import { homeAnchors, routes } from "@/lib/routes";
+import {
+  routes,
+  startProjectUrl,
+  type StartProjectIntent,
+} from "@/lib/routes";
 
 type ContactOpenLinkProps = {
   children: React.ReactNode;
   className?: string;
   onOpen?: () => void;
+  /** URL complète optionnelle (ex. startProjectUrl({...})). */
+  href?: string;
+  serviceSlug?: string | null;
+  serviceId?: string | null;
+  serviceReference?: string | null;
+  projectType?: string | null;
+  /** Achat d’offre à prix vs démarrage sur-mesure. */
+  intent?: StartProjectIntent | null;
 };
 
+/** CTA « démarrer / acheter / contact projet » → parcours interactif. */
 export function ContactOpenLink({
   children,
   className,
   onOpen,
+  href,
+  serviceSlug,
+  serviceId,
+  serviceReference,
+  projectType,
+  intent,
 }: ContactOpenLinkProps) {
+  const resolved =
+    href ??
+    (serviceSlug || serviceId || serviceReference || projectType || intent
+      ? startProjectUrl({
+          serviceSlug,
+          serviceId,
+          serviceReference,
+          projectType,
+          intent,
+        })
+      : routes.startProject);
+
   return (
     <Link
-      href={`${routes.home}${homeAnchors.contact}`}
+      href={resolved}
       className={className}
-      onClick={(e) => {
-        openContactModal(e);
+      onClick={() => {
         onOpen?.();
       }}
     >

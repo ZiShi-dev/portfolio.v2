@@ -88,12 +88,6 @@ describe("POST /api/review — persist, unicité, rate-limit IP", () => {
         }),
       },
     });
-
-    mock.module("@/lib/email/send-review-email", {
-      namedExports: {
-        sendReviewEmail: async () => ({ ok: false, reason: "not_configured" }),
-      },
-    });
   });
 
   before(async () => {
@@ -116,7 +110,7 @@ describe("POST /api/review — persist, unicité, rate-limit IP", () => {
     lastSaveInput = null;
   });
 
-  it("persiste via saveReview et retourne stored si Resend down", async () => {
+  it("persiste via saveReview et retourne stored", async () => {
     const email = `persist-${Date.now()}@example.com`;
     const res = await reviewRoute.POST(
       formRequest(validBody(email), { ip: "203.0.113.201" })
@@ -161,7 +155,7 @@ describe("POST /api/review — persist, unicité, rate-limit IP", () => {
     assert.equal(lastSaveInput, null);
   });
 
-  it("si save échoue (persist) et Resend down → 503", async () => {
+  it("si save échoue (persist) → 503", async () => {
     saveResult = { ok: false, reason: "persist_failed" };
     const res = await reviewRoute.POST(
       formRequest(validBody(`fail-${Date.now()}@example.com`), {

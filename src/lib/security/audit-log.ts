@@ -9,9 +9,13 @@ type FormAuditEvent =
   | "origin_rejected"
   | "turnstile_failed"
   | "validation_failed"
+  | "invalid_body"
+  | "invalid_json"
   | "send_failed"
   | "persist_failed"
-  | "sent";
+  | "sent"
+  | "honeypot"
+  | "rate_limited";
 
 /** Logs structurés sans PII (IP hashée, pas d'email/nom/message). */
 export function logFormSecurityEvent(

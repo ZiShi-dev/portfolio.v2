@@ -25,6 +25,7 @@ const sampleProject = {
     },
   ],
   link: null,
+  app_link: null,
   sort_order: 0,
   published: true,
 };
@@ -131,6 +132,12 @@ describe("API admin projects", () => {
     mock.module("@/lib/admin/audit-log", {
       namedExports: { logAdminAuthEvent: () => undefined },
     });
+
+    mock.module("@/lib/projects/revalidate", {
+      namedExports: {
+        revalidateProjectSurfaces: () => undefined,
+      },
+    });
   });
 
   before(async () => {
@@ -163,6 +170,7 @@ describe("API admin projects", () => {
     businessTypeIds: ["dashboard"],
     images: sampleProject.images,
     link: null,
+    appLink: null,
     sortOrder: 0,
     published: true,
   };

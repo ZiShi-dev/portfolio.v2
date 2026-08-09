@@ -9,6 +9,7 @@ import { jsonResponse } from "@/lib/api/json-response";
 import { isValidReviewStatus } from "@/lib/reviews/admin-query";
 import {
   deleteReview,
+  updateReviewProjectId,
   updateReviewStatus,
   type ReviewStatus,
 } from "@/lib/reviews/store";
@@ -20,7 +21,10 @@ type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
-/** PATCH — valider / retirer / rejeter. DELETE — suppression définitive. */
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/** PATCH — status et/ou liaison projet. DELETE — suppression. */
 export async function PATCH(request: Request, context: RouteContext) {
   const ip = getClientIp(request);
   const guard = await requireAdminApi(request, { requireOrigin: true });
@@ -41,18 +45,63 @@ export async function PATCH(request: Request, context: RouteContext) {
     return adminErrorResponse(ADMIN_ERROR_CODES.INVALID_REQUEST, 400);
   }
 
-  const status = (parsedBody.body as { status?: string }).status;
-  if (!isValidReviewStatus(status)) {
+  const body = parsedBody.body as {
+    status?: string;
+    projectId?: string | null;
+  };
+
+  let touched = false;
+
+  if (body.projectId !== undefined) {
+    const projectId =
+      body.projectId === null || body.projectId === ""
+        ? null
+        : body.projectId;
+    if (projectId !== null && !UUID_RE.test(projectId)) {
+      return adminErrorResponse(ADMIN_ERROR_CODES.INVALID_REQUEST, 400);
+    }
+    const ok = await updateReviewProjectId(id, projectId);
+    if (!ok) {
+      return adminErrorResponse(ADMIN_ERROR_CODES.INTERNAL, 502);
+    }
+    touched = true;
+    logAdminAuthEvent("review_updated", ip, {
+      projectLinked: Boolean(projectId),
+    });
+  }
+
+  if (body.status !== undefined) {
+    if (!isValidReviewStatus(body.status)) {
+      return adminErrorResponse(ADMIN_ERROR_CODES.INVALID_REQUEST, 400);
+    }
+    const ok = await updateReviewStatus(id, body.status as ReviewStatus);
+    if (!ok) {
+      return adminErrorResponse(ADMIN_ERROR_CODES.INTERNAL, 502);
+    }
+    touched = true;
+    logAdminAuthEvent("review_updated", ip, { status: body.status });
+  }
+
+  if (!touched) {
     return adminErrorResponse(ADMIN_ERROR_CODES.INVALID_REQUEST, 400);
   }
 
-  const ok = await updateReviewStatus(id, status as ReviewStatus);
-  if (!ok) {
-    return adminErrorResponse(ADMIN_ERROR_CODES.INTERNAL, 502);
-  }
+  const { revalidateReviewSurfaces } = await import(
+    "@/lib/reviews/revalidate"
+  );
+  revalidateReviewSurfaces();
 
-  logAdminAuthEvent("review_updated", ip, { status });
-  return jsonResponse({ ok: true, id, status }, 200);
+  return jsonResponse(
+    {
+      ok: true,
+      id,
+      ...(body.status ? { status: body.status } : {}),
+      ...(body.projectId !== undefined
+        ? { projectId: body.projectId || null }
+        : {}),
+    },
+    200
+  );
 }
 
 export async function DELETE(request: Request, context: RouteContext) {
@@ -71,6 +120,10 @@ export async function DELETE(request: Request, context: RouteContext) {
   }
 
   logAdminAuthEvent("review_deleted", ip);
+  const { revalidateReviewSurfaces } = await import(
+    "@/lib/reviews/revalidate"
+  );
+  revalidateReviewSurfaces();
   return jsonResponse({ ok: true, id }, 200);
 }
 

@@ -4,7 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Mail, Send, Check, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
@@ -41,6 +41,7 @@ type ContactFormProps = {
 };
 
 export function ContactForm({ contactEmail }: ContactFormProps) {
+  const locale = useLocale();
   const t = useTranslations("contact");
   const tValidation = useTranslations("validation");
   const translateError = (key: ValidationErrorKey) => tValidation(key);
@@ -244,6 +245,7 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
               ref={turnstileRef}
               onToken={setTurnstileToken}
               onExpire={() => setTurnstileToken("")}
+              language={locale}
             />
           )}
 
@@ -282,23 +284,23 @@ export function Contact({ contactEmail }: ContactProps) {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="relative scroll-mt-28 bg-step-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[min(400px,80vw)] w-[min(700px,120vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--color-step-accent),transparent_60%)] opacity-15 blur-3xl" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[min(400px,80vw)] w-[min(700px,120vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--color-primary),transparent_60%)] opacity-10 blur-3xl" />
 
       <Reveal>
-        <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-step-accent/20 bg-card/70 p-5 text-center backdrop-blur-sm sm:rounded-3xl sm:p-8 md:p-12">
-          <span className="inline-flex items-center gap-2 rounded-full border border-step-accent/30 bg-background/60 px-4 py-1 text-xs font-medium uppercase tracking-widest text-step-accent">
+        <div className="mx-auto max-w-3xl overflow-hidden rounded-xl border border-border-gold bg-surface-elevated/90 p-5 text-center sm:p-8 md:p-12">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border-gold bg-background/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
             <Mail className="h-3.5 w-3.5" aria-hidden /> {t("eyebrow")}
           </span>
           <h2
             id="contact-heading"
-            className="mt-4 font-display-serif text-3xl font-semibold tracking-tight sm:mt-5 sm:text-4xl md:text-5xl"
+            className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
           >
             {t("title")}{" "}
-            <span className="text-gradient">{t("titleHighlight")}</span>
+            <span className="text-primary">{t("titleHighlight")}</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-foreground/65 sm:mt-5 sm:text-lg">
+          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
             {t("subtitle")}
           </p>
 

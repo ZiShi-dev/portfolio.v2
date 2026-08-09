@@ -9,26 +9,26 @@ import {
   type ProjectItem,
 } from "@/components/sections/project-modal";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
+import { Link } from "@/i18n/navigation";
+import { routes } from "@/lib/routes";
 
 type ProjectCardProps = {
   project: ProjectItem;
-  onOpen: (project: ProjectItem) => void;
+  /** @deprecated Les cartes naviguent vers /projets/[slug]. Conservé pour compat. */
+  onOpen?: (project: ProjectItem) => void;
   className?: string;
   priority?: boolean;
-  /** Évite que le bouton natif bloque le swipe Embla sur mobile. */
   swipeFriendly?: boolean;
 };
 
 export function ProjectCard({
   project,
-  onOpen,
   className,
   priority,
   swipeFriendly = false,
 }: ProjectCardProps) {
   const t = useTranslations("projects");
-  const openProject = () => onOpen(project);
-
+  const href = `${routes.projects}/${project.slug ?? project.id}`;
   const openLabel = t("openDetails", { title: project.title });
 
   const cardBody = (
@@ -47,9 +47,15 @@ export function ProjectCard({
         >
           <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5" />
         </span>
-        <p className="text-xs uppercase tracking-widest text-foreground/50">
-          {project.category}
-        </p>
+        {project.reference ? (
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/80">
+            {project.reference}
+          </p>
+        ) : (
+          <p className="text-xs uppercase tracking-widest text-foreground/50">
+            {project.category}
+          </p>
+        )}
         <h3 className="mt-2 pe-12 font-display-serif text-lg font-semibold leading-snug sm:text-xl">
           {project.title}
         </h3>
@@ -58,8 +64,11 @@ export function ProjectCard({
         </p>
         <ProjectTypeBadges
           businessTypeIds={project.businessTypeIds}
-          tags={project.tags}
+          tags={project.technologies?.length ? project.technologies : project.tags}
         />
+        <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary/75">
+          {t("viewCase")}
+        </p>
       </div>
     </>
   );
@@ -73,45 +82,41 @@ export function ProjectCard({
         "group h-full w-full overflow-hidden rounded-2xl border border-step-accent/20 bg-card/80 backdrop-blur-sm transition-colors hover:border-step-accent/45"
       }
     >
-      {swipeFriendly ? (
-        <div
-          role="button"
-          tabIndex={0}
-          aria-label={openLabel}
-          onClick={openProject}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              openProject();
-            }
-          }}
-          className="w-full cursor-pointer text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          {cardBody}
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={openProject}
-          aria-label={openLabel}
-          className="w-full text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          {cardBody}
-        </button>
-      )}
+      <Link
+        href={href}
+        aria-label={openLabel}
+        className="block w-full text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        {cardBody}
+      </Link>
 
-      {project.link && isSafeHttpUrl(project.link) && (
-        <div className="border-t border-border px-4 py-3 sm:px-6">
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex min-h-10 items-center gap-1.5 text-sm text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            {t("seeSite")}
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-          </a>
+      {((project.link && isSafeHttpUrl(project.link)) ||
+        (project.appLink && isSafeHttpUrl(project.appLink))) && (
+        <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-border px-4 py-3 sm:px-6">
+          {project.link && isSafeHttpUrl(project.link) && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex min-h-10 items-center gap-1.5 text-sm text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              {t("seeSite")}
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+            </a>
+          )}
+          {project.appLink && isSafeHttpUrl(project.appLink) && (
+            <a
+              href={project.appLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex min-h-10 items-center gap-1.5 text-sm text-primary/80 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              {t("seeApp")}
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+            </a>
+          )}
         </div>
       )}
     </motion.div>

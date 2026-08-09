@@ -43,6 +43,11 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
+    /**
+     * Next 16 : allowlist obligatoire pour `quality`.
+     * Inclure 70 (blur placeholder) — Next le pousse en dev et mute le tableau.
+     */
+    qualities: [70, 75, 90, 95, 100],
     remotePatterns: [
       {
         protocol: "https",

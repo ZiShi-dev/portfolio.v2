@@ -14,9 +14,6 @@ type AdminAuditEvent =
   | "mfa_enroll_failed"
   | "password_change_success"
   | "password_change_failed"
-  | "messages_listed"
-  | "message_updated"
-  | "message_deleted"
   | "reviews_listed"
   | "about_stats_listed"
   | "about_stats_updated"
@@ -32,8 +29,26 @@ type AdminAuditEvent =
   | "project_deleted"
   | "project_uploaded"
   | "project_upload_failed"
+  | "project_inquiries_listed"
+  | "project_inquiry_updated"
+  | "project_inquiry_deleted"
   | "review_updated"
-  | "review_deleted";
+  | "review_deleted"
+  | "services_listed"
+  | "services_reordered"
+  | "service_created"
+  | "service_create_failed"
+  | "service_updated"
+  | "service_update_failed"
+  | "service_duplicated"
+  | "service_deleted"
+  | "engagements_listed"
+  | "engagements_reordered"
+  | "engagement_created"
+  | "engagement_viewed"
+  | "engagement_updated"
+  | "engagement_archived"
+  | "engagement_deleted";
 
 export function logAdminAuthEvent(
   event: AdminAuditEvent,

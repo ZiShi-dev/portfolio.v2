@@ -6,10 +6,10 @@ export function parseAdminReviewsListQuery(url: URL): {
   status: ReviewStatus | "all";
   limit: number;
 } {
-  const statusRaw = url.searchParams.get("status") ?? "pending";
+  const statusRaw = url.searchParams.get("status") ?? "published";
   const status = STATUSES.has(statusRaw)
     ? (statusRaw as ReviewStatus | "all")
-    : "pending";
+    : "published";
   const limitRaw = Number(url.searchParams.get("limit") ?? "50");
   const limit = Number.isFinite(limitRaw) && limitRaw >= 1 ? limitRaw : 50;
   return { status, limit };

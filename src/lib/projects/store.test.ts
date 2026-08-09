@@ -60,6 +60,10 @@ function createProjectsClient(
     filters.push({ type: "limit", args });
     return chain();
   };
+  api.not = (...args: unknown[]) => {
+    filters.push({ type: "not", args });
+    return chain();
+  };
   api.single = async () => finish();
   api.maybeSingle = async () => finish();
   api.then = (
@@ -75,6 +79,7 @@ const sampleRow = {
   created_at: "2026-07-16T00:00:00Z",
   updated_at: "2026-07-16T00:00:00Z",
   slug: "nova",
+  reference: "VZ—CASE 001",
   title: { fr: "Nova FR", en: "Nova EN", ar: "Nova AR" },
   description: {
     fr: "Desc FR assez longue ici.",
@@ -89,8 +94,20 @@ const sampleRow = {
     },
   ],
   link: null,
+  app_link: null,
   sort_order: 0,
   published: true,
+  featured: false,
+  cover_image: null,
+  technologies: [],
+  features: [],
+  client_need: { fr: "", en: "", ar: "" },
+  objective: { fr: "", en: "", ar: "" },
+  solution: { fr: "", en: "", ar: "" },
+  result: { fr: "", en: "", ar: "" },
+  seo_title: { fr: "", en: "", ar: "" },
+  seo_description: { fr: "", en: "", ar: "" },
+  published_at: "2026-07-16T00:00:00Z",
 };
 
 describe("projects/store", () => {
@@ -144,7 +161,11 @@ describe("projects/store", () => {
   });
 
   it("createProject écrit business_type_ids snake_case", async () => {
-    resultQueue.push({ data: sampleRow, error: null });
+    // 1) allocateNextCaseReference select · 2) insert
+    resultQueue.push(
+      { data: [{ reference: "VZ—CASE 001" }], error: null },
+      { data: sampleRow, error: null }
+    );
     const result = await store.createProject({
       slug: "nova",
       title: sampleRow.title,
@@ -153,21 +174,37 @@ describe("projects/store", () => {
       businessTypeIds: ["dashboard"],
       images: sampleRow.images,
       link: null,
+  appLink: null,
       sortOrder: 0,
       published: true,
+      featured: false,
+      coverImage: null,
+      technologies: [],
+      features: [],
+      clientNeed: { fr: "", en: "", ar: "" },
+      objective: { fr: "", en: "", ar: "" },
+      solution: { fr: "", en: "", ar: "" },
+      result: { fr: "", en: "", ar: "" },
+      seoTitle: { fr: "", en: "", ar: "" },
+      seoDescription: { fr: "", en: "", ar: "" },
     });
     assert.equal(result.ok, true);
-    assert.equal(lastOps[0]?.method, "insert");
-    const payload = lastOps[0]?.payload as Record<string, unknown>;
+    const insertOp = lastOps.find((op) => op.method === "insert");
+    assert.ok(insertOp);
+    const payload = insertOp?.payload as Record<string, unknown>;
     assert.deepEqual(payload.business_type_ids, ["dashboard"]);
     assert.equal("businessTypeIds" in payload, false);
+    assert.equal(payload.reference, "VZ—CASE 002");
   });
 
   it("createProject duplicate_slug", async () => {
-    resultQueue.push({
-      data: null,
-      error: { code: "23505", message: "duplicate" },
-    });
+    resultQueue.push(
+      { data: [], error: null },
+      {
+        data: null,
+        error: { code: "23505", message: "duplicate key slug" },
+      }
+    );
     const result = await store.createProject({
       slug: "nova",
       title: sampleRow.title,
@@ -176,8 +213,19 @@ describe("projects/store", () => {
       businessTypeIds: [],
       images: sampleRow.images,
       link: null,
+  appLink: null,
       sortOrder: 0,
       published: false,
+      featured: false,
+      coverImage: null,
+      technologies: [],
+      features: [],
+      clientNeed: { fr: "", en: "", ar: "" },
+      objective: { fr: "", en: "", ar: "" },
+      solution: { fr: "", en: "", ar: "" },
+      result: { fr: "", en: "", ar: "" },
+      seoTitle: { fr: "", en: "", ar: "" },
+      seoDescription: { fr: "", en: "", ar: "" },
     });
     assert.deepEqual(result, { ok: false, reason: "duplicate_slug" });
   });

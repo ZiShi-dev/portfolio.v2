@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -44,9 +44,16 @@ const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 type ReviewFormPageProps = {
   variant?: "page" | "modal";
   onClose?: () => void;
+  /** Case Study lié (invitation admin). */
+  projectId?: string | null;
 };
 
-function ReviewFormBody({ variant = "page" }: ReviewFormPageProps) {
+function ReviewFormBody({
+  variant = "page",
+  projectId = null,
+}: ReviewFormPageProps) {
+  const locale = useLocale();
+  const router = useRouter();
   const t = useTranslations("reviewForm");
   const tCommon = useTranslations("common");
   const tValidation = useTranslations("validation");
@@ -100,6 +107,7 @@ function ReviewFormBody({ variant = "page" }: ReviewFormPageProps) {
       rating: values.rating,
       message: values.message,
       _honeypot: values._honeypot ?? "",
+      ...(projectId ? { projectId } : {}),
       ...(turnstileToken ? { turnstileToken } : {}),
     };
 
@@ -114,6 +122,8 @@ function ReviewFormBody({ variant = "page" }: ReviewFormPageProps) {
 
       if (res.ok) {
         setSent(true);
+        // Force le rechargement RSC (cache client staleTimes) pour afficher l’avis.
+        router.refresh();
         return;
       }
 
@@ -325,6 +335,7 @@ function ReviewFormBody({ variant = "page" }: ReviewFormPageProps) {
                     ref={turnstileRef}
                     onToken={setTurnstileToken}
                     onExpire={() => setTurnstileToken("")}
+                    language={locale}
                   />
                 )}
 

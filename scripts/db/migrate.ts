@@ -87,7 +87,11 @@ async function main() {
     if (ran === 0) {
       console.info("[db] Déjà à jour.");
     } else {
+      // PostgREST (API Supabase) garde un cache de schéma — sans reload,
+      // les nouvelles colonnes renvoient « column does not exist ».
+      await client.query("NOTIFY pgrst, 'reload schema'");
       console.info(`[db] ${ran} migration(s) appliquée(s).`);
+      console.info("[db] Cache schéma PostgREST rechargé.");
     }
   } finally {
     await client.end();

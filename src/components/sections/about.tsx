@@ -1,5 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import { brand } from "@/lib/brand";
 import { aboutStatsToDisplay } from "@/data/about-stats";
 import { getAboutStats } from "@/lib/about/store";
 import { AnimatedNumber } from "@/components/ui/animated-number";
@@ -14,31 +13,31 @@ export async function About() {
     <section
       id="a-propos"
       aria-labelledby="about-heading"
-      className="relative scroll-mt-28 bg-step-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 bg-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
-            <span className="inline-block rounded-full border border-step-accent/30 bg-background/60 px-4 py-1 text-xs font-medium uppercase tracking-widest text-step-accent">
+            <span className="inline-block rounded-full border border-border-gold bg-background/70 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
               {t("eyebrow")}
             </span>
           </Reveal>
           <Reveal delay={0.05}>
             <h2
               id="about-heading"
-              className="mt-4 font-display-serif text-3xl font-semibold tracking-tight sm:mt-5 sm:text-4xl md:text-5xl"
+              className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
             >
               {t("title")}{" "}
-              <span className="text-gradient">{t("titleHighlight")}</span>
+              <span className="text-primary">{t("titleHighlight")}</span>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-4 text-base leading-relaxed text-foreground/65 sm:mt-5 sm:text-lg">
-              {t("p1", { name: brand.name })}
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
+              {t("p1")}
             </p>
           </Reveal>
           <Reveal delay={0.12}>
-            <p className="mt-3 text-base leading-relaxed text-foreground/65 sm:mt-4 sm:text-lg">
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:mt-4 sm:text-lg">
               {t("p2")}
             </p>
           </Reveal>
@@ -57,7 +56,7 @@ export async function About() {
                 key={s.id}
                 className="rounded-2xl border border-step-accent/20 bg-background/70 p-4 text-center backdrop-blur-sm transition-colors hover:border-step-accent/40 sm:p-6"
               >
-                <div className="font-display-serif text-3xl font-semibold text-gradient sm:text-4xl">
+                <div className="font-display text-3xl font-semibold text-primary sm:text-4xl">
                   <AnimatedNumber
                     value={s.value}
                     decimals={s.decimals}

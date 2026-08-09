@@ -61,6 +61,10 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 
   logAdminAuthEvent("project_updated", ip);
+  const { revalidateProjectSurfaces } = await import(
+    "@/lib/projects/revalidate"
+  );
+  revalidateProjectSurfaces(updated.project.slug);
   return jsonResponse({ ok: true, project: updated.project }, 200);
 }
 
@@ -81,6 +85,10 @@ export async function DELETE(request: Request, context: RouteContext) {
   }
 
   logAdminAuthEvent("project_deleted", ip);
+  const { revalidateProjectSurfaces } = await import(
+    "@/lib/projects/revalidate"
+  );
+  revalidateProjectSurfaces();
   return jsonResponse({ ok: true, id }, 200);
 }
 

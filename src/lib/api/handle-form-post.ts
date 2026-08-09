@@ -28,7 +28,8 @@ type PersistResult = PersistOk | PersistFail;
 type HandleFormPostOptions<T> = {
   formKind: "contact" | "review";
   parsePayload: (body: unknown) => ValidationResult<T> | { ok: false; error: "honeypot" };
-  sendEmail: (data: T, context: FormSubmitContext) => Promise<SendEmailResult>;
+  /** Optionnel — legacy / tests ; contact & avis stockent en BDD sans email. */
+  sendEmail?: (data: T, context: FormSubmitContext) => Promise<SendEmailResult>;
   getRateLimitEmail?: (data: T) => string | undefined;
   /**
    * Persistance optionnelle (ex. inbox Supabase / avis).
@@ -149,18 +150,28 @@ export async function handleFormPost<T>(
     }
   }
 
+  // Contact / avis : succès = enregistrement BDD (pas d’email transactionnel).
+  if (!options.sendEmail) {
+    if (persisted) {
+      logFormSecurityEvent(formKind, "sent", ip, { email_disabled: true });
+      return jsonResponse({ ok: true, stored: true }, 200);
+    }
+    logFormSecurityEvent(formKind, "persist_failed", ip);
+    return serviceUnavailableResponse();
+  }
+
   const result = await options.sendEmail(parsed.data, {
     idempotencyKey: fingerprint,
   });
 
   if (!result.ok) {
-    // Inbox OK → succès UX même si Resend est down / clé invalide
+    // Inbox OK → succès UX même si l’envoi email optionnel échoue
     if (persisted) {
       logFormSecurityEvent(formKind, "sent", ip, { email_skipped: true });
       return jsonResponse({ ok: true, stored: true }, 200);
     }
     if (result.reason === "not_configured") {
-      console.error(`[${formKind}] Configuration Resend manquante ou invalide`);
+      console.error(`[${formKind}] Envoi email non configuré`);
       return serviceUnavailableResponse();
     }
     logFormSecurityEvent(formKind, "send_failed", ip);

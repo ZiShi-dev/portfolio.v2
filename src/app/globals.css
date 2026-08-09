@@ -3,42 +3,62 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ─── VORZIX — Nuit Céleste (unique thème officiel) ─── */
 @theme {
-  /* Palette beige chaude — cohérente avec la section À propos */
-  --color-background: #faf8f4;
-  --color-foreground: #2c251f;
-  --color-card: #fffdf9;
-  --color-muted: #f2ece4;
-  --color-border: #e5dcd0;
-  --color-primary: #4a3f35;
-  --color-primary-foreground: #faf8f4;
-  --color-accent: #a8875c;
-  --color-profile: #ebe3d6;
-  --color-step-accent: #a8875c;
-  --color-step-surface: #f3ede4;
+  /* Surfaces nuit — profondeurs d'un même ciel */
+  --color-background: #070a12;
+  --color-foreground: #f4f1e8;
+  --color-card: #0a0e1a;
+  --color-muted: #0d1322;
+  --color-surface: #0a0e1a;
+  --color-surface-elevated: #0d1322;
+  --color-surface-high: #101828;
 
-  --font-sans: var(--font-display-serif);
-  --font-mono: var(--font-geist-mono);
+  /* Texte secondaire */
+  --color-muted-foreground: #8b93a7;
+  --color-subtle-foreground: #6e7789;
+  --color-faint-foreground: #4f586b;
 
-  --radius: 0.85rem;
+  /* Laiton céleste */
+  --color-primary: #c9a96a;
+  --color-primary-foreground: #070a12;
+  --color-primary-hover: #e5c98f;
+  --color-primary-light: #d4af7a;
 
+  /* Alias sémantiques (rétrocompatibilité) */
+  --color-accent: #c9a96a;
+  --color-profile: #0d1322;
+  --color-step-accent: #c9a96a;
+  --color-step-surface: #0d1322;
+
+  /* Bordures */
+  --color-border: rgb(244 241 232 / 0.1);
+  --color-border-strong: rgb(244 241 232 / 0.14);
+  --color-border-subtle: rgb(244 241 232 / 0.08);
+  --color-border-gold: rgb(212 175 122 / 0.18);
+
+  /* Typographie */
+  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
+
+  /* Rayons */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius: var(--radius-md);
+
+  /* Container */
+  --container-vorzix: 75rem;
+  --container-vorzix-wide: 87.5rem;
+
+  /* Animations */
   --animate-aurora: aurora 18s linear infinite;
   --animate-marquee: marquee 35s linear infinite;
   --animate-shimmer: shimmer 2.5s linear infinite;
-}
-
-.dark {
-  --color-background: #131110;
-  --color-foreground: #f0ebe3;
-  --color-card: #1c1916;
-  --color-muted: #252119;
-  --color-border: #3a342c;
-  --color-primary: #e8dfd2;
-  --color-primary-foreground: #131110;
-  --color-accent: #c9a876;
-  --color-profile: #2a2520;
-  --color-step-accent: #c9a876;
-  --color-step-surface: #1a1714;
+  --animate-twinkle: twinkle 5s ease-in-out infinite;
+  --animate-code-scroll: code-scroll 55s linear infinite;
 }
 
 @keyframes aurora {
@@ -71,6 +91,41 @@
   }
 }
 
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes code-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes fade-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+}
+
+.animate-code-scroll {
+  animation: code-scroll 55s linear infinite;
+}
+
 * {
   border-color: var(--color-border);
 }
@@ -82,18 +137,16 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Pendant une modale : plus de bande réservée / barre de scroll */
 html[data-scroll-locked] {
   overflow: hidden;
   scrollbar-gutter: auto;
   padding-inline-end: var(--scrollbar-compensation, 0px);
 }
 
-/* Scrollbar — teinte beige */
 html,
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--color-step-accent) 35%, transparent)
+  scrollbar-color: color-mix(in srgb, var(--color-primary) 35%, transparent)
     transparent;
 }
 
@@ -110,14 +163,14 @@ html::-webkit-scrollbar-track,
 
 html::-webkit-scrollbar-thumb,
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: color-mix(in srgb, var(--color-step-accent) 30%, transparent);
+  background-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
   border-radius: 100px;
   transition: background-color 0.2s ease;
 }
 
 html::-webkit-scrollbar-thumb:hover,
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: color-mix(in srgb, var(--color-step-accent) 65%, transparent);
+  background-color: color-mix(in srgb, var(--color-primary) 65%, transparent);
 }
 
 html::-webkit-scrollbar-corner,
@@ -160,12 +213,26 @@ html::-webkit-scrollbar-corner,
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-display-serif), "Cormorant Garamond", Georgia, serif;
-  font-feature-settings: "liga" 1, "dlig" 1;
+  font-family: var(--font-sans);
   line-height: 1.65;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+}
+
+html[lang="ar"] body,
+html[dir="rtl"] body {
+  font-family: var(--font-arabic-body), var(--font-sans);
+  letter-spacing: 0;
+}
+
+html[lang="ar"] .font-display,
+html[lang="ar"] .font-display-serif,
+html[lang="ar"] .font-brand,
+html[dir="rtl"] .font-display,
+html[dir="rtl"] .font-display-serif,
+html[dir="rtl"] .font-brand {
+  font-family: var(--font-arabic-display), var(--font-arabic-body), serif;
 }
 
 img,
@@ -175,15 +242,15 @@ video {
 }
 
 ::selection {
-  background-color: color-mix(in srgb, var(--color-step-accent) 35%, transparent);
+  background-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
   color: var(--color-foreground);
 }
 
 .text-gradient {
   background: linear-gradient(
     105deg,
-    var(--color-step-accent),
-    color-mix(in srgb, var(--color-step-accent) 45%, var(--color-foreground))
+    var(--color-primary-light),
+    color-mix(in srgb, var(--color-primary) 70%, var(--color-foreground))
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -191,16 +258,74 @@ video {
 }
 
 .font-brand {
-  font-family: var(--font-display-serif), "Cormorant Garamond", Georgia, serif;
-  font-feature-settings: "liga" 1, "dlig" 1;
+  font-family: var(--font-display);
 }
 
 .font-name {
-  font-family: var(--font-name), "Segoe Script", cursive;
-  font-feature-settings: "liga" 1, "calt" 1;
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
 
 .font-display-serif {
-  font-family: var(--font-display-serif), "Cormorant Garamond", Georgia, serif;
-  font-feature-settings: "liga" 1, "dlig" 1;
+  font-family: var(--font-display);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-technical {
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.7em;
+}
+
+.celestial-vault {
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgb(244 241 232 / 0.35), transparent),
+    radial-gradient(1px 1px at 78% 12%, rgb(244 241 232 / 0.25), transparent),
+    radial-gradient(1px 1px at 42% 68%, rgb(244 241 232 / 0.2), transparent),
+    radial-gradient(1px 1px at 88% 74%, rgb(201 169 106 / 0.35), transparent),
+    radial-gradient(1px 1px at 22% 82%, rgb(244 241 232 / 0.18), transparent),
+    radial-gradient(ellipse at 20% 0%, rgb(201 169 106 / 0.08), transparent 55%),
+    radial-gradient(ellipse at 80% 100%, rgb(13 19 34 / 0.6), transparent 50%);
+}
+
+/* Tracé progressif d’arc (hero) */
+@keyframes celestial-draw {
+  from {
+    stroke-dashoffset: 1130;
+    opacity: 0.2;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+.celestial-draw {
+  animation: celestial-draw 2.8s ease-out forwards;
+}
+
+@utility container-vorzix {
+  width: 100%;
+  max-width: var(--container-vorzix);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@utility container-vorzix-wide {
+  width: 100%;
+  max-width: var(--container-vorzix-wide);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-twinkle,
+  .animate-code-scroll,
+  .celestial-draw {
+    animation: none;
+  }
 }

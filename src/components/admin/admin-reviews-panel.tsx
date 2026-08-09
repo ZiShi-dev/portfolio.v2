@@ -4,7 +4,9 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import {
   Check,
+  Copy,
   EyeOff,
+  Link2,
   Loader2,
   Mail,
   MessageSquareQuote,
@@ -42,9 +44,21 @@ import {
 } from "@/components/ui/select";
 import { readAdminApiError } from "@/lib/admin/api-error";
 import type { ReviewRow, ReviewStatus } from "@/lib/reviews/store";
+import {
+  absoluteUrl,
+  reviewInvitePath,
+  reviewPublicPath,
+} from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 type Filter = "all" | ReviewStatus;
+
+type ProjectOption = {
+  id: string;
+  title: string;
+  slug: string;
+  reference: string | null;
+};
 
 type ListResponse = {
   ok?: boolean;
@@ -55,18 +69,20 @@ type ListResponse = {
   code?: string;
 };
 
-const INITIAL_FILTER: Filter = "pending";
+const INITIAL_FILTER: Filter = "published";
 
 type AdminReviewsPanelProps = {
   initialReviews?: ReviewRow[];
   initialPendingCount?: number;
   initialConfigured?: boolean;
+  projectOptions?: ProjectOption[];
 };
 
 export function AdminReviewsPanel({
   initialReviews,
   initialPendingCount = 0,
   initialConfigured = true,
+  projectOptions = [],
 }: AdminReviewsPanelProps = {}) {
   const t = useTranslations("admin.reviews");
   const tErrors = useTranslations("admin.errors");
@@ -82,6 +98,7 @@ export function AdminReviewsPanel({
   );
   const [loading, setLoading] = useState(initialReviews === undefined);
   const [pending, startTransition] = useTransition();
+  const [copyHint, setCopyHint] = useState<string | null>(null);
   const statusOpRef = useRef(0);
 
   const open = selectedId !== null;
@@ -200,6 +217,48 @@ export function AdminReviewsPanel({
         }
       }
     });
+  }
+
+  async function linkProject(id: string, projectId: string | null) {
+    setError("");
+    setSelectedSnapshot((prev) =>
+      prev?.id === id ? { ...prev, project_id: projectId } : prev
+    );
+    setReviews((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, project_id: projectId } : r))
+    );
+
+    startTransition(async () => {
+      try {
+        const res = await fetch(`/api/admin/reviews/${id}`, {
+          method: "PATCH",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ projectId }),
+        });
+        const body = (await res.json().catch(() => null)) as ListResponse | null;
+        if (!res.ok) {
+          setError(
+            readAdminApiError(res, body, tErrors("generic"), (key) =>
+              tErrors(key)
+            )
+          );
+          await load(filter, undefined, true);
+        }
+      } catch {
+        setError(tErrors("generic"));
+      }
+    });
+  }
+
+  async function copyText(label: string, value: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyHint(label);
+      window.setTimeout(() => setCopyHint(null), 2000);
+    } catch {
+      setError(t("copyFailed"));
+    }
   }
 
   async function remove(id: string) {
@@ -393,6 +452,95 @@ export function AdminReviewsPanel({
               <div className="scrollbar-overlay min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6">
                 <div className="whitespace-pre-wrap break-words rounded-xl border border-border/60 bg-muted/20 p-3 text-sm leading-relaxed text-foreground/85">
                   {selected.message}
+                </div>
+
+                <div className="mt-4 space-y-3 rounded-xl border border-border bg-background/40 p-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/70">
+                    {t("projectLinkTitle")}
+                  </p>
+                  <Select
+                    value={selected.project_id ?? "__none__"}
+                    onValueChange={(v) =>
+                      void linkProject(
+                        selected.id,
+                        v === "__none__" ? null : v
+                      )
+                    }
+                  >
+                    <SelectTrigger aria-label={t("projectLinkLabel")}>
+                      <SelectValue placeholder={t("projectLinkNone")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">
+                        {t("projectLinkNone")}
+                      </SelectItem>
+                      {projectOptions.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>
+                          {(p.reference ? `${p.reference} · ` : "") + p.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-foreground/50">
+                    {t("projectLinkHint")}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {selected.status === "published" ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          void copyText(
+                            t("copiedPublic"),
+                            absoluteUrl(reviewPublicPath(selected.id))
+                          )
+                        }
+                      >
+                        <Copy className="h-3.5 w-3.5" aria-hidden />
+                        {t("copyPublicLink")}
+                      </Button>
+                    ) : null}
+                    {selected.project_id ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          void copyText(
+                            t("copiedInvite"),
+                            absoluteUrl(
+                              reviewInvitePath(selected.project_id!)
+                            )
+                          )
+                        }
+                      >
+                        <Link2 className="h-3.5 w-3.5" aria-hidden />
+                        {t("copyInviteLink")}
+                      </Button>
+                    ) : projectOptions[0] ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          void copyText(
+                            t("copiedInvite"),
+                            absoluteUrl(
+                              reviewInvitePath(projectOptions[0].id)
+                            )
+                          )
+                        }
+                      >
+                        <Link2 className="h-3.5 w-3.5" aria-hidden />
+                        {t("copyInviteLinkFirst")}
+                      </Button>
+                    ) : null}
+                  </div>
+                  {copyHint ? (
+                    <p className="text-xs text-primary">{copyHint}</p>
+                  ) : null}
                 </div>
               </div>
 

@@ -36,6 +36,19 @@ export async function GET(request: Request) {
     countReviewsByStatus("pending"),
   ]);
 
+  if (reviews === null) {
+    return jsonResponse(
+      {
+        ok: false,
+        code: "persist_failed",
+        configured: true,
+        reviews: [],
+        pendingCount: 0,
+      },
+      503
+    );
+  }
+
   logAdminAuthEvent("reviews_listed", ip);
 
   return jsonResponse(

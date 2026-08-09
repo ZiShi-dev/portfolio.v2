@@ -5,7 +5,7 @@ type BrandNameProps = {
   className?: string;
   /** Nombre de caractères visibles (effet machine à écrire). */
   length?: number;
-  /** Hero typewriter : signature Allura. Reste du site : serif. */
+  /** Hero typewriter : marque VORZIX en display. */
   variant?: "signature" | "modern";
 };
 

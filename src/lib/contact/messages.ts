@@ -68,22 +68,6 @@ export async function countContactSubmissionsInWindow(options: {
   };
 }
 
-export type ContactMessageStatus = "unread" | "read" | "archived";
-
-export type ContactMessageRow = {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  name: string;
-  email: string;
-  message: string;
-  status: ContactMessageStatus;
-  fingerprint: string | null;
-  ip_hash: string | null;
-  archive_note: string | null;
-  conversation_url: string | null;
-};
-
 export type SaveContactMessageInput = {
   name: string;
   email: string;
@@ -135,91 +119,4 @@ export async function saveContactMessage(
 
   if (!data?.id) return { ok: false };
   return { ok: true, id: data.id };
-}
-
-export async function listContactMessages(options?: {
-  status?: ContactMessageStatus | "all";
-  limit?: number;
-}): Promise<ContactMessageRow[]> {
-  const supabase = createSupabaseServiceClient();
-  if (!supabase) return [];
-
-  const limit = Math.min(Math.max(options?.limit ?? 50, 1), 100);
-  let query = supabase
-    .from("contact_messages")
-    .select(
-      "id, created_at, updated_at, name, email, message, status, fingerprint, ip_hash, archive_note, conversation_url"
-    )
-    .order("created_at", { ascending: false })
-    .limit(limit);
-
-  if (options?.status && options.status !== "all") {
-    query = query.eq("status", options.status);
-  }
-
-  const { data, error } = await query;
-  if (error || !data) {
-    console.error("[contact] list failed", error?.code ?? "unknown");
-    return [];
-  }
-
-  return data as ContactMessageRow[];
-}
-
-export async function countUnreadContactMessages(): Promise<number> {
-  const supabase = createSupabaseServiceClient();
-  if (!supabase) return 0;
-
-  const { count, error } = await supabase
-    .from("contact_messages")
-    .select("id", { count: "exact", head: true })
-    .eq("status", "unread");
-
-  if (error) return 0;
-  return count ?? 0;
-}
-
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-export type UpdateContactMessageInput = {
-  status: ContactMessageStatus;
-  archiveNote?: string | null;
-  conversationUrl?: string | null;
-};
-
-export async function updateContactMessageStatus(
-  id: string,
-  input: UpdateContactMessageInput
-): Promise<boolean> {
-  const supabase = createSupabaseServiceClient();
-  if (!supabase || !UUID_RE.test(id)) return false;
-
-  const patch: Record<string, string | null> = {
-    status: input.status,
-  };
-
-  if (input.status === "archived") {
-    patch.archive_note = input.archiveNote ?? null;
-    patch.conversation_url = input.conversationUrl ?? null;
-  } else {
-    // Quitter l'archive → nettoyer les métadonnées liées
-    patch.archive_note = null;
-    patch.conversation_url = null;
-  }
-
-  const { error } = await supabase
-    .from("contact_messages")
-    .update(patch)
-    .eq("id", id);
-
-  return !error;
-}
-
-export async function deleteContactMessage(id: string): Promise<boolean> {
-  const supabase = createSupabaseServiceClient();
-  if (!supabase || !UUID_RE.test(id)) return false;
-
-  const { error } = await supabase.from("contact_messages").delete().eq("id", id);
-  return !error;
 }

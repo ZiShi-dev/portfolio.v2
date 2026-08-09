@@ -3,20 +3,21 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import Link from "next/link";
 import {
   ArrowRight,
-  Mail,
   MessageSquareQuote,
   FolderKanban,
   BarChart3,
+  Orbit,
   Share2,
+  Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import { AdminHeaderActions } from "@/components/admin/admin-header-actions";
 import { Button } from "@/components/ui/button";
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
 import { getAdminLocale } from "@/lib/admin/i18n";
 import { requireAdminPageUser } from "@/lib/admin/require-admin-page";
-import { brand } from "@/lib/brand";
 import { isSupabaseServiceConfigured } from "@/lib/supabase/service";
-import { countUnreadContactMessages } from "@/lib/contact/messages";
+import { countNewProjectInquiries } from "@/lib/project-inquiry/store";
 import {
   countReviewsByStatus,
   getPublishedReviews,
@@ -25,6 +26,7 @@ import {
   countDemoProjects,
   listProjectsForAdmin,
 } from "@/lib/projects/store";
+import { listServicesForAdmin } from "@/lib/services/store";
 
 export const dynamic = "force-dynamic";
 
@@ -45,16 +47,21 @@ export default async function AdminDashboardPage() {
   const user = await requireAdminPageUser();
 
   const configured = isSupabaseServiceConfigured();
-  const unreadCount = configured ? await countUnreadContactMessages() : 0;
+  const newInquiries = configured ? await countNewProjectInquiries() : 0;
   const pendingReviews = configured
     ? await countReviewsByStatus("pending")
     : 0;
-  const publishedReviews = await getPublishedReviews();
+  const publishedReviews = await getPublishedReviews({ fallbackToDemo: false });
   const projectsAdmin = configured ? await listProjectsForAdmin() : null;
   const projectsCount =
     projectsAdmin?.ok && projectsAdmin.configured
       ? projectsAdmin.projects.length
       : countDemoProjects();
+  const servicesAdmin = configured ? await listServicesForAdmin() : null;
+  const servicesCount =
+    servicesAdmin?.ok && servicesAdmin.configured
+      ? servicesAdmin.services.length
+      : 0;
 
   const stats = [
     {
@@ -72,10 +79,16 @@ export default async function AdminDashboardPage() {
       hint: t("stats.projectsHint"),
     },
     {
-      label: configured ? t("stats.unread") : t("stats.email"),
-      value: configured ? String(unreadCount) : brand.email,
-      icon: Mail,
-      hint: configured ? t("stats.emailHintInbox") : t("stats.emailHint"),
+      label: t("stats.services"),
+      value: servicesCount,
+      icon: Sparkles,
+      hint: t("stats.servicesHint"),
+    },
+    {
+      label: t("stats.newInquiries"),
+      value: configured ? String(newInquiries) : "—",
+      icon: Orbit,
+      hint: t("stats.newInquiriesHint"),
     },
   ];
 
@@ -92,7 +105,7 @@ export default async function AdminDashboardPage() {
         <AdminHeaderActions />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <section
             key={stat.label}
@@ -118,23 +131,21 @@ export default async function AdminDashboardPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <Mail className="h-5 w-5 text-primary" aria-hidden />
-              {t("contactTitle")}
+              <Orbit className="h-5 w-5 text-primary" aria-hidden />
+              {t("inquiriesTitle")}
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/65">
-              {t("contactBody", { email: brand.email })}
+              {t("inquiriesBody")}
             </p>
-            {configured && unreadCount > 0 ? (
+            {configured && newInquiries > 0 ? (
               <p className="mt-3 text-sm font-medium text-primary">
-                {t("contactUnreadBadge", { count: unreadCount })}
+                {t("inquiriesNewBadge", { count: newInquiries })}
               </p>
-            ) : (
-              <p className="mt-3 text-sm text-foreground/55">{t("contactNext")}</p>
-            )}
+            ) : null}
           </div>
           <Button asChild className="shrink-0 self-start">
-            <Link href={ADMIN_ROUTES.messages}>
-              {t("manageMessages")}
+            <Link href={ADMIN_ROUTES.inquiries}>
+              {t("manageInquiries")}
               <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </Link>
           </Button>
@@ -187,6 +198,48 @@ export default async function AdminDashboardPage() {
           <Button asChild className="shrink-0 self-start">
             <Link href={ADMIN_ROUTES.about}>
               {t("manageAboutStats")}
+              <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <Sparkles className="h-5 w-5 text-primary" aria-hidden />
+              {t("servicesTitle")}
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/65">
+              {t("servicesBody")}
+            </p>
+            <p className="mt-3 text-sm text-foreground/55">{t("servicesNext")}</p>
+          </div>
+          <Button asChild className="shrink-0 self-start">
+            <Link href={ADMIN_ROUTES.services}>
+              {t("manageServices")}
+              <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <ShieldCheck className="h-5 w-5 text-primary" aria-hidden />
+              {t("engagementsTitle")}
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/65">
+              {t("engagementsBody")}
+            </p>
+            <p className="mt-3 text-sm text-foreground/55">{t("engagementsNext")}</p>
+          </div>
+          <Button asChild className="shrink-0 self-start">
+            <Link href={ADMIN_ROUTES.engagements}>
+              {t("manageEngagements")}
               <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </Link>
           </Button>

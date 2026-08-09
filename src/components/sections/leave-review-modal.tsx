@@ -32,6 +32,7 @@ function clearOpenReviewQuery() {
 
 export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) {
   const [open, setOpen] = useState(false);
+  const [projectId, setProjectId] = useState<string | null>(null);
   const unlockScrollRef = useRef<(() => void) | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -45,6 +46,10 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
     document.addEventListener(OPEN_LEAVE_REVIEW_EVENT, handleOpen);
 
     const params = new URLSearchParams(window.location.search);
+    const project = params.get("project");
+    if (project && /^[0-9a-f-]{36}$/i.test(project)) {
+      setProjectId(project);
+    }
     if (params.get(OPEN_REVIEW_QUERY) === "1") {
       setOpen(true);
       clearOpenReviewQuery();
@@ -138,7 +143,7 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
                 </button>
 
                 <div className="p-4 sm:p-6">
-                  <ReviewFormPage variant="modal" />
+                  <ReviewFormPage variant="modal" projectId={projectId} />
                 </div>
               </motion.div>
             </div>

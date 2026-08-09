@@ -64,18 +64,8 @@ export default async function MentionsLegalesPage() {
             <h2 className="text-lg font-semibold text-foreground">
               {t("personalData")}
             </h2>
-            <p>
-              {t.rich("personalDataP1", {
-                resend: externalLink("https://resend.com"),
-              })}
-            </p>
-            <p>
-              {t.rich("personalDataP2", {
-                privacy: externalLink(
-                  "https://resend.com/legal/privacy-policy"
-                ),
-              })}
-            </p>
+            <p>{t("personalDataP1")}</p>
+            <p>{t("personalDataP2")}</p>
             <p>{t("personalDataP3")}</p>
             <p>
               {t.rich("personalDataP4", {

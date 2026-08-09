@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, LogIn } from "lucide-react";
@@ -43,6 +43,7 @@ export function AdminLoginForm({
   initialMfaChallenge,
   initialNeedsEnrollment = false,
 }: AdminLoginFormProps) {
+  const locale = useLocale();
   const t = useTranslations("admin.login");
   const tErrors = useTranslations("admin.errors");
   const router = useRouter();
@@ -265,6 +266,7 @@ export function AdminLoginForm({
           ref={turnstileRef}
           onToken={setTurnstileToken}
           onExpire={() => setTurnstileToken("")}
+          language={locale}
         />
       )}
 

@@ -69,7 +69,11 @@ function handleFormRateLimit(request: NextRequest) {
 
   const ip = getClientIp(request);
   const path = request.nextUrl.pathname;
-  const rateKey = path.includes("/contact") ? `contact:${ip}` : `review:${ip}`;
+  const rateKey = path.includes("/contact")
+    ? `contact:${ip}`
+    : path.includes("/project-inquiry")
+      ? `project-inquiry:${ip}`
+      : `review:${ip}`;
   const rate = checkRateLimitInStore(formStore, rateKey);
 
   if (!rate.allowed) {
@@ -150,19 +154,31 @@ function handleAdminMfaRateLimit(request: NextRequest) {
 
 /** Anciennes pages → sections de l’accueil. */
 const HOME_SECTION_REDIRECTS: Record<string, string> = {
-  "/services": "/#services",
   "/a-propos": "/#a-propos",
 };
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
+  // Ancien chemin /services → catalogue /offres (+ détail)
+  if (path === "/services") {
+    return NextResponse.redirect(new URL("/offres", request.url), 308);
+  }
+  if (path.startsWith("/services/")) {
+    const slug = path.slice("/services/".length);
+    return NextResponse.redirect(new URL(`/offres/${slug}`, request.url), 308);
+  }
+
   const homeSection = HOME_SECTION_REDIRECTS[path];
   if (homeSection) {
     return NextResponse.redirect(new URL(homeSection, request.url), 308);
   }
 
-  if (path === "/api/contact" || path === "/api/review") {
+  if (
+    path === "/api/contact" ||
+    path === "/api/review" ||
+    path === "/api/project-inquiry"
+  ) {
     return handleFormRateLimit(request);
   }
 
@@ -207,6 +223,7 @@ export const config = {
   matcher: [
     "/api/contact",
     "/api/review",
+    "/api/project-inquiry",
     "/api/admin/login",
     "/api/admin/password",
     "/api/admin/mfa/verify",

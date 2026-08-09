@@ -1,11 +1,11 @@
 {
   "meta": {
-    "title": "Web Developer",
-    "description": "Freelance web developer & designer. Custom websites and apps — polished design, guided launch — by Vignes Ibrahim.",
-    "jobTitle": "Freelance web developer"
+    "title": "Digital solutions",
+    "description": "VORZIX designs custom websites, applications and digital platforms — premium design, reliable engineering and dedicated team support.",
+    "jobTitle": "Technology agency"
   },
   "nav": {
-    "services": "Services",
+    "services": "Offers",
     "projects": "Projects",
     "about": "About",
     "reviews": "Reviews",
@@ -25,14 +25,24 @@
     "socialConfig": "{label} — link to configure"
   },
   "home": {
-    "contact": "Let's discuss your project",
-    "projects": "View portfolio",
+    "contact": "Start your project",
+    "projects": "View our work",
     "scroll": "Explore",
-    "trustLine": "Reply within 48h · Clear quote · No commitment"
+    "trustLine": "Reply within 48h · Transparent quote · Dedicated team"
   },
   "hero": {
+    "eyebrow": "Technology agency",
+    "title": "Websites, apps and platforms",
+    "titleHighlight": "measured to a tenth.",
+    "subtitle": "VORZIX crafts premium digital products — websites, applications and platforms — with the precision of a celestial atlas.",
     "tagline": "Sites & apps that convert",
-    "bio": "I design custom websites and applications — polished design, reliable tech, guided launch. One point of contact from brief to go-live."
+    "bio": "We design custom websites, applications and digital products — premium design, reliable engineering, guided delivery. A dedicated team from brief to launch."
+  },
+  "journey": {
+    "eyebrow": "Journey",
+    "title": "From idea",
+    "titleHighlight": "to a live site",
+    "subtitle": "Six clear steps — explore the cube to see how we guide your project, from the first conversation onward."
   },
   "heroCube": {
     "storyLabel": "From idea to website",
@@ -52,7 +62,7 @@
       },
       "build": {
         "title": "Creation",
-        "desc": "I build your site piece by piece — clear, fast, ready to welcome visitors."
+        "desc": "We build your site piece by piece — clear, fast, ready to welcome visitors."
       },
       "launch": {
         "title": "Go live",
@@ -64,19 +74,20 @@
       },
       "support": {
         "title": "Support",
-        "desc": "I stay available after launch to fix issues, evolve the site, and advise you."
+        "desc": "We stay available after launch to fix issues, evolve the site, and advise you."
       }
     }
   },
   "services": {
-    "eyebrow": "Services",
-    "title": "What I can",
-    "titleHighlight": "do for you",
-    "subtitle": "Concrete deliverables to attract clients, clarify your offer, and grow your online presence.",
-    "cta": "Talk about my needs",
+    "eyebrow": "Catalog · Offers",
+    "title": "Digital products crafted with",
+    "titleHighlight": "precision.",
+    "subtitle": "Every deliverable is mapped: clear, measurable, built to convert — sites, apps and platforms.",
+    "discover": "Discover",
+    "cta": "Talk about your needs",
     "page": {
-      "metaTitle": "Services — {brand}",
-      "metaDescription": "Website creation, design, backend, SEO and maintenance by {brand}. Clear solutions for your business."
+      "metaTitle": "Our commercial offers — {brand}",
+      "metaDescription": "{brand} commercial offers catalog: websites, e-commerce, apps, SaaS and custom solutions."
     },
     "items": {
       "web": {
@@ -103,17 +114,56 @@
         "title": "Post-launch support",
         "desc": "Fixes, improvements and advice after go-live — your site stays stable and ready to evolve."
       }
-    }
+    },
+    "empty": "Offers will be available soon.",
+    "idealFor": "Ideal for",
+    "included": "Typically included",
+    "learnMore": "Learn more",
+    "ctaStart": "Start a project",
+    "ctaBuy": "Buy this offer",
+    "backToServices": "Back to offers",
+    "backToCatalog": "Back to offers",
+    "detailAbout": "About this offer",
+    "detailPricing": "Pricing",
+    "relatedProjects": "Related work",
+    "viewCaseStudy": "View a case study",
+    "offerKind": {
+      "service": "Service",
+      "product": "For sale"
+    },
+    "filter": {
+      "label": "Filter offers",
+      "all": "All",
+      "product": "For sale",
+      "service": "Services",
+      "empty": "No offers in this filter."
+    },
+    "pricing": {
+      "startingAt": "From {price}",
+      "quoteOnly": "On quote",
+      "contact": "Let's talk about your project",
+      "disclaimer": "The final price depends on scope, features and project needs."
+    },
+    "catalogTitle": "Our commercial",
+    "catalogTitleHighlight": "offers.",
+    "catalogSubtitle": "Pick the solution that fits your need — each offer has a dedicated detail page.",
+    "viewAll": "View all offers"
+  },
+  "engagements": {
+    "eyebrow": "Commitments · VORZIX",
+    "title": "Our",
+    "titleHighlight": "commitments.",
+    "subtitle": "A clear framework to work together — from scope to post-launch support."
   },
   "about": {
     "eyebrow": "About",
     "title": "A clear method for your",
     "titleHighlight": "online presence",
-    "p1": "My name is {name}. Freelance web developer and designer — I build custom sites and apps with one obsession: clarity, performance, and clean delivery.",
-    "p2": "You get one point of contact — from scoping to launch. Simple communication, shared priorities, a usable result fast.",
+    "p1": "At VORZIX, we design custom websites, applications and digital products. Our obsession: clarity, performance and flawless delivery.",
+    "p2": "A dedicated team supports you from scoping to launch. Simple communication, shared priorities, a usable result fast.",
     "page": {
       "metaTitle": "About — {brand}",
-      "metaDescription": "Meet {brand}, freelance web developer: background, working method and support for your online presence."
+      "metaDescription": "Discover {brand}: our team, our method and our support for your digital presence."
     },
     "stats": {
       "years": "Years of experience",
@@ -133,17 +183,25 @@
     },
     "step3": {
       "title": "Launch & support",
-      "desc": "Go-live, final tests and post-launch follow-up. Your site stays fast, reliable and evolvable — with one point of contact throughout."
+      "desc": "Go-live, final tests and post-launch follow-up. Your site stays fast, reliable and evolvable — with a team by your side throughout."
     }
   },
   "projects": {
     "eyebrow": "Work",
-    "title": "My latest",
-    "titleHighlight": "projects",
-    "subtitle": "Real cases: project type, stack, and details on click.",
+    "title": "Our latest",
+    "titleHighlight": "work",
+    "subtitle": "Published case studies: need, VORZIX response and outcome.",
     "openDetails": "View project details for {title}",
     "seeMore": "See more",
+    "exploreAll": "Explore all projects",
     "seeSite": "Visit site",
+    "seeApp": "View app",
+    "filters": {
+      "allTypes": "All types",
+      "allLinks": "All links",
+      "withSite": "With website",
+      "withApp": "With app"
+    },
     "screens": "screens",
     "all": "All",
     "empty": "No projects in this category.",
@@ -160,9 +218,9 @@
       "metaTitle": "Projects — {brand}",
       "metaDescription": "Explore {brand}'s work: showcase sites, e-commerce and custom web applications.",
       "eyebrow": "Portfolio",
-      "title": "All my",
+      "title": "All our",
       "titleHighlight": "projects",
-      "subtitle": "Filter by project type and click to see details."
+      "subtitle": "Filter and open a full case study."
     },
     "categories": {
       "personal": "Personal project",
@@ -181,7 +239,7 @@
     },
     "items": {
       "nova": {
-        "title": "Nova — SaaS Dashboard",
+        "title": "Nova — Dashboard",
         "desc": "Analytics app concept: clear dashboard, charts and navigation designed for quick reading.",
         "images": {
           "home": "Home page",
@@ -213,7 +271,8 @@
           "member": "Member area"
         }
       }
-    }
+    },
+    "viewCase": "→ View case study"
   },
   "reviews": {
     "eyebrow": "Testimonials",
@@ -240,7 +299,7 @@
     "eyebrow": "Contact",
     "title": "Let's bring",
     "titleHighlight": "your project to life",
-    "subtitle": "Describe your needs in 2 minutes. I reply within 48h with a clear proposal — no jargon.",
+    "subtitle": "Describe your needs in 2 minutes. We reply within 48h with a clear proposal — no jargon.",
     "name": "Your name",
     "email": "Your email",
     "message": "Your message",
@@ -248,10 +307,10 @@
     "emailPlaceholder": "you@example.com",
     "messagePlaceholder": "Goal, audience, timeline, approximate budget…",
     "send": "Send my request",
-    "openForm": "Get a reply within 48h",
+    "openForm": "Start a project",
     "sending": "Sending...",
     "successTitle": "Message sent!",
-    "successBody": "I'll reply within 48 hours with next steps.",
+    "successBody": "We'll reply within 48 hours with next steps.",
     "orEmail": "Prefer email?",
     "formAria": "Contact form",
     "turnstileError": "Complete the anti-spam check before sending.",
@@ -262,7 +321,7 @@
     "eyebrow": "Client review",
     "title": "Share your",
     "titleHighlight": "experience",
-    "subtitle": "Worked with {name}? Leave a review. It will be published on the portfolio after approval.",
+    "subtitle": "Worked with {name}? Leave a review. It appears on the site right away.",
     "backToReviews": "Back to reviews",
     "name": "Your name",
     "email": "Your email",
@@ -277,7 +336,7 @@
     "send": "Submit my review",
     "sending": "Sending...",
     "successTitle": "Thank you for your review!",
-    "successBody": "I'll publish it soon on the testimonials page.",
+    "successBody": "Your review is already live on the site. Thank you!",
     "consent": "By submitting, you agree to publish your first name and review on this portfolio.",
     "formAria": "Client review form",
     "turnstileError": "Complete the anti-spam check before sending."
@@ -308,7 +367,8 @@
     "turnstileFailed": "Anti-spam verification failed. Please try again.",
     "sendFailed": "Could not send right now. Please try again later.",
     "serviceUnavailable": "Service temporarily unavailable.",
-    "unauthorized": "Unauthorized request."
+    "unauthorized": "Unauthorized request.",
+    "invalidPhone": "Invalid phone number."
   },
   "common": {
     "skipToContent": "Skip to content",
@@ -316,9 +376,7 @@
     "backHome": "Back to home",
     "closeModal": "Close dialog",
     "language": "Language",
-    "themeLight": "Switch to light mode",
-    "themeDark": "Switch to dark mode",
-    "themeToggle": "Toggle theme"
+    "whatsappFloat": "Message on WhatsApp"
   },
   "language": {
     "fr": "Français",
@@ -339,8 +397,8 @@
     "hosting": "Hosting",
     "hostingText": "This site is hosted by Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, United States.",
     "personalData": "Personal data",
-    "personalDataP1": "The contact and review forms collect your name, email, and message only to respond to your request or publish a review with your consent. They are sent via <resend>Resend</resend> (a US-based provider) so I can be notified by email.",
-    "personalDataP2": "Resend processes this data on my behalf; see their <privacy>privacy policy</privacy>.",
+    "personalDataP1": "The contact and review forms collect your name, email, and message only to respond to your request or publish a review with your consent. This data is stored securely in our database (Supabase) — no notification email is sent automatically.",
+    "personalDataP2": "You may request access, correction, or deletion of this data by contacting us.",
     "personalDataP3": "Legal basis: performance of your request (contact) or consent (publishing a review). Retention period: as long as needed to process the request, then deletion upon request.",
     "personalDataP4": "The review form uses <turnstile>Cloudflare Turnstile</turnstile> to limit spam. Turnstile may set a technical cookie; no personal data is shared for advertising purposes.",
     "personalDataP5": "This data is never sold or transferred for commercial purposes, except where required by law.",
@@ -354,11 +412,13 @@
       "title": "Administration",
       "dashboardTitle": "Dashboard",
       "loginTitle": "Admin sign-in",
-      "messagesTitle": "Contact messages",
       "reviewsTitle": "Published reviews",
       "aboutStatsTitle": "About stats",
       "projectsTitle": "Projects",
-      "settingsTitle": "Settings"
+      "inquiriesTitle": "Project inquiries",
+      "settingsTitle": "Settings",
+      "servicesTitle": "Services / Offers",
+      "engagementsTitle": "Commitments"
     },
     "language": {
       "label": "Language",
@@ -450,13 +510,13 @@
         "pendingReviewsHint": "Submissions waiting for admin approval",
         "projects": "Portfolio projects",
         "projectsHint": "Editable in /admin/projects",
-        "email": "Contact email",
-        "emailHint": "Messages received via Resend",
-        "emailHintInbox": "Unread inbox messages",
-        "unread": "Unread messages"
+        "newInquiries": "New inquiries",
+        "newInquiriesHint": "Leads to process in /admin/inquiries",
+        "services": "Offers",
+        "servicesHint": "Managed in /admin/services"
       },
       "reviewsTitle": "Review management",
-      "reviewsBody": "Visitors can leave a review (email required). Each review starts as pending: you approve, withdraw, or delete.",
+      "reviewsBody": "Visitors leave a review (email required). It goes live immediately: you then withdraw or delete if needed.",
       "reviewsEmpty": "No published reviews yet.",
       "reviewsNext": "Open the dedicated page to moderate incoming reviews.",
       "reviewsPendingBadge": "{count, plural, one {# pending review} other {# pending reviews}}",
@@ -471,11 +531,11 @@
       "aboutStatsPageTitle": "About section figures",
       "aboutStatsPageSubtitle": "These values power the stats grid on the home page.",
       "projectsTitle": "Portfolio projects",
-      "projectsBody": "Add or edit work (FR/EN/AR titles, Supabase images, app type, personal/sold).",
+      "projectsBody": "Manage Case Studies: client story, features, technologies, images and FR/EN/AR publish.",
       "projectsNext": "Open the dedicated page to manage projects shown on the site.",
       "manageProjects": "Manage projects",
       "projectsPageTitle": "Project management",
-      "projectsPageSubtitle": "Secure CRUD · Storage images · tech badges.",
+      "projectsPageSubtitle": "Case Studies · CRUD · gallery · FR/EN/AR · publish.",
       "settingsTitle": "Contact & social",
       "settingsBody": "Edit the email shown on the site and Discord, WhatsApp, Instagram, TikTok links. Leave a network empty to hide it.",
       "settingsNext": "Open settings to update without redeploying.",
@@ -483,23 +543,32 @@
       "openSettings": "Settings",
       "settingsPageTitle": "Site settings",
       "settingsPageSubtitle": "Public contact email and footer social links.",
-      "contactTitle": "Contact messages",
-      "contactBody": "Contact forms are sent to {email} via Resend and stored in the secure inbox.",
-      "contactNext": "Open the dedicated page to read, archive, or delete messages.",
-      "contactUnreadBadge": "{count, plural, one {# unread message} other {# unread messages}}",
-      "manageMessages": "Manage messages",
-      "messagesPageTitle": "Contact messages",
-      "messagesPageSubtitle": "Read, mark as read, archive, or delete incoming messages.",
       "backToDashboard": "Dashboard",
       "demoTitle": "Demo content",
       "demoBody": "Projects and reviews on the site are samples. Replace them with real work and client feedback before production.",
-      "viewSite": "View site"
+      "viewSite": "View site",
+      "inquiriesTitle": "Project inquiries",
+      "inquiriesBody": "Manage leads from the interactive journey.",
+      "manageInquiries": "View inquiries",
+      "inquiriesNewBadge": "{count} new",
+      "servicesTitle": "Commercial offers",
+      "servicesBody": "Create, publish and order offers shown on the site. Pricing, translations and linked case studies.",
+      "servicesNext": "Manage everything from /admin/services — no code changes.",
+      "manageServices": "Manage offers",
+      "servicesPageTitle": "Offers management",
+      "servicesPageSubtitle": "CMS · FR/EN/AR · pricing · case studies · publishing.",
+      "engagementsTitle": "VORZIX commitments",
+      "engagementsBody": "Edit commitments shown on the site: titles, FR/EN/AR copy, order and publishing.",
+      "engagementsNext": "Manage everything from /admin/engagements — no code changes.",
+      "manageEngagements": "Manage commitments",
+      "engagementsPageTitle": "Commitments management",
+      "engagementsPageSubtitle": "CMS · FR/EN/AR · icons · order · publishing."
     },
     "reviews": {
       "title": "Review moderation",
-      "subtitle": "Public submissions → pending → manual publication.",
-      "selectHint": "Select a review to moderate it.",
-      "moderationHint": "No automatic email verification: email is required, then you approve (anti-spam: Turnstile, honeypot, rate-limit).",
+      "subtitle": "Published immediately — withdraw or delete reviews that don’t fit.",
+      "selectHint": "Select a review to manage it.",
+      "moderationHint": "Anti-spam is on (Turnstile, honeypot, rate-limit). Email is required. You then decide to keep or remove the review.",
       "publishHint": "Submissions go through {api}.",
       "notConfigured": "Moderation disabled: add SUPABASE_SERVICE_ROLE_KEY and run npm run db:migrate (reviews table).",
       "filters": "Filters",
@@ -518,7 +587,17 @@
       "confirmDelete": "Permanently delete this review?",
       "confirmDeleteTitle": "Delete this review?",
       "confirmDeleteAction": "Yes, delete",
-      "confirmDeleteCancel": "Cancel"
+      "confirmDeleteCancel": "Cancel",
+      "projectLinkTitle": "Project link & sharing",
+      "projectLinkLabel": "Linked case study",
+      "projectLinkNone": "No project",
+      "projectLinkHint": "A published review appears on the project detail page. Copy the public link for the client, or the invite link so they can leave a review.",
+      "copyPublicLink": "Copy review link",
+      "copyInviteLink": "Copy client invite",
+      "copyInviteLinkFirst": "Copy invite (first project)",
+      "copiedPublic": "Review link copied.",
+      "copiedInvite": "Invite link copied.",
+      "copyFailed": "Could not copy the link."
     },
     "aboutStats": {
       "loading": "Loading…",
@@ -558,7 +637,7 @@
         "tiktok": "TikTok"
       },
       "hints": {
-        "contactEmail": "Shown on the site (footer, contact, legal). Does not change Resend.",
+        "contactEmail": "Shown on the site (footer, contact, legal).",
         "discord": "Invite or profile on discord.gg / discord.com",
         "whatsapp": "wa.me link (country code, no +)",
         "instagram": "instagram.com/… profile",
@@ -600,9 +679,21 @@
         "kind": "Type",
         "sortOrder": "Order",
         "link": "Site link",
+        "appLink": "App link",
         "published": "Visible on the site",
         "businessTypes": "Application type",
-        "images": "Images"
+        "images": "Images",
+        "reference": "Reference",
+        "featured": "Featured",
+        "clientNeed": "Client need",
+        "objective": "Objective",
+        "solution": "VORZIX response",
+        "result": "Result",
+        "features": "Features",
+        "technologies": "Technologies",
+        "seoTitle": "SEO title",
+        "seoDescription": "SEO description",
+        "coverImage": "Cover image"
       },
       "businessTypesHint": "Up to {max} types.",
       "businessTypesMax": "Maximum {max} application types.",
@@ -620,7 +711,7 @@
       "kindPersonal": "Personal project",
       "kindSold": "Sold / client project",
       "upload": "Upload",
-      "imagesEmpty": "Add at least one image.",
+      "imagesEmpty": "Add images (required to publish).",
       "moveUp": "Move up",
       "moveDown": "Move down",
       "removeImage": "Remove image",
@@ -638,7 +729,17 @@
       "noCover": "No image",
       "confirmDeleteTitle": "Delete this project?",
       "confirmDeleteAction": "Yes, delete",
-      "confirmDeleteCancel": "Cancel"
+      "confirmDeleteCancel": "Cancel",
+      "featured": "Featured",
+      "referenceHint": "Catalog reference (VZ—CASE …) is generated on create.",
+      "hints": {
+        "appLink": "Play Store, App Store, or app URL (optional)."
+      },
+      "addFeature": "Add a feature",
+      "featurePlaceholder": "e.g. Admin dashboard",
+      "techPlaceholder": "e.g. Next.js",
+      "projectsPageSubtitle": "Case Studies · CRUD · gallery · FR/EN/AR · publish.",
+      "preview": "Preview"
     },
     "errors": {
       "unavailable": "Service temporarily unavailable.",
@@ -670,45 +771,364 @@
       "project_invalid_images": "Add at least one valid image.",
       "project_invalid_image": "Image URL not allowed.",
       "project_invalid_link": "Invalid site link.",
+      "project_invalid_app_link": "Invalid app link.",
       "project_invalid_business_types": "Pick a valid application type.",
       "project_too_many_business_types": "Maximum 4 application types.",
       "invalid_business_type": "Unknown application type.",
       "duplicate_business_type": "Duplicate application type.",
       "duplicate_slug": "This slug already exists.",
-      "empty_patch": "Nothing to save."
+      "empty_patch": "Nothing to save.",
+      "publish_requires_title": "French title is required to publish.",
+      "publish_requires_description": "French description is required to publish.",
+      "publish_requires_images": "At least one image is required to publish.",
+      "project_invalid_features": "Invalid features.",
+      "project_invalid_technologies": "Invalid technologies.",
+      "duplicate_reference": "This catalog reference already exists.",
+      "service_invalid_slug": "Invalid slug.",
+      "service_invalid_icon": "Invalid icon.",
+      "service_invalid_reference": "Invalid reference.",
+      "service_invalid_title": "Invalid title.",
+      "service_invalid_short_description": "Invalid short description.",
+      "service_invalid_features": "Invalid included items.",
+      "service_invalid_pricing": "Invalid pricing.",
+      "service_invalid_case_studies": "Invalid case studies.",
+      "starting_price_required": "Starting price required for this mode.",
+      "publish_requires_short_description": "FR short description required to publish.",
+      "publish_requires_reference": "Reference required to publish.",
+      "publish_incomplete": "Offer incomplete for publishing.",
+      "duplicate_case_study": "Duplicate case study.",
+      "invalid_reorder": "Invalid reorder.",
+      "not_found": "Not found.",
+      "engagement_invalid_icon": "Invalid icon.",
+      "engagement_invalid_reference": "Invalid reference.",
+      "engagement_invalid_title": "Invalid title.",
+      "engagement_invalid_description": "Invalid description."
     },
-    "inbox": {
-      "title": "Contact messages",
-      "subtitle": "Secure inbox (Origin · MFA · service_role · RLS).",
-      "notConfigured": "Inbox disabled: add SUPABASE_SERVICE_ROLE_KEY and run supabase/migrations/001_contact_messages.sql.",
-      "filters": "Filters",
-      "filterUnread": "Unread ({count})",
-      "filterAll": "All",
-      "filterRead": "Read",
-      "filterArchived": "Archived",
-      "loading": "Loading…",
-      "empty": "No messages in this filter.",
-      "selectHint": "Select a message to read it.",
-      "close": "Close",
-      "markRead": "Mark read",
-      "markUnread": "Mark unread",
+    "engagements": {
+      "listTitle": "Commitments",
+      "create": "Create a commitment",
+      "createTitle": "New commitment",
+      "editTitle": "Edit commitment",
+      "formHint": "Incomplete drafts allowed. Publishing requires FR title and description.",
+      "edit": "Edit",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "saveDraft": "Save draft",
+      "savePublish": "Save & publish",
+      "cancel": "Cancel",
+      "empty": "No commitments yet.",
+      "loadError": "Unable to load commitments.",
+      "deleteError": "Delete failed.",
+      "deleteTitle": "Delete this commitment?",
+      "deleteBody": "Permanent. It will disappear from the site.",
+      "deleteConfirm": "Delete",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
       "archive": "Archive",
-      "editArchiveMeta": "Edit note / link",
-      "archiveFormTitle": "Archive this message",
-      "archiveFormHint": "Add a follow-up note and the link to the email thread (Gmail, Outlook…).",
-      "archiveNoteLabel": "Note",
-      "archiveNotePlaceholder": "e.g. Quote sent, waiting for reply…",
-      "conversationUrlLabel": "Email conversation link",
-      "conversationUrlPlaceholder": "https://mail.google.com/mail/…",
-      "confirmArchive": "Save archive",
-      "cancelArchive": "Cancel",
-      "archiveMetaTitle": "Archive follow-up",
-      "openConversation": "Open conversation",
-      "delete": "Delete",
-      "confirmDelete": "Permanently delete this message?",
-      "confirmDeleteTitle": "Delete this message?",
-      "confirmDeleteAction": "Yes, delete",
-      "confirmDeleteCancel": "Cancel"
+      "notConfiguredTitle": "Unavailable",
+      "notConfiguredBody": "Add SUPABASE_SERVICE_ROLE_KEY and run npm run db:migrate (engagements table).",
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "fields": {
+        "reference": "Reference",
+        "icon": "Icon",
+        "status": "Status",
+        "sortOrder": "Order",
+        "title": "Title",
+        "description": "Description"
+      }
+    },
+    "inquiries": {
+      "title": "Project inquiries",
+      "subtitle": "Leads from the Start a project journey.",
+      "empty": "No inquiries for this filter.",
+      "notConfiguredTitle": "Database not configured",
+      "notConfiguredBody": "Configure Supabase to manage inquiries.",
+      "retry": "Retry",
+      "filters": {
+        "all": "All",
+        "new": "New",
+        "contacted": "Contacted",
+        "qualified": "Qualified",
+        "won": "Won",
+        "lost": "Lost",
+        "spam": "Spam"
+      },
+      "fields": {
+        "status": "Status",
+        "notes": "Internal notes",
+        "type": "Type",
+        "objective": "Goal",
+        "budget": "Budget",
+        "timeline": "Timeline",
+        "launch": "Launch",
+        "description": "Description",
+        "contact": "Contact",
+        "company": "Company",
+        "website": "Website",
+        "locale": "Locale",
+        "source": "Source"
+      },
+      "actions": {
+        "save": "Save",
+        "saving": "Saving…",
+        "saved": "Saved.",
+        "delete": "Delete",
+        "copyEmail": "Copy email",
+        "copyPhone": "Copy phone",
+        "openSite": "Open website",
+        "confirmDeleteTitle": "Delete this inquiry?",
+        "confirmDelete": "This action is permanent.",
+        "confirmDeleteAction": "Yes, delete",
+        "confirmDeleteCancel": "Cancel"
+      }
+    },
+    "services": {
+      "listTitle": "Offers",
+      "create": "Create offer",
+      "createTitle": "New offer",
+      "editTitle": "Edit offer",
+      "formHint": "Incomplete drafts allowed. Publishing requires FR title and short description.",
+      "edit": "Edit",
+      "preview": "Preview",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "saveDraft": "Save draft",
+      "savePublish": "Save & publish",
+      "cancel": "Cancel",
+      "empty": "No offers yet. Create the first one.",
+      "loadError": "Could not load offers.",
+      "duplicateError": "Could not duplicate.",
+      "deleteError": "Could not delete.",
+      "deleteTitle": "Delete this offer?",
+      "deleteBody": "Permanent. Existing leads keep the frozen reference.",
+      "deleteConfirm": "Delete",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "addFeature": "Add item",
+      "removeFeature": "Remove",
+      "ctaPlaceholder": "Start a project",
+      "inquiryNone": "No preselection",
+      "noCaseStudies": "No case studies available.",
+      "notConfiguredTitle": "Unavailable",
+      "notConfiguredBody": "Add SUPABASE_SERVICE_ROLE_KEY and run npm run db:migrate (services table).",
+      "cols": {
+        "reference": "Ref.",
+        "name": "Name",
+        "status": "Status",
+        "pricing": "Pricing",
+        "featured": "Featured",
+        "order": "Order",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "pricingMode": {
+        "starting_at": "Starting at",
+        "quote_only": "On quote",
+        "contact": "Contact"
+      },
+      "offerKind": {
+        "service": "Service",
+        "product": "For sale"
+      },
+      "commerceHint": "Offer type powers the catalog filter. Checkboxes control which buttons appear on the site.",
+      "sections": {
+        "identity": "Identity",
+        "commerce": "Type & buttons",
+        "pricing": "Pricing",
+        "features": "Included items",
+        "caseStudies": "Linked case studies"
+      },
+      "fields": {
+        "reference": "Reference",
+        "slug": "Slug",
+        "icon": "Icon",
+        "status": "Status",
+        "featured": "Featured",
+        "sortOrder": "Sort order",
+        "offerKind": "Offer type",
+        "showCtaBuy": "“Buy” button",
+        "showCtaStart": "“Start a project” button",
+        "pricingMode": "Pricing mode",
+        "currency": "Currency",
+        "startingPrice": "Starting price",
+        "inquiryType": "Preselected type (flow)",
+        "title": "Title",
+        "shortDescription": "Short description",
+        "description": "Description",
+        "idealFor": "Ideal for",
+        "ctaLabel": "Start CTA label"
+      },
+      "duplicate": "Duplicate",
+      "archive": "Archive"
+    }
+  },
+  "caseStudy": {
+    "need": "The need",
+    "objective": "The objective",
+    "solution": "The VORZIX response",
+    "features": "What was built",
+    "result": "The result",
+    "gallery": "Gallery",
+    "technologies": "Technologies",
+    "clientReview": "Client review",
+    "visitSite": "Visit the live site",
+    "visitApp": "Open the app",
+    "ctaTitle": "Have a similar project?",
+    "ctaSubtitle": "Tell us about your need — a clear reply within 48h.",
+    "ctaPrimary": "Start a project",
+    "ctaNext": "See next project",
+    "backToList": "All case studies"
+  },
+  "projectInquiry": {
+    "brand": "VZ—PROJECT",
+    "meta": {
+      "title": "Start a project — {brand}",
+      "description": "Frame your need in a few choices. VORZIX builds your project constellation."
+    },
+    "intro": {
+      "title": "Let's map the outlines of your project.",
+      "subtitle": "A few choices are enough for us to understand your need.",
+      "cta": "Start"
+    },
+    "progress": {
+      "overview": "Project journey",
+      "step": "Step {current} of {total} — {label}"
+    },
+    "nodes": {
+      "type": "Type",
+      "objective": "Goal",
+      "budget": "Budget",
+      "timeline": "Timeline",
+      "description": "Project",
+      "contact": "Contact"
+    },
+    "questions": {
+      "type": "What would you like to create?",
+      "objective": "What is your main goal?",
+      "budget": "What budget do you have in mind?",
+      "timeline": "When would you like to start?",
+      "description": "Tell us about your project.",
+      "contact": "Your details"
+    },
+    "types": {
+      "showcase": {
+        "title": "Showcase website",
+        "description": "Present your activity with clarity."
+      },
+      "ecommerce": {
+        "title": "E-commerce",
+        "description": "Sell your products online."
+      },
+      "web_app": {
+        "title": "Web application",
+        "description": "An interactive product in the browser."
+      },
+      "saas": {
+        "title": "SaaS / platform",
+        "description": "A scalable multi-user service."
+      },
+      "redesign": {
+        "title": "Redesign",
+        "description": "Modernize an existing product."
+      },
+      "automation": {
+        "title": "Automation / back-office",
+        "description": "Streamline an internal process."
+      },
+      "other": {
+        "title": "Other",
+        "description": "A specific need to clarify."
+      }
+    },
+    "objectives": {
+      "present_activity": "Present my activity",
+      "generate_leads": "Generate leads",
+      "sell_online": "Sell online",
+      "create_product": "Create a digital product",
+      "automate_process": "Automate a process",
+      "modernize": "Modernize an existing product",
+      "other": "Other"
+    },
+    "budgets": {
+      "amount_150": "€150",
+      "amount_350": "€350",
+      "under_500": "Under €500",
+      "500_1000": "€500–1,000",
+      "1000_3000": "€1,000–3,000",
+      "3000_5000": "€3,000–5,000",
+      "5000_plus": "€5,000+",
+      "custom": "Custom amount",
+      "customAmount": "€{amount}",
+      "unknown": "I don't know yet"
+    },
+    "timelines": {
+      "asap": "As soon as possible",
+      "this_month": "This month",
+      "1_3_months": "In 1 to 3 months",
+      "later": "Later",
+      "unknown": "I don't know yet"
+    },
+    "fields": {
+      "targetLaunchDate": "Desired launch date",
+      "targetLaunchHint": "Optional.",
+      "targetLaunchPlaceholder": "Pick a date",
+      "targetLaunchClear": "Clear date",
+      "typeOther": "Describe what you want to create",
+      "typeOtherPlaceholder": "e.g. booking platform",
+      "objectiveOther": "Describe your goal",
+      "objectiveOtherPlaceholder": "e.g. retain my customers",
+      "customBudget": "Your budget",
+      "customBudgetPlaceholder": "e.g. 750",
+      "customBudgetHint": "Between €{min} and €{max}.",
+      "descriptionHelp": "Describe your activity, idea and important features. No technical jargon needed.",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "company": "Company",
+      "website": "Current website"
+    },
+    "nav": {
+      "back": "Back",
+      "continue": "Continue",
+      "review": "Review summary",
+      "exit": "Close"
+    },
+    "summary": {
+      "title": "Your project is taking shape.",
+      "subtitle": "Review the summary, then send your request.",
+      "type": "Type",
+      "objective": "Goal",
+      "budget": "Budget",
+      "timeline": "Timeline",
+      "project": "Project",
+      "contact": "Contact",
+      "submit": "Send my request",
+      "sending": "Sending…",
+      "edit": "Edit my answers"
+    },
+    "success": {
+      "title": "Request received.",
+      "body": "Your project details have been successfully sent to VORZIX."
+    },
+    "errors": {
+      "description": "Add a few lines to describe your project.",
+      "invalidWebsite": "Invalid website URL.",
+      "invalidPhone": "Invalid number. Use digits only (e.g. +33…).",
+      "otherText": "Please add a short description (2 characters min).",
+      "customBudget": "Enter an amount between €50 and €500,000.",
+      "timelineOrDate": "Choose a timeline or a launch date.",
+      "submit": "Unable to send the request. Please try again.",
+      "turnstile": "Anti-spam verification required."
     }
   }
 }

@@ -2,7 +2,7 @@ import { absoluteUrl, routes } from "@/lib/routes";
 import { brand } from "@/lib/brand";
 import { getSiteSettings } from "@/lib/social/store";
 
-export async function PersonJsonLd() {
+export async function OrganizationJsonLd() {
   const settings = await getSiteSettings();
   const homeUrl = absoluteUrl(routes.home);
   const sameAs = [
@@ -12,15 +12,14 @@ export async function PersonJsonLd() {
     settings.tiktok,
   ].filter(Boolean);
 
-  const person = {
-    "@type": "Person",
-    "@id": `${homeUrl}#person`,
+  const organization = {
+    "@type": "Organization",
+    "@id": `${homeUrl}#organization`,
     name: brand.name,
     url: homeUrl,
     email: settings.contactEmail,
-    jobTitle: "Développeur web freelance",
     description: brand.description,
-    image: absoluteUrl(brand.profileImage),
+    logo: absoluteUrl(brand.profileImage),
     sameAs,
   };
 
@@ -31,23 +30,23 @@ export async function PersonJsonLd() {
     name: brand.name,
     description: brand.description,
     inLanguage: ["fr", "en", "ar"],
-    publisher: { "@id": `${homeUrl}#person` },
+    publisher: { "@id": `${homeUrl}#organization` },
   };
 
   const professionalService = {
     "@type": "ProfessionalService",
     "@id": `${homeUrl}#service`,
-    name: `${brand.name} — Développement web`,
+    name: `${brand.name} — ${brand.titleSuffix}`,
     url: homeUrl,
     description: brand.description,
-    provider: { "@id": `${homeUrl}#person` },
+    provider: { "@id": `${homeUrl}#organization` },
     areaServed: "FR",
     email: settings.contactEmail,
   };
 
   const schema = {
     "@context": "https://schema.org",
-    "@graph": [person, website, professionalService],
+    "@graph": [organization, website, professionalService],
   };
 
   return (
@@ -57,3 +56,6 @@ export async function PersonJsonLd() {
     />
   );
 }
+
+/** @deprecated Utiliser OrganizationJsonLd */
+export const PersonJsonLd = OrganizationJsonLd;
