@@ -324,13 +324,13 @@ export async function archiveEngagement(
   | { ok: false; reason: "not_found" | "invalid_id" | "persist_failed" }
 > {
   const result = await updateEngagement(id, { status: "archived" });
-  if (!result.ok) {
-    if (result.reason === "duplicate_reference") {
-      return { ok: false, reason: "persist_failed" };
-    }
-    return result;
+  if (result.ok) return result;
+
+  // Archiver ne crée pas de conflit de référence — normaliser le type de retour.
+  if (result.reason === "invalid_id" || result.reason === "not_found") {
+    return { ok: false, reason: result.reason };
   }
-  return result;
+  return { ok: false, reason: "persist_failed" };
 }
 
 export async function reorderEngagements(
