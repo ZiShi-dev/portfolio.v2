@@ -22,9 +22,9 @@ type RowConfig = {
 };
 
 const ROWS: RowConfig[] = [
-  { durationSec: 42 },
-  { reverse: true, compact: true, durationSec: 48 },
-  { durationSec: 38 },
+  { durationSec: 85 },
+  { reverse: true, compact: true, durationSec: 95 },
+  { durationSec: 78 },
 ];
 
 /** Duplique la liste pour un défilement fluide (même avec 1–2 projets). */
