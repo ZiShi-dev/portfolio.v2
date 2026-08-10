@@ -104,18 +104,6 @@ const technologySchema = z
   .min(1)
   .max(PROJECT_LIMITS.technologyMax);
 
-const coverImageSchema = z
-  .string()
-  .trim()
-  .max(1000)
-  .nullable()
-  .optional()
-  .transform((v) => {
-    if (v === undefined || v === null || v === "") return null;
-    return v;
-  })
-  .refine((v) => v === null || isAllowedImageUrl(v), "invalid_image_url");
-
 /** Champ write optionnel : absent → null sans forcer la clé dans les patches. */
 const coverImageWriteSchema = z
   .union([z.string().trim().max(1000), z.null()])

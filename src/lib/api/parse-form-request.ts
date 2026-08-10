@@ -68,7 +68,7 @@ export async function parseFormRequest(
     const turnstileToken =
       typeof raw.turnstileToken === "string" ? raw.turnstileToken : "";
 
-    const valid = await verifyTurnstileToken(turnstileToken, ip);
+    const valid = await verifyTurnstileToken(turnstileToken, ip, formKind);
     if (!valid) {
       logFormSecurityEvent(formKind, "turnstile_failed", ip);
       return {

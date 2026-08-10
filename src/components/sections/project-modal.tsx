@@ -53,7 +53,13 @@ type ProjectModalProps = {
   onClose: () => void;
 };
 
-export function ProjectModal({ project, onClose }: ProjectModalProps) {
+export function ProjectModal(props: ProjectModalProps) {
+  return (
+    <ProjectModalContent key={props.project?.id ?? "closed"} {...props} />
+  );
+}
+
+function ProjectModalContent({ project, onClose }: ProjectModalProps) {
   const t = useTranslations("projects");
   const tCommon = useTranslations("common");
   const [index, setIndex] = useState(0);
@@ -61,10 +67,6 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useModalA11y(Boolean(project), dialogRef);
-
-  useEffect(() => {
-    setIndex(0);
-  }, [project?.id]);
 
   useEffect(() => {
     if (!project) return;

@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ProjectInquiryFlow } from "@/components/project-inquiry/project-inquiry-flow";
 import {
   PROJECT_INQUIRY_TYPES,
+  type ProjectInquirySource,
   type ProjectInquiryType,
 } from "@/data/project-inquiry-options";
 import { brand } from "@/lib/brand";
@@ -38,14 +39,12 @@ export default async function StartProjectPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const serviceSlug = firstParam(sp.service);
   const typeParam = firstParam(sp.type);
-  const serviceIdParam = firstParam(sp.serviceId);
-  const refParam = firstParam(sp.ref);
   const intentParam = firstParam(sp.intent);
 
   let initialProjectType: ProjectInquiryType | null = null;
-  let serviceId: string | null = serviceIdParam ?? null;
-  let serviceReference: string | null = refParam ?? null;
-  let source = "start-project-page";
+  let serviceId: string | null = null;
+  let serviceReference: string | null = null;
+  let source: ProjectInquirySource = "start-project-page";
 
   if (
     typeParam &&
@@ -65,8 +64,6 @@ export default async function StartProjectPage({ searchParams }: PageProps) {
         initialProjectType = service.inquiry_project_type;
       }
     }
-  } else if (intentParam === "buy") {
-    source = "service-buy";
   }
 
   return (

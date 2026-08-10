@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { brand } from "@/lib/brand";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,9 @@ type HeroBannerProps = {
 const sunriseEase = [0.22, 1, 0.36, 1] as const;
 /** Opacité finale de la bannière (texte / CTA restent lisibles). */
 const BANNER_OPACITY = 0.45;
+const subscribeToHydration = () => () => {};
+const getClientHydrationSnapshot = () => true;
+const getServerHydrationSnapshot = () => false;
 
 /**
  * Bannière en `<img>` natif (pas via /_next/image) :
@@ -115,11 +118,11 @@ function HeroBackdrop({
 
 function ConcaveBanner({ className }: { className?: string }) {
   const reduceMotion = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    subscribeToHydration,
+    getClientHydrationSnapshot,
+    getServerHydrationSnapshot
+  );
 
   const sunrise = Boolean(mounted && !reduceMotion);
 

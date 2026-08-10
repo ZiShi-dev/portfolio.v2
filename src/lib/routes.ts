@@ -61,15 +61,11 @@ export type StartProjectIntent = "start" | "buy";
  */
 export function startProjectUrl(opts?: {
   serviceSlug?: string | null;
-  serviceId?: string | null;
-  serviceReference?: string | null;
   projectType?: string | null;
   intent?: StartProjectIntent | null;
 }): string {
   const params = new URLSearchParams();
   if (opts?.serviceSlug) params.set("service", opts.serviceSlug);
-  if (opts?.serviceId) params.set("serviceId", opts.serviceId);
-  if (opts?.serviceReference) params.set("ref", opts.serviceReference);
   if (opts?.projectType) params.set("type", opts.projectType);
   if (opts?.intent === "buy" || opts?.intent === "start") {
     params.set("intent", opts.intent);

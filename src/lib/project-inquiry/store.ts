@@ -1,8 +1,6 @@
 import { hashForAudit } from "@/lib/security/fingerprint";
 import { normalizeEmail } from "@/lib/form-validation";
 import {
-  formatLeadReference,
-  parseLeadReferenceNumber,
   type ProjectInquiryAdminPatch,
   type ProjectInquiryPayload,
 } from "@/lib/project-inquiry/schema";
@@ -87,40 +85,14 @@ function normalizeRow(raw: Record<string, unknown>): ProjectInquiryRow {
   };
 }
 
-export async function allocateNextLeadReference(): Promise<string> {
-  if (!isSupabaseServiceConfigured()) return formatLeadReference(1);
-  const supabase = createSupabaseServiceClient();
-  if (!supabase) return formatLeadReference(1);
-
-  const { data, error } = await supabase
-    .from("project_inquiries")
-    .select("reference")
-    .not("reference", "is", null)
-    .limit(500);
-
-  if (error) {
-    console.error("[project-inquiry] allocate reference", error.message);
-    return formatLeadReference(1);
-  }
-
-  let max = 0;
-  for (const row of data ?? []) {
-    const n = parseLeadReferenceNumber(
-      typeof row.reference === "string" ? row.reference : null
-    );
-    if (n !== null && n > max) max = n;
-  }
-  return formatLeadReference(max + 1);
-}
-
 export async function createProjectInquiry(input: {
   data: ProjectInquiryPayload;
   fingerprint: string;
   ip: string;
   userAgent: string | null;
 }): Promise<
-  | { ok: true; inquiry: ProjectInquiryRow }
-  | { ok: false; reason: "not_configured" | "persist_failed" | "duplicate" }
+  | { ok: true; inquiry: ProjectInquiryRow; duplicate?: boolean }
+  | { ok: false; reason: "not_configured" | "persist_failed" }
 > {
   if (!isSupabaseServiceConfigured()) {
     return { ok: false, reason: "not_configured" };
@@ -128,11 +100,9 @@ export async function createProjectInquiry(input: {
   const supabase = createSupabaseServiceClient();
   if (!supabase) return { ok: false, reason: "not_configured" };
 
-  const reference = await allocateNextLeadReference();
   const { data, error } = await supabase
     .from("project_inquiries")
     .insert({
-      reference,
       status: "new",
       project_type: input.data.projectType,
       project_type_other: input.data.projectTypeOther,
@@ -164,7 +134,19 @@ export async function createProjectInquiry(input: {
 
   if (error) {
     if (error.code === "23505") {
-      return { ok: false, reason: "duplicate" };
+      const { data: existing, error: lookupError } = await supabase
+        .from("project_inquiries")
+        .select(SELECT)
+        .eq("fingerprint", input.fingerprint)
+        .maybeSingle();
+
+      if (!lookupError && existing) {
+        return {
+          ok: true,
+          inquiry: normalizeRow(existing as Record<string, unknown>),
+          duplicate: true,
+        };
+      }
     }
     console.error("[project-inquiry] create", error.message);
     return { ok: false, reason: "persist_failed" };
@@ -174,6 +156,25 @@ export async function createProjectInquiry(input: {
     ok: true,
     inquiry: normalizeRow(data as Record<string, unknown>),
   };
+}
+
+/** Ne reconnaît comme doublon qu'une demande déjà persistée. */
+export async function getProjectInquiryByFingerprint(
+  fingerprint: string
+): Promise<ProjectInquiryRow | null> {
+  if (!/^[0-9a-f]{64}$/i.test(fingerprint)) return null;
+  if (!isSupabaseServiceConfigured()) return null;
+  const supabase = createSupabaseServiceClient();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from("project_inquiries")
+    .select(SELECT)
+    .eq("fingerprint", fingerprint)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return normalizeRow(data as Record<string, unknown>);
 }
 
 export async function listProjectInquiriesForAdmin(options?: {

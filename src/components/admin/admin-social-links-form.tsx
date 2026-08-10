@@ -91,9 +91,11 @@ export function AdminSocialLinksForm({
 
   useEffect(() => {
     if (initialSettings !== undefined) return;
-    void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only
-  }, []);
+    const frame = window.requestAnimationFrame(() => {
+      void load();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [initialSettings, load]);
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");

@@ -38,14 +38,11 @@ export function AnimatedNumber({
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: !animateOnChange, margin: "-40px" });
   const reduceMotion = useReducedMotion();
-  const [display, setDisplay] = useState(reduceMotion ? value : 0);
+  const [display, setDisplay] = useState(0);
   const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
-    if (reduceMotion) {
-      setDisplay(value);
-      return;
-    }
+    if (reduceMotion) return;
 
     if (!inView && !animateOnChange) return;
 
@@ -88,10 +85,12 @@ export function AnimatedNumber({
     return () => cancelAnimationFrame(raf);
   }, [inView, value, duration, delay, decimals, reduceMotion, animateOnChange]);
 
+  const displayedValue = reduceMotion ? value : display;
+
   return (
     <span ref={ref} className={cn("tabular-nums", className)}>
       {prefix}
-      {formatValue(display, decimals, decimalSeparator)}
+      {formatValue(displayedValue, decimals, decimalSeparator)}
       {suffix}
     </span>
   );

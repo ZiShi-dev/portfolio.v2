@@ -5,9 +5,9 @@ import {
   isValidEmail,
   normalizeEmail,
   sanitizeText,
-} from "./form-validation.ts";
-import { paginateReviews } from "./reviews-config.ts";
-import { absoluteUrl, homeSectionUrl } from "./routes.ts";
+} from "./form-validation";
+import { paginateReviews } from "./reviews-config";
+import { absoluteUrl, homeSectionUrl } from "./routes";
 
 describe("form-validation", () => {
   it("normalise les emails", () => {

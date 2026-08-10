@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import Marquee from "react-fast-marquee";
 import { useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -16,36 +15,40 @@ type ProjectMarqueeProps = {
   projects: LocalizedProjectItem[];
 };
 
-const MARQUEE_SURFACE = "#0A0E1A";
+type RowConfig = {
+  reverse?: boolean;
+  compact?: boolean;
+  durationSec: number;
+};
 
-const ROWS = [
-  { direction: "left" as const, speed: 35 },
-  { direction: "right" as const, speed: 42 },
-  { direction: "left" as const, speed: 30 },
+const ROWS: RowConfig[] = [
+  { durationSec: 42 },
+  { reverse: true, compact: true, durationSec: 48 },
+  { durationSec: 38 },
 ];
 
-/** Assez de cartes pour remplir toute la largeur (évite le “tas” à gauche). */
-function fillRow(
+/** Duplique la liste pour un défilement fluide (même avec 1–2 projets). */
+function buildTrack(
   items: LocalizedProjectItem[],
   rowIndex: number,
-  minCount = 10
+  copies = 6
 ): LocalizedProjectItem[] {
   if (items.length === 0) return [];
   const offset = rowIndex % items.length;
   const rotated = [...items.slice(offset), ...items.slice(0, offset)];
   const out: LocalizedProjectItem[] = [];
-  while (out.length < minCount) {
-    out.push(...rotated);
-  }
+  for (let c = 0; c < copies; c++) out.push(...rotated);
   return out;
 }
 
-function MarqueeCard({
+function ProjectCard({
   project,
   compact,
+  className,
 }: {
   project: LocalizedProjectItem;
   compact?: boolean;
+  className?: string;
 }) {
   const t = useTranslations("projects");
   const href = `${routes.projects}/${project.slug ?? project.id}`;
@@ -56,11 +59,12 @@ function MarqueeCard({
       href={href}
       aria-label={t("openDetails", { title: project.title })}
       className={cn(
-        "group relative mx-2 block shrink-0 overflow-hidden rounded-2xl border border-[rgba(244,241,232,0.10)] bg-[#0D1322] sm:mx-2.5",
+        "group relative block shrink-0 overflow-hidden rounded-2xl border border-[rgba(244,241,232,0.10)] bg-[#0D1322]",
         "transition-[border-color,box-shadow] duration-200",
         "hover:border-[rgba(212,175,122,0.28)] hover:shadow-[0_0_24px_rgba(201,169,106,0.08)]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[#070A12]",
-        compact ? "w-[230px] sm:w-[260px]" : "w-[270px] sm:w-[310px]"
+        compact ? "w-[220px] sm:w-[250px]" : "w-[260px] sm:w-[300px]",
+        className
       )}
     >
       <div
@@ -74,10 +78,12 @@ function MarqueeCard({
             src={cover}
             alt=""
             fill
-            sizes="310px"
+            sizes="300px"
             className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
           />
-        ) : null}
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#101828] to-[#070A12]" />
+        )}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#070A12]/85 via-transparent to-transparent" />
       </div>
       <div className="space-y-1 px-3.5 py-3 text-center sm:px-4 sm:py-3.5">
@@ -105,31 +111,54 @@ function ExploreAllButton() {
     <Button asChild size="lg" className="min-h-12 px-6">
       <Link href={routes.projects} onClick={markHomeForScrollRestore}>
         {t("exploreAll")}
-        <ArrowRight className="h-4 w-4" aria-hidden />
+        <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
       </Link>
     </Button>
   );
 }
 
-/**
- * Mobile / tablette : défilement manuel (snap).
- * Les liens CSS animés du marquee ne reçoivent souvent pas le tap.
- */
-function MobileProjectStrip({ projects }: { projects: LocalizedProjectItem[] }) {
+function ProjectGrid({ projects }: { projects: LocalizedProjectItem[] }) {
   return (
-    <div className="relative mt-10 sm:mt-14 lg:hidden">
-      <div
+    <div className="relative mt-10 sm:mt-14">
+      <ul
         className={cn(
-          "flex gap-1 overflow-x-auto px-2 pb-3 sm:gap-2 sm:px-4",
-          "snap-x snap-mandatory scroll-smooth",
-          "[scrollbar-width:thin] [scrollbar-color:rgba(201,169,106,0.35)_transparent]",
-          "[&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full",
-          "[&::-webkit-scrollbar-thumb]:bg-[rgba(201,169,106,0.35)]"
+          "mx-auto grid max-w-5xl list-none justify-center gap-5 px-4 sm:px-6",
+          projects.length === 1 && "grid-cols-1 max-w-sm",
+          projects.length === 2 && "grid-cols-1 sm:grid-cols-2",
+          projects.length >= 3 && "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
         )}
       >
         {projects.map((project) => (
-          <div key={project.id} className="snap-center shrink-0 first:ms-2 last:me-2 sm:first:ms-0 sm:last:me-0">
-            <MarqueeCard project={project} />
+          <li key={project.id} className="flex justify-center">
+            <ProjectCard project={project} className="w-full max-w-[300px]" />
+          </li>
+        ))}
+      </ul>
+      <div className="mt-10 flex justify-center px-4">
+        <ExploreAllButton />
+      </div>
+    </div>
+  );
+}
+
+/** Scroll manuel mobile (pas d’animation CSS — taps fiables). */
+function MobileStrip({ projects }: { projects: LocalizedProjectItem[] }) {
+  const few = projects.length <= 2;
+
+  return (
+    <div className="mt-10 lg:hidden">
+      <div
+        dir="ltr"
+        className={cn(
+          "flex gap-3 overflow-x-auto px-4 pb-2 sm:gap-4 sm:px-6",
+          "snap-x snap-mandatory",
+          "[scrollbar-width:thin] [scrollbar-color:rgba(201,169,106,0.35)_transparent]",
+          few && "justify-center"
+        )}
+      >
+        {projects.map((project) => (
+          <div key={project.id} className="snap-center shrink-0">
+            <ProjectCard project={project} />
           </div>
         ))}
       </div>
@@ -140,9 +169,54 @@ function MobileProjectStrip({ projects }: { projects: LocalizedProjectItem[] }) 
   );
 }
 
+/** Une rangée de défilement CSS (indépendante de react-fast-marquee / RTL). */
+function ScrollRow({
+  projects,
+  rowIndex,
+  reverse,
+  compact,
+  durationSec,
+}: {
+  projects: LocalizedProjectItem[];
+  rowIndex: number;
+  reverse?: boolean;
+  compact?: boolean;
+  durationSec: number;
+}) {
+  const track = buildTrack(projects, rowIndex);
+
+  return (
+    <div className="project-scroll-row relative w-full overflow-hidden" dir="ltr">
+      <div
+        className={cn(
+          "project-scroll-track flex w-max gap-3 sm:gap-4",
+          reverse && "project-scroll-track--reverse"
+        )}
+        style={{ ["--project-scroll-duration" as string]: `${durationSec}s` }}
+      >
+        {/* Deux segments identiques pour une boucle seamless */}
+        {[0, 1].map((segment) => (
+          <div
+            key={segment}
+            className="flex shrink-0 gap-3 sm:gap-4"
+            aria-hidden={segment === 1 ? true : undefined}
+          >
+            {track.map((project, idx) => (
+              <ProjectCard
+                key={`${segment}-${project.id}-${idx}`}
+                project={project}
+                compact={compact}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /**
- * Mur de projets — marquee desktop ; strip scrollable en responsive
- * (évite les taps perdus sur des cartes en animation CSS).
+ * Section projets Home — défilement CSS (fiable LTR/RTL).
  */
 export function ProjectMarquee({ projects }: ProjectMarqueeProps) {
   const t = useTranslations("projects");
@@ -157,63 +231,33 @@ export function ProjectMarquee({ projects }: ProjectMarqueeProps) {
   }
 
   if (reducedMotion) {
-    return (
-      <div className="relative mt-10 sm:mt-14">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
-          {projects.slice(0, 6).map((p) => (
-            <div key={p.id} className="flex justify-center">
-              <MarqueeCard project={p} />
-            </div>
-          ))}
-        </div>
-        <div className="mt-8 flex justify-center px-4">
-          <ExploreAllButton />
-        </div>
-      </div>
-    );
+    return <ProjectGrid projects={projects} />;
   }
 
   return (
     <>
-      <MobileProjectStrip projects={projects} />
+      <MobileStrip projects={projects} />
 
-      <div
-        className="relative mt-10 hidden w-full sm:mt-14 lg:block"
-        // LTR forcé : sous dir=rtl le flex du marquee se casse (contenu collé à gauche).
-        dir="ltr"
-      >
-        <div className="space-y-3 sm:space-y-4">
+      <div className="relative mt-10 hidden w-full sm:mt-14 lg:block">
+        <div className="space-y-4">
           {ROWS.map((row, i) => (
-            <Marquee
+            <ScrollRow
               key={i}
-              className="project-marquee-row w-full overflow-hidden [&_.rfm-overlay]:pointer-events-none"
-              direction={row.direction}
-              speed={row.speed}
-              autoFill
-              pauseOnHover
-              pauseOnClick
-              gradient
-              gradientColor={MARQUEE_SURFACE}
-              gradientWidth="12%"
-            >
-              {fillRow(projects, i).map((project, idx) => (
-                <MarqueeCard
-                  key={`${project.id}-${i}-${idx}`}
-                  project={project}
-                  compact={i === 1}
-                />
-              ))}
-            </Marquee>
+              projects={projects}
+              rowIndex={i}
+              reverse={row.reverse}
+              compact={row.compact}
+              durationSec={row.durationSec}
+            />
           ))}
         </div>
 
-        {/* CTA centré : pointer-events uniquement sur le bouton */}
         <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,14,26,0.5)_0%,transparent_62%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,14,26,0.55)_0%,transparent_65%)]"
             aria-hidden
           />
-          <div className="pointer-events-auto relative shadow-[0_8px_32px_rgba(0,0,0,0.45)]">
+          <div className="pointer-events-auto relative">
             <ExploreAllButton />
           </div>
         </div>

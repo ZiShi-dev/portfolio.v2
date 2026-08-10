@@ -52,6 +52,8 @@ export type DatePickerProps = {
   clearLabel?: string;
   disabled?: boolean;
   className?: string;
+  ariaDescribedBy?: string;
+  invalid?: boolean;
   /** Empêche les dates antérieures à aujourd’hui. */
   disablePast?: boolean;
 };
@@ -65,6 +67,8 @@ export function DatePicker({
   clearLabel = "Clear",
   disabled = false,
   className,
+  ariaDescribedBy,
+  invalid = false,
   disablePast = true,
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
@@ -88,6 +92,8 @@ export function DatePicker({
             type="button"
             variant="outline"
             disabled={disabled}
+            aria-describedby={ariaDescribedBy}
+            aria-invalid={invalid || undefined}
             className={cn(
               "h-12 min-h-12 flex-1 justify-start rounded-xl border-border bg-background/50 px-4 font-normal hover:bg-surface-elevated",
               !selected && "text-muted-foreground"

@@ -85,9 +85,11 @@ export function AdminAboutStatsForm({
 
   useEffect(() => {
     if (initialStats !== undefined) return;
-    void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only
-  }, []);
+    const frame = window.requestAnimationFrame(() => {
+      void load();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [initialStats, load]);
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");

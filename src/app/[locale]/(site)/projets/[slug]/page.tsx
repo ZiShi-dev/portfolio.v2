@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 import { CaseStudyDetail } from "@/components/sections/case-study-detail";
 import { brand } from "@/lib/brand";
 import {

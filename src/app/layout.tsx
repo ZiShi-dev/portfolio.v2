@@ -8,6 +8,7 @@ import {
 } from "next/font/google";
 import { getLocale } from "next-intl/server";
 import Script from "next/script";
+import { headers } from "next/headers";
 import "./globals.css";
 import { OrganizationJsonLd } from "@/components/json-ld";
 import { brand } from "@/lib/brand";
@@ -91,6 +92,7 @@ export default async function RootLayout({
 }>) {
   const locale = (await getLocale()) as Locale;
   const dir = getLocaleDirection(locale);
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <html
@@ -110,10 +112,14 @@ export default async function RootLayout({
       style={{ colorScheme: "dark" }}
     >
       <body className="flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
-        <Script id="clear-legacy-theme" strategy="beforeInteractive">
+        <Script
+          id="clear-legacy-theme"
+          strategy="beforeInteractive"
+          nonce={nonce}
+        >
           {`try{localStorage.removeItem('portfolio-theme');document.cookie='portfolio-theme=;path=/;max-age=0;SameSite=Lax'}catch(e){}`}
         </Script>
-        <OrganizationJsonLd />
+        <OrganizationJsonLd nonce={nonce} />
         {children}
       </body>
     </html>

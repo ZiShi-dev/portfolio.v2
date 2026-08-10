@@ -3,7 +3,7 @@
 import { useLocale } from "next-intl";
 import { useRouter as useNextRouter } from "next/navigation";
 import { usePathname, useRouter } from "@/i18n/navigation";
-import { locales, localeLabels, getLocaleDirection, type Locale } from "@/i18n/routing";
+import { locales, localeLabels, type Locale } from "@/i18n/routing";
 import { markLocaleChange, setNextLocaleCookie } from "@/lib/locale-cookie";
 import { cn } from "@/lib/utils";
 
@@ -26,9 +26,6 @@ export function LanguageSwitcher({ className, compact, embedded }: LanguageSwitc
     const hash = window.location.hash;
 
     if (!setNextLocaleCookie(code)) return;
-
-    document.documentElement.lang = code;
-    document.documentElement.dir = getLocaleDirection(code);
 
     markLocaleChange();
     router.replace(pathname, { locale: code, scroll: false });

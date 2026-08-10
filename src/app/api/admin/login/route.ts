@@ -64,7 +64,11 @@ export async function POST(request: Request) {
   }
 
   if (isTurnstileEnabled()) {
-    const valid = await verifyTurnstileToken(parsed.data.turnstileToken, ip);
+    const valid = await verifyTurnstileToken(
+      parsed.data.turnstileToken,
+      ip,
+      "admin_login"
+    );
     if (!valid) {
       logAdminAuthEvent("login_failed", ip, { reason: "turnstile" });
       return adminErrorResponse(ADMIN_ERROR_CODES.TURNSTILE_FAILED, 400);

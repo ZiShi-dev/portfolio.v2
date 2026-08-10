@@ -17,6 +17,54 @@ import { routing } from "@/i18n/routing";
 import { redirectLegacyLocalePrefix } from "@/lib/i18n/legacy-locale-redirect";
 
 const handleI18nRouting = createIntlMiddleware(routing);
+const CSP_HEADER = "Content-Security-Policy";
+
+function secureDocumentResponse(
+  request: NextRequest,
+  response: NextResponse
+): NextResponse {
+  const nonce = crypto.randomUUID().replaceAll("-", "");
+  const isDev = process.env.NODE_ENV === "development";
+  const csp = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${
+      isDev ? " 'unsafe-eval'" : ""
+    } https://challenges.cloudflare.com`,
+    `style-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-inline'" : ""}`,
+    "style-src-attr 'unsafe-inline'",
+    "img-src 'self' data: blob: https://*.supabase.co",
+    "font-src 'self'",
+    "connect-src 'self' https://challenges.cloudflare.com https://*.supabase.co wss://*.supabase.co",
+    "frame-src https://challenges.cloudflare.com",
+    "worker-src 'self' blob:",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "object-src 'none'",
+    ...(isDev ? [] : ["upgrade-insecure-requests"]),
+  ].join("; ");
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set(CSP_HEADER, csp);
+
+  // NextResponse encode les remplacements d'en-têtes de requête dans des
+  // en-têtes internes. On les fusionne avec la réponse de next-intl/admin.
+  const forwarding = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+  forwarding.headers.forEach((value, key) => {
+    if (
+      key === "x-middleware-override-headers" ||
+      key.startsWith("x-middleware-request-")
+    ) {
+      response.headers.set(key, value);
+    }
+  });
+
+  response.headers.set(CSP_HEADER, csp);
+  return response;
+}
 
 type RateLimitEntry = {
   count: number;
@@ -203,7 +251,7 @@ export async function proxy(request: NextRequest) {
 
   if (path.startsWith("/admin")) {
     const { response } = await handleAdminSession(request);
-    return response;
+    return secureDocumentResponse(request, response);
   }
 
   if (
@@ -213,7 +261,7 @@ export async function proxy(request: NextRequest) {
   ) {
     const legacy = redirectLegacyLocalePrefix(request);
     if (legacy) return legacy;
-    return handleI18nRouting(request);
+    return secureDocumentResponse(request, handleI18nRouting(request));
   }
 
   return NextResponse.next();

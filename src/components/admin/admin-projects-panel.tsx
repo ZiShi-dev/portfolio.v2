@@ -313,10 +313,14 @@ export function AdminProjectsPanel({
   useEffect(() => {
     if (initialProjects !== undefined) return;
     const ac = new AbortController();
-    void load({ signal: ac.signal });
-    return () => ac.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only
-  }, []);
+    const frame = window.requestAnimationFrame(() => {
+      void load({ signal: ac.signal });
+    });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      ac.abort();
+    };
+  }, [initialProjects, load]);
 
   const editorPayload = useMemo(() => {
     if (!editor) return null;

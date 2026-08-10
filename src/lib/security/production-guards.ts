@@ -1,4 +1,7 @@
-import { isTurnstileEnabled } from "@/lib/turnstile";
+import {
+  isTurnstileEnabled,
+  isTurnstileSiteKeyConfigured,
+} from "@/lib/turnstile";
 
 function readBoolEnv(name: string): boolean | undefined {
   const value = process.env[name]?.trim().toLowerCase();
@@ -19,6 +22,6 @@ export function isTurnstileRequired(): boolean {
 
 export function getTurnstileGuardFailure(): "missing_config" | null {
   if (!isTurnstileRequired()) return null;
-  if (isTurnstileEnabled()) return null;
+  if (isTurnstileEnabled() && isTurnstileSiteKeyConfigured()) return null;
   return "missing_config";
 }

@@ -56,6 +56,20 @@ export const PROJECT_INQUIRY_OTHER_TEXT = {
   max: 120,
 } as const;
 
+/** Limites partagées entre l'interface et la validation serveur. */
+export const PROJECT_INQUIRY_TEXT_LIMITS = {
+  nameMin: 2,
+  nameMax: 100,
+  emailMax: 254,
+  phoneMin: 6,
+  phoneMax: 40,
+  companyMax: 120,
+  websiteMax: 500,
+  descriptionMin: 10,
+  descriptionMax: 5000,
+  serviceReferenceMax: 32,
+} as const;
+
 export const PROJECT_INQUIRY_TIMELINES = [
   "asap",
   "this_month",
@@ -66,6 +80,17 @@ export const PROJECT_INQUIRY_TIMELINES = [
 
 export type ProjectInquiryTimeline =
   (typeof PROJECT_INQUIRY_TIMELINES)[number];
+
+/** Origines métier acceptées par l'API publique. */
+export const PROJECT_INQUIRY_SOURCES = [
+  "site",
+  "start-project-page",
+  "service",
+  "service-buy",
+] as const;
+
+export type ProjectInquirySource =
+  (typeof PROJECT_INQUIRY_SOURCES)[number];
 
 export const PROJECT_INQUIRY_STATUSES = [
   "new",

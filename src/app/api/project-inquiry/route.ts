@@ -3,13 +3,16 @@ import { jsonResponse, serviceUnavailableResponse } from "@/lib/api/json-respons
 import { logFormSecurityEvent } from "@/lib/security/audit-log";
 import { checkEmailSubmissionLimit } from "@/lib/security/email-submission-limit";
 import { createSubmissionFingerprint } from "@/lib/security/fingerprint";
-import { isDuplicateSubmission } from "@/lib/security/submission-dedup";
 import {
   checkProjectInquiryEmailDailyLimit,
   checkProjectInquiryIpDailyLimit,
 } from "@/lib/security/project-inquiry-daily-limit";
 import { parseProjectInquiryPayload } from "@/lib/project-inquiry/schema";
-import { createProjectInquiry } from "@/lib/project-inquiry/store";
+import {
+  createProjectInquiry,
+  getProjectInquiryByFingerprint,
+} from "@/lib/project-inquiry/store";
+import { getPublishedServiceById } from "@/lib/services/store";
 import { isSupabaseServiceConfigured } from "@/lib/supabase/service";
 import { ValidationErrors } from "@/lib/validation-errors";
 
@@ -41,10 +44,44 @@ export async function POST(request: Request) {
     );
   }
 
-  const fingerprint = createSubmissionFingerprint(ip, FORM_KIND, parsed.data);
-  if (isDuplicateSubmission(fingerprint)) {
+  let submissionData = parsed.data;
+  if (submissionData.serviceId) {
+    const service = await getPublishedServiceById(submissionData.serviceId);
+    submissionData = {
+      ...submissionData,
+      serviceId: service?.id ?? null,
+      serviceReference: service?.reference ?? null,
+      source: service
+        ? submissionData.source === "service-buy"
+          ? "service-buy"
+          : "service"
+        : "start-project-page",
+    };
+  } else {
+    submissionData = {
+      ...submissionData,
+      serviceReference: null,
+      source:
+        submissionData.source === "service" ||
+        submissionData.source === "service-buy"
+          ? "start-project-page"
+          : submissionData.source,
+    };
+  }
+
+  const fingerprint = createSubmissionFingerprint(
+    ip,
+    FORM_KIND,
+    submissionData
+  );
+
+  const existing = await getProjectInquiryByFingerprint(fingerprint);
+  if (existing) {
     logFormSecurityEvent(FORM_KIND, "duplicate", ip);
-    return jsonResponse({ ok: true }, 200);
+    return jsonResponse(
+      { ok: true, stored: true, reference: existing.reference },
+      200
+    );
   }
 
   const ipDaily = await checkProjectInquiryIpDailyLimit(ip);
@@ -60,7 +97,7 @@ export async function POST(request: Request) {
   }
 
   const emailDaily = await checkProjectInquiryEmailDailyLimit(
-    parsed.data.email
+    submissionData.email
   );
   if (!emailDaily.allowed) {
     logFormSecurityEvent(FORM_KIND, "rate_limited_daily_email", ip);
@@ -73,7 +110,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const emailLimit = checkEmailSubmissionLimit(parsed.data.email);
+  const emailLimit = checkEmailSubmissionLimit(submissionData.email);
   if (!emailLimit.allowed) {
     logFormSecurityEvent(FORM_KIND, "rate_limited_email", ip);
     return jsonResponse(
@@ -90,22 +127,23 @@ export async function POST(request: Request) {
   }
 
   const created = await createProjectInquiry({
-    data: parsed.data,
+    data: submissionData,
     fingerprint,
     ip,
     userAgent: request.headers.get("user-agent"),
   });
 
   if (!created.ok) {
-    if (created.reason === "duplicate") {
-      logFormSecurityEvent(FORM_KIND, "duplicate", ip);
-      return jsonResponse({ ok: true }, 200);
-    }
     logFormSecurityEvent(FORM_KIND, "persist_failed", ip);
     return serviceUnavailableResponse();
   }
 
-  logFormSecurityEvent(FORM_KIND, "sent", ip, { email_disabled: true });
+  logFormSecurityEvent(
+    FORM_KIND,
+    created.duplicate ? "duplicate" : "sent",
+    ip,
+    { email_disabled: true }
+  );
   return jsonResponse(
     {
       ok: true,

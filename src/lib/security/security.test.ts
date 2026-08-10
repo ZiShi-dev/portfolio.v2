@@ -17,6 +17,7 @@ import {
   getTurnstileGuardFailure,
   isTurnstileRequired,
 } from "@/lib/security/production-guards";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 
 function jsonRequest(body: unknown, headers: Record<string, string> = {}): Request {
   const text = JSON.stringify(body);
@@ -135,7 +136,7 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
   });
 
   it("accepte localhost en développement", () => {
-    process.env.NODE_ENV = "development";
+    process.env = { ...process.env, NODE_ENV: "development" };
     process.env.NEXT_PUBLIC_SITE_URL = "https://zishi.dev";
     const request = new Request("http://localhost:3000/api/contact", {
       method: "POST",
@@ -202,30 +203,74 @@ describe("OWASP A04 — anti-abus (empreinte, déduplication, rate limit email)"
 
 describe("OWASP A05 — production-guards (Turnstile)", () => {
   const envSnapshot = { ...process.env };
+  const originalFetch = globalThis.fetch;
 
   afterEach(() => {
     process.env = envSnapshot;
+    globalThis.fetch = originalFetch;
   });
 
   it("exige Turnstile en production par défaut", () => {
-    process.env.NODE_ENV = "production";
+    process.env = { ...process.env, NODE_ENV: "production" };
     delete process.env.FORM_REQUIRE_TURNSTILE;
     delete process.env.TURNSTILE_SECRET_KEY;
+    delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
     assert.equal(isTurnstileRequired(), true);
     assert.equal(getTurnstileGuardFailure(), "missing_config");
   });
 
   it("permet de désactiver explicitement Turnstile", () => {
-    process.env.NODE_ENV = "production";
+    process.env = { ...process.env, NODE_ENV: "production" };
     process.env.FORM_REQUIRE_TURNSTILE = "false";
     delete process.env.TURNSTILE_SECRET_KEY;
+    delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
     assert.equal(isTurnstileRequired(), false);
     assert.equal(getTurnstileGuardFailure(), null);
   });
 
   it("ne signale pas d'erreur si Turnstile est configuré", () => {
-    process.env.NODE_ENV = "production";
+    process.env = { ...process.env, NODE_ENV: "production" };
     process.env.TURNSTILE_SECRET_KEY = "test-secret";
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = "test-site-key";
     assert.equal(getTurnstileGuardFailure(), null);
+  });
+
+  it("refuse une configuration où la clé publique manque", () => {
+    process.env = { ...process.env, NODE_ENV: "production" };
+    process.env.TURNSTILE_SECRET_KEY = "test-secret";
+    delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    assert.equal(getTurnstileGuardFailure(), "missing_config");
+  });
+
+  it("vérifie le hostname et l'action Turnstile en production", async () => {
+    process.env = { ...process.env, NODE_ENV: "production" };
+    process.env.NEXT_PUBLIC_SITE_URL = "https://zishi.dev";
+    process.env.TURNSTILE_SECRET_KEY = "test-secret";
+    globalThis.fetch = async () =>
+      Response.json({
+        success: true,
+        hostname: "zishi.dev",
+        action: "project_inquiry",
+      });
+
+    assert.equal(
+      await verifyTurnstileToken("token", "203.0.113.1", "project_inquiry"),
+      true
+    );
+    assert.equal(
+      await verifyTurnstileToken("token", "203.0.113.1", "contact"),
+      false
+    );
+
+    globalThis.fetch = async () =>
+      Response.json({
+        success: true,
+        hostname: "evil.example",
+        action: "project_inquiry",
+      });
+    assert.equal(
+      await verifyTurnstileToken("token", "203.0.113.1", "project_inquiry"),
+      false
+    );
   });
 });

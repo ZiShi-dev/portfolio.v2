@@ -28,7 +28,6 @@ export function ReviewDetailModal({
   const dialogRef = useRef<HTMLDivElement>(null);
   const unlockScrollRef = useRef<(() => void) | null>(null);
   const indexRef = useRef(index);
-  indexRef.current = index;
 
   const open = index !== null && reviews.length > 0;
   const safeIndex =
@@ -39,6 +38,10 @@ export function ReviewDetailModal({
   const hasMultiple = reviews.length > 1;
 
   useModalA11y(open, dialogRef);
+
+  useEffect(() => {
+    indexRef.current = index;
+  }, [index]);
 
   useEffect(() => {
     if (!open) return;

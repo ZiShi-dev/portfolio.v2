@@ -328,7 +328,7 @@ describe("OWASP A01/A08 — CSRF origine formulaire avis", () => {
   });
 
   it("localhost autorisé hors production", () => {
-    process.env.NODE_ENV = "development";
+    process.env = { ...process.env, NODE_ENV: "development" };
     const req = new Request("http://localhost:3000/api/review", {
       method: "POST",
       headers: {

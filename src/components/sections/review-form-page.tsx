@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,10 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { HoneypotField } from "@/components/ui/honeypot-field";
 import { StarRating } from "@/components/ui/star-rating";
-import {
-  TurnstileWidget,
-  type TurnstileWidgetHandle,
-} from "@/components/turnstile-widget";
+import { TurnstileWidget } from "@/components/turnstile-widget";
 import { useSubmitGuard } from "@/hooks/use-submit-guard";
 import { brand } from "@/lib/brand";
 import { isHoneypotTriggered } from "@/lib/form-validation";
@@ -57,16 +54,23 @@ function ReviewFormBody({
   const t = useTranslations("reviewForm");
   const tCommon = useTranslations("common");
   const tValidation = useTranslations("validation");
-  const translateError = (key: ValidationErrorKey) => tValidation(key);
+  const translateError = useCallback(
+    (key: ValidationErrorKey) => tValidation(key),
+    [tValidation]
+  );
   const schema = useMemo(
     () => createReviewFormSchema(translateError),
-    [tValidation]
+    [translateError]
   );
   const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const { loading, setLoading, trySubmit } = useSubmitGuard();
-  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
+  const [turnstileVersion, setTurnstileVersion] = useState(0);
+  const resetTurnstile = useCallback(() => {
+    setTurnstileToken("");
+    setTurnstileVersion((value) => value + 1);
+  }, []);
 
   const {
     register,
@@ -132,7 +136,7 @@ function ReviewFormBody({
         const message = tValidation("sendFailed");
         setSubmitError(message);
         showAppToast(message, "error");
-        turnstileRef.current?.reset();
+        resetTurnstile();
         return;
       }
 
@@ -153,12 +157,12 @@ function ReviewFormBody({
         message,
         res.status === 429 || res.status === 409 ? "info" : "error"
       );
-      turnstileRef.current?.reset();
+      resetTurnstile();
     } catch {
       const message = tValidation("networkError");
       setSubmitError(message);
       showAppToast(message, "error");
-      turnstileRef.current?.reset();
+      resetTurnstile();
     } finally {
       setLoading(false);
     }
@@ -332,7 +336,8 @@ function ReviewFormBody({
 
                 {turnstileEnabled && (
                   <TurnstileWidget
-                    ref={turnstileRef}
+                    key={turnstileVersion}
+                    action="review"
                     onToken={setTurnstileToken}
                     onExpire={() => setTurnstileToken("")}
                     language={locale}

@@ -142,9 +142,11 @@ export function AdminReviewsPanel({
   // Données déjà fournies par le SSR : pas de fetch au montage.
   useEffect(() => {
     if (initialReviews !== undefined) return;
-    void load(INITIAL_FILTER);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only
-  }, []);
+    const frame = window.requestAnimationFrame(() => {
+      void load(INITIAL_FILTER);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [initialReviews, load]);
 
   function closeModal() {
     setSelectedId(null);

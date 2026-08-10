@@ -28,11 +28,19 @@ export default async function MentionsLegalesPage() {
   const tCommon = await getTranslations("common");
   const contactEmail = await getPublicContactEmail();
 
-  const externalLink = (href: string) => (chunks: ReactNode) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={linkClass}>
-      {chunks}
-    </a>
-  );
+  const externalLink = (href: string) =>
+    function ExternalLink(chunks: ReactNode) {
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkClass}
+        >
+          {chunks}
+        </a>
+      );
+    };
 
   return (
     <>

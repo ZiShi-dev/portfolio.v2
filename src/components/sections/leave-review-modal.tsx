@@ -45,26 +45,29 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
 
     document.addEventListener(OPEN_LEAVE_REVIEW_EVENT, handleOpen);
 
-    const params = new URLSearchParams(window.location.search);
-    const project = params.get("project");
-    if (project && /^[0-9a-f-]{36}$/i.test(project)) {
-      setProjectId(project);
-    }
-    if (params.get(OPEN_REVIEW_QUERY) === "1") {
-      setOpen(true);
-      clearOpenReviewQuery();
-    }
+    const frame = window.requestAnimationFrame(() => {
+      const params = new URLSearchParams(window.location.search);
+      const project = params.get("project");
+      if (project && /^[0-9a-f-]{36}$/i.test(project)) {
+        setProjectId(project);
+      }
+      if (params.get(OPEN_REVIEW_QUERY) === "1") {
+        setOpen(true);
+        clearOpenReviewQuery();
+      }
 
-    if (window.location.hash === "#laisser-un-avis") {
-      window.history.replaceState(
-        null,
-        "",
-        window.location.pathname + window.location.search
-      );
-      setOpen(true);
-    }
+      if (window.location.hash === "#laisser-un-avis") {
+        window.history.replaceState(
+          null,
+          "",
+          window.location.pathname + window.location.search
+        );
+        setOpen(true);
+      }
+    });
 
     return () => {
+      window.cancelAnimationFrame(frame);
       document.removeEventListener(OPEN_LEAVE_REVIEW_EVENT, handleOpen);
     };
   }, []);

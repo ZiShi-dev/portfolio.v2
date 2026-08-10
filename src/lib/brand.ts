@@ -20,7 +20,7 @@ export const brand = {
   heroBannerDarkAlt:
     "VORZIX — atlas céleste, horizon doré et précision digitale",
   email: "contact@zishi.dev", // fallback display — sourcé BDD via getPublicContactEmail()
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://zishi.dev",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zishi.dev",
   description:
     "VORZIX conçoit des sites web, applications et plateformes digitales sur-mesure — design premium, technique fiable et accompagnement par une équipe dédiée.",
   preferredContactText: "Contact préféré · Discord",

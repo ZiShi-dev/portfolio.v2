@@ -24,7 +24,7 @@ const valid = {
   company: null,
   currentWebsite: null,
   locale: "fr",
-  source: "test",
+  source: "site",
   serviceId: null,
   serviceReference: null,
 };
@@ -91,15 +91,40 @@ describe("project-inquiry schema", () => {
   });
 
   it("accepte une date sans timeline", () => {
+    const futureDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
     const parsed = parseProjectInquiryPayload({
       ...valid,
       timeline: null,
-      targetLaunchDate: "2026-09-01",
+      targetLaunchDate: futureDate,
     });
     assert.equal(parsed.ok, true);
     if (parsed.ok) {
-      assert.equal(parsed.data.targetLaunchDate, "2026-09-01");
+      assert.equal(parsed.data.targetLaunchDate, futureDate);
       assert.equal(parsed.data.timeline, "unknown");
+    }
+  });
+
+  it("rejette une date impossible ou passée", () => {
+    const invalid = parseProjectInquiryPayload({
+      ...valid,
+      timeline: null,
+      targetLaunchDate: "2026-99-99",
+    });
+    assert.equal(invalid.ok, false);
+    if (!invalid.ok) {
+      assert.equal("field" in invalid ? invalid.field : undefined, "targetLaunchDate");
+    }
+
+    const past = parseProjectInquiryPayload({
+      ...valid,
+      timeline: null,
+      targetLaunchDate: "2020-01-01",
+    });
+    assert.equal(past.ok, false);
+    if (!past.ok) {
+      assert.equal("field" in past ? past.field : undefined, "targetLaunchDate");
     }
   });
 
@@ -176,6 +201,28 @@ describe("project-inquiry schema", () => {
       email: "not-an-email",
     });
     assert.equal(parsed.ok, false);
+  });
+
+  it("rejette les textes trop longs au lieu de les tronquer", () => {
+    const parsed = parseProjectInquiryPayload({
+      ...valid,
+      description: "x".repeat(5001),
+    });
+    assert.equal(parsed.ok, false);
+    if (!parsed.ok) {
+      assert.equal("field" in parsed ? parsed.field : undefined, "description");
+    }
+  });
+
+  it("rejette une source arbitraire", () => {
+    const parsed = parseProjectInquiryPayload({
+      ...valid,
+      source: "forged-source",
+    });
+    assert.equal(parsed.ok, false);
+    if (!parsed.ok) {
+      assert.equal("field" in parsed ? parsed.field : undefined, "source");
+    }
   });
 
   it("rejette type inconnu", () => {

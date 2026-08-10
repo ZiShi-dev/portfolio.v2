@@ -163,7 +163,8 @@ export function AdminProjectInquiriesPanel({
 
   useEffect(() => {
     if (initialInquiries !== undefined) return;
-    void load(INITIAL_FILTER);
+    const frame = window.requestAnimationFrame(() => void load(INITIAL_FILTER));
+    return () => window.cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only
   }, []);
 

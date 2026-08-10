@@ -66,8 +66,12 @@ export async function getPublicContactEmail(): Promise<string> {
 /** Liens réseaux seuls (compat footer). */
 export async function getSiteSocialLinks() {
   const settings = await getSiteSettings();
-  const { contactEmail: _email, ...links } = settings;
-  return links;
+  return {
+    discord: settings.discord,
+    whatsapp: settings.whatsapp,
+    instagram: settings.instagram,
+    tiktok: settings.tiktok,
+  };
 }
 
 export type GetSiteSocialAdminResult =

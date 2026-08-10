@@ -4,12 +4,15 @@ import {
   PROJECT_INQUIRY_CUSTOM_BUDGET,
   PROJECT_INQUIRY_OBJECTIVES,
   PROJECT_INQUIRY_OTHER_TEXT,
+  PROJECT_INQUIRY_SOURCES,
+  PROJECT_INQUIRY_TEXT_LIMITS,
   PROJECT_INQUIRY_TIMELINES,
   PROJECT_INQUIRY_TYPES,
   PROJECT_INQUIRY_STATUSES,
   type ProjectInquiryBudget,
   type ProjectInquiryObjective,
   type ProjectInquiryStatus,
+  type ProjectInquirySource,
   type ProjectInquiryTimeline,
   type ProjectInquiryType,
 } from "@/data/project-inquiry-options";
@@ -17,27 +20,16 @@ import {
   isHoneypotTriggered,
   isValidEmail,
   normalizeEmail,
-  sanitizePersonName,
-  sanitizeText,
+  stripControlChars,
 } from "@/lib/form-validation";
 import { isSafeHttpUrl } from "@/lib/review-schema";
 import { ValidationErrors } from "@/lib/validation-errors";
 
 export const PROJECT_INQUIRY_LIMITS = {
   maxBodyBytes: 48_000,
-  nameMin: 2,
-  nameMax: 100,
-  emailMax: 254,
-  phoneMin: 6,
-  phoneMax: 40,
-  companyMax: 120,
-  websiteMax: 500,
-  descriptionMin: 10,
-  descriptionMax: 5000,
+  ...PROJECT_INQUIRY_TEXT_LIMITS,
   adminNotesMax: 4000,
-  sourceMax: 80,
   referenceMax: 32,
-  serviceReferenceMax: 32,
   otherTextMin: PROJECT_INQUIRY_OTHER_TEXT.min,
   otherTextMax: PROJECT_INQUIRY_OTHER_TEXT.max,
 } as const;
@@ -83,6 +75,40 @@ const optionalWebsite = z
   })
   .refine((v) => v === null || isSafeHttpUrl(v), "invalid_website");
 
+function normalizeText(value: string): string {
+  return stripControlChars(value).trim();
+}
+
+function normalizePersonName(value: string): string {
+  return stripControlChars(value)
+    .replace(/[\r\n<>]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isValidLaunchDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+
+  const [year, month, day] = value.split("-").map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  if (
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() !== month - 1 ||
+    parsed.getUTCDate() !== day
+  ) {
+    return false;
+  }
+
+  const now = new Date();
+  const today = [
+    now.getUTCFullYear(),
+    String(now.getUTCMonth() + 1).padStart(2, "0"),
+    String(now.getUTCDate()).padStart(2, "0"),
+  ].join("-");
+
+  return value >= today;
+}
+
 export const projectInquiryWriteSchema = z
   .object({
     projectType: z.enum(PROJECT_INQUIRY_TYPES),
@@ -106,7 +132,7 @@ export const projectInquiryWriteSchema = z
     targetLaunchDate: z
       .string()
       .trim()
-      .regex(/^\d{4}-\d{2}-\d{2}$/, "invalid_date")
+      .refine(isValidLaunchDate, "invalid_date")
       .nullable()
       .optional()
       .transform((v) => (v === undefined || v === null || v === "" ? null : v)),
@@ -133,12 +159,10 @@ export const projectInquiryWriteSchema = z
     currentWebsite: optionalWebsite,
     locale: z.enum(["fr", "en", "ar"]).default("fr"),
     source: z
-      .string()
-      .trim()
-      .max(PROJECT_INQUIRY_LIMITS.sourceMax)
+      .enum(PROJECT_INQUIRY_SOURCES)
       .nullable()
       .optional()
-      .transform((v) => (v === undefined || v === null || v === "" ? null : v)),
+      .transform((v) => (v === undefined || v === null ? null : v)),
     serviceId: z
       .string()
       .trim()
@@ -219,7 +243,7 @@ export type ProjectInquiryPayload = {
   company: string | null;
   currentWebsite: string | null;
   locale: "fr" | "en" | "ar";
-  source: string | null;
+  source: ProjectInquirySource | null;
   serviceId: string | null;
   serviceReference: string | null;
 };
@@ -252,10 +276,32 @@ function mapZodError(issues: z.core.$ZodIssue[]): {
   const path = issue.path.map(String).join(".");
   const msg = issue.message;
 
-  if (path === "name") return { error: ValidationErrors.nameTooShort, field: "name" };
-  if (path === "email") return { error: ValidationErrors.emailInvalid, field: "email" };
+  if (path === "name") {
+    return {
+      error:
+        issue.code === "too_big"
+          ? ValidationErrors.nameTooLong
+          : ValidationErrors.nameTooShort,
+      field: "name",
+    };
+  }
+  if (path === "email") {
+    return {
+      error:
+        issue.code === "too_big"
+          ? ValidationErrors.emailTooLong
+          : ValidationErrors.emailInvalid,
+      field: "email",
+    };
+  }
   if (path === "description") {
-    return { error: ValidationErrors.messageTooShortMin, field: "description" };
+    return {
+      error:
+        issue.code === "too_big"
+          ? ValidationErrors.messageTooLong
+          : ValidationErrors.messageTooShortMin,
+      field: "description",
+    };
   }
   if (msg === "invalid_phone" || path === "phone" || path === "whatsapp") {
     return { error: ValidationErrors.invalidPhone, field: path || "phone" };
@@ -283,6 +329,9 @@ function mapZodError(issues: z.core.$ZodIssue[]): {
   }
   if (msg === "timeline_or_date_required" || path === "timeline") {
     return { error: ValidationErrors.invalidRequest, field: "timeline" };
+  }
+  if (msg === "invalid_date" || path === "targetLaunchDate") {
+    return { error: ValidationErrors.invalidRequest, field: "targetLaunchDate" };
   }
   if (msg === "empty_patch") return { error: "empty_patch" };
   return { error: ValidationErrors.invalidRequest, field: path || undefined };
@@ -321,42 +370,47 @@ export function parseProjectInquiryPayload(
   }
 
   const normalized = {
-    ...raw,
+    projectType: raw.projectType,
+    objective: raw.objective,
+    budgetRange: raw.budgetRange,
+    timeline: raw.timeline,
+    targetLaunchDate: raw.targetLaunchDate,
+    locale: raw.locale,
+    source: raw.source,
+    serviceId: raw.serviceId,
+    serviceReference: raw.serviceReference,
     budgetCustomAmount: coerceBudgetCustomAmount(raw.budgetCustomAmount),
     projectTypeOther:
       typeof raw.projectTypeOther === "string"
-        ? sanitizeText(raw.projectTypeOther, PROJECT_INQUIRY_LIMITS.otherTextMax)
+        ? normalizeText(raw.projectTypeOther)
         : raw.projectTypeOther,
     objectiveOther:
       typeof raw.objectiveOther === "string"
-        ? sanitizeText(raw.objectiveOther, PROJECT_INQUIRY_LIMITS.otherTextMax)
+        ? normalizeText(raw.objectiveOther)
         : raw.objectiveOther,
-    name: sanitizePersonName(
-      typeof raw.name === "string" ? raw.name : "",
-      PROJECT_INQUIRY_LIMITS.nameMax
-    ),
+    name: normalizePersonName(typeof raw.name === "string" ? raw.name : ""),
     email: normalizeEmail(
-      sanitizeText(
-        typeof raw.email === "string" ? raw.email : "",
-        PROJECT_INQUIRY_LIMITS.emailMax
-      )
+      normalizeText(typeof raw.email === "string" ? raw.email : "")
     ),
-    description: sanitizeText(
-      typeof raw.description === "string" ? raw.description : "",
-      PROJECT_INQUIRY_LIMITS.descriptionMax
+    description: normalizeText(
+      typeof raw.description === "string" ? raw.description : ""
     ),
     company:
       typeof raw.company === "string"
-        ? sanitizeText(raw.company, PROJECT_INQUIRY_LIMITS.companyMax)
+        ? normalizeText(raw.company)
         : raw.company,
     phone:
       typeof raw.phone === "string"
-        ? sanitizeText(raw.phone, PROJECT_INQUIRY_LIMITS.phoneMax)
+        ? normalizeText(raw.phone)
         : raw.phone,
     whatsapp:
       typeof raw.whatsapp === "string"
-        ? sanitizeText(raw.whatsapp, PROJECT_INQUIRY_LIMITS.phoneMax)
+        ? normalizeText(raw.whatsapp)
         : raw.whatsapp,
+    currentWebsite:
+      typeof raw.currentWebsite === "string"
+        ? normalizeText(raw.currentWebsite)
+        : raw.currentWebsite,
   };
 
   if (!isValidEmail(String(normalized.email ?? ""))) {

@@ -96,7 +96,8 @@ export function NavigationProgress() {
   }, [pathname, finishProgress, pulseProgress]);
 
   useEffect(() => {
-    return () => clearTimers(timersRef.current);
+    const timers = timersRef.current;
+    return () => clearTimers(timers);
   }, []);
 
   if (!visible) return null;

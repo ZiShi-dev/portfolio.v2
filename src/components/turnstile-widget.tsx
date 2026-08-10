@@ -25,6 +25,7 @@ declare global {
           size?: "normal" | "compact" | "flexible";
           appearance?: "always" | "execute" | "interaction-only";
           language?: string;
+          action?: string;
         }
       ) => string;
       reset: (widgetId?: string) => void;
@@ -47,6 +48,8 @@ type TurnstileWidgetProps = {
   /** Code i18n site (`fr` | `en` | `ar`) ou `auto`. */
   language?: string;
   theme?: "light" | "dark" | "auto";
+  /** Action stable, vérifiée côté serveur via Siteverify. */
+  action: string;
 };
 
 export const TurnstileWidget = forwardRef<
@@ -61,6 +64,7 @@ export const TurnstileWidget = forwardRef<
     appearance = "always",
     language = "auto",
     theme = "dark",
+    action,
   },
   ref
 ) {
@@ -108,6 +112,7 @@ export const TurnstileWidget = forwardRef<
       size,
       appearance,
       language,
+      action,
     });
 
     return () => {
@@ -116,7 +121,7 @@ export const TurnstileWidget = forwardRef<
         widgetIdRef.current = null;
       }
     };
-  }, [siteKey, scriptReady, size, appearance, language, theme]);
+  }, [siteKey, scriptReady, size, appearance, language, theme, action]);
 
   if (!siteKey) return null;
 

@@ -117,6 +117,12 @@ describe("API admin reviews — auth, CSRF, validation, modération", () => {
         logAdminAuthEvent: () => undefined,
       },
     });
+
+    mock.module("@/lib/reviews/revalidate", {
+      namedExports: {
+        revalidateReviewSurfaces: () => undefined,
+      },
+    });
   });
 
   before(async () => {

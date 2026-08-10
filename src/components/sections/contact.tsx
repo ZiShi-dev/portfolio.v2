@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -14,10 +14,7 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { HoneypotField } from "@/components/ui/honeypot-field";
-import {
-  TurnstileWidget,
-  type TurnstileWidgetHandle,
-} from "@/components/turnstile-widget";
+import { TurnstileWidget } from "@/components/turnstile-widget";
 import { useSubmitGuard } from "@/hooks/use-submit-guard";
 import { CONTACT_LIMITS } from "@/lib/contact-schema";
 import {
@@ -44,16 +41,23 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
   const locale = useLocale();
   const t = useTranslations("contact");
   const tValidation = useTranslations("validation");
-  const translateError = (key: ValidationErrorKey) => tValidation(key);
+  const translateError = useCallback(
+    (key: ValidationErrorKey) => tValidation(key),
+    [tValidation]
+  );
   const schema = useMemo(
     () => createContactFormSchema(translateError),
-    [tValidation]
+    [translateError]
   );
   const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const { loading, setLoading, trySubmit } = useSubmitGuard();
-  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
+  const [turnstileVersion, setTurnstileVersion] = useState(0);
+  const resetTurnstile = useCallback(() => {
+    setTurnstileToken("");
+    setTurnstileVersion((value) => value + 1);
+  }, []);
 
   const {
     register,
@@ -114,7 +118,7 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
         const message = tValidation("sendFailed");
         setSubmitError(message);
         showAppToast(message, "error");
-        turnstileRef.current?.reset();
+        resetTurnstile();
         setTurnstileToken("");
         return;
       }
@@ -129,13 +133,13 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
       );
       setSubmitError(message);
       showAppToast(message, res.status === 429 ? "info" : "error");
-      turnstileRef.current?.reset();
+      resetTurnstile();
       setTurnstileToken("");
     } catch {
       const message = tValidation("networkError");
       setSubmitError(message);
       showAppToast(message, "error");
-      turnstileRef.current?.reset();
+      resetTurnstile();
     } finally {
       setLoading(false);
     }
@@ -242,7 +246,8 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
 
           {turnstileEnabled && (
             <TurnstileWidget
-              ref={turnstileRef}
+              key={turnstileVersion}
+              action="contact"
               onToken={setTurnstileToken}
               onExpire={() => setTurnstileToken("")}
               language={locale}

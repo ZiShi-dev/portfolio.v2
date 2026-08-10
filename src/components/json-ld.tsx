@@ -2,7 +2,7 @@ import { absoluteUrl, routes } from "@/lib/routes";
 import { brand } from "@/lib/brand";
 import { getSiteSettings } from "@/lib/social/store";
 
-export async function OrganizationJsonLd() {
+export async function OrganizationJsonLd({ nonce }: { nonce?: string }) {
   const settings = await getSiteSettings();
   const homeUrl = absoluteUrl(routes.home);
   const sameAs = [
@@ -52,7 +52,10 @@ export async function OrganizationJsonLd() {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      nonce={nonce}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+      }}
     />
   );
 }

@@ -38,8 +38,6 @@ export function ContactOpenLink({
     (serviceSlug || serviceId || serviceReference || projectType || intent
       ? startProjectUrl({
           serviceSlug,
-          serviceId,
-          serviceReference,
           projectType,
           intent,
         })

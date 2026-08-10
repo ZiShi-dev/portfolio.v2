@@ -231,7 +231,8 @@ export function pickLocale(
 
 export function serviceRowToLocalized(
   row: ServiceRow,
-  locale: Locale | string
+  locale: Locale | string,
+  overrides?: { coverImage?: string | null }
 ): LocalizedService {
   return {
     id: row.id,
@@ -251,7 +252,11 @@ export function serviceRowToLocalized(
     offerKind: row.offer_kind,
     showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
-    coverImage: row.cover_image,
+    // Public : image uniquement via projet lié (override). Jamais la cover admin legacy.
+    coverImage:
+      overrides && "coverImage" in overrides
+        ? overrides.coverImage ?? null
+        : null,
     linkedProjectId: row.linked_project_id,
     pricingMode: row.pricing_mode,
     startingPriceCents: row.starting_price_cents,
@@ -478,6 +483,31 @@ export async function getPublishedServiceBySlug(
   const row = normalizeRow(data as Record<string, unknown>);
   const caseMap = await loadCaseStudyIds([row.id]);
   return { ...row, case_study_ids: caseMap.get(row.id) ?? [] };
+}
+
+/** Résout côté serveur le contexte d'offre envoyé par le formulaire public. */
+export async function getPublishedServiceById(
+  id: string
+): Promise<ServiceRow | null> {
+  if (!UUID_RE.test(id)) return null;
+  if (!isSupabaseServiceConfigured()) return null;
+  const supabase = createSupabaseServiceClient();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from("services")
+    .select(SERVICE_SELECT)
+    .eq("id", id)
+    .eq("status", "published")
+    .maybeSingle();
+
+  if (error) {
+    console.error("[services] get published by id", error.message);
+    return null;
+  }
+  if (!data) return null;
+
+  return normalizeRow(data as Record<string, unknown>);
 }
 
 export async function getServiceByIdForAdmin(

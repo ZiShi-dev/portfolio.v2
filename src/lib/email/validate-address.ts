@@ -2,7 +2,6 @@ import { isValidEmail, normalizeEmail } from "@/lib/form-validation";
 
 const FROM_WITH_NAME_RE =
   /^[^<>\r\n]+<\s*([^\s@<>]+@[^\s@<>]+)\s*>$/;
-const PLAIN_EMAIL_RE = /^[^\s@<>]+@[^\s@<>]+$/;
 
 /** Valide le format `Nom <email@domaine>` ou email simple. */
 export function isValidFromAddress(value: string): boolean {

@@ -26,7 +26,7 @@ import {
   adminPasswordChangeSchema,
   type AdminPasswordChangeValues,
 } from "@/lib/admin/password-change-schema";
-import { getSubmitCooldownMessage, useSubmitGuard } from "@/hooks/use-submit-guard";
+import { useSubmitGuard } from "@/hooks/use-submit-guard";
 import { startNavigationProgress } from "@/lib/navigation-progress";
 
 function PasswordField({

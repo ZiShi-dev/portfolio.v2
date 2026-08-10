@@ -22,20 +22,17 @@ export function AnimatedStarRating({
   const inView = useInView(ref, { once: true, margin: "-20px" });
   const reduceMotion = useReducedMotion();
   const safeRating = Math.min(5, Math.max(0, Math.round(rating)));
-  const [filled, setFilled] = useState(reduceMotion ? safeRating : 0);
+  const [filled, setFilled] = useState(0);
 
   useEffect(() => {
-    if (reduceMotion) {
-      setFilled(safeRating);
-      return;
-    }
+    if (reduceMotion) return;
 
-    if (!inView) return;
+    if (!inView || safeRating === 0) return;
 
-    setFilled(0);
     let current = 0;
     let interval: number | undefined;
     const timeout = window.setTimeout(() => {
+      setFilled(0);
       interval = window.setInterval(() => {
         current += 1;
         setFilled(current);
@@ -51,10 +48,13 @@ export function AnimatedStarRating({
     };
   }, [inView, safeRating, reduceMotion, delay]);
 
+  const displayedFilled =
+    reduceMotion || safeRating === 0 ? safeRating : Math.min(filled, safeRating);
+
   return (
     <div ref={ref} className={cn("flex gap-1", className)} aria-label={`${safeRating} sur 5 étoiles`}>
       {[1, 2, 3, 4, 5].map((value) => {
-        const active = value <= filled;
+        const active = value <= displayedFilled;
 
         return (
           <motion.span

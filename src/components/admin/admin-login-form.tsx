@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
@@ -11,10 +11,7 @@ import { FormError } from "@/components/ui/form-error";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { HoneypotField } from "@/components/ui/honeypot-field";
-import {
-  TurnstileWidget,
-  type TurnstileWidgetHandle,
-} from "@/components/turnstile-widget";
+import { TurnstileWidget } from "@/components/turnstile-widget";
 import {
   AdminMfaVerifyForm,
   type AdminMfaChallengeState,
@@ -52,7 +49,11 @@ export function AdminLoginForm({
   const [submitError, setSubmitError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
-  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
+  const [turnstileVersion, setTurnstileVersion] = useState(0);
+  const resetTurnstile = useCallback(() => {
+    setTurnstileToken("");
+    setTurnstileVersion((value) => value + 1);
+  }, []);
   const [mfaChallenge, setMfaChallenge] = useState<AdminMfaChallengeState | null>(
     initialMfaChallenge ?? null
   );
@@ -153,11 +154,11 @@ export function AdminLoginForm({
       setSubmitError(
         readAdminApiError(res, body, tErrors("generic"), (key) => tErrors(key))
       );
-      turnstileRef.current?.reset();
+      resetTurnstile();
       setTurnstileToken("");
     } catch {
       setSubmitError(tErrors("generic"));
-      turnstileRef.current?.reset();
+      resetTurnstile();
       setTurnstileToken("");
     } finally {
       setLoading(false);
@@ -265,7 +266,8 @@ export function AdminLoginForm({
 
       {turnstileEnabled && (
         <TurnstileWidget
-          ref={turnstileRef}
+          key={turnstileVersion}
+          action="admin_login"
           onToken={setTurnstileToken}
           onExpire={() => setTurnstileToken("")}
           language={locale}

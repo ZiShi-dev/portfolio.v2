@@ -1,10 +1,13 @@
 import { FORM_SECURITY } from "@/lib/security/constants";
+import { getAllowedFormOrigins } from "@/lib/security/request-origin";
 
 const SITEVERIFY_URL =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 type SiteverifyResponse = {
   success: boolean;
+  hostname?: string;
+  action?: string;
   "error-codes"?: string[];
 };
 
@@ -12,15 +15,46 @@ export function isTurnstileEnabled(): boolean {
   return Boolean(process.env.TURNSTILE_SECRET_KEY);
 }
 
+export function isTurnstileSiteKeyConfigured(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim());
+}
+
+function hasExpectedTurnstileContext(
+  data: SiteverifyResponse,
+  expectedAction?: string
+): boolean {
+  if (process.env.NODE_ENV !== "production") return true;
+
+  const allowedHostnames = new Set<string>();
+  for (const origin of getAllowedFormOrigins()) {
+    try {
+      allowedHostnames.add(new URL(origin).hostname);
+    } catch {
+      // Origine déjà filtrée par request-origin ; ignorer une valeur invalide.
+    }
+  }
+
+  if (
+    allowedHostnames.size === 0 ||
+    !data.hostname ||
+    !allowedHostnames.has(data.hostname)
+  ) {
+    return false;
+  }
+
+  return !expectedAction || data.action === expectedAction;
+}
+
 export async function verifyTurnstileToken(
   token: string,
-  remoteIp: string
+  remoteIp: string,
+  expectedAction?: string
 ): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
   if (!secret) return true;
 
   const response = token.trim();
-  if (!response) return false;
+  if (!response || response.length > 2048) return false;
 
   try {
     const params = new URLSearchParams({
@@ -55,7 +89,12 @@ export async function verifyTurnstileToken(
         );
       }
     }
-    return data.success;
+    if (!data.success) return false;
+    if (!hasExpectedTurnstileContext(data, expectedAction)) {
+      console.error("[turnstile] hostname/action mismatch");
+      return false;
+    }
+    return true;
   } catch (err) {
     console.error(
       "[turnstile] siteverify error",

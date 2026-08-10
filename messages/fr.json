@@ -6,14 +6,16 @@
   },
   "nav": {
     "services": "Offres",
-    "engagements": "Engagements VORZIX",
+    "engagements": "Engagements",
     "projects": "Projets",
     "faq": "FAQ",
-    "about": "À propos",
+    "about": "À\u00a0propos",
     "reviews": "Avis",
     "leaveReview": "Laisser un avis",
     "workTogether": "Travaillons ensemble",
-    "menu": "Menu"
+    "workTogetherShort": "Démarrer",
+    "menu": "Menu",
+    "closeMenu": "Fermer le menu"
   },
   "footer": {
     "navigation": "Navigation",
@@ -415,10 +417,10 @@
     "hosting": "Hébergement",
     "hostingText": "Le site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis.",
     "personalData": "Données personnelles",
-    "personalDataP1": "Les formulaires de contact et d'avis collectent votre nom, email et message uniquement pour répondre à votre demande ou publier un avis avec votre accord. Ces données sont enregistrées de façon sécurisée sur notre base (Supabase) — aucun email de notification n’est envoyé automatiquement.",
+    "personalDataP1": "Les formulaires de contact, de demande de projet et d'avis collectent les informations que vous fournissez (coordonnées, besoin, budget et calendrier) uniquement pour répondre à votre demande ou publier un avis avec votre accord. Ces données sont enregistrées de façon sécurisée sur notre base (Supabase) — aucun email de notification n’est envoyé automatiquement.",
     "personalDataP2": "Vous pouvez demander l’accès, la rectification ou la suppression de ces données en nous contactant.",
-    "personalDataP3": "Base légale : exécution de votre demande (contact) ou consentement (publication d'un avis). Durée de conservation : le temps nécessaire au traitement, puis suppression sur demande.",
-    "personalDataP4": "Le formulaire d'avis utilise <turnstile>Cloudflare Turnstile</turnstile> pour limiter le spam. Turnstile peut déposer un cookie technique ; aucune donnée personnelle n'est transmise à des fins publicitaires.",
+    "personalDataP3": "Base légale : exécution de votre demande (contact ou projet) ou consentement (publication d'un avis). Durée de conservation : le temps nécessaire au traitement, puis suppression sur demande.",
+    "personalDataP4": "Les formulaires publics utilisent <turnstile>Cloudflare Turnstile</turnstile> pour limiter le spam. Turnstile peut déposer un cookie technique ; aucune donnée personnelle n'est transmise à des fins publicitaires.",
     "personalDataP5": "Ces données ne sont ni revendues ni cédées à des fins commerciales, sauf obligation légale.",
     "personalDataP6": "Pour exercer vos droits (accès, rectification, suppression), contactez <email></email>.",
     "cookies": "Cookies",
@@ -1056,7 +1058,7 @@
         "showCtaBuy": "Bouton « Acheter »",
         "showCtaStart": "Bouton « Démarrer un projet »",
         "coverImage": "Photo du produit",
-        "linkedProject": "Projet lié (/projets)",
+        "linkedProject": "Projet lié (/projets) — fournit aussi la photo",
         "pricingMode": "Mode tarifaire",
         "currency": "Devise",
         "startingPrice": "Prix de départ",
@@ -1069,8 +1071,8 @@
         "ctaLabel": "Libellé CTA démarrer"
       },
       "hints": {
-        "coverImage": "Photo mise en avant pour les offres « À vendre » (catalogue + page détail).",
-        "linkedProject": "Lien direct vers la page /projets de ce produit (bouton sur la page offre)."
+        "coverImage": "Désactivé : la photo vient du projet lié.",
+        "linkedProject": "Associez un projet publié : ses images s’affichent sur l’offre. Sans projet lié, aucune image."
       },
       "linkedProjectNone": "Aucun projet lié",
       "caseStudiesHint": "Réalisations secondaires affichées sous le projet principal.",
@@ -1097,6 +1099,7 @@
   },
   "projectInquiry": {
     "brand": "VZ—PROJECT",
+    "privacyNotice": "Vos informations servent uniquement à traiter votre demande. Consultez notre <legal>politique de confidentialité</legal>.",
     "meta": {
       "title": "Démarrer un projet — {brand}",
       "description": "Cadrez votre besoin en quelques choix. VORZIX construit votre constellation de projet."
@@ -1234,6 +1237,7 @@
       "otherText": "Précisez en quelques mots (2 caractères minimum).",
       "customBudget": "Indiquez un montant entre 50 € et 500 000 €.",
       "timelineOrDate": "Choisissez un délai ou une date de lancement.",
+      "invalidDate": "Choisissez une date valide, aujourd’hui ou plus tard.",
       "submit": "Impossible d’envoyer la demande. Réessayez.",
       "turnstile": "Vérification anti-spam requise."
     }

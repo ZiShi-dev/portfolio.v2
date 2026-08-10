@@ -6,14 +6,16 @@
   },
   "nav": {
     "services": "Offers",
-    "engagements": "VORZIX commitments",
+    "engagements": "Commitments",
     "projects": "Projects",
     "faq": "FAQ",
     "about": "About",
     "reviews": "Reviews",
     "leaveReview": "Leave a review",
     "workTogether": "Let's work together",
-    "menu": "Menu"
+    "workTogetherShort": "Start",
+    "menu": "Menu",
+    "closeMenu": "Close menu"
   },
   "footer": {
     "navigation": "Navigation",
@@ -413,10 +415,10 @@
     "hosting": "Hosting",
     "hostingText": "This site is hosted by Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, United States.",
     "personalData": "Personal data",
-    "personalDataP1": "The contact and review forms collect your name, email, and message only to respond to your request or publish a review with your consent. This data is stored securely in our database (Supabase) — no notification email is sent automatically.",
+    "personalDataP1": "The contact, project inquiry and review forms collect the information you provide (contact details, needs, budget and timeline) only to respond to your request or publish a review with your consent. This data is stored securely in our database (Supabase) — no notification email is sent automatically.",
     "personalDataP2": "You may request access, correction, or deletion of this data by contacting us.",
-    "personalDataP3": "Legal basis: performance of your request (contact) or consent (publishing a review). Retention period: as long as needed to process the request, then deletion upon request.",
-    "personalDataP4": "The review form uses <turnstile>Cloudflare Turnstile</turnstile> to limit spam. Turnstile may set a technical cookie; no personal data is shared for advertising purposes.",
+    "personalDataP3": "Legal basis: performance of your request (contact or project) or consent (publishing a review). Retention period: as long as needed to process the request, then deletion upon request.",
+    "personalDataP4": "Public forms use <turnstile>Cloudflare Turnstile</turnstile> to limit spam. Turnstile may set a technical cookie; no personal data is shared for advertising purposes.",
     "personalDataP5": "This data is never sold or transferred for commercial purposes, except where required by law.",
     "personalDataP6": "To exercise your rights (access, rectification, erasure), contact <email></email>.",
     "cookies": "Cookies",
@@ -1054,7 +1056,7 @@
         "showCtaBuy": "“Buy” button",
         "showCtaStart": "“Start a project” button",
         "coverImage": "Product photo",
-        "linkedProject": "Linked project (/projects)",
+        "linkedProject": "Linked project (/projects) — also provides the photo",
         "pricingMode": "Pricing mode",
         "currency": "Currency",
         "startingPrice": "Starting price",
@@ -1067,8 +1069,8 @@
         "ctaLabel": "Start CTA label"
       },
       "hints": {
-        "coverImage": "Featured photo for “For sale” offers (catalog + detail page).",
-        "linkedProject": "Direct link to this product’s /projects page (button on the offer page)."
+        "coverImage": "Disabled: the photo comes from the linked project.",
+        "linkedProject": "Link a published project: its images appear on the offer. Without a linked project, no image."
       },
       "linkedProjectNone": "No linked project",
       "caseStudiesHint": "Secondary case studies shown under the main project.",
@@ -1095,6 +1097,7 @@
   },
   "projectInquiry": {
     "brand": "VZ—PROJECT",
+    "privacyNotice": "Your information is used only to process your request. Read our <legal>privacy policy</legal>.",
     "meta": {
       "title": "Start a project — {brand}",
       "description": "Frame your need in a few choices. VORZIX builds your project constellation."
@@ -1232,6 +1235,7 @@
       "otherText": "Please add a short description (2 characters min).",
       "customBudget": "Enter an amount between €50 and €500,000.",
       "timelineOrDate": "Choose a timeline or a launch date.",
+      "invalidDate": "Choose a valid date, today or later.",
       "submit": "Unable to send the request. Please try again.",
       "turnstile": "Anti-spam verification required."
     }

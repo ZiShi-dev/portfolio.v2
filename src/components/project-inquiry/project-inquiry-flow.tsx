@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -21,7 +21,10 @@ import { HoneypotField } from "@/components/ui/honeypot-field";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Textarea } from "@/components/ui/textarea";
-import { TurnstileWidget } from "@/components/turnstile-widget";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/turnstile-widget";
 import { ChoiceCards } from "@/components/project-inquiry/choice-cards";
 import {
   ProjectConstellation,
@@ -35,11 +38,13 @@ import {
   PROJECT_INQUIRY_CUSTOM_BUDGET,
   PROJECT_INQUIRY_OBJECTIVES,
   PROJECT_INQUIRY_OTHER_TEXT,
+  PROJECT_INQUIRY_TEXT_LIMITS,
   PROJECT_INQUIRY_TIMELINES,
   PROJECT_INQUIRY_TYPES,
   type ProjectInquiryBudget,
   type ProjectInquiryObjective,
   type ProjectInquiryStep,
+  type ProjectInquirySource,
   type ProjectInquiryTimeline,
   type ProjectInquiryType,
 } from "@/data/project-inquiry-options";
@@ -62,7 +67,8 @@ type FieldKey =
   | "name"
   | "email"
   | "whatsapp"
-  | "currentWebsite";
+  | "currentWebsite"
+  | "targetLaunchDate";
 
 function isValidPhone(value: string): boolean {
   const v = value.trim();
@@ -86,7 +92,8 @@ type Answers = {
   currentWebsite: string;
 };
 
-const STORAGE_KEY = "vorzix_project_inquiry_draft_v1";
+const STORAGE_KEY = "vorzix_project_inquiry_draft_v2";
+const LEGACY_STORAGE_KEY = "vorzix_project_inquiry_draft_v1";
 
 const emptyAnswers = (): Answers => ({
   projectType: null,
@@ -104,6 +111,55 @@ const emptyAnswers = (): Answers => ({
   company: "",
   currentWebsite: "",
 });
+
+function parseSafeDraft(value: unknown): Partial<Answers> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const draft = value as Record<string, unknown>;
+  const safe: Partial<Answers> = {};
+
+  if (
+    typeof draft.projectType === "string" &&
+    (PROJECT_INQUIRY_TYPES as readonly string[]).includes(draft.projectType)
+  ) {
+    safe.projectType = draft.projectType as ProjectInquiryType;
+  }
+  if (
+    typeof draft.objective === "string" &&
+    (PROJECT_INQUIRY_OBJECTIVES as readonly string[]).includes(draft.objective)
+  ) {
+    safe.objective = draft.objective as ProjectInquiryObjective;
+  }
+  if (
+    typeof draft.budgetRange === "string" &&
+    (PROJECT_INQUIRY_BUDGETS as readonly string[]).includes(draft.budgetRange)
+  ) {
+    safe.budgetRange = draft.budgetRange as ProjectInquiryBudget;
+  }
+  if (
+    typeof draft.timeline === "string" &&
+    (PROJECT_INQUIRY_TIMELINES as readonly string[]).includes(draft.timeline)
+  ) {
+    safe.timeline = draft.timeline as ProjectInquiryTimeline;
+  }
+  if (
+    typeof draft.targetLaunchDate === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(draft.targetLaunchDate)
+  ) {
+    safe.targetLaunchDate = draft.targetLaunchDate;
+  }
+
+  return safe;
+}
+
+function draftAnswers(answers: Answers): Partial<Answers> {
+  return {
+    projectType: answers.projectType,
+    objective: answers.objective,
+    budgetRange: answers.budgetRange,
+    timeline: answers.timeline,
+    targetLaunchDate: answers.targetLaunchDate,
+  };
+}
 
 function parseCustomBudgetInput(raw: string): number | null {
   const cleaned = raw.replace(/\s/g, "").replace(",", ".");
@@ -183,7 +239,7 @@ export function ProjectInquiryFlow({
   serviceId,
   serviceReference,
 }: {
-  source?: string;
+  source?: ProjectInquirySource;
   fullscreen?: boolean;
   /** Pré-sélection depuis une offre — modifiable par le visiteur. */
   initialProjectType?: ProjectInquiryType | null;
@@ -216,6 +272,13 @@ export function ProjectInquiryFlow({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  const flowRef = useRef<HTMLDivElement>(null);
+  const previousStepRef = useRef<ProjectInquiryStep>("intro");
+  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
+
+  const focusField = useCallback((id: string) => {
+    window.requestAnimationFrame(() => document.getElementById(id)?.focus());
+  }, []);
 
   const clearFieldError = useCallback((key: FieldKey) => {
     setFieldErrors((prev) => {
@@ -246,33 +309,32 @@ export function ProjectInquiryFlow({
   }, [fullscreen]);
 
   useEffect(() => {
+    let restoredAnswers: Answers | null = null;
     try {
+      sessionStorage.removeItem(LEGACY_STORAGE_KEY);
       const raw = sessionStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as {
-          step?: ProjectInquiryStep;
-          answers?: Answers;
-        };
+        const parsed = JSON.parse(raw) as { answers?: unknown };
         if (parsed.answers) {
-          const merged = { ...emptyAnswers(), ...parsed.answers };
+          const merged = {
+            ...emptyAnswers(),
+            ...parseSafeDraft(parsed.answers),
+          };
           // Contexte offre : pré-sélection seulement si le brouillon n’a pas encore de type
           if (!merged.projectType && initialProjectType) {
             merged.projectType = initialProjectType;
           }
-          setAnswers(merged);
-        }
-        if (
-          parsed.step &&
-          parsed.step !== "success" &&
-          parsed.step !== "intro"
-        ) {
-          setStep(parsed.step);
+          restoredAnswers = merged;
         }
       }
     } catch {
       /* ignore */
     }
-    setHydrated(true);
+    const frame = window.requestAnimationFrame(() => {
+      if (restoredAnswers) setAnswers(restoredAnswers);
+      setHydrated(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
     // Intentionnel : hydratation unique au montage
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -282,12 +344,23 @@ export function ProjectInquiryFlow({
     try {
       sessionStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ step, answers })
+        JSON.stringify({ answers: draftAnswers(answers) })
       );
     } catch {
       /* ignore */
     }
   }, [answers, step, hydrated]);
+
+  useEffect(() => {
+    if (previousStepRef.current === step) return;
+    previousStepRef.current = step;
+    const timer = window.setTimeout(() => {
+      flowRef.current
+        ?.querySelector<HTMLElement>("[data-step-heading]")
+        ?.focus();
+    }, reduceMotion ? 0 : 320);
+    return () => window.clearTimeout(timer);
+  }, [reduceMotion, step]);
 
   const goNext = useCallback(
     (next: ProjectInquiryStep) => {
@@ -433,6 +506,7 @@ export function ProjectInquiryFlow({
       };
 
       if (!res.ok || !body.ok) {
+        turnstileRef.current?.reset();
         if (res.status === 429) {
           setSubmitError(
             body.error === "dailyRateLimited"
@@ -440,18 +514,35 @@ export function ProjectInquiryFlow({
               : tVal("rateLimited")
           );
         } else if (body.error === "invalidPhone") {
+          setStep("contact");
           setFieldErr(
             body.field === "phone" ? "whatsapp" : "whatsapp",
             t("errors.invalidPhone")
           );
         } else if (body.field === "objectiveOther") {
+          setStep("objective");
           setFieldErr("objectiveOther", t("errors.otherText"));
         } else if (body.field === "projectTypeOther") {
+          setStep("type");
           setFieldErr("projectTypeOther", t("errors.otherText"));
         } else if (body.field === "currentWebsite") {
+          setStep("contact");
           setFieldErr("currentWebsite", t("errors.invalidWebsite"));
         } else if (body.field === "timeline") {
+          setStep("timeline");
           setSubmitError(t("errors.timelineOrDate"));
+        } else if (body.field === "targetLaunchDate") {
+          setStep("timeline");
+          setFieldErr("targetLaunchDate", t("errors.invalidDate"));
+        } else if (body.field === "description") {
+          setStep("description");
+          setFieldErr("description", t("errors.description"));
+        } else if (body.field === "name") {
+          setStep("contact");
+          setFieldErr("name", tVal("nameTooShort"));
+        } else if (body.field === "email") {
+          setStep("contact");
+          setFieldErr("email", tVal("emailInvalid"));
         } else {
           setSubmitError(t("errors.submit"));
         }
@@ -466,6 +557,7 @@ export function ProjectInquiryFlow({
       }
       setStep("success");
     } catch {
+      turnstileRef.current?.reset();
       setSubmitError(tVal("networkError"));
     } finally {
       setLoading(false);
@@ -480,7 +572,11 @@ export function ProjectInquiryFlow({
             <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
               {t("brand")}
             </p>
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            <h1
+              data-step-heading
+              tabIndex={-1}
+              className="font-display text-3xl font-semibold tracking-tight text-foreground outline-none sm:text-4xl"
+            >
               {t("intro.title")}
             </h1>
             <p className="mx-auto max-w-lg text-sm leading-relaxed text-muted-foreground sm:mx-0 sm:text-base">
@@ -533,6 +629,11 @@ export function ProjectInquiryFlow({
                     maxLength={PROJECT_INQUIRY_OTHER_TEXT.max}
                     placeholder={t("fields.typeOtherPlaceholder")}
                     aria-invalid={Boolean(fieldErrors.projectTypeOther)}
+                    aria-describedby={
+                      fieldErrors.projectTypeOther
+                        ? "project-type-other-error"
+                        : undefined
+                    }
                     onChange={(e) => {
                       const value = e.target.value;
                       setAnswers((a) => ({ ...a, projectTypeOther: value }));
@@ -605,6 +706,11 @@ export function ProjectInquiryFlow({
                     maxLength={PROJECT_INQUIRY_OTHER_TEXT.max}
                     placeholder={t("fields.objectiveOtherPlaceholder")}
                     aria-invalid={Boolean(fieldErrors.objectiveOther)}
+                    aria-describedby={
+                      fieldErrors.objectiveOther
+                        ? "objective-other-error"
+                        : undefined
+                    }
                     onChange={(e) => {
                       const value = e.target.value;
                       setAnswers((a) => ({ ...a, objectiveOther: value }));
@@ -686,6 +792,11 @@ export function ProjectInquiryFlow({
                       placeholder={t("fields.customBudgetPlaceholder")}
                       value={answers.budgetCustomAmount}
                       aria-invalid={Boolean(fieldErrors.budgetCustomAmount)}
+                      aria-describedby={
+                        fieldErrors.budgetCustomAmount
+                          ? "budget-custom-error"
+                          : undefined
+                      }
                       onChange={(e) => {
                         const value = e.target.value;
                         setAnswers((a) => ({
@@ -792,6 +903,7 @@ export function ProjectInquiryFlow({
             <FormField
               id="launch-date"
               label={t("fields.targetLaunchDate")}
+              error={fieldErrors.targetLaunchDate}
               className="mt-6"
             >
               <DatePicker
@@ -801,7 +913,12 @@ export function ProjectInquiryFlow({
                 placeholder={t("fields.targetLaunchPlaceholder")}
                 clearLabel={t("fields.targetLaunchClear")}
                 disabled={transitioning}
+                invalid={Boolean(fieldErrors.targetLaunchDate)}
+                ariaDescribedBy={
+                  fieldErrors.targetLaunchDate ? "launch-date-error" : undefined
+                }
                 onChange={(next) => {
+                  clearFieldError("targetLaunchDate");
                   setAnswers((a) => ({
                     ...a,
                     targetLaunchDate: next,
@@ -846,6 +963,7 @@ export function ProjectInquiryFlow({
                 id="proj-desc"
                 rows={7}
                 value={answers.description}
+                maxLength={PROJECT_INQUIRY_TEXT_LIMITS.descriptionMax}
                 onChange={(e) => {
                   const value = e.target.value;
                   setAnswers((a) => ({ ...a, description: value }));
@@ -861,19 +979,23 @@ export function ProjectInquiryFlow({
                   }
                 }}
                 aria-invalid={Boolean(fieldErrors.description)}
+                aria-describedby={
+                  fieldErrors.description ? "proj-desc-error" : undefined
+                }
                 className="min-h-40"
               />
             </FormField>
             <div className="mt-6">
               <Button
-                type="button"
+                  type="button"
                 size="lg"
                 className="min-h-12 w-full sm:w-auto"
                 disabled={transitioning}
-                onClick={() => {
-                  if (answers.description.trim().length < 10) {
-                    setFieldErr("description", t("errors.description"));
-                    return;
+                  onClick={() => {
+                    if (answers.description.trim().length < 10) {
+                      setFieldErr("description", t("errors.description"));
+                      focusField("proj-desc");
+                      return;
                   }
                   goNext("contact");
                 }}
@@ -898,8 +1020,11 @@ export function ProjectInquiryFlow({
                 <Input
                   id="inq-name"
                   autoComplete="name"
+                  required
+                  maxLength={PROJECT_INQUIRY_TEXT_LIMITS.nameMax}
                   value={answers.name}
                   aria-invalid={Boolean(fieldErrors.name)}
+                  aria-describedby={fieldErrors.name ? "inq-name-error" : undefined}
                   onChange={(e) => {
                     const value = e.target.value;
                     setAnswers((a) => ({ ...a, name: value }));
@@ -926,8 +1051,11 @@ export function ProjectInquiryFlow({
                   id="inq-email"
                   type="email"
                   autoComplete="email"
+                  required
+                  maxLength={PROJECT_INQUIRY_TEXT_LIMITS.emailMax}
                   value={answers.email}
                   aria-invalid={Boolean(fieldErrors.email)}
+                  aria-describedby={fieldErrors.email ? "inq-email-error" : undefined}
                   onChange={(e) => {
                     const value = e.target.value;
                     setAnswers((a) => ({ ...a, email: value }));
@@ -954,9 +1082,11 @@ export function ProjectInquiryFlow({
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
+                  maxLength={PROJECT_INQUIRY_TEXT_LIMITS.phoneMax}
                   placeholder="+33…"
                   value={answers.whatsapp}
                   aria-invalid={Boolean(fieldErrors.whatsapp)}
+                  aria-describedby={fieldErrors.whatsapp ? "inq-wa-error" : undefined}
                   onChange={(e) => {
                     const value = e.target.value;
                     setAnswers((a) => ({ ...a, whatsapp: value }));
@@ -980,6 +1110,7 @@ export function ProjectInquiryFlow({
                 <Input
                   id="inq-company"
                   autoComplete="organization"
+                  maxLength={PROJECT_INQUIRY_TEXT_LIMITS.companyMax}
                   value={answers.company}
                   onChange={(e) =>
                     setAnswers((a) => ({ ...a, company: e.target.value }))
@@ -994,9 +1125,13 @@ export function ProjectInquiryFlow({
                 <Input
                   id="inq-site"
                   type="url"
+                  maxLength={PROJECT_INQUIRY_TEXT_LIMITS.websiteMax}
                   placeholder="https://"
                   value={answers.currentWebsite}
                   aria-invalid={Boolean(fieldErrors.currentWebsite)}
+                  aria-describedby={
+                    fieldErrors.currentWebsite ? "inq-site-error" : undefined
+                  }
                   onChange={(e) => {
                     const value = e.target.value;
                     setAnswers((a) => ({
@@ -1026,6 +1161,18 @@ export function ProjectInquiryFlow({
                 />
               </FormField>
             </div>
+            <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+              {t.rich("privacyNotice", {
+                legal: (chunks) => (
+                  <Link
+                    href={routes.legal}
+                    className="underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
+            </p>
             <HoneypotField
               name="_honeypot"
               value={honeypot}
@@ -1060,6 +1207,13 @@ export function ProjectInquiryFlow({
                   }
                   if (Object.keys(nextErrors).length > 0) {
                     setFieldErrors(nextErrors);
+                    const firstField = [
+                      ["name", "inq-name"],
+                      ["email", "inq-email"],
+                      ["whatsapp", "inq-wa"],
+                      ["currentWebsite", "inq-site"],
+                    ].find(([key]) => Boolean(nextErrors[key as FieldKey]));
+                    if (firstField) focusField(firstField[1]);
                     return;
                   }
                   setSubmitError(null);
@@ -1083,9 +1237,13 @@ export function ProjectInquiryFlow({
               <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
                 {t("brand")}
               </p>
-              <h2 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
+              <h1
+                data-step-heading
+                tabIndex={-1}
+                className="font-display text-2xl font-semibold tracking-tight text-foreground outline-none sm:text-[1.75rem]"
+              >
                 {t("summary.title")}
-              </h2>
+              </h1>
               <p className="text-sm text-muted-foreground">
                 {t.has("summary.subtitle")
                   ? t("summary.subtitle")
@@ -1177,9 +1335,13 @@ export function ProjectInquiryFlow({
             <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-primary">
               {reference ?? t("brand")}
             </p>
-            <h2 className="font-display text-3xl font-semibold text-foreground">
+            <h1
+              data-step-heading
+              tabIndex={-1}
+              className="font-display text-3xl font-semibold text-foreground outline-none"
+            >
               {t("success.title")}
-            </h2>
+            </h1>
             <p className="max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
               {t("success.body")}
             </p>
@@ -1200,6 +1362,8 @@ export function ProjectInquiryFlow({
       {submitError ? <FormError message={submitError} /> : null}
       {turnstileEnabled ? (
         <TurnstileWidget
+          ref={turnstileRef}
+          action="project_inquiry"
           onToken={setTurnstileToken}
           onExpire={() => setTurnstileToken("")}
           size="flexible"
@@ -1232,6 +1396,7 @@ export function ProjectInquiryFlow({
 
   return (
     <motion.div
+      ref={flowRef}
       className={cn(
         "relative overflow-hidden bg-background",
         fullscreen
@@ -1370,9 +1535,13 @@ function StepShell({
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
           {hint}
         </p>
-        <h2 className="mt-2 font-display text-2xl font-semibold text-foreground sm:text-3xl">
+        <h1
+          data-step-heading
+          tabIndex={-1}
+          className="mt-2 font-display text-2xl font-semibold text-foreground outline-none sm:text-3xl"
+        >
           {title}
-        </h2>
+        </h1>
       </div>
       {children}
     </div>

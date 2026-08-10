@@ -325,6 +325,62 @@ video {
     radial-gradient(ellipse at 80% 100%, rgb(13 19 34 / 0.6), transparent 50%);
 }
 
+/* Marquee projets : forcer le flux LTR même sous html[dir=rtl] */
+.project-marquee-row.rfm-marquee-container,
+.project-marquee-row .rfm-marquee,
+.project-marquee-row .rfm-initial-child-container {
+  flex-direction: row !important;
+  direction: ltr;
+}
+
+/* Défilement projets Home — CSS pur (pas de react-fast-marquee) */
+.project-scroll-row {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+
+.project-scroll-track {
+  animation: project-scroll-x var(--project-scroll-duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+.project-scroll-track--reverse {
+  animation-name: project-scroll-x-reverse;
+}
+
+.project-scroll-row:hover .project-scroll-track {
+  animation-play-state: paused;
+}
+
+@keyframes project-scroll-x {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes project-scroll-x-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-scroll-track {
+    animation: none !important;
+  }
+}
+
 /* Tracé progressif d’arc (hero) */
 @keyframes celestial-draw {
   from {

@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useCallback, useEffect, useId, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { Menu, X } from "lucide-react";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -13,146 +13,184 @@ import { openLeaveReviewModal } from "@/lib/open-leave-review-modal";
 import { homeSectionUrl, routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
-function NavLink({
-  href,
-  label,
-  onClick,
-}: {
-  href: string;
+type NavItem = {
+  id: string;
   label: string;
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-}) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="min-h-10 px-2.5 py-2 text-sm text-foreground/70 underline-offset-4 transition-colors hover:text-step-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md xl:px-3"
-    >
-      {label}
-    </Link>
-  );
-}
+  href: string;
+  openReview?: boolean;
+};
 
-function NavControls() {
-  return (
-    <div className="flex h-9 shrink-0 items-center rounded-full border border-border/60 bg-surface/70 p-0.5 shadow-sm backdrop-blur-sm">
-      <LanguageSwitcher compact embedded />
-    </div>
-  );
-}
-
+/**
+ * Navbar VORZIX — une seule ligne, jamais de wrap, LTR/RTL.
+ * Structure : Logo | liens (desktop) | langue + CTA + menu
+ */
 export function Navbar() {
   const t = useTranslations("nav");
+  const menuId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const links = [
-    { label: t("services"), href: routes.services },
-    { label: t("engagements"), href: homeSectionUrl("engagements") },
-    { label: t("projects"), href: routes.projects },
-    { label: t("reviews"), href: routes.reviews },
-    { label: t("faq"), href: homeSectionUrl("faq") },
-    { label: t("about"), href: homeSectionUrl("about") },
-    { label: t("leaveReview"), href: "#", openReview: true },
-  ] as const;
+  const primary: NavItem[] = [
+    { id: "services", label: t("services"), href: routes.services },
+    { id: "projects", label: t("projects"), href: routes.projects },
+    {
+      id: "engagements",
+      label: t("engagements"),
+      href: homeSectionUrl("engagements"),
+    },
+    { id: "faq", label: t("faq"), href: homeSectionUrl("faq") },
+  ];
 
-  const openReviewModal = useCallback((e?: React.MouseEvent<HTMLAnchorElement>) => {
-    openLeaveReviewModal(e);
-    setOpen(false);
-  }, []);
+  const more: NavItem[] = [
+    { id: "about", label: t("about"), href: homeSectionUrl("about") },
+    { id: "reviews", label: t("reviews"), href: routes.reviews },
+    {
+      id: "leave-review",
+      label: t("leaveReview"),
+      href: "#",
+      openReview: true,
+    },
+  ];
+
+  const drawerLinks = [...primary, ...more];
+
+  const handleItem = useCallback(
+    (item: NavItem, e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (item.openReview) {
+        openLeaveReviewModal(e);
+        setOpen(false);
+        return;
+      }
+      setOpen(false);
+    },
+    []
+  );
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 16);
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <header className="fixed left-0 right-[var(--scrollbar-compensation,0px)] top-0 z-50 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4 md:pt-8">
-      <div className="relative w-full max-w-5xl">
-        <motion.nav
-          initial={{ y: -40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
+      <div className="relative mx-auto w-full max-w-5xl">
+        <div
           className={cn(
-            "flex w-full min-w-0 items-center justify-between gap-2 rounded-full border border-transparent px-3 py-2.5 sm:px-5 sm:py-3 transition-all duration-300",
-            scrolled &&
-              "border-border bg-card/90 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+            "flex h-12 w-full items-center gap-2 rounded-full border px-2 transition-colors duration-300 sm:h-14 sm:gap-3 sm:px-3",
+            scrolled
+              ? "border-border bg-[#0A0E1A]/95 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+              : "border-white/10 bg-[#0A0E1A]/80 backdrop-blur-md"
           )}
         >
-          <Link href={routes.home} className="shrink-0 font-semibold">
+          <Link
+            href={routes.home}
+            className="shrink-0 ps-1"
+            onClick={() => setOpen(false)}
+          >
             <BrandLogo />
           </Link>
 
-          <div className="hidden items-center gap-0.5 xl:flex">
-            {links.map((l) => (
-              <NavLink
-                key={l.label}
-                href={l.href}
-                label={l.label}
-                onClick={"openReview" in l ? openReviewModal : undefined}
-              />
-            ))}
-          </div>
+          {/* Liens desktop : 4 max, nowrap strict */}
+          <nav
+            className="mx-auto hidden min-w-0 flex-1 items-center justify-center lg:flex"
+            aria-label={t("menu")}
+          >
+            <ul className="flex list-none flex-nowrap items-center gap-1">
+              {primary.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    href={item.href}
+                    className="inline-flex h-9 items-center whitespace-nowrap rounded-full px-3 text-sm text-[#F4F1E8]/75 transition-colors hover:bg-white/5 hover:text-[#C9A96A]"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-          <div className="hidden items-center gap-2.5 xl:flex">
-            <NavControls />
-            <Button asChild size="sm" className="h-9 shrink-0 px-4 text-xs sm:text-sm">
+          <div className="ms-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <div className="flex h-9 items-center rounded-full border border-white/10 bg-[#070A12]/60 px-0.5">
+              <LanguageSwitcher compact embedded />
+            </div>
+
+            <Button
+              asChild
+              size="sm"
+              className="h-9 whitespace-nowrap rounded-full px-3.5 text-sm"
+            >
               <ContactOpenLink onOpen={() => setOpen(false)}>
-                {t("workTogether")}
+                {t("workTogetherShort")}
               </ContactOpenLink>
             </Button>
-          </div>
 
-          <div className="flex items-center gap-2 xl:hidden">
-            <NavControls />
             <button
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background/70 shadow-sm backdrop-blur-sm"
-              onClick={() => setOpen((v) => !v)}
-              aria-label={t("menu")}
+              type="button"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-[#070A12]/60 text-[#F4F1E8] transition-colors hover:border-[#C9A96A]/40 hover:text-[#C9A96A]"
+              aria-label={open ? t("closeMenu") : t("menu")}
               aria-expanded={open}
-              aria-controls="mobile-nav-menu"
+              aria-controls={menuId}
+              onClick={() => setOpen((v) => !v)}
             >
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {open ? <X className="h-4 w-4" strokeWidth={2} /> : <Menu className="h-4 w-4" strokeWidth={2} />}
             </button>
           </div>
-        </motion.nav>
+        </div>
 
         <AnimatePresence>
-          {open && (
-            <motion.div
-              id="mobile-nav-menu"
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="mt-3 rounded-2xl border border-border bg-card/95 p-4 backdrop-blur-xl sm:mt-4 xl:hidden"
-            >
-              <div className="flex flex-col gap-1">
-                {links.map((l) => (
-                  <Link
-                    key={l.label}
-                    href={l.href}
-                    onClick={(e) => {
-                      if ("openReview" in l) {
-                        openReviewModal(e);
-                        return;
-                      }
-                      setOpen(false);
-                    }}
-                    className="px-4 py-3 text-foreground/80 underline-offset-4 transition-colors hover:text-step-accent hover:underline"
-                  >
-                    {l.label}
-                  </Link>
-                ))}
-                <Button asChild className="mt-2 w-full">
-                  <ContactOpenLink onOpen={() => setOpen(false)}>
-                    {t("workTogether")}
-                  </ContactOpenLink>
-                </Button>
-              </div>
-            </motion.div>
-          )}
+          {open ? (
+            <>
+              <motion.button
+                type="button"
+                aria-label={t("closeMenu")}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-40 cursor-default bg-black/50"
+                onClick={() => setOpen(false)}
+              />
+              <motion.div
+                id={menuId}
+                role="dialog"
+                aria-modal="true"
+                aria-label={t("menu")}
+                initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                transition={{ duration: 0.18 }}
+                className="absolute inset-x-0 top-[calc(100%+0.5rem)] z-50 overflow-hidden rounded-2xl border border-border bg-[#0A0E1A] shadow-2xl"
+              >
+                <ul className="flex list-none flex-col p-2">
+                  {drawerLinks.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        href={item.href}
+                        onClick={(e) => handleItem(item, e)}
+                        className="flex h-11 items-center rounded-xl px-4 text-sm text-[#F4F1E8]/85 transition-colors hover:bg-white/5 hover:text-[#C9A96A]"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            </>
+          ) : null}
         </AnimatePresence>
       </div>
     </header>

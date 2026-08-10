@@ -9,8 +9,6 @@ import {
   Copy,
   ExternalLink,
   Eye,
-  ImagePlus,
-  Loader2,
   Plus,
   Save,
   Trash2,
@@ -97,7 +95,6 @@ type EditorState = {
   offerKind: ServiceOfferKind;
   showCtaBuy: boolean;
   showCtaStart: boolean;
-  coverImage: string;
   linkedProjectId: string;
   pricingMode: ServicePricingMode;
   startingPriceEuros: string;
@@ -127,7 +124,6 @@ function emptyEditor(): EditorState {
     offerKind: "service",
     showCtaBuy: false,
     showCtaStart: true,
-    coverImage: "",
     linkedProjectId: "",
     pricingMode: "quote_only",
     startingPriceEuros: "",
@@ -157,7 +153,6 @@ function rowToEditor(row: ServiceRow): EditorState {
     offerKind: row.offer_kind,
     showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
-    coverImage: row.cover_image ?? "",
     linkedProjectId: row.linked_project_id ?? "",
     pricingMode: row.pricing_mode,
     startingPriceEuros: centsToEurosInput(row.starting_price_cents),
@@ -191,7 +186,8 @@ function editorToPayload(editor: EditorState) {
     offerKind: editor.offerKind,
     showCtaBuy: editor.showCtaBuy,
     showCtaStart: editor.showCtaStart,
-    coverImage: editor.coverImage.trim() || null,
+    // Image publique = images du projet lié uniquement (plus de cover admin).
+    coverImage: null,
     linkedProjectId: editor.linkedProjectId.trim() || null,
     pricingMode: editor.pricingMode,
     startingPriceCents,
@@ -225,7 +221,6 @@ export function AdminServicesPanel({
   const [localeTab, setLocaleTab] = useState<LocaleTab>("fr");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [listError, setListError] = useState<string | null>(null);
-  const [uploadingCover, setUploadingCover] = useState(false);
 
   const refresh = useCallback(async () => {
     try {
@@ -269,39 +264,6 @@ export function AdminServicesPanel({
       [next[index], next[target]] = [next[target], next[index]];
       return { ...prev, includedFeatures: next };
     });
-  };
-
-  const uploadCover = async (file: File) => {
-    setUploadingCover(true);
-    setSubmitError(null);
-    try {
-      const form = new FormData();
-      form.append("file", file);
-      const res = await fetch("/api/admin/projects/upload", {
-        method: "POST",
-        credentials: "include",
-        body: form,
-      });
-      const body = (await res.json().catch(() => null)) as {
-        ok?: boolean;
-        url?: string;
-        error?: string;
-        code?: string;
-      } | null;
-      if (!res.ok || !body?.url) {
-        setSubmitError(
-          readAdminApiError(res, body, tErrors("generic"), (key) =>
-            tErrors(key)
-          )
-        );
-        return;
-      }
-      setEditor((p) => ({ ...p, coverImage: body.url! }));
-    } catch {
-      setSubmitError(tErrors("generic"));
-    } finally {
-      setUploadingCover(false);
-    }
   };
 
   const save = async (publish?: boolean) => {
@@ -837,82 +799,6 @@ export function AdminServicesPanel({
                 </div>
               </div>
               <p className="text-xs text-foreground/50">{t("commerceHint")}</p>
-
-              <FormField
-                label={t("fields.coverImage")}
-                id="svc-cover"
-                hint={t("hints.coverImage")}
-              >
-                <div className="space-y-3">
-                  {editor.coverImage ? (
-                    <div className="relative overflow-hidden rounded-lg border border-border">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={editor.coverImage}
-                        alt=""
-                        className="aspect-[16/10] w-full object-cover"
-                      />
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="secondary"
-                        className="absolute end-2 top-2"
-                        disabled={loading || uploadingCover}
-                        onClick={() =>
-                          setEditor((p) => ({ ...p, coverImage: "" }))
-                        }
-                      >
-                        <Trash2 className="h-3.5 w-3.5" aria-hidden />
-                        {t("removeCover")}
-                      </Button>
-                    </div>
-                  ) : null}
-                  <div className="flex flex-wrap items-center gap-2">
-                    <label className="inline-flex cursor-pointer items-center gap-2">
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        disabled={loading || uploadingCover}
-                        asChild
-                      >
-                        <span>
-                          {uploadingCover ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <ImagePlus className="h-3.5 w-3.5" aria-hidden />
-                          )}
-                          {t("uploadCover")}
-                        </span>
-                      </Button>
-                      <input
-                        id="svc-cover"
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp,image/gif"
-                        className="sr-only"
-                        disabled={loading || uploadingCover}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          e.target.value = "";
-                          if (file) void uploadCover(file);
-                        }}
-                      />
-                    </label>
-                    <Input
-                      value={editor.coverImage}
-                      onChange={(e) =>
-                        setEditor((p) => ({
-                          ...p,
-                          coverImage: e.target.value,
-                        }))
-                      }
-                      placeholder="https://…"
-                      className="min-w-[12rem] flex-1"
-                      disabled={loading || uploadingCover}
-                    />
-                  </div>
-                </div>
-              </FormField>
             </section>
 
             <section className="space-y-3">

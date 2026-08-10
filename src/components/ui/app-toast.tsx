@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, Info, X } from "lucide-react";
@@ -13,14 +13,20 @@ import {
 import { cn } from "@/lib/utils";
 
 const AUTO_DISMISS_MS = 6200;
+const subscribeToHydration = () => () => {};
+const getClientHydrationSnapshot = () => true;
+const getServerHydrationSnapshot = () => false;
 
 export function AppToastHost() {
   const tCommon = useTranslations("common");
   const [toast, setToast] = useState<AppToast | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    subscribeToHydration,
+    getClientHydrationSnapshot,
+    getServerHydrationSnapshot
+  );
 
   useEffect(() => {
-    setMounted(true);
     return subscribeAppToast(setToast);
   }, []);
 

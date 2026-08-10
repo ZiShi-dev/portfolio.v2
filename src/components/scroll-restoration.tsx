@@ -69,7 +69,6 @@ export function ScrollRestoration() {
   }, [pathname]);
 
   useEffect(() => {
-    const key = scrollStorageKey(pathname);
     let ticking = false;
 
     const onScroll = () => {
