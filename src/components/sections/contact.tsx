@@ -249,9 +249,9 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
             />
           )}
 
-          <Button type="submit" size="lg" className="min-h-12 w-full" disabled={loading}>
+          <Button type="submit" size="lg" className="min-h-12 w-full" loading={loading}>
             {loading ? t("sending") : t("send")}
-            <Send className="h-4 w-4" aria-hidden />
+            {!loading && <Send className="h-4 w-4" aria-hidden />}
           </Button>
 
           <p className="text-center text-xs leading-relaxed text-foreground/45">
@@ -262,12 +262,9 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
 
       <p className="mt-6 text-center text-xs text-foreground/50 sm:text-sm">
         {t("orEmail")}{" "}
-        <a
-          href={`mailto:${contactEmail}`}
-          className="break-all font-medium text-primary underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:break-normal"
-        >
+        <span className="break-all font-medium text-primary sm:break-normal">
           {contactEmail}
-        </a>
+        </span>
       </p>
     </>
   );
@@ -313,12 +310,9 @@ export function Contact({ contactEmail }: ContactProps) {
 
           <p className="mt-6 text-xs text-foreground/50 sm:text-sm">
             {t("orEmail")}{" "}
-            <a
-              href={`mailto:${contactEmail}`}
-              className="break-all font-medium text-primary underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:break-normal"
-            >
+            <span className="break-all font-medium text-primary sm:break-normal">
               {contactEmail}
-            </a>
+            </span>
           </p>
           <p className="mt-3 text-xs leading-relaxed text-foreground/40">
             {t("privacy")}

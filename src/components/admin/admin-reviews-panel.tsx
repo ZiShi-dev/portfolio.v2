@@ -7,7 +7,6 @@ import {
   Copy,
   EyeOff,
   Link2,
-  Loader2,
   Mail,
   MessageSquareQuote,
   Star,
@@ -549,14 +548,10 @@ export function AdminReviewsPanel({
                   <Button
                     type="button"
                     size="sm"
-                    disabled={pending}
+                    loading={pending}
                     onClick={() => void patchStatus(selected.id, "published")}
                   >
-                    {pending ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Check className="h-4 w-4" />
-                    )}
+                    {!pending && <Check className="h-4 w-4" />}
                     {t("approve")}
                   </Button>
                 )}

@@ -339,9 +339,9 @@ function ReviewFormBody({
                   />
                 )}
 
-                <Button type="submit" size="lg" className="w-full" disabled={loading}>
+                <Button type="submit" size="lg" className="w-full" loading={loading}>
                   {loading ? t("sending") : t("send")}
-                  <Send className="h-4 w-4" aria-hidden />
+                  {!loading && <Send className="h-4 w-4" aria-hidden />}
                 </Button>
 
                 <p className="text-center text-xs text-foreground/45">{t("consent")}</p>

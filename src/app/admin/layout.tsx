@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AdminLanguageSwitcher } from "@/components/admin/admin-language-switcher";
 import { AdminPrefetchSite } from "@/components/admin/admin-prefetch-site";
+import { CelestialPageSplash } from "@/components/celestial-page-loader";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { brand } from "@/lib/brand";
 import { getAdminLocale, getAdminMessages } from "@/lib/admin/i18n";
@@ -32,6 +33,7 @@ export default async function AdminLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
+      <CelestialPageSplash />
       <AdminPrefetchSite />
       <NavigationProgress />
       <div className="relative min-h-dvh overflow-x-clip bg-background text-foreground">

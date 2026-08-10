@@ -17,6 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
+import { startNavigationProgress } from "@/lib/navigation-progress";
 
 export function AdminLogoutButton() {
   const t = useTranslations("admin.logout");
@@ -35,6 +36,7 @@ export function AdminLogoutButton() {
         redirectTo?: string;
       } | null;
       setOpen(false);
+      startNavigationProgress();
       router.push(body?.redirectTo ?? ADMIN_ROUTES.login);
       router.refresh();
     } finally {
@@ -49,9 +51,9 @@ export function AdminLogoutButton() {
           type="button"
           size="sm"
           variant="destructive"
-          disabled={loading}
+          loading={loading}
         >
-          <LogOut className="h-4 w-4" />
+          {!loading && <LogOut className="h-4 w-4" />}
           {loading ? t("loading") : t("button")}
         </Button>
       </AlertDialogTrigger>

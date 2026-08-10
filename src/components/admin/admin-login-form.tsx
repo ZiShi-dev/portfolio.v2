@@ -24,6 +24,7 @@ import { readAdminApiError } from "@/lib/admin/api-error";
 import { getSafeAdminNextPath } from "@/lib/admin/safe-next";
 import { getSubmitCooldownMessage, useSubmitGuard } from "@/hooks/use-submit-guard";
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
+import { startNavigationProgress } from "@/lib/navigation-progress";
 import {
   adminLoginDefaultValues,
   adminLoginSchema,
@@ -143,6 +144,7 @@ export function AdminLoginForm({
       }
 
       if (res.ok) {
+        startNavigationProgress();
         router.push(resolveRedirect(body?.redirectTo));
         router.refresh();
         return;
@@ -270,7 +272,7 @@ export function AdminLoginForm({
         />
       )}
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full" loading={loading}>
         {loading ? (
           t("connecting")
         ) : (

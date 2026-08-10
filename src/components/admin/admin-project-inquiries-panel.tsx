@@ -6,7 +6,6 @@ import {
   Check,
   Copy,
   ExternalLink,
-  Loader2,
   Orbit,
   Trash2,
 } from "lucide-react";
@@ -566,14 +565,10 @@ export function AdminProjectInquiriesPanel({
                 <Button
                   type="button"
                   size="sm"
-                  disabled={pending}
+                  loading={pending}
                   onClick={() => void saveSelected()}
                 >
-                  {pending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                  ) : (
-                    <Check className="h-4 w-4" aria-hidden />
-                  )}
+                  {!pending && <Check className="h-4 w-4" aria-hidden />}
                   {pending ? t("actions.saving") : t("actions.save")}
                 </Button>
                 <AlertDialog>

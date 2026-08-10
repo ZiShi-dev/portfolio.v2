@@ -1212,7 +1212,8 @@ export function ProjectInquiryFlow({
           type="button"
           size="lg"
           className="min-h-12 w-full"
-          disabled={loading || transitioning}
+          loading={loading}
+          disabled={transitioning}
           onClick={() => void submit()}
         >
           {loading ? t("summary.sending") : t("summary.submit")}

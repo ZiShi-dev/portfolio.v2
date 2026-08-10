@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { readAdminApiError } from "@/lib/admin/api-error";
 import { getSubmitCooldownMessage, useSubmitGuard } from "@/hooks/use-submit-guard";
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
+import { startNavigationProgress } from "@/lib/navigation-progress";
 
 const enrollCodeSchema = z.object({
   code: z
@@ -138,6 +139,7 @@ export function AdminMfaEnrollForm({
       } | null;
 
       if (res.ok) {
+        startNavigationProgress();
         router.push(body?.redirectTo ?? redirectTo);
         router.refresh();
         return;
@@ -261,7 +263,7 @@ export function AdminMfaEnrollForm({
         />
       </FormField>
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full" loading={loading}>
         {loading ? (
           "Activation…"
         ) : (

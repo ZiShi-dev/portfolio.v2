@@ -9,7 +9,6 @@ import {
   Copy,
   ExternalLink,
   Eye,
-  Loader2,
   Plus,
   Save,
   Trash2,
@@ -1162,13 +1161,9 @@ export function AdminServicesPanel({
               type="button"
               variant="secondary"
               onClick={() => save(false)}
-              disabled={loading}
+              loading={loading}
             >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4" />
-              )}
+              {!loading && <Save className="h-4 w-4" />}
               {t("saveDraft")}
             </Button>
             <Button

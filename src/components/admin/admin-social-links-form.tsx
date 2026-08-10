@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { Loader2, Mail, Save, Share2 } from "lucide-react";
+import { Mail, Save, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/ui/form-error";
 import { FormField } from "@/components/ui/form-field";
@@ -264,12 +264,9 @@ export function AdminSocialLinksForm({
         </p>
       ) : null}
 
-      <Button type="submit" disabled={saving || !isDirty}>
+      <Button type="submit" loading={saving} disabled={!isDirty}>
         {saving ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-            {t("saving")}
-          </>
+          t("saving")
         ) : (
           <>
             <Save className="h-4 w-4" aria-hidden />

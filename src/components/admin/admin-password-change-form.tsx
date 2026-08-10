@@ -27,6 +27,7 @@ import {
   type AdminPasswordChangeValues,
 } from "@/lib/admin/password-change-schema";
 import { getSubmitCooldownMessage, useSubmitGuard } from "@/hooks/use-submit-guard";
+import { startNavigationProgress } from "@/lib/navigation-progress";
 
 function PasswordField({
   id,
@@ -130,6 +131,7 @@ function PasswordChangeFormFields({ onSuccess }: { onSuccess?: () => void }) {
         reset(adminPasswordChangeDefaultValues);
         onSuccess?.();
         window.setTimeout(() => {
+          startNavigationProgress();
           router.push(body?.redirectTo ?? ADMIN_ROUTES.login);
           router.refresh();
         }, 900);
@@ -200,7 +202,7 @@ function PasswordChangeFormFields({ onSuccess }: { onSuccess?: () => void }) {
 
       <HoneypotField {...register("_honeypot")} />
 
-      <Button type="submit" disabled={loading} className="w-full">
+      <Button type="submit" loading={loading} className="w-full">
         {loading ? (
           t("submitting")
         ) : (

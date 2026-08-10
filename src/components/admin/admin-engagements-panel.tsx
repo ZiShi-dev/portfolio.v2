@@ -6,7 +6,6 @@ import {
   Archive,
   ChevronDown,
   ChevronUp,
-  Loader2,
   Plus,
   Save,
   Trash2,
@@ -692,13 +691,9 @@ export function AdminEngagementsPanel({
               type="button"
               variant="outline"
               onClick={() => save("draft")}
-              disabled={loading}
+              loading={loading}
             >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-              ) : (
-                <Save className="h-4 w-4" aria-hidden />
-              )}
+              {!loading && <Save className="h-4 w-4" aria-hidden />}
               {t("saveDraft")}
             </Button>
             <Button

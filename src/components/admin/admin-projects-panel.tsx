@@ -1291,14 +1291,11 @@ export function AdminProjectsPanel({
               <DialogFooter className="shrink-0 flex-row flex-wrap justify-start gap-3 border-t border-border px-5 py-4 sm:justify-start sm:px-6">
                 <Button
                   type="button"
-                  disabled={saving}
+                  loading={saving}
                   onClick={() => void save()}
                 >
                   {saving ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      {t("saving")}
-                    </>
+                    t("saving")
                   ) : (
                     <>
                       <Save className="h-4 w-4" />

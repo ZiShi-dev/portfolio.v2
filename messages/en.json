@@ -373,6 +373,7 @@
   "common": {
     "skipToContent": "Skip to content",
     "loading": "Loading",
+    "loadingCatalog": "CAT · VX-00 · ALIGNING",
     "backHome": "Back to home",
     "closeModal": "Close dialog",
     "language": "Language",

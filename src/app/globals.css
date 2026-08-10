@@ -101,6 +101,39 @@
   }
 }
 
+@keyframes celestial-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes celestial-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes celestial-loader-bar {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(240%);
+  }
+}
+
+.celestial-spin {
+  animation: celestial-spin 4.5s linear infinite;
+}
+
+.celestial-spin-rev {
+  animation: celestial-spin-rev 6.5s linear infinite;
+}
+
+.celestial-loader-bar {
+  animation: celestial-loader-bar 1.4s ease-in-out infinite;
+}
+
 @keyframes code-scroll {
   from {
     transform: translateY(0);
@@ -325,7 +358,10 @@ video {
 @media (prefers-reduced-motion: reduce) {
   .animate-twinkle,
   .animate-code-scroll,
-  .celestial-draw {
+  .celestial-draw,
+  .celestial-spin,
+  .celestial-spin-rev,
+  .celestial-loader-bar {
     animation: none;
   }
 }

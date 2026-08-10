@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { BarChart3, Loader2, Save } from "lucide-react";
+import { BarChart3, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/ui/form-error";
 import { FormField } from "@/components/ui/form-field";
@@ -282,12 +282,9 @@ export function AdminAboutStatsForm({
         </p>
       ) : null}
 
-      <Button type="submit" disabled={saving || !isDirty}>
+      <Button type="submit" loading={saving} disabled={!isDirty}>
         {saving ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-            {t("saving")}
-          </>
+          t("saving")
         ) : (
           <>
             <Save className="h-4 w-4" aria-hidden />

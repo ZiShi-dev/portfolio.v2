@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { OPEN_CONTACT_EVENT } from "@/lib/open-contact-modal";
+import { startNavigationProgress } from "@/lib/navigation-progress";
 import { homeAnchors, routes } from "@/lib/routes";
 
 type ContactModalProps = {
@@ -22,6 +23,7 @@ export function ContactModal({
 
   useEffect(() => {
     function goToProjectFlow() {
+      startNavigationProgress();
       router.push(routes.startProject);
     }
 

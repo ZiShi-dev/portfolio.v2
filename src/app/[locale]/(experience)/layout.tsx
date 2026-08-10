@@ -1,4 +1,6 @@
 import { AppToastHost } from "@/components/ui/app-toast";
+import { CelestialPageSplash } from "@/components/celestial-page-loader";
+import { NavigationProgress } from "@/components/navigation-progress";
 import { SkipToContent } from "@/components/skip-to-content";
 
 /**
@@ -12,7 +14,9 @@ export default function ExperienceLayout({
 }) {
   return (
     <>
+      <CelestialPageSplash />
       <SkipToContent />
+      <NavigationProgress />
       <div className="min-h-dvh bg-background text-foreground">{children}</div>
       <AppToastHost />
     </>

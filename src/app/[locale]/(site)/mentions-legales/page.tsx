@@ -51,9 +51,7 @@ export default async function MentionsLegalesPage() {
               {brand.name}
               <br />
               {t("emailLabel")} :{" "}
-              <a href={`mailto:${contactEmail}`} className={linkClass}>
-                {contactEmail}
-              </a>
+              <span className="text-primary">{contactEmail}</span>
             </p>
 
             <h2 className="text-lg font-semibold text-foreground">
@@ -78,9 +76,7 @@ export default async function MentionsLegalesPage() {
             <p>
               {t.rich("personalDataP6", {
                 email: () => (
-                  <a href={`mailto:${contactEmail}`} className={linkClass}>
-                    {contactEmail}
-                  </a>
+                  <span className="text-primary">{contactEmail}</span>
                 ),
               })}
             </p>
