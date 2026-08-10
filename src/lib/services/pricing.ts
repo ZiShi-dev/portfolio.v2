@@ -32,12 +32,15 @@ export function formatServicePrice(
 
 export type ServicePriceDisplay =
   | { mode: "starting_at"; label: string; formattedAmount: string }
+  | { mode: "fixed"; label: string; formattedAmount: string }
   | { mode: "quote_only"; label: string }
   | { mode: "contact"; label: string };
 
 type PriceLabels = {
   /** next-intl : t("pricing.startingAt", { price }) */
   startingAt: (formattedPrice: string) => string;
+  /** next-intl : t("pricing.fixed", { price }) — prix exact « à vendre » */
+  fixed: (formattedPrice: string) => string;
   quoteOnly: string;
   contact: string;
 };
@@ -49,13 +52,25 @@ export function resolveServicePriceDisplay(input: {
   locale: string;
   labels: PriceLabels;
 }): ServicePriceDisplay {
-  if (
-    input.pricingMode === "starting_at" &&
-    input.startingPriceCents !== null &&
-    input.startingPriceCents >= 0
-  ) {
+  const hasAmount =
+    input.startingPriceCents !== null && input.startingPriceCents >= 0;
+
+  if (input.pricingMode === "fixed" && hasAmount) {
     const formattedAmount = formatServicePrice(
-      input.startingPriceCents,
+      input.startingPriceCents!,
+      input.currency,
+      input.locale
+    );
+    return {
+      mode: "fixed",
+      formattedAmount,
+      label: input.labels.fixed(formattedAmount),
+    };
+  }
+
+  if (input.pricingMode === "starting_at" && hasAmount) {
+    const formattedAmount = formatServicePrice(
+      input.startingPriceCents!,
       input.currency,
       input.locale
     );

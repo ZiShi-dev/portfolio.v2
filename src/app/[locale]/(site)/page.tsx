@@ -9,6 +9,7 @@ import { getPublishedReviews } from "@/lib/reviews/store";
 import { getSiteProjects } from "@/lib/projects/site";
 import { getSiteServices } from "@/lib/services/site";
 import { getSiteEngagements } from "@/lib/engagements/site";
+import { getSiteGeneralFaqs } from "@/lib/faqs/site";
 import { getPublicContactEmail } from "@/lib/social/store";
 import type { Locale } from "@/i18n/routing";
 
@@ -31,6 +32,9 @@ const Engagements = dynamic(
   () =>
     import("@/components/sections/engagements").then((m) => m.Engagements)
 );
+const FaqSection = dynamic(
+  () => import("@/components/sections/faq").then((m) => m.FaqSection)
+);
 
 export const metadata: Metadata = createPageMetadata({
   title: `${brand.name} — ${brand.titleSuffix}`,
@@ -40,13 +44,14 @@ export const metadata: Metadata = createPageMetadata({
 
 export default async function Home() {
   const locale = (await getLocale()) as Locale;
-  const [reviews, projects, contactEmail, services, engagements] =
+  const [reviews, projects, contactEmail, services, engagements, faqs] =
     await Promise.all([
       getPublishedReviews(),
       getSiteProjects(locale),
       getPublicContactEmail(),
       getSiteServices(locale),
       getSiteEngagements(locale),
+      getSiteGeneralFaqs(locale),
     ]);
 
   return (
@@ -57,6 +62,7 @@ export default async function Home() {
       <Journey />
       <Projects projects={projects} />
       <Testimonials reviews={reviews} />
+      <FaqSection faqs={faqs} />
       <About />
       <Contact contactEmail={contactEmail} />
     </>

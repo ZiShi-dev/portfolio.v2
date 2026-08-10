@@ -48,7 +48,15 @@ type AdminAuditEvent =
   | "engagement_viewed"
   | "engagement_updated"
   | "engagement_archived"
-  | "engagement_deleted";
+  | "engagement_deleted"
+  | "faqs_listed"
+  | "faqs_reordered"
+  | "faq_created"
+  | "faq_viewed"
+  | "faq_updated"
+  | "faq_archived"
+  | "faq_duplicated"
+  | "faq_deleted";
 
 export function logAdminAuthEvent(
   event: AdminAuditEvent,

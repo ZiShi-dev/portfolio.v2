@@ -10,6 +10,7 @@ import {
   Share2,
   Sparkles,
   ShieldCheck,
+  CircleHelp,
 } from "lucide-react";
 import { AdminHeaderActions } from "@/components/admin/admin-header-actions";
 import { Button } from "@/components/ui/button";
@@ -51,7 +52,7 @@ export default async function AdminDashboardPage() {
   const pendingReviews = configured
     ? await countReviewsByStatus("pending")
     : 0;
-  const publishedReviews = await getPublishedReviews({ fallbackToDemo: false });
+  const publishedReviews = await getPublishedReviews();
   const projectsAdmin = configured ? await listProjectsForAdmin() : null;
   const projectsCount =
     projectsAdmin?.ok && projectsAdmin.configured
@@ -240,6 +241,27 @@ export default async function AdminDashboardPage() {
           <Button asChild className="shrink-0 self-start">
             <Link href={ADMIN_ROUTES.engagements}>
               {t("manageEngagements")}
+              <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <CircleHelp className="h-5 w-5 text-primary" aria-hidden />
+              {t("faqsTitle")}
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/65">
+              {t("faqsBody")}
+            </p>
+            <p className="mt-3 text-sm text-foreground/55">{t("faqsNext")}</p>
+          </div>
+          <Button asChild className="shrink-0 self-start">
+            <Link href={ADMIN_ROUTES.faqs}>
+              {t("manageFaqs")}
               <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </Link>
           </Button>

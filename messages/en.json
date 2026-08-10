@@ -6,7 +6,9 @@
   },
   "nav": {
     "services": "Offers",
+    "engagements": "VORZIX commitments",
     "projects": "Projects",
+    "faq": "FAQ",
     "about": "About",
     "reviews": "Reviews",
     "leaveReview": "Leave a review",
@@ -127,6 +129,8 @@
     "detailPricing": "Pricing",
     "relatedProjects": "Related work",
     "viewCaseStudy": "View a case study",
+    "linkedProjectEyebrow": "Project for sale",
+    "viewLinkedProject": "View project details",
     "offerKind": {
       "service": "Service",
       "product": "For sale"
@@ -140,9 +144,11 @@
     },
     "pricing": {
       "startingAt": "From {price}",
+      "fixed": "{price}",
       "quoteOnly": "On quote",
       "contact": "Let's talk about your project",
-      "disclaimer": "The final price depends on scope, features and project needs."
+      "disclaimer": "The final price depends on scope, features and project needs.",
+      "fixedDisclaimer": "Price for the offer as presented. Options or custom work may be quoted separately."
     },
     "catalogTitle": "Our commercial",
     "catalogTitleHighlight": "offers.",
@@ -154,6 +160,15 @@
     "title": "Our",
     "titleHighlight": "commitments.",
     "subtitle": "A clear framework to work together — from scope to post-launch support."
+  },
+  "faq": {
+    "eyebrow": "FAQ · VORZIX",
+    "title": "Frequent",
+    "titleHighlight": "questions.",
+    "subtitle": "Answers to the most common questions before starting a project.",
+    "ctaTitle": "Still have a question?",
+    "ctaSubtitle": "Describe your need — we will clarify the scope together.",
+    "ctaPrimary": "Start a project"
   },
   "about": {
     "eyebrow": "About",
@@ -419,7 +434,8 @@
       "inquiriesTitle": "Project inquiries",
       "settingsTitle": "Settings",
       "servicesTitle": "Services / Offers",
-      "engagementsTitle": "Commitments"
+      "engagementsTitle": "Commitments",
+      "faqsTitle": "FAQ"
     },
     "language": {
       "label": "Language",
@@ -563,7 +579,13 @@
       "engagementsNext": "Manage everything from /admin/engagements — no code changes.",
       "manageEngagements": "Manage commitments",
       "engagementsPageTitle": "Commitments management",
-      "engagementsPageSubtitle": "CMS · FR/EN/AR · icons · order · publishing."
+      "engagementsPageSubtitle": "CMS · FR/EN/AR · icons · order · publishing.",
+      "faqsTitle": "Commercial FAQ",
+      "faqsBody": "Answer prospect objections: pricing, timelines, hosting, maintenance — in FR/EN/AR.",
+      "faqsNext": "Manage everything from /admin/faqs — no code changes.",
+      "manageFaqs": "Manage FAQ",
+      "faqsPageTitle": "FAQ management",
+      "faqsPageSubtitle": "CMS · FR/EN/AR · scope · Services · order · publishing."
     },
     "reviews": {
       "title": "Review moderation",
@@ -803,7 +825,15 @@
       "engagement_invalid_icon": "Invalid icon.",
       "engagement_invalid_reference": "Invalid reference.",
       "engagement_invalid_title": "Invalid title.",
-      "engagement_invalid_description": "Invalid description."
+      "engagement_invalid_description": "Invalid description.",
+      "publish_requires_question": "FR question required to publish.",
+      "publish_requires_answer": "FR answer required to publish.",
+      "invalid_question": "Invalid question.",
+      "invalid_answer": "Invalid answer.",
+      "invalid_reference": "Invalid reference.",
+      "invalid_services": "Invalid linked services.",
+      "duplicate_service": "Duplicate service.",
+      "duplicate_id": "Duplicate id."
     },
     "engagements": {
       "listTitle": "Commitments",
@@ -840,6 +870,67 @@
         "sortOrder": "Order",
         "title": "Title",
         "description": "Description"
+      }
+    },
+    "faqs": {
+      "listTitle": "FAQ questions",
+      "create": "Create a question",
+      "createTitle": "New question",
+      "editTitle": "Edit question",
+      "formHint": "Incomplete drafts allowed. Publishing requires FR question and answer.",
+      "edit": "Edit",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "saveDraft": "Save draft",
+      "savePublish": "Save & publish",
+      "cancel": "Cancel",
+      "duplicate": "Duplicate",
+      "duplicateError": "Duplication failed.",
+      "empty": "No questions for this filter.",
+      "loadError": "Unable to load FAQ.",
+      "deleteError": "Delete failed.",
+      "deleteTitle": "Delete this question?",
+      "deleteBody": "Permanent. It will disappear from the site.",
+      "deleteConfirm": "Delete",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "archive": "Archive",
+      "featuredBadge": "Featured",
+      "filtersLabel": "FAQ filters",
+      "sortLabel": "Order {order}",
+      "updatedLabel": "Updated {date}",
+      "servicesLabel": "Services",
+      "noServices": "No linked services",
+      "servicesHint": "Link this question to one or more offers (detail page).",
+      "noServiceOptions": "No offers available.",
+      "notConfiguredTitle": "Unavailable",
+      "notConfiguredBody": "Add SUPABASE_SERVICE_ROLE_KEY and run npm run db:migrate (faqs table).",
+      "filters": {
+        "all": "All",
+        "published": "Published",
+        "draft": "Drafts",
+        "archived": "Archived",
+        "general": "General",
+        "service": "Service"
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "scope": {
+        "general": "General",
+        "service": "Service"
+      },
+      "fields": {
+        "reference": "Reference",
+        "status": "Status",
+        "sortOrder": "Order",
+        "featured": "Featured",
+        "scope": "Scope",
+        "services": "Linked services",
+        "question": "Question",
+        "answer": "Answer"
       }
     },
     "inquiries": {
@@ -884,7 +975,8 @@
         "confirmDeleteTitle": "Delete this inquiry?",
         "confirmDelete": "This action is permanent.",
         "confirmDeleteAction": "Yes, delete",
-        "confirmDeleteCancel": "Cancel"
+        "confirmDeleteCancel": "Cancel",
+        "deleted": "Inquiry deleted."
       }
     },
     "services": {
@@ -933,6 +1025,7 @@
       },
       "pricingMode": {
         "starting_at": "Starting at",
+        "fixed": "Fixed price",
         "quote_only": "On quote",
         "contact": "Contact"
       },
@@ -941,6 +1034,8 @@
         "product": "For sale"
       },
       "commerceHint": "Offer type powers the catalog filter. Checkboxes control which buttons appear on the site.",
+      "uploadCover": "Upload photo",
+      "removeCover": "Remove",
       "sections": {
         "identity": "Identity",
         "commerce": "Type & buttons",
@@ -958,9 +1053,12 @@
         "offerKind": "Offer type",
         "showCtaBuy": "“Buy” button",
         "showCtaStart": "“Start a project” button",
+        "coverImage": "Product photo",
+        "linkedProject": "Linked project (/projects)",
         "pricingMode": "Pricing mode",
         "currency": "Currency",
         "startingPrice": "Starting price",
+        "fixedPrice": "Sale price",
         "inquiryType": "Preselected type (flow)",
         "title": "Title",
         "shortDescription": "Short description",
@@ -968,6 +1066,12 @@
         "idealFor": "Ideal for",
         "ctaLabel": "Start CTA label"
       },
+      "hints": {
+        "coverImage": "Featured photo for “For sale” offers (catalog + detail page).",
+        "linkedProject": "Direct link to this product’s /projects page (button on the offer page)."
+      },
+      "linkedProjectNone": "No linked project",
+      "caseStudiesHint": "Secondary case studies shown under the main project.",
       "duplicate": "Duplicate",
       "archive": "Archive"
     }

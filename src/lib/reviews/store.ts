@@ -5,7 +5,6 @@ import {
   isSupabaseServiceConfigured,
 } from "@/lib/supabase/service";
 import type { ReviewItem } from "@/data/reviews";
-import { reviews as demoReviews } from "@/data/reviews";
 
 export type ReviewStatus = "pending" | "published" | "rejected";
 
@@ -51,21 +50,18 @@ export function reviewRowToItem(row: Pick<ReviewRow, "id" | "name" | "role" | "m
 }
 
 /**
- * Avis publiés pour le site. Si Supabase non configuré ou requête en échec → démos locales.
- * Si configuré et requête OK → uniquement les `published` (peut être vide).
+ * Avis publiés pour le site.
+ * Si Supabase non configuré, BDD coupée ou requête en échec → liste vide
+ * (jamais d’avis démo / fictifs).
  */
-export async function getPublishedReviews(options?: {
-  fallbackToDemo?: boolean;
-}): Promise<ReviewItem[]> {
-  const fallbackToDemo = options?.fallbackToDemo !== false;
-
+export async function getPublishedReviews(): Promise<ReviewItem[]> {
   if (!isSupabaseServiceConfigured()) {
-    return fallbackToDemo ? demoReviews : [];
+    return [];
   }
 
   const rows = await listReviews({ status: "published", limit: 100 });
   if (rows === null) {
-    return fallbackToDemo ? demoReviews : [];
+    return [];
   }
 
   return rows.map(reviewRowToItem);

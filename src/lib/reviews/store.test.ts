@@ -146,24 +146,16 @@ describe("reviews/store — persistance & unicité (Supabase mocké)", () => {
     );
   });
 
-  it("getPublishedReviews → démos si non configuré", async () => {
+  it("getPublishedReviews → [] si non configuré", async () => {
     configured = false;
-    const { reviews: demos } = await import("@/data/reviews");
     const items = await store.getPublishedReviews();
-    assert.deepEqual(items, demos);
+    assert.deepEqual(items, []);
     assert.equal(lastOps.length, 0);
   });
 
-  it("getPublishedReviews → démos si requête Supabase en échec", async () => {
+  it("getPublishedReviews → [] si requête Supabase en échec", async () => {
     resultQueue = [{ data: null, error: { code: "42P01", message: "relation does not exist" } }];
-    const { reviews: demos } = await import("@/data/reviews");
     const items = await store.getPublishedReviews();
-    assert.deepEqual(items, demos);
-  });
-
-  it("getPublishedReviews → [] si échec sans fallback démo", async () => {
-    resultQueue = [{ data: null, error: { code: "42P01", message: "relation does not exist" } }];
-    const items = await store.getPublishedReviews({ fallbackToDemo: false });
     assert.deepEqual(items, []);
   });
 

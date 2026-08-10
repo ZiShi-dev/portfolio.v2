@@ -45,6 +45,8 @@ export type ServiceRow = {
   offer_kind: ServiceOfferKind;
   show_cta_buy: boolean;
   show_cta_start: boolean;
+  cover_image: string | null;
+  linked_project_id: string | null;
   pricing_mode: ServicePricingMode;
   starting_price_cents: number | null;
   currency: ServiceCurrency;
@@ -71,6 +73,8 @@ export type LocalizedService = {
   offerKind: ServiceOfferKind;
   showCtaBuy: boolean;
   showCtaStart: boolean;
+  coverImage: string | null;
+  linkedProjectId: string | null;
   pricingMode: ServicePricingMode;
   startingPriceCents: number | null;
   currency: ServiceCurrency;
@@ -84,7 +88,7 @@ const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const SERVICE_SELECT =
-  "id, created_at, updated_at, reference, slug, icon, status, featured, sort_order, title, short_description, description, ideal_for, included_features, cta_label, offer_kind, show_cta_buy, show_cta_start, pricing_mode, starting_price_cents, currency, inquiry_project_type, seo_title, seo_description, published_at";
+  "id, created_at, updated_at, reference, slug, icon, status, featured, sort_order, title, short_description, description, ideal_for, included_features, cta_label, offer_kind, show_cta_buy, show_cta_start, cover_image, linked_project_id, pricing_mode, starting_price_cents, currency, inquiry_project_type, seo_title, seo_description, published_at";
 
 function asI18n(value: unknown, fallback = ""): ServiceI18n {
   const obj = (value && typeof value === "object" ? value : {}) as Record<
@@ -193,6 +197,15 @@ function normalizeRow(
       raw.show_cta_start === undefined || raw.show_cta_start === null
         ? true
         : Boolean(raw.show_cta_start),
+    cover_image:
+      typeof raw.cover_image === "string" && raw.cover_image.trim()
+        ? raw.cover_image.trim()
+        : null,
+    linked_project_id:
+      typeof raw.linked_project_id === "string" &&
+      UUID_RE.test(raw.linked_project_id)
+        ? raw.linked_project_id
+        : null,
     pricing_mode: asPricingMode(raw.pricing_mode),
     starting_price_cents:
       typeof cents === "number" && Number.isFinite(cents)
@@ -238,6 +251,8 @@ export function serviceRowToLocalized(
     offerKind: row.offer_kind,
     showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
+    coverImage: row.cover_image,
+    linkedProjectId: row.linked_project_id,
     pricingMode: row.pricing_mode,
     startingPriceCents: row.starting_price_cents,
     currency: row.currency,
@@ -316,7 +331,9 @@ async function replaceCaseStudies(
 
 function writeToDbPayload(input: ServiceWriteInput) {
   const startingCents =
-    input.pricingMode === "starting_at" ? input.startingPriceCents : null;
+    input.pricingMode === "starting_at" || input.pricingMode === "fixed"
+      ? input.startingPriceCents
+      : null;
 
   return {
     reference: input.reference,
@@ -334,6 +351,8 @@ function writeToDbPayload(input: ServiceWriteInput) {
     offer_kind: input.offerKind,
     show_cta_buy: input.showCtaBuy,
     show_cta_start: input.showCtaStart,
+    cover_image: input.coverImage ?? null,
+    linked_project_id: input.linkedProjectId ?? null,
     pricing_mode: input.pricingMode,
     starting_price_cents: startingCents,
     currency: input.currency,
@@ -379,6 +398,10 @@ function patchToDbPayload(
   if (input.showCtaStart !== undefined) {
     payload.show_cta_start = input.showCtaStart;
   }
+  if (input.coverImage !== undefined) payload.cover_image = input.coverImage;
+  if (input.linkedProjectId !== undefined) {
+    payload.linked_project_id = input.linkedProjectId;
+  }
   if (input.pricingMode !== undefined) payload.pricing_mode = input.pricingMode;
   if (input.currency !== undefined) payload.currency = input.currency;
   if (input.inquiryProjectType !== undefined) {
@@ -391,7 +414,7 @@ function patchToDbPayload(
 
   const nextMode = (input.pricingMode ?? current.pricing_mode) as ServicePricingMode;
   if (input.startingPriceCents !== undefined || input.pricingMode !== undefined) {
-    if (nextMode === "starting_at") {
+    if (nextMode === "starting_at" || nextMode === "fixed") {
       payload.starting_price_cents =
         input.startingPriceCents !== undefined
           ? input.startingPriceCents
@@ -738,6 +761,8 @@ export async function duplicateService(
     offerKind: source.offer_kind,
     showCtaBuy: source.show_cta_buy,
     showCtaStart: source.show_cta_start,
+    coverImage: source.cover_image,
+    linkedProjectId: source.linked_project_id,
     pricingMode: source.pricing_mode,
     startingPriceCents: source.starting_price_cents,
     currency: source.currency,

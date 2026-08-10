@@ -6,7 +6,9 @@
   },
   "nav": {
     "services": "Offres",
+    "engagements": "Engagements VORZIX",
     "projects": "Projets",
+    "faq": "FAQ",
     "about": "À propos",
     "reviews": "Avis",
     "leaveReview": "Laisser un avis",
@@ -127,6 +129,8 @@
     "detailPricing": "Tarification",
     "relatedProjects": "Réalisations associées",
     "viewCaseStudy": "Voir une réalisation",
+    "linkedProjectEyebrow": "Projet à vendre",
+    "viewLinkedProject": "Voir le détail du projet",
     "offerKind": {
       "service": "Service",
       "product": "À vendre"
@@ -140,9 +144,11 @@
     },
     "pricing": {
       "startingAt": "À partir de {price}",
+      "fixed": "{price}",
       "quoteOnly": "Sur devis",
       "contact": "Parlons de votre projet",
-      "disclaimer": "Le tarif final dépend du périmètre, des fonctionnalités et des besoins du projet."
+      "disclaimer": "Le tarif final dépend du périmètre, des fonctionnalités et des besoins du projet.",
+      "fixedDisclaimer": "Prix de l’offre telle que présentée. Options ou adaptations éventuelles sur devis."
     },
     "catalogTitle": "Nos offres",
     "catalogTitleHighlight": "commerciales.",
@@ -154,6 +160,15 @@
     "title": "Nos",
     "titleHighlight": "engagements.",
     "subtitle": "Un cadre clair pour travailler ensemble — du périmètre au suivi après lancement."
+  },
+  "faq": {
+    "eyebrow": "FAQ · VORZIX",
+    "title": "Questions",
+    "titleHighlight": "fréquentes.",
+    "subtitle": "Les réponses aux questions les plus courantes avant de démarrer un projet.",
+    "ctaTitle": "Vous avez encore une question ?",
+    "ctaSubtitle": "Décrivez votre besoin — nous précisons ensemble le périmètre.",
+    "ctaPrimary": "Démarrer un projet"
   },
   "about": {
     "eyebrow": "À propos",
@@ -421,7 +436,8 @@
       "inquiriesTitle": "Demandes de projet",
       "settingsTitle": "Paramètres",
       "servicesTitle": "Services / Offres",
-      "engagementsTitle": "Engagements"
+      "engagementsTitle": "Engagements",
+      "faqsTitle": "FAQ"
     },
     "language": {
       "label": "Langue",
@@ -565,7 +581,13 @@
       "engagementsNext": "Gérez tout depuis /admin/engagements — aucune modification de code.",
       "manageEngagements": "Gérer les engagements",
       "engagementsPageTitle": "Gestion des engagements",
-      "engagementsPageSubtitle": "CMS · FR/EN/AR · icônes · ordre · publication."
+      "engagementsPageSubtitle": "CMS · FR/EN/AR · icônes · ordre · publication.",
+      "faqsTitle": "FAQ commerciale",
+      "faqsBody": "Répondez aux objections des prospects : tarifs, délais, hébergement, maintenance — en FR/EN/AR.",
+      "faqsNext": "Gérez tout depuis /admin/faqs — aucune modification de code.",
+      "manageFaqs": "Gérer la FAQ",
+      "faqsPageTitle": "Gestion de la FAQ",
+      "faqsPageSubtitle": "CMS · FR/EN/AR · scope · Services · ordre · publication."
     },
     "reviews": {
       "title": "Modération des avis",
@@ -805,7 +827,15 @@
       "engagement_invalid_icon": "Icône invalide.",
       "engagement_invalid_reference": "Référence invalide.",
       "engagement_invalid_title": "Titre invalide.",
-      "engagement_invalid_description": "Description invalide."
+      "engagement_invalid_description": "Description invalide.",
+      "publish_requires_question": "Question FR requise pour publier.",
+      "publish_requires_answer": "Réponse FR requise pour publier.",
+      "invalid_question": "Question invalide.",
+      "invalid_answer": "Réponse invalide.",
+      "invalid_reference": "Référence invalide.",
+      "invalid_services": "Services associés invalides.",
+      "duplicate_service": "Service en double.",
+      "duplicate_id": "Identifiant en double."
     },
     "engagements": {
       "listTitle": "Engagements",
@@ -842,6 +872,67 @@
         "sortOrder": "Ordre",
         "title": "Titre",
         "description": "Description"
+      }
+    },
+    "faqs": {
+      "listTitle": "Questions FAQ",
+      "create": "Créer une question",
+      "createTitle": "Nouvelle question",
+      "editTitle": "Modifier la question",
+      "formHint": "Brouillon autorisé incomplet. La publication exige question et réponse FR.",
+      "edit": "Modifier",
+      "publish": "Publier",
+      "unpublish": "Dépublier",
+      "saveDraft": "Enregistrer brouillon",
+      "savePublish": "Enregistrer & publier",
+      "cancel": "Annuler",
+      "duplicate": "Dupliquer",
+      "duplicateError": "Duplication impossible.",
+      "empty": "Aucune question pour ce filtre.",
+      "loadError": "Impossible de charger la FAQ.",
+      "deleteError": "Suppression impossible.",
+      "deleteTitle": "Supprimer cette question ?",
+      "deleteBody": "Action définitive. La question disparaîtra du site.",
+      "deleteConfirm": "Supprimer",
+      "moveUp": "Monter",
+      "moveDown": "Descendre",
+      "archive": "Archiver",
+      "featuredBadge": "À la une",
+      "filtersLabel": "Filtres FAQ",
+      "sortLabel": "Ordre {order}",
+      "updatedLabel": "Modifié {date}",
+      "servicesLabel": "Services",
+      "noServices": "Aucun service associé",
+      "servicesHint": "Associez cette question à une ou plusieurs offres (page détail).",
+      "noServiceOptions": "Aucune offre disponible.",
+      "notConfiguredTitle": "Gestion indisponible",
+      "notConfiguredBody": "Ajoutez SUPABASE_SERVICE_ROLE_KEY et exécutez npm run db:migrate (table faqs).",
+      "filters": {
+        "all": "Tous",
+        "published": "Publiés",
+        "draft": "Brouillons",
+        "archived": "Archivés",
+        "general": "Général",
+        "service": "Service"
+      },
+      "status": {
+        "draft": "Brouillon",
+        "published": "Publié",
+        "archived": "Archivé"
+      },
+      "scope": {
+        "general": "Général",
+        "service": "Service"
+      },
+      "fields": {
+        "reference": "Référence",
+        "status": "Statut",
+        "sortOrder": "Ordre",
+        "featured": "Mettre en avant",
+        "scope": "Portée",
+        "services": "Services associés",
+        "question": "Question",
+        "answer": "Réponse"
       }
     },
     "inquiries": {
@@ -886,7 +977,8 @@
         "confirmDeleteTitle": "Supprimer cette demande ?",
         "confirmDelete": "Cette action est définitive.",
         "confirmDeleteAction": "Oui, supprimer",
-        "confirmDeleteCancel": "Annuler"
+        "confirmDeleteCancel": "Annuler",
+        "deleted": "Demande supprimée."
       }
     },
     "services": {
@@ -935,6 +1027,7 @@
       },
       "pricingMode": {
         "starting_at": "À partir de",
+        "fixed": "Prix fixe",
         "quote_only": "Sur devis",
         "contact": "Contact"
       },
@@ -943,6 +1036,8 @@
         "product": "À vendre"
       },
       "commerceHint": "Le type sert au filtre du catalogue. Les cases contrôlent quels boutons apparaissent sur le site.",
+      "uploadCover": "Uploader une photo",
+      "removeCover": "Retirer",
       "sections": {
         "identity": "Identité",
         "commerce": "Type & boutons",
@@ -960,9 +1055,12 @@
         "offerKind": "Type d’offre",
         "showCtaBuy": "Bouton « Acheter »",
         "showCtaStart": "Bouton « Démarrer un projet »",
+        "coverImage": "Photo du produit",
+        "linkedProject": "Projet lié (/projets)",
         "pricingMode": "Mode tarifaire",
         "currency": "Devise",
         "startingPrice": "Prix de départ",
+        "fixedPrice": "Prix de vente",
         "inquiryType": "Type pré-sélectionné (parcours)",
         "title": "Titre",
         "shortDescription": "Description courte",
@@ -970,6 +1068,12 @@
         "idealFor": "Idéal pour",
         "ctaLabel": "Libellé CTA démarrer"
       },
+      "hints": {
+        "coverImage": "Photo mise en avant pour les offres « À vendre » (catalogue + page détail).",
+        "linkedProject": "Lien direct vers la page /projets de ce produit (bouton sur la page offre)."
+      },
+      "linkedProjectNone": "Aucun projet lié",
+      "caseStudiesHint": "Réalisations secondaires affichées sous le projet principal.",
       "duplicate": "Dupliquer",
       "archive": "Archiver"
     }

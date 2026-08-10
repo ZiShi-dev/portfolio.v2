@@ -6,7 +6,9 @@
   },
   "nav": {
     "services": "عروضنا التجارية",
+    "engagements": "التزامات VORZIX",
     "projects": "المشاريع",
+    "faq": "أسئلة شائعة",
     "about": "من نحن",
     "reviews": "الآراء",
     "leaveReview": "اترك رأياً",
@@ -127,6 +129,8 @@
     "detailPricing": "التسعير",
     "relatedProjects": "أعمال مرتبطة",
     "viewCaseStudy": "عرض إنجاز",
+    "linkedProjectEyebrow": "المشروع المعروض للبيع",
+    "viewLinkedProject": "عرض تفاصيل المشروع",
     "offerKind": {
       "service": "خدمة",
       "product": "للبيع"
@@ -140,9 +144,11 @@
     },
     "pricing": {
       "startingAt": "ابتداءً من {price}",
+      "fixed": "{price}",
       "quoteOnly": "حسب العرض",
       "contact": "لنتحدث عن مشروعك",
-      "disclaimer": "السعر النهائي يعتمد على النطاق والميزات واحتياجات المشروع."
+      "disclaimer": "السعر النهائي يعتمد على النطاق والميزات واحتياجات المشروع.",
+      "fixedDisclaimer": "سعر العرض كما هو معروض. أي خيارات أو تعديلات تُسعَّر بشكل منفصل."
     },
     "catalogTitle": "عروضنا",
     "catalogTitleHighlight": "التجارية.",
@@ -154,6 +160,15 @@
     "title": "التزامات",
     "titleHighlight": "VORZIX.",
     "subtitle": "إطار واضح للعمل معاً — من تحديد النطاق إلى المتابعة بعد الإطلاق."
+  },
+  "faq": {
+    "eyebrow": "الأسئلة الشائعة · VORZIX",
+    "title": "أسئلة",
+    "titleHighlight": "شائعة.",
+    "subtitle": "إجابات عن الأسئلة الأكثر تكراراً قبل بدء المشروع.",
+    "ctaTitle": "هل لديك سؤال آخر؟",
+    "ctaSubtitle": "صف احتياجك — نوضح معاً نطاق المشروع.",
+    "ctaPrimary": "ابدأ مشروعاً"
   },
   "about": {
     "eyebrow": "من نحن",
@@ -419,7 +434,8 @@
       "inquiriesTitle": "طلبات المشاريع",
       "settingsTitle": "الإعدادات",
       "servicesTitle": "الخدمات / العروض",
-      "engagementsTitle": "الالتزامات"
+      "engagementsTitle": "الالتزامات",
+      "faqsTitle": "الأسئلة الشائعة"
     },
     "language": {
       "label": "اللغة",
@@ -563,7 +579,13 @@
       "engagementsNext": "أدِر كل شيء من /admin/engagements — دون تعديل الشيفرة.",
       "manageEngagements": "إدارة الالتزامات",
       "engagementsPageTitle": "إدارة الالتزامات",
-      "engagementsPageSubtitle": "CMS · FR/EN/AR · الأيقونات · الترتيب · النشر."
+      "engagementsPageSubtitle": "CMS · FR/EN/AR · الأيقونات · الترتيب · النشر.",
+      "faqsTitle": "الأسئلة الشائعة التجارية",
+      "faqsBody": "أجب عن اعتراضات العملاء المحتملين: الأسعار والمواعيد والاستضافة والصيانة — بـ FR/EN/AR.",
+      "faqsNext": "أدِر كل شيء من /admin/faqs — دون تعديل الشيفرة.",
+      "manageFaqs": "إدارة الأسئلة الشائعة",
+      "faqsPageTitle": "إدارة الأسئلة الشائعة",
+      "faqsPageSubtitle": "CMS · FR/EN/AR · النطاق · الخدمات · الترتيب · النشر."
     },
     "reviews": {
       "title": "مراجعة المراجعات",
@@ -803,7 +825,15 @@
       "engagement_invalid_icon": "أيقونة غير صالحة.",
       "engagement_invalid_reference": "مرجع غير صالح.",
       "engagement_invalid_title": "عنوان غير صالح.",
-      "engagement_invalid_description": "وصف غير صالح."
+      "engagement_invalid_description": "وصف غير صالح.",
+      "publish_requires_question": "السؤال بالفرنسية مطلوب للنشر.",
+      "publish_requires_answer": "الإجابة بالفرنسية مطلوبة للنشر.",
+      "invalid_question": "سؤال غير صالح.",
+      "invalid_answer": "إجابة غير صالحة.",
+      "invalid_reference": "مرجع غير صالح.",
+      "invalid_services": "خدمات مرتبطة غير صالحة.",
+      "duplicate_service": "خدمة مكررة.",
+      "duplicate_id": "معرّف مكرر."
     },
     "engagements": {
       "listTitle": "الالتزامات",
@@ -840,6 +870,67 @@
         "sortOrder": "الترتيب",
         "title": "العنوان",
         "description": "الوصف"
+      }
+    },
+    "faqs": {
+      "listTitle": "أسئلة FAQ",
+      "create": "إنشاء سؤال",
+      "createTitle": "سؤال جديد",
+      "editTitle": "تعديل السؤال",
+      "formHint": "المسودة الناقصة مسموحة. النشر يتطلب سؤالاً وإجابة بالفرنسية.",
+      "edit": "تعديل",
+      "publish": "نشر",
+      "unpublish": "إلغاء النشر",
+      "saveDraft": "حفظ مسودة",
+      "savePublish": "حفظ ونشر",
+      "cancel": "إلغاء",
+      "duplicate": "تكرار",
+      "duplicateError": "تعذر التكرار.",
+      "empty": "لا أسئلة لهذا التصفية.",
+      "loadError": "تعذر تحميل الأسئلة الشائعة.",
+      "deleteError": "تعذر الحذف.",
+      "deleteTitle": "حذف هذا السؤال؟",
+      "deleteBody": "نهائي. سيختفي من الموقع.",
+      "deleteConfirm": "حذف",
+      "moveUp": "أعلى",
+      "moveDown": "أسفل",
+      "archive": "أرشفة",
+      "featuredBadge": "مميز",
+      "filtersLabel": "فلاتر الأسئلة",
+      "sortLabel": "الترتيب {order}",
+      "updatedLabel": "عُدّل {date}",
+      "servicesLabel": "الخدمات",
+      "noServices": "لا خدمات مرتبطة",
+      "servicesHint": "اربط هذا السؤال بعرض أو أكثر (صفحة التفاصيل).",
+      "noServiceOptions": "لا عروض متاحة.",
+      "notConfiguredTitle": "غير متاح",
+      "notConfiguredBody": "أضف SUPABASE_SERVICE_ROLE_KEY ونفّذ npm run db:migrate (جدول faqs).",
+      "filters": {
+        "all": "الكل",
+        "published": "منشور",
+        "draft": "مسودات",
+        "archived": "مؤرشف",
+        "general": "عام",
+        "service": "خدمة"
+      },
+      "status": {
+        "draft": "مسودة",
+        "published": "منشور",
+        "archived": "مؤرشف"
+      },
+      "scope": {
+        "general": "عام",
+        "service": "خدمة"
+      },
+      "fields": {
+        "reference": "المرجع",
+        "status": "الحالة",
+        "sortOrder": "الترتيب",
+        "featured": "إبراز",
+        "scope": "النطاق",
+        "services": "الخدمات المرتبطة",
+        "question": "السؤال",
+        "answer": "الإجابة"
       }
     },
     "inquiries": {
@@ -884,7 +975,8 @@
         "confirmDeleteTitle": "حذف هذا الطلب؟",
         "confirmDelete": "هذا الإجراء نهائي.",
         "confirmDeleteAction": "نعم، احذف",
-        "confirmDeleteCancel": "إلغاء"
+        "confirmDeleteCancel": "إلغاء",
+        "deleted": "تم حذف الطلب."
       }
     },
     "services": {
@@ -933,6 +1025,7 @@
       },
       "pricingMode": {
         "starting_at": "ابتداءً من",
+        "fixed": "سعر ثابت",
         "quote_only": "حسب عرض",
         "contact": "تواصل"
       },
@@ -941,6 +1034,8 @@
         "product": "للبيع"
       },
       "commerceHint": "النوع يغذي فلتر الكتالوج. الخانات تتحكم بالأزرار الظاهرة على الموقع.",
+      "uploadCover": "رفع صورة",
+      "removeCover": "إزالة",
       "sections": {
         "identity": "الهوية",
         "commerce": "النوع والأزرار",
@@ -958,9 +1053,12 @@
         "offerKind": "نوع العرض",
         "showCtaBuy": "زر « اشترِ »",
         "showCtaStart": "زر « ابدأ مشروعاً »",
+        "coverImage": "صورة المنتج",
+        "linkedProject": "المشروع المرتبط (/projets)",
         "pricingMode": "نمط التسعير",
         "currency": "العملة",
         "startingPrice": "سعر البداية",
+        "fixedPrice": "سعر البيع",
         "inquiryType": "نوع مسبق",
         "title": "العنوان",
         "shortDescription": "وصف قصير",
@@ -968,6 +1066,12 @@
         "idealFor": "مثالي لـ",
         "ctaLabel": "نص زر ابدأ"
       },
+      "hints": {
+        "coverImage": "صورة بارزة لعروض « للبيع » (الكتالوج + صفحة التفاصيل).",
+        "linkedProject": "رابط مباشر لصفحة /projets لهذا المنتج (زر في صفحة العرض)."
+      },
+      "linkedProjectNone": "لا يوجد مشروع مرتبط",
+      "caseStudiesHint": "دراسات حالة ثانوية تظهر تحت المشروع الرئيسي.",
       "duplicate": "تكرار",
       "archive": "أرشفة"
     }

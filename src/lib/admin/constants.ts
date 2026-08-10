@@ -6,6 +6,7 @@ export const ADMIN_ROUTES = {
   projects: "/admin/projects",
   services: "/admin/services",
   engagements: "/admin/engagements",
+  faqs: "/admin/faqs",
   inquiries: "/admin/inquiries",
   settings: "/admin/settings",
 } as const;

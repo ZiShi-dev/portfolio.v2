@@ -26,7 +26,7 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
-      className="min-h-10 px-3 py-2 text-sm text-foreground/70 underline-offset-4 transition-colors hover:text-step-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md"
+      className="min-h-10 px-2.5 py-2 text-sm text-foreground/70 underline-offset-4 transition-colors hover:text-step-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md xl:px-3"
     >
       {label}
     </Link>
@@ -48,8 +48,10 @@ export function Navbar() {
 
   const links = [
     { label: t("services"), href: routes.services },
+    { label: t("engagements"), href: homeSectionUrl("engagements") },
     { label: t("projects"), href: routes.projects },
     { label: t("reviews"), href: routes.reviews },
+    { label: t("faq"), href: homeSectionUrl("faq") },
     { label: t("about"), href: homeSectionUrl("about") },
     { label: t("leaveReview"), href: "#", openReview: true },
   ] as const;
@@ -83,7 +85,7 @@ export function Navbar() {
             <BrandLogo />
           </Link>
 
-          <div className="hidden items-center gap-0.5 lg:flex lg:gap-1">
+          <div className="hidden items-center gap-0.5 xl:flex">
             {links.map((l) => (
               <NavLink
                 key={l.label}
@@ -94,7 +96,7 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="hidden items-center gap-2.5 lg:flex">
+          <div className="hidden items-center gap-2.5 xl:flex">
             <NavControls />
             <Button asChild size="sm" className="h-9 shrink-0 px-4 text-xs sm:text-sm">
               <ContactOpenLink onOpen={() => setOpen(false)}>
@@ -103,10 +105,10 @@ export function Navbar() {
             </Button>
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-2 xl:hidden">
             <NavControls />
             <button
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background/70 shadow-sm backdrop-blur-sm lg:hidden"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background/70 shadow-sm backdrop-blur-sm"
               onClick={() => setOpen((v) => !v)}
               aria-label={t("menu")}
               aria-expanded={open}
@@ -124,7 +126,7 @@ export function Navbar() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="mt-3 rounded-2xl border border-border bg-card/95 p-4 backdrop-blur-xl sm:mt-4 lg:hidden"
+              className="mt-3 rounded-2xl border border-border bg-card/95 p-4 backdrop-blur-xl sm:mt-4 xl:hidden"
             >
               <div className="flex flex-col gap-1">
                 {links.map((l) => (

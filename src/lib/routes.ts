@@ -22,6 +22,7 @@ export const homeAnchors = {
   projects: "#projets",
   about: "#a-propos",
   reviews: "#avis",
+  faq: "#faq",
   contact: "#contact",
 } as const;
 

@@ -138,12 +138,30 @@ describe("services pricing", () => {
       locale: "fr",
       labels: {
         startingAt: (price) => `À partir de ${price}`,
+        fixed: (price) => price,
         quoteOnly: "Sur devis",
         contact: "Parlons",
       },
     });
     assert.equal(display.mode, "starting_at");
     assert.match(display.label, /À partir de/);
+  });
+
+  it("resolve fixed", () => {
+    const display = resolveServicePriceDisplay({
+      pricingMode: "fixed",
+      startingPriceCents: 250000,
+      currency: "EUR",
+      locale: "fr",
+      labels: {
+        startingAt: (price) => `À partir de ${price}`,
+        fixed: (price) => price,
+        quoteOnly: "Sur devis",
+        contact: "Parlons",
+      },
+    });
+    assert.equal(display.mode, "fixed");
+    assert.match(display.formattedAmount, /€/);
   });
 
   it("resolve quote_only", () => {
@@ -154,6 +172,7 @@ describe("services pricing", () => {
       locale: "fr",
       labels: {
         startingAt: (price) => `À partir de ${price}`,
+        fixed: (price) => price,
         quoteOnly: "Sur devis",
         contact: "Parlons",
       },

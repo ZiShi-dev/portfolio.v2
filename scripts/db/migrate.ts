@@ -2,7 +2,11 @@
  * Applique les migrations SQL pending (supabase/migrations/*.sql).
  * Table de suivi : public.schema_migrations
  *
- * Usage : npm run db:migrate
+ * Usage :
+ *   npm run db:migrate
+ *   npm run db:migrate -- --fix-checksums
+ *     → met à jour les checksums des migrations déjà jouées si le fichier a changé
+ *       (utile après un edit accidentel ; ne ré-exécute pas le SQL).
  */
 import pg from "pg";
 import {
@@ -23,6 +27,7 @@ CREATE TABLE IF NOT EXISTS public.schema_migrations (
 `;
 
 async function main() {
+  const fixChecksums = process.argv.includes("--fix-checksums");
   const databaseUrl = getDatabaseUrl();
   console.info(`[db] Connexion ${redactDatabaseUrl(databaseUrl)}`);
 
@@ -52,14 +57,26 @@ async function main() {
     }
 
     let ran = 0;
+    let repaired = 0;
 
     for (const file of files) {
       const prev = appliedMap.get(file.name);
       if (prev) {
         if (prev !== file.checksum) {
+          if (fixChecksums) {
+            await client.query(
+              "UPDATE public.schema_migrations SET checksum = $1 WHERE name = $2",
+              [file.checksum, file.name]
+            );
+            console.info(`[db] repair checksum  ${file.name}`);
+            repaired += 1;
+            continue;
+          }
           throw new Error(
             `[db] Checksum modifié pour ${file.name} (déjà appliquée). ` +
-              "Ne modifiez pas une migration déjà jouée — créez-en une nouvelle."
+              "Ne modifiez pas une migration déjà jouée — créez-en une nouvelle.\n" +
+              "Si le fichier a été retouché par erreur, réparez le suivi avec :\n" +
+              "  npm run db:migrate -- --fix-checksums"
           );
         }
         console.info(`[db] skip  ${file.name}`);
@@ -82,6 +99,10 @@ async function main() {
         const message = err instanceof Error ? err.message : String(err);
         throw new Error(`[db] Échec ${file.name}: ${message}`);
       }
+    }
+
+    if (repaired > 0) {
+      console.info(`[db] ${repaired} checksum(s) réparé(s).`);
     }
 
     if (ran === 0) {

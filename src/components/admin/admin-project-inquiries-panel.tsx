@@ -237,6 +237,7 @@ export function AdminProjectInquiriesPanel({
 
   async function remove(id: string) {
     setError("");
+    setSaveMessage("");
     const opToken = ++opRef.current;
     startTransition(async () => {
       try {
@@ -254,8 +255,9 @@ export function AdminProjectInquiriesPanel({
           );
           return;
         }
+        setInquiries((prev) => prev.filter((row) => row.id !== id));
         if (selectedId === id) closeModal();
-        await load(filter, opToken, true);
+        setSaveMessage(t("actions.deleted"));
       } catch {
         if (opToken === opRef.current) setError(tErrors("generic"));
       }
@@ -327,6 +329,12 @@ export function AdminProjectInquiriesPanel({
         </div>
       ) : null}
 
+      {saveMessage && !error ? (
+        <p className="mt-4 text-sm font-medium text-primary" role="status">
+          {saveMessage}
+        </p>
+      ) : null}
+
       <ul
         className="mt-6 max-h-[32rem] space-y-2 overflow-y-auto pe-1"
         aria-busy={loading}
@@ -352,36 +360,85 @@ export function AdminProjectInquiriesPanel({
         ) : (
           inquiries.map((row) => (
             <li key={row.id}>
-              <button
-                type="button"
-                onClick={() => openInquiry(row)}
+              <div
                 className={cn(
-                  "w-full rounded-xl border border-border bg-background/50 px-4 py-3 text-start transition-colors hover:border-primary/25",
+                  "flex items-stretch gap-2 rounded-xl border border-border bg-background/50 transition-colors hover:border-primary/25",
                   row.status === "new" && "border-s-2 border-s-primary"
                 )}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <p className="truncate font-mono text-xs tracking-wide text-primary">
-                    {row.reference || "—"}
+                <button
+                  type="button"
+                  onClick={() => openInquiry(row)}
+                  className="min-w-0 flex-1 px-4 py-3 text-start"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="truncate font-mono text-xs tracking-wide text-primary">
+                      {row.reference || "—"}
+                    </p>
+                    <time className="shrink-0 text-[11px] text-foreground/40">
+                      {new Date(row.created_at).toLocaleString()}
+                    </time>
+                  </div>
+                  <p className="mt-1 truncate text-sm font-medium">{row.name}</p>
+                  <p className="mt-0.5 truncate text-xs text-foreground/50">
+                    {[
+                      row.company,
+                      typeLabel(row.project_type, row.project_type_other),
+                      budgetLabel(row.budget_range, row.budget_custom_amount),
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
                   </p>
-                  <time className="shrink-0 text-[11px] text-foreground/40">
-                    {new Date(row.created_at).toLocaleString()}
-                  </time>
+                  <p className="mt-1 text-[11px] uppercase tracking-wider text-foreground/45">
+                    {statusLabel(row.status)}
+                  </p>
+                </button>
+
+                <div className="flex shrink-0 items-center border-s border-border pe-2 ps-1">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        disabled={pending}
+                        className="text-muted-foreground hover:bg-red-950/40 hover:text-red-300"
+                        aria-label={t("actions.delete")}
+                        title={t("actions.delete")}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          {t("actions.confirmDeleteTitle")}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t("actions.confirmDelete")}
+                          {row.reference ? (
+                            <span className="mt-2 block font-mono text-xs text-foreground/60">
+                              {row.reference} · {row.name}
+                            </span>
+                          ) : null}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel disabled={pending}>
+                          {t("actions.confirmDeleteCancel")}
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          disabled={pending}
+                          className="bg-red-800 text-red-50 hover:bg-red-900"
+                          onClick={() => void remove(row.id)}
+                        >
+                          {t("actions.confirmDeleteAction")}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
-                <p className="mt-1 truncate text-sm font-medium">{row.name}</p>
-                <p className="mt-0.5 truncate text-xs text-foreground/50">
-                  {[
-                    row.company,
-                    typeLabel(row.project_type, row.project_type_other),
-                    budgetLabel(row.budget_range, row.budget_custom_amount),
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
-                <p className="mt-1 text-[11px] uppercase tracking-wider text-foreground/45">
-                  {statusLabel(row.status)}
-                </p>
-              </button>
+              </div>
             </li>
           ))
         )}
@@ -576,9 +633,8 @@ export function AdminProjectInquiriesPanel({
                     <Button
                       type="button"
                       size="sm"
-                      variant="outline"
+                      variant="destructive"
                       disabled={pending}
-                      className="border-red-600/30 text-red-700 hover:bg-red-50"
                     >
                       <Trash2 className="h-4 w-4" aria-hidden />
                       {t("actions.delete")}
@@ -594,10 +650,12 @@ export function AdminProjectInquiriesPanel({
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>
+                      <AlertDialogCancel disabled={pending}>
                         {t("actions.confirmDeleteCancel")}
                       </AlertDialogCancel>
                       <AlertDialogAction
+                        disabled={pending}
+                        className="bg-red-800 text-red-50 hover:bg-red-900"
                         onClick={() => void remove(selected.id)}
                       >
                         {t("actions.confirmDeleteAction")}
