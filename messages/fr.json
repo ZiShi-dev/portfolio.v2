@@ -356,6 +356,7 @@
     "sending": "Envoi en cours...",
     "successTitle": "Merci pour votre avis !",
     "successBody": "Votre avis est déjà visible sur le site. Merci !",
+    "successToast": "Merci ! Votre avis est déjà visible sur le site.",
     "consent": "En envoyant, vous acceptez la publication de votre prénom et avis sur ce portfolio.",
     "formAria": "Formulaire d'avis client",
     "turnstileError": "Complétez la vérification anti-spam avant d'envoyer."
