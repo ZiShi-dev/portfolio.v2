@@ -22,9 +22,18 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  // Ne pas envoyer le catalogue admin (~50 % du JSON) au site public.
+  const { admin: _admin, ...publicMessages } = messages as Record<
+    string,
+    unknown
+  > & { admin?: unknown };
 
   return (
-    <NextIntlClientProvider key={locale} locale={locale} messages={messages}>
+    <NextIntlClientProvider
+      key={locale}
+      locale={locale}
+      messages={publicMessages}
+    >
       <LocaleDocumentSync locale={locale as Locale} />
       {children}
     </NextIntlClientProvider>

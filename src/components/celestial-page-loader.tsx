@@ -116,18 +116,41 @@ function LoaderMark({ compact }: { compact?: boolean }) {
   );
 }
 
+const SPLASH_SEEN_KEY = "vorzix-splash-seen";
+
 /** Overlay plein écran au premier chargement / rechargement. */
 export function CelestialPageSplash() {
   const [phase, setPhase] = useState<"show" | "fade" | "gone">("show");
 
   useEffect(() => {
+    try {
+      if (sessionStorage.getItem(SPLASH_SEEN_KEY) === "1") {
+        setPhase("gone");
+        return;
+      }
+    } catch {
+      /* private mode */
+    }
+
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const minMs = reduced ? 200 : 950;
+    const saveData =
+      "connection" in navigator &&
+      Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+    // Court sur mauvais réseau / data saver — le splash ne doit pas bloquer LCP.
+    const minMs = reduced || saveData ? 120 : 380;
     const started = performance.now();
     let fadeTimer = 0;
     let goneTimer = 0;
     let safetyTimer = 0;
     let startedFade = false;
+
+    const markSeen = () => {
+      try {
+        sessionStorage.setItem(SPLASH_SEEN_KEY, "1");
+      } catch {
+        /* ignore */
+      }
+    };
 
     const beginFade = () => {
       if (startedFade) return;
@@ -135,22 +158,24 @@ export function CelestialPageSplash() {
       const wait = Math.max(0, minMs - (performance.now() - started));
       fadeTimer = window.setTimeout(() => {
         setPhase("fade");
-        goneTimer = window.setTimeout(() => setPhase("gone"), 450);
+        markSeen();
+        goneTimer = window.setTimeout(() => setPhase("gone"), 320);
       }, wait);
     };
 
-    if (document.readyState === "complete") {
+    // Ne pas attendre l’événement `load` (images lourdes) — DOM prêt suffit.
+    if (document.readyState === "interactive" || document.readyState === "complete") {
       beginFade();
     } else {
-      window.addEventListener("load", beginFade, { once: true });
-      safetyTimer = window.setTimeout(beginFade, minMs + 1000);
+      document.addEventListener("DOMContentLoaded", beginFade, { once: true });
+      safetyTimer = window.setTimeout(beginFade, minMs + 600);
     }
 
     return () => {
       window.clearTimeout(fadeTimer);
       window.clearTimeout(goneTimer);
       window.clearTimeout(safetyTimer);
-      window.removeEventListener("load", beginFade);
+      document.removeEventListener("DOMContentLoaded", beginFade);
     };
   }, []);
 
