@@ -548,16 +548,16 @@ export function AdminProjectsPanel({
     return (
       <div className="space-y-4" aria-busy="true" aria-label={t("loading")}>
         <div className="h-10 w-36 animate-pulse rounded-full bg-muted" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid w-full min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }, (_, i) => (
             <div
               key={`skel-${i}`}
-              className="overflow-hidden rounded-2xl border border-border bg-card"
+              className="min-w-0 overflow-hidden rounded-2xl border border-border bg-card"
             >
-              <div className="aspect-[16/10] animate-pulse bg-muted" />
+              <div className="aspect-[16/10] w-full animate-pulse bg-muted" />
               <div className="space-y-2 p-4">
-                <div className="h-4 w-40 animate-pulse rounded bg-muted" />
-                <div className="h-3 w-24 animate-pulse rounded bg-muted/70" />
+                <div className="h-4 w-40 max-w-full animate-pulse rounded bg-muted" />
+                <div className="h-3 w-24 max-w-full animate-pulse rounded bg-muted/70" />
               </div>
             </div>
           ))}
@@ -597,7 +597,7 @@ export function AdminProjectsPanel({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="min-w-0 space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-foreground/80">
           {t("listTitle")}
@@ -616,18 +616,18 @@ export function AdminProjectsPanel({
           {t("empty")}
         </p>
       ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid w-full min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => {
             const cover = p.images[0]?.url;
             const name = p.title.fr || p.slug;
             return (
-              <li key={p.id}>
+              <li key={p.id} className="min-w-0">
                 <button
                   type="button"
                   onClick={() => openEdit(p)}
-                  className="group w-full overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
+                  className="group block w-full max-w-full overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
                 >
-                  <div className="relative aspect-[16/10] bg-muted">
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
                     {cover ? (
                       <Image
                         src={cover}
@@ -653,14 +653,14 @@ export function AdminProjectsPanel({
                       {p.published ? t("published") : t("draft")}
                     </span>
                   </div>
-                  <div className="p-4">
+                  <div className="min-w-0 p-4">
                     {p.reference ? (
-                      <p className="font-mono text-[10px] tracking-[0.16em] text-primary/80">
+                      <p className="truncate font-mono text-[10px] tracking-[0.16em] text-primary/80">
                         {p.reference}
                       </p>
                     ) : null}
                     <p className="truncate font-medium leading-snug">{name}</p>
-                    <p className="mt-1 text-xs text-foreground/50">
+                    <p className="mt-1 truncate text-xs text-foreground/50">
                       {p.kind === "sold" ? t("kindSold") : t("kindPersonal")}
                       {p.featured ? ` · ${t("featured")}` : ""}
                     </p>
@@ -1218,13 +1218,13 @@ export function AdminProjectsPanel({
                       {t("imagesEmpty")}
                     </p>
                   ) : (
-                    <ul className="space-y-2">
+                    <ul className="min-w-0 space-y-2">
                       {editor.images.map((img, index) => (
                         <li
                           key={`${img.url}-${index}`}
-                          className="flex items-center gap-3 rounded-xl border border-border p-2"
+                          className="flex min-w-0 items-center gap-3 overflow-hidden rounded-xl border border-border p-2"
                         >
-                          <div className="relative h-14 w-20 overflow-hidden rounded-lg bg-muted">
+                          <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-muted">
                             <Image
                               src={img.url}
                               alt=""
@@ -1236,7 +1236,7 @@ export function AdminProjectsPanel({
                           <p className="min-w-0 flex-1 truncate text-xs text-foreground/55">
                             {img.url}
                           </p>
-                          <div className="flex items-center gap-1">
+                          <div className="flex shrink-0 items-center gap-1">
                             <button
                               type="button"
                               className="rounded-md p-1 hover:bg-muted"
