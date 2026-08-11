@@ -621,7 +621,7 @@ export function AdminProjectsPanel({
             const cover = p.images[0]?.url;
             const name = p.title.fr || p.slug;
             return (
-              <li key={p.id}>
+              <li key={p.id} className="min-w-0">
                 <button
                   type="button"
                   onClick={() => openEdit(p)}
