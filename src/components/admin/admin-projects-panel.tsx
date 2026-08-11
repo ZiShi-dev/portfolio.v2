@@ -625,15 +625,15 @@ export function AdminProjectsPanel({
                 <button
                   type="button"
                   onClick={() => openEdit(p)}
-                  className="group w-full overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
+                  className="group w-full max-w-full overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
                 >
-                  <div className="relative aspect-[16/10] bg-muted">
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
                     {cover ? (
                       <Image
                         src={cover}
                         alt=""
                         fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                        className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
                         unoptimized
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
@@ -680,7 +680,7 @@ export function AdminProjectsPanel({
       >
         {editor ? (
           <DialogContent
-            className="flex max-h-[min(92dvh,52rem)] max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:p-0"
+            className="flex max-h-[min(92dvh,52rem)] w-[calc(100%-1rem)] max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:w-full sm:p-0"
             closeLabel={t("cancel")}
           >
             <DialogHeader className="shrink-0 border-b border-border px-5 py-4 sm:px-6">
@@ -1218,60 +1218,77 @@ export function AdminProjectsPanel({
                       {t("imagesEmpty")}
                     </p>
                   ) : (
-                    <ul className="space-y-2">
-                      {editor.images.map((img, index) => (
-                        <li
-                          key={`${img.url}-${index}`}
-                          className="flex items-center gap-3 rounded-xl border border-border p-2"
-                        >
-                          <div className="relative h-14 w-20 overflow-hidden rounded-lg bg-muted">
-                            <Image
-                              src={img.url}
-                              alt=""
-                              fill
-                              className="object-cover"
-                              unoptimized
-                            />
-                          </div>
-                          <p className="min-w-0 flex-1 truncate text-xs text-foreground/55">
-                            {img.url}
-                          </p>
-                          <div className="flex items-center gap-1">
-                            <button
-                              type="button"
-                              className="rounded-md p-1 hover:bg-muted"
-                              aria-label={t("moveUp")}
-                              onClick={() => moveImage(index, -1)}
-                            >
-                              <ChevronUp className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              className="rounded-md p-1 hover:bg-muted"
-                              aria-label={t("moveDown")}
-                              onClick={() => moveImage(index, 1)}
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              className="rounded-md p-1 text-destructive hover:bg-muted"
-                              aria-label={t("removeImage")}
-                              onClick={() => {
-                                clearFieldError("images");
-                                setEditor({
-                                  ...editor,
-                                  images: editor.images.filter(
-                                    (_, i) => i !== index
-                                  ),
-                                });
-                              }}
-                            >
-                              <X className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
+                    <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {editor.images.map((img, index) => {
+                        const fileName =
+                          img.url.split("/").pop()?.split("?")[0] || img.url;
+                        return (
+                          <li
+                            key={`${img.url}-${index}`}
+                            className="overflow-hidden rounded-xl border border-border bg-card/60"
+                          >
+                            <div className="relative aspect-[16/10] w-full bg-muted">
+                              <Image
+                                src={img.url}
+                                alt=""
+                                fill
+                                className="object-cover"
+                                unoptimized
+                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 280px"
+                              />
+                              {index === 0 ? (
+                                <span className="absolute start-2 top-2 rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary-foreground">
+                                  {t("fields.coverImage")}
+                                </span>
+                              ) : null}
+                            </div>
+                            <div className="flex items-center gap-2 p-2">
+                              <p
+                                className="min-w-0 flex-1 truncate text-[11px] text-foreground/55"
+                                title={img.url}
+                              >
+                                {decodeURIComponent(fileName)}
+                              </p>
+                              <div className="flex shrink-0 items-center gap-0.5">
+                                <button
+                                  type="button"
+                                  className="rounded-md p-1.5 hover:bg-muted disabled:opacity-40"
+                                  aria-label={t("moveUp")}
+                                  disabled={index === 0}
+                                  onClick={() => moveImage(index, -1)}
+                                >
+                                  <ChevronUp className="h-4 w-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  className="rounded-md p-1.5 hover:bg-muted disabled:opacity-40"
+                                  aria-label={t("moveDown")}
+                                  disabled={index === editor.images.length - 1}
+                                  onClick={() => moveImage(index, 1)}
+                                >
+                                  <ChevronDown className="h-4 w-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  className="rounded-md p-1.5 text-destructive hover:bg-muted"
+                                  aria-label={t("removeImage")}
+                                  onClick={() => {
+                                    clearFieldError("images");
+                                    setEditor({
+                                      ...editor,
+                                      images: editor.images.filter(
+                                        (_, i) => i !== index
+                                      ),
+                                    });
+                                  }}
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   )}
                   {fieldErrors.images ? (
