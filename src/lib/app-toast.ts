@@ -1,4 +1,4 @@
-type ToastVariant = "error" | "info";
+type ToastVariant = "error" | "info" | "success";
 
 export type AppToast = {
   id: number;

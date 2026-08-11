@@ -50,6 +50,7 @@ import { PROJECT_INQUIRY_TYPES } from "@/data/project-inquiry-options";
 import { SERVICE_ICON_KEYS } from "@/lib/services/icons";
 import {
   SERVICE_CURRENCIES,
+  SERVICE_DETAIL_CTA_TYPES,
   SERVICE_LIMITS,
   SERVICE_OFFER_KINDS,
   SERVICE_PRICING_MODES,
@@ -57,6 +58,7 @@ import {
   parseServiceWriteBody,
   slugifyServiceTitle,
   type ServiceOfferKind,
+  type ServiceDetailCtaType,
   type ServicePricingMode,
   type ServiceStatus,
 } from "@/lib/services/schema";
@@ -92,6 +94,9 @@ type EditorState = {
   idealFor: ServiceI18n;
   includedFeatures: ServiceI18n[];
   ctaLabel: ServiceI18n;
+  detailCtaType: ServiceDetailCtaType;
+  detailCtaUrl: string;
+  detailCtaLabel: ServiceI18n;
   offerKind: ServiceOfferKind;
   showCtaBuy: boolean;
   showCtaStart: boolean;
@@ -121,6 +126,9 @@ function emptyEditor(): EditorState {
     idealFor: emptyI18n(),
     includedFeatures: [],
     ctaLabel: emptyI18n(),
+    detailCtaType: "linked_project",
+    detailCtaUrl: "",
+    detailCtaLabel: emptyI18n(),
     offerKind: "service",
     showCtaBuy: false,
     showCtaStart: true,
@@ -150,6 +158,9 @@ function rowToEditor(row: ServiceRow): EditorState {
     idealFor: { ...row.ideal_for },
     includedFeatures: row.included_features.map((f) => ({ ...f })),
     ctaLabel: { ...row.cta_label },
+    detailCtaType: row.detail_cta_type,
+    detailCtaUrl: row.detail_cta_url ?? "",
+    detailCtaLabel: { ...row.detail_cta_label },
     offerKind: row.offer_kind,
     showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
@@ -183,6 +194,12 @@ function editorToPayload(editor: EditorState) {
     idealFor: editor.idealFor,
     includedFeatures: editor.includedFeatures.filter((f) => f.fr.trim()),
     ctaLabel: editor.ctaLabel,
+    detailCtaType: editor.detailCtaType,
+    detailCtaUrl:
+      editor.detailCtaType === "custom"
+        ? editor.detailCtaUrl.trim() || null
+        : null,
+    detailCtaLabel: editor.detailCtaLabel,
     offerKind: editor.offerKind,
     showCtaBuy: editor.showCtaBuy,
     showCtaStart: editor.showCtaStart,
@@ -1015,6 +1032,27 @@ export function AdminServicesPanel({
                     placeholder={t("ctaPlaceholder")}
                   />
                 </FormField>
+                <FormField
+                  label={t("fields.detailCtaLabel")}
+                  id={`detail-cta-label-${localeTab}`}
+                  hint={t("hints.detailCtaLabel")}
+                >
+                  <Input
+                    id={`detail-cta-label-${localeTab}`}
+                    value={editor.detailCtaLabel[localeTab]}
+                    maxLength={SERVICE_LIMITS.ctaLabelMax}
+                    onChange={(e) =>
+                      setEditor((p) => ({
+                        ...p,
+                        detailCtaLabel: {
+                          ...p.detailCtaLabel,
+                          [localeTab]: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder={t("detailCtaLabelPlaceholder")}
+                  />
+                </FormField>
               </div>
             </section>
 
@@ -1144,6 +1182,58 @@ export function AdminServicesPanel({
                   </SelectContent>
                 </Select>
               </FormField>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <FormField
+                  label={t("fields.detailCtaType")}
+                  id="svc-detail-cta-type"
+                  hint={t("hints.detailCtaType")}
+                >
+                  <Select
+                    value={editor.detailCtaType}
+                    onValueChange={(value) =>
+                      setEditor((p) => ({
+                        ...p,
+                        detailCtaType: value as ServiceDetailCtaType,
+                      }))
+                    }
+                  >
+                    <SelectTrigger id="svc-detail-cta-type">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SERVICE_DETAIL_CTA_TYPES.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {t(`detailCtaType.${type}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormField>
+
+                {editor.detailCtaType === "custom" ? (
+                  <FormField
+                    label={t("fields.detailCtaUrl")}
+                    id="svc-detail-cta-url"
+                    hint={t("hints.detailCtaUrl")}
+                  >
+                    <Input
+                      id="svc-detail-cta-url"
+                      type="text"
+                      inputMode="url"
+                      maxLength={SERVICE_LIMITS.detailCtaUrlMax}
+                      value={editor.detailCtaUrl}
+                      onChange={(e) =>
+                        setEditor((p) => ({
+                          ...p,
+                          detailCtaUrl: e.target.value,
+                        }))
+                      }
+                      placeholder="/projets ou https://exemple.com"
+                    />
+                  </FormField>
+                ) : null}
+              </div>
 
               <p className="text-xs text-foreground/50">{t("caseStudiesHint")}</p>
               <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg border border-border p-3">

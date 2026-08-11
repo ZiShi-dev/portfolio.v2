@@ -146,7 +146,11 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
                 </button>
 
                 <div className="p-4 sm:p-6">
-                  <ReviewFormPage variant="modal" projectId={projectId} />
+                  <ReviewFormPage
+                    variant="modal"
+                    projectId={projectId}
+                    onClose={() => setOpen(false)}
+                  />
                 </div>
               </motion.div>
             </div>

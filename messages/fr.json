@@ -133,6 +133,8 @@
     "viewCaseStudy": "Voir une réalisation",
     "linkedProjectEyebrow": "Projet à vendre",
     "viewLinkedProject": "Voir le détail du projet",
+    "viewProjects": "Voir tous les projets",
+    "visitExternalLink": "Découvrir le projet",
     "offerKind": {
       "service": "Service",
       "product": "À vendre"
@@ -819,6 +821,7 @@
       "service_invalid_features": "Éléments inclus invalides.",
       "service_invalid_pricing": "Tarification invalide.",
       "service_invalid_case_studies": "Case Studies invalides.",
+      "service_invalid_detail_cta_url": "L’URL du bouton projet est invalide ou manquante.",
       "starting_price_required": "Prix de départ requis pour ce mode.",
       "publish_requires_short_description": "Description courte FR requise pour publier.",
       "publish_requires_reference": "Référence requise pour publier.",
@@ -1037,6 +1040,11 @@
         "service": "Service",
         "product": "À vendre"
       },
+      "detailCtaType": {
+        "linked_project": "Projet lié",
+        "projects": "Page Tous les projets",
+        "custom": "URL personnalisée"
+      },
       "commerceHint": "Le type sert au filtre du catalogue. Les cases contrôlent quels boutons apparaissent sur le site.",
       "uploadCover": "Uploader une photo",
       "removeCover": "Retirer",
@@ -1045,7 +1053,7 @@
         "commerce": "Type & boutons",
         "pricing": "Prix",
         "features": "Éléments inclus",
-        "caseStudies": "Case Studies associées"
+        "caseStudies": "Projets & lien de détail"
       },
       "fields": {
         "reference": "Référence",
@@ -1068,12 +1076,19 @@
         "shortDescription": "Description courte",
         "description": "Description",
         "idealFor": "Idéal pour",
-        "ctaLabel": "Libellé CTA démarrer"
+        "ctaLabel": "Libellé CTA démarrer",
+        "detailCtaType": "Destination du bouton projet",
+        "detailCtaUrl": "URL personnalisée",
+        "detailCtaLabel": "Libellé du bouton projet"
       },
       "hints": {
         "coverImage": "Désactivé : la photo vient du projet lié.",
-        "linkedProject": "Associez un projet publié : ses images s’affichent sur l’offre. Sans projet lié, aucune image."
+        "linkedProject": "Associez un projet publié : ses images s’affichent sur l’offre. Sans projet lié, aucune image.",
+        "detailCtaType": "Choisissez où mène le bouton affiché sur la page de l’offre.",
+        "detailCtaUrl": "Chemin interne (/projets) ou URL complète en http(s).",
+        "detailCtaLabel": "Optionnel. Vide = libellé automatique selon la destination."
       },
+      "detailCtaLabelPlaceholder": "Voir le projet",
       "linkedProjectNone": "Aucun projet lié",
       "caseStudiesHint": "Réalisations secondaires affichées sous le projet principal.",
       "duplicate": "Dupliquer",
