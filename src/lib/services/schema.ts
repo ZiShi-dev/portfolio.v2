@@ -261,7 +261,10 @@ export const servicePatchSchema = z
     shortDescription: serviceWriteSchema.shape.shortDescription.optional(),
     description: serviceWriteSchema.shape.description.optional(),
     idealFor: serviceWriteSchema.shape.idealFor.optional(),
-    includedFeatures: serviceWriteSchema.shape.includedFeatures.optional(),
+    includedFeatures: z
+      .array(featureItemSchema)
+      .max(SERVICE_LIMITS.maxFeatures)
+      .optional(),
     ctaLabel: serviceWriteSchema.shape.ctaLabel.optional(),
     detailCtaType: z.enum(SERVICE_DETAIL_CTA_TYPES).optional(),
     detailCtaUrl: z
@@ -284,7 +287,7 @@ export const servicePatchSchema = z
         return v;
       }),
     detailCtaLabel: localeOptional(SERVICE_LIMITS.ctaLabelMax).optional(),
-    offerKind: serviceWriteSchema.shape.offerKind.optional(),
+    offerKind: z.enum(SERVICE_OFFER_KINDS).optional(),
     showCtaBuy: z.boolean().optional(),
     showCtaStart: z.boolean().optional(),
     coverImage: z
@@ -325,12 +328,19 @@ export const servicePatchSchema = z
       .max(SERVICE_LIMITS.startingPriceCentsMax)
       .nullable()
       .optional(),
-    currency: serviceWriteSchema.shape.currency.optional(),
+    currency: z.enum(SERVICE_CURRENCIES).optional(),
     inquiryProjectType: z
       .enum(PROJECT_INQUIRY_TYPES)
       .nullable()
       .optional(),
-    caseStudyIds: serviceWriteSchema.shape.caseStudyIds.optional(),
+    caseStudyIds: z
+      .array(uuidSchema)
+      .max(SERVICE_LIMITS.maxCaseStudies)
+      .refine(
+        (ids) => new Set(ids).size === ids.length,
+        "duplicate_case_study"
+      )
+      .optional(),
     seoTitle: serviceWriteSchema.shape.seoTitle.optional(),
     seoDescription: serviceWriteSchema.shape.seoDescription.optional(),
   })
