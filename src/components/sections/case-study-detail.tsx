@@ -30,9 +30,7 @@ export function CaseStudyDetail({
   const cover = project.images[0]?.src;
   const gallery = project.images.slice(1);
   const features = project.features ?? [];
-  const technologies = project.technologies?.length
-    ? project.technologies
-    : project.tags;
+  const technologies = project.technologies ?? [];
 
   return (
     <article className="relative overflow-hidden bg-background px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-32">
