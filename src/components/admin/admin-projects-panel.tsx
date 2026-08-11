@@ -627,18 +627,18 @@ export function AdminProjectsPanel({
                   onClick={() => openEdit(p)}
                   className="group w-full max-w-full overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
                 >
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
+                  <div className="relative w-full overflow-hidden bg-muted">
                     {cover ? (
-                      <Image
+                      // eslint-disable-next-line @next/next/no-img-element -- ratio naturel, sans crop fill
+                      <img
                         src={cover}
                         alt=""
-                        fill
-                        className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.02]"
-                        unoptimized
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="block h-auto w-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.01]"
+                        loading="lazy"
+                        decoding="async"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-xs text-foreground/40">
+                      <div className="flex aspect-[16/10] w-full items-center justify-center text-xs text-foreground/40">
                         {t("noCover")}
                       </div>
                     )}
@@ -653,13 +653,13 @@ export function AdminProjectsPanel({
                       {p.published ? t("published") : t("draft")}
                     </span>
                   </div>
-                  <div className="p-4">
+                  <div className="min-w-0 p-4">
                     {p.reference ? (
                       <p className="font-mono text-[10px] tracking-[0.16em] text-primary/80">
                         {p.reference}
                       </p>
                     ) : null}
-                    <p className="truncate font-medium leading-snug">{name}</p>
+                    <p className="break-words font-medium leading-snug">{name}</p>
                     <p className="mt-1 text-xs text-foreground/50">
                       {p.kind === "sold" ? t("kindSold") : t("kindPersonal")}
                       {p.featured ? ` · ${t("featured")}` : ""}
@@ -1218,23 +1218,23 @@ export function AdminProjectsPanel({
                       {t("imagesEmpty")}
                     </p>
                   ) : (
-                    <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <ul className="grid grid-cols-1 gap-3">
                       {editor.images.map((img, index) => {
                         const fileName =
                           img.url.split("/").pop()?.split("?")[0] || img.url;
                         return (
                           <li
                             key={`${img.url}-${index}`}
-                            className="overflow-hidden rounded-xl border border-border bg-card/60"
+                            className="min-w-0 overflow-hidden rounded-xl border border-border bg-card/60"
                           >
-                            <div className="relative aspect-[16/10] w-full bg-muted">
-                              <Image
+                            <div className="relative w-full bg-muted">
+                              {/* eslint-disable-next-line @next/next/no-img-element -- ratio naturel, sans crop fill */}
+                              <img
                                 src={img.url}
                                 alt=""
-                                fill
-                                className="object-cover"
-                                unoptimized
-                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 280px"
+                                className="block h-auto w-full max-w-full object-contain"
+                                loading="lazy"
+                                decoding="async"
                               />
                               {index === 0 ? (
                                 <span className="absolute start-2 top-2 rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary-foreground">
@@ -1242,7 +1242,7 @@ export function AdminProjectsPanel({
                                 </span>
                               ) : null}
                             </div>
-                            <div className="flex items-center gap-2 p-2">
+                            <div className="flex min-w-0 items-center gap-2 p-2">
                               <p
                                 className="min-w-0 flex-1 truncate text-[11px] text-foreground/55"
                                 title={img.url}
