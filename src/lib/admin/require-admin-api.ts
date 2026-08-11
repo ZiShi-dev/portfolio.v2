@@ -20,6 +20,7 @@ export type AdminGuardFail = {
 
 /**
  * OWASP A01 — session valide + allowlist + AAL2 (+ Origin pour mutations).
+ * Origin exigé par défaut pour toute méthode hors GET/HEAD.
  */
 export async function requireAdminApi(
   request: Request,
@@ -32,7 +33,11 @@ export async function requireAdminApi(
     };
   }
 
-  if (options?.requireOrigin && !verifyFormRequestOrigin(request)) {
+  const method = request.method.toUpperCase();
+  const requireOrigin =
+    options?.requireOrigin ?? (method !== "GET" && method !== "HEAD");
+
+  if (requireOrigin && !verifyFormRequestOrigin(request)) {
     return {
       ok: false,
       response: adminErrorResponse(ADMIN_ERROR_CODES.UNAUTHORIZED_ORIGIN, 403),

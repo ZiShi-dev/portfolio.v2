@@ -7,6 +7,7 @@ import {
   PROJECT_IMAGE_BUCKET,
   PROJECT_LIMITS,
 } from "@/lib/projects/schema";
+import { detectImageMime } from "@/lib/projects/image-magic";
 
 const EXT_BY_MIME: Record<string, string> = {
   "image/jpeg": "jpg",
@@ -33,21 +34,27 @@ export async function uploadProjectImage(
     return { ok: false, reason: "not_configured" };
   }
 
-  const mime = file.type;
-  if (!(PROJECT_LIMITS.allowedMime as readonly string[]).includes(mime)) {
-    return { ok: false, reason: "invalid_type" };
-  }
-
   if (file.size <= 0 || file.size > PROJECT_LIMITS.uploadMaxBytes) {
     return { ok: false, reason: "too_large" };
   }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const detected = detectImageMime(buffer);
+  if (
+    !detected ||
+    !(PROJECT_LIMITS.allowedMime as readonly string[]).includes(detected)
+  ) {
+    return { ok: false, reason: "invalid_type" };
+  }
+
+  // Ne jamais faire confiance au Content-Type client : on force la signature.
+  const mime = detected;
 
   const supabase = createSupabaseServiceClient();
   if (!supabase) return { ok: false, reason: "not_configured" };
 
   const ext = EXT_BY_MIME[mime] ?? "bin";
   const path = `projects/${randomUUID()}.${ext}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
 
   const { error } = await supabase.storage
     .from(PROJECT_IMAGE_BUCKET)

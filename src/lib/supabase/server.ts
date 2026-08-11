@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { ADMIN_SESSION_COOKIE_OPTIONS } from "@/lib/admin/constants";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
 export async function createSupabaseServerClient() {
@@ -11,6 +12,7 @@ export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
 
   const client = createServerClient(config.config.url, config.config.anonKey, {
+    cookieOptions: ADMIN_SESSION_COOKIE_OPTIONS,
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -18,7 +20,10 @@ export async function createSupabaseServerClient() {
       setAll(cookiesToSet) {
         try {
           cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
+            cookieStore.set(name, value, {
+              ...ADMIN_SESSION_COOKIE_OPTIONS,
+              ...options,
+            });
           });
         } catch {
           // Ignoré dans les Server Components en lecture seule.

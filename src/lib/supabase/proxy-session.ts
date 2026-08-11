@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAllowedAdminEmail, isAdminConfigured } from "@/lib/admin/allowlist";
-import { ADMIN_ROUTES } from "@/lib/admin/constants";
+import { ADMIN_ROUTES, ADMIN_SESSION_COOKIE_OPTIONS } from "@/lib/admin/constants";
 import { adminHasVerifiedTotp, hasAdminMfaSatisfied } from "@/lib/admin/mfa";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
@@ -27,6 +27,7 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(config.config.url, config.config.anonKey, {
+    cookieOptions: ADMIN_SESSION_COOKIE_OPTIONS,
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -37,7 +38,10 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
         });
         response = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
+          response.cookies.set(name, value, {
+            ...ADMIN_SESSION_COOKIE_OPTIONS,
+            ...options,
+          });
         });
       },
     },

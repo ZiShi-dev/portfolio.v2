@@ -89,9 +89,21 @@ describe("projects storage (upload + delete)", () => {
     if (!res.ok) assert.equal(res.reason, "invalid_type");
   });
 
+  it("refuse un faux MIME (magic bytes manquants)", async () => {
+    reset();
+    const file = new File([new Uint8Array([1, 2, 3, 4])], "fake.png", {
+      type: "image/png",
+    });
+    const res = await uploadProjectImage(file);
+    assert.equal(res.ok, false);
+    if (!res.ok) assert.equal(res.reason, "invalid_type");
+  });
+
   it("refuse fichier trop gros", async () => {
     reset();
     const big = new Uint8Array(PROJECT_LIMITS.uploadMaxBytes + 1);
+    // Signature PNG valide en tête pour isoler le test taille.
+    big.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], 0);
     const file = new File([big], "big.png", { type: "image/png" });
     const res = await uploadProjectImage(file);
     assert.equal(res.ok, false);
@@ -108,7 +120,21 @@ describe("projects storage (upload + delete)", () => {
 
   it("upload OK : path UUID sous projects/ sans upsert", async () => {
     reset();
-    const file = new File([new Uint8Array([9, 9])], "ok.webp", {
+    const webp = Uint8Array.of(
+      0x52,
+      0x49,
+      0x46,
+      0x46,
+      0,
+      0,
+      0,
+      0,
+      0x57,
+      0x45,
+      0x42,
+      0x50
+    );
+    const file = new File([webp], "ok.webp", {
       type: "image/webp",
     });
     const res = await uploadProjectImage(file);
@@ -124,7 +150,8 @@ describe("projects storage (upload + delete)", () => {
   it("propagate upload_failed", async () => {
     reset();
     uploadError = { message: "denied" };
-    const file = new File([new Uint8Array([1])], "x.jpg", {
+    const jpeg = Uint8Array.of(0xff, 0xd8, 0xff, 0xe0);
+    const file = new File([jpeg], "x.jpg", {
       type: "image/jpeg",
     });
     const res = await uploadProjectImage(file);

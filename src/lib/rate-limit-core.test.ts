@@ -9,19 +9,46 @@ import {
 } from "@/lib/rate-limit-core";
 
 describe("OWASP A04 — rate-limit-core", () => {
-  it("getClientIp lit x-forwarded-for (première IP)", () => {
+  it("getClientIp préfère x-vercel-forwarded-for", () => {
     const request = new Request("http://localhost", {
-      headers: { "x-forwarded-for": " 1.2.3.4, 5.6.7.8" },
+      headers: {
+        "x-vercel-forwarded-for": "203.0.113.9",
+        "x-forwarded-for": "1.2.3.4, 5.6.7.8",
+        "x-real-ip": "9.9.9.9",
+      },
     });
-    assert.equal(getClientIp(request), "1.2.3.4");
+    assert.equal(getClientIp(request), "203.0.113.9");
   });
 
-  it("getClientIp retombe sur x-real-ip puis unknown", () => {
-    const realIp = new Request("http://localhost", {
-      headers: { "x-real-ip": "9.9.9.9" },
+  it("getClientIp lit x-real-ip avant x-forwarded-for", () => {
+    const request = new Request("http://localhost", {
+      headers: {
+        "x-forwarded-for": "1.2.3.4, 5.6.7.8",
+        "x-real-ip": "9.9.9.9",
+      },
     });
-    assert.equal(getClientIp(realIp), "9.9.9.9");
+    assert.equal(getClientIp(request), "9.9.9.9");
+  });
 
+  it("getClientIp hors Vercel prend la dernière IP de XFF", () => {
+    const prevVercel = process.env.VERCEL;
+    const prevEnv = process.env.VERCEL_ENV;
+    delete process.env.VERCEL;
+    delete process.env.VERCEL_ENV;
+    try {
+      const request = new Request("http://localhost", {
+        headers: { "x-forwarded-for": "1.2.3.4, 5.6.7.8" },
+      });
+      assert.equal(getClientIp(request), "5.6.7.8");
+    } finally {
+      if (prevVercel === undefined) delete process.env.VERCEL;
+      else process.env.VERCEL = prevVercel;
+      if (prevEnv === undefined) delete process.env.VERCEL_ENV;
+      else process.env.VERCEL_ENV = prevEnv;
+    }
+  });
+
+  it("getClientIp retombe sur unknown", () => {
     const unknown = new Request("http://localhost");
     assert.equal(getClientIp(unknown), "unknown");
   });

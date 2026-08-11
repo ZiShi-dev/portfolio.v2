@@ -83,7 +83,7 @@ export function BrowserPreview3D({
               fill
               className="object-cover object-top"
               sizes="(max-width: 640px) 90vw, (max-width: 768px) 512px, 576px"
-              priority
+              loading="lazy"
             />
           </div>
         </div>

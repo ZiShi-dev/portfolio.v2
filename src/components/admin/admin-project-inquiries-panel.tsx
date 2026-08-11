@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/ui/form-error";
 import { Textarea } from "@/components/ui/textarea";
+import { isSafeHttpUrl } from "@/lib/review-schema";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -551,7 +552,8 @@ export function AdminProjectInquiriesPanel({
                         {t("actions.copyPhone")}
                       </Button>
                     ) : null}
-                    {selected.current_website ? (
+                    {selected.current_website &&
+                    isSafeHttpUrl(selected.current_website) ? (
                       <Button type="button" size="sm" variant="outline" asChild>
                         <a
                           href={selected.current_website}

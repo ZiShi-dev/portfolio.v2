@@ -10,6 +10,7 @@ import {
   ADMIN_LOGIN_LIMITS,
   ADMIN_MFA_LIMITS,
   ADMIN_PASSWORD_CHANGE_LIMITS,
+  ADMIN_UPLOAD_LIMITS,
 } from "@/lib/admin/constants";
 import { ADMIN_ERROR_CODES, ADMIN_ERROR_MESSAGES } from "@/lib/admin/error-codes";
 import { handleAdminSession } from "@/lib/supabase/proxy-session";
@@ -75,6 +76,7 @@ const formStore = new Map<string, RateLimitEntry>();
 const loginStore = new Map<string, RateLimitEntry>();
 const passwordStore = new Map<string, RateLimitEntry>();
 const mfaStore = new Map<string, RateLimitEntry>();
+const uploadStore = new Map<string, RateLimitEntry>();
 
 function formRateLimitResponse(retryAfterSec?: number) {
   return NextResponse.json(
@@ -200,6 +202,29 @@ function handleAdminMfaRateLimit(request: NextRequest) {
   return NextResponse.next();
 }
 
+function handleAdminUploadRateLimit(request: NextRequest) {
+  if (request.method !== "POST") {
+    return NextResponse.next();
+  }
+
+  pruneRateLimitStore(uploadStore);
+
+  const ip = getClientIp(request);
+  const rate = checkRateLimitInStore(
+    uploadStore,
+    `admin-upload:${ip}`,
+    Date.now(),
+    ADMIN_UPLOAD_LIMITS.windowMs,
+    ADMIN_UPLOAD_LIMITS.maxAttempts
+  );
+
+  if (!rate.allowed) {
+    return adminRateLimitProxyResponse(rate.retryAfterSec);
+  }
+
+  return NextResponse.next();
+}
+
 /** Anciennes pages → sections de l’accueil. */
 const HOME_SECTION_REDIRECTS: Record<string, string> = {
   "/a-propos": "/#a-propos",
@@ -249,6 +274,11 @@ export async function proxy(request: NextRequest) {
     if (rateResponse.status === 429) return rateResponse;
   }
 
+  if (path === "/api/admin/projects/upload") {
+    const rateResponse = handleAdminUploadRateLimit(request);
+    if (rateResponse.status === 429) return rateResponse;
+  }
+
   if (path.startsWith("/admin")) {
     const { response } = await handleAdminSession(request);
     return secureDocumentResponse(request, response);
@@ -278,6 +308,7 @@ export const config = {
     "/api/admin/mfa/challenge",
     "/api/admin/mfa/enroll",
     "/api/admin/mfa/enroll/verify",
+    "/api/admin/projects/upload",
     "/admin/:path*",
     "/((?!api|_next|_vercel|.*\\..*).*)",
   ],

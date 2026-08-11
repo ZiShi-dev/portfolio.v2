@@ -48,3 +48,9 @@ export const ADMIN_SESSION_COOKIE_OPTIONS = {
   secure: process.env.NODE_ENV === "production",
   path: "/",
 };
+
+/** Rate-limit upload images projets (proxy). */
+export const ADMIN_UPLOAD_LIMITS = {
+  maxAttempts: 20,
+  windowMs: 15 * 60 * 1000,
+} as const;
