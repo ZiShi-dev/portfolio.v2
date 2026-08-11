@@ -5,8 +5,10 @@ import {
   openContactModal,
 } from "@/lib/open-contact-modal";
 import {
+  CLOSE_LEAVE_REVIEW_EVENT,
   OPEN_LEAVE_REVIEW_EVENT,
   OPEN_REVIEW_QUERY,
+  closeLeaveReviewModal,
   openLeaveReviewModal,
 } from "@/lib/open-leave-review-modal";
 import {
@@ -149,6 +151,16 @@ describe("openLeaveReviewModal (parity contact system)", () => {
   it("ne plante pas sans événement", () => {
     assert.doesNotThrow(() => openLeaveReviewModal());
     assert.doesNotThrow(() => openLeaveReviewModal({}));
+  });
+
+  it("émet CLOSE_LEAVE_REVIEW_EVENT pour fermer la modale", () => {
+    let received = "";
+    document.addEventListener(CLOSE_LEAVE_REVIEW_EVENT, (e) => {
+      received = e.type;
+    });
+    closeLeaveReviewModal();
+    assert.equal(received, CLOSE_LEAVE_REVIEW_EVENT);
+    assert.equal(CLOSE_LEAVE_REVIEW_EVENT, "close-leave-review-modal");
   });
 });
 

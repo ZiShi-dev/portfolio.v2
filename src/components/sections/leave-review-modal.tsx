@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReviewFormPage } from "@/components/sections/review-form-page";
 import { lockBodyScroll } from "@/lib/lock-body-scroll";
 import {
+  CLOSE_LEAVE_REVIEW_EVENT,
   OPEN_LEAVE_REVIEW_EVENT,
   OPEN_REVIEW_QUERY,
 } from "@/lib/open-leave-review-modal";
@@ -38,12 +39,20 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
 
   useModalA11y(open, dialogRef);
 
+  const closeModal = useCallback(() => {
+    setOpen(false);
+    // Débloque immédiatement (ne dépend pas de la fin d'animation Framer).
+    unlockScrollRef.current?.();
+    unlockScrollRef.current = null;
+  }, []);
+
   useEffect(() => {
     function handleOpen() {
       setOpen(true);
     }
 
     document.addEventListener(OPEN_LEAVE_REVIEW_EVENT, handleOpen);
+    document.addEventListener(CLOSE_LEAVE_REVIEW_EVENT, closeModal);
 
     const frame = window.requestAnimationFrame(() => {
       const params = new URLSearchParams(window.location.search);
@@ -69,8 +78,9 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
     return () => {
       window.cancelAnimationFrame(frame);
       document.removeEventListener(OPEN_LEAVE_REVIEW_EVENT, handleOpen);
+      document.removeEventListener(CLOSE_LEAVE_REVIEW_EVENT, closeModal);
     };
-  }, []);
+  }, [closeModal]);
 
   useEffect(() => {
     if (!open) return;
@@ -78,19 +88,16 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
     unlockScrollRef.current = lockBodyScroll();
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") closeModal();
     };
     window.addEventListener("keydown", onKey);
 
     return () => {
       window.removeEventListener("keydown", onKey);
+      unlockScrollRef.current?.();
+      unlockScrollRef.current = null;
     };
-  }, [open]);
-
-  const handleExitComplete = () => {
-    unlockScrollRef.current?.();
-    unlockScrollRef.current = null;
-  };
+  }, [open, closeModal]);
 
   return (
     <div className={showCallout ? "bg-background px-4 py-16 sm:px-6 lg:py-20" : "contents"}>
@@ -112,14 +119,14 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
         </div>
       )}
 
-      <AnimatePresence onExitComplete={handleExitComplete}>
+      <AnimatePresence>
         {open && (
           <motion.div
             className="scrollbar-overlay fixed inset-0 z-[999] overflow-y-auto overscroll-contain bg-black/55 px-3 py-4 sm:px-4 sm:py-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
+            onClick={closeModal}
             role="presentation"
           >
             <div className="flex min-h-full items-center justify-center">
@@ -131,13 +138,13 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
                 initial={{ opacity: 0, y: 20, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 12, scale: 0.98 }}
-                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                 className="relative my-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
                   type="button"
-                  onClick={() => setOpen(false)}
+                  onClick={closeModal}
                   data-modal-initial-focus
                   className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground/70 transition-colors hover:text-foreground sm:right-4 sm:top-4"
                   aria-label="Fermer la modale avis"
@@ -149,7 +156,7 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
                   <ReviewFormPage
                     variant="modal"
                     projectId={projectId}
-                    onClose={() => setOpen(false)}
+                    onClose={closeModal}
                   />
                 </div>
               </motion.div>

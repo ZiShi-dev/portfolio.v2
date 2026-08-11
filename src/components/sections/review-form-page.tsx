@@ -27,6 +27,7 @@ import {
 } from "@/lib/review-form-schema";
 import { REVIEW_LIMITS } from "@/lib/review-schema";
 import { REVIEW_MODAL_TITLE_ID } from "@/lib/modal-a11y-ids";
+import { closeLeaveReviewModal } from "@/lib/open-leave-review-modal";
 import { routes } from "@/lib/routes";
 import {
   translateValidationError,
@@ -87,15 +88,15 @@ function ReviewFormBody({
     reset(reviewFormDefaultValues);
     setTurnstileToken("");
 
-    if (onClose) {
-      onClose();
-      router.refresh();
-      return;
-    }
-
-    router.push(routes.reviews);
+    // Toujours fermer la modale (prop + événement global).
+    onClose?.();
+    closeLeaveReviewModal();
     router.refresh();
-  }, [onClose, reset, router, t]);
+
+    if (!onClose && variant !== "modal") {
+      router.push(routes.reviews);
+    }
+  }, [onClose, reset, router, t, variant]);
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");
