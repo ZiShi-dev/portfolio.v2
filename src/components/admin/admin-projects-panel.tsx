@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import {
   ChevronDown,
@@ -597,8 +596,8 @@ export function AdminProjectsPanel({
   }
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="min-w-0 space-y-5">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-foreground/80">
           {t("listTitle")}
           {projects.length > 0 ? (
@@ -616,29 +615,30 @@ export function AdminProjectsPanel({
           {t("empty")}
         </p>
       ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => {
             const cover = p.images[0]?.url;
             const name = p.title.fr || p.slug;
             return (
-              <li key={p.id}>
+              <li key={p.id} className="min-w-0 max-w-full">
                 <button
                   type="button"
                   onClick={() => openEdit(p)}
-                  className="group w-full overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
+                  className="group flex w-full min-w-0 max-w-full flex-col overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
                 >
-                  <div className="relative aspect-[16/10] bg-muted">
+                  {/* Cadre image : largeur = colonne, hauteur bornée, jamais plus large que le viewport */}
+                  <div className="relative w-full min-w-0 max-w-full overflow-hidden bg-muted">
                     {cover ? (
-                      <Image
+                      // eslint-disable-next-line @next/next/no-img-element -- cadre fluide, pas de fill absolu
+                      <img
                         src={cover}
                         alt=""
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                        unoptimized
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="mx-auto block h-auto max-h-56 w-full max-w-full object-contain object-center sm:max-h-64"
+                        loading="lazy"
+                        decoding="async"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-xs text-foreground/40">
+                      <div className="flex aspect-[16/10] w-full items-center justify-center text-xs text-foreground/40">
                         {t("noCover")}
                       </div>
                     )}
@@ -653,13 +653,15 @@ export function AdminProjectsPanel({
                       {p.published ? t("published") : t("draft")}
                     </span>
                   </div>
-                  <div className="p-4">
+                  <div className="min-w-0 max-w-full p-4">
                     {p.reference ? (
-                      <p className="font-mono text-[10px] tracking-[0.16em] text-primary/80">
+                      <p className="truncate font-mono text-[10px] tracking-[0.16em] text-primary/80">
                         {p.reference}
                       </p>
                     ) : null}
-                    <p className="truncate font-medium leading-snug">{name}</p>
+                    <p className="break-words font-medium leading-snug [overflow-wrap:anywhere]">
+                      {name}
+                    </p>
                     <p className="mt-1 text-xs text-foreground/50">
                       {p.kind === "sold" ? t("kindSold") : t("kindPersonal")}
                       {p.featured ? ` · ${t("featured")}` : ""}
@@ -680,7 +682,7 @@ export function AdminProjectsPanel({
       >
         {editor ? (
           <DialogContent
-            className="flex max-h-[min(92dvh,52rem)] max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:p-0"
+            className="flex max-h-[min(92dvh,52rem)] w-[calc(100%-1rem)] min-w-0 max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:w-full sm:p-0"
             closeLabel={t("cancel")}
           >
             <DialogHeader className="shrink-0 border-b border-border px-5 py-4 sm:px-6">
@@ -1218,60 +1220,77 @@ export function AdminProjectsPanel({
                       {t("imagesEmpty")}
                     </p>
                   ) : (
-                    <ul className="space-y-2">
-                      {editor.images.map((img, index) => (
-                        <li
-                          key={`${img.url}-${index}`}
-                          className="flex items-center gap-3 rounded-xl border border-border p-2"
-                        >
-                          <div className="relative h-14 w-20 overflow-hidden rounded-lg bg-muted">
-                            <Image
-                              src={img.url}
-                              alt=""
-                              fill
-                              className="object-cover"
-                              unoptimized
-                            />
-                          </div>
-                          <p className="min-w-0 flex-1 truncate text-xs text-foreground/55">
-                            {img.url}
-                          </p>
-                          <div className="flex items-center gap-1">
-                            <button
-                              type="button"
-                              className="rounded-md p-1 hover:bg-muted"
-                              aria-label={t("moveUp")}
-                              onClick={() => moveImage(index, -1)}
-                            >
-                              <ChevronUp className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              className="rounded-md p-1 hover:bg-muted"
-                              aria-label={t("moveDown")}
-                              onClick={() => moveImage(index, 1)}
-                            >
-                              <ChevronDown className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              className="rounded-md p-1 text-destructive hover:bg-muted"
-                              aria-label={t("removeImage")}
-                              onClick={() => {
-                                clearFieldError("images");
-                                setEditor({
-                                  ...editor,
-                                  images: editor.images.filter(
-                                    (_, i) => i !== index
-                                  ),
-                                });
-                              }}
-                            >
-                              <X className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </li>
-                      ))}
+                    <ul className="grid w-full min-w-0 grid-cols-1 gap-3">
+                      {editor.images.map((img, index) => {
+                        const fileName =
+                          img.url.split("/").pop()?.split("?")[0] || img.url;
+                        return (
+                          <li
+                            key={`${img.url}-${index}`}
+                            className="min-w-0 max-w-full overflow-hidden rounded-xl border border-border bg-card/60"
+                          >
+                            <div className="relative w-full min-w-0 max-w-full overflow-hidden bg-muted">
+                              {/* eslint-disable-next-line @next/next/no-img-element -- cadre fluide */}
+                              <img
+                                src={img.url}
+                                alt=""
+                                className="mx-auto block h-auto max-h-52 w-full max-w-full object-contain object-center sm:max-h-64"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                              {index === 0 ? (
+                                <span className="absolute start-2 top-2 rounded-full bg-primary/90 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary-foreground">
+                                  {t("fields.coverImage")}
+                                </span>
+                              ) : null}
+                            </div>
+                            <div className="flex min-w-0 items-center gap-2 p-2">
+                              <p
+                                className="min-w-0 flex-1 truncate text-[11px] text-foreground/55"
+                                title={img.url}
+                              >
+                                {decodeURIComponent(fileName)}
+                              </p>
+                              <div className="flex shrink-0 items-center gap-0.5">
+                                <button
+                                  type="button"
+                                  className="rounded-md p-1.5 hover:bg-muted disabled:opacity-40"
+                                  aria-label={t("moveUp")}
+                                  disabled={index === 0}
+                                  onClick={() => moveImage(index, -1)}
+                                >
+                                  <ChevronUp className="h-4 w-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  className="rounded-md p-1.5 hover:bg-muted disabled:opacity-40"
+                                  aria-label={t("moveDown")}
+                                  disabled={index === editor.images.length - 1}
+                                  onClick={() => moveImage(index, 1)}
+                                >
+                                  <ChevronDown className="h-4 w-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  className="rounded-md p-1.5 text-destructive hover:bg-muted"
+                                  aria-label={t("removeImage")}
+                                  onClick={() => {
+                                    clearFieldError("images");
+                                    setEditor({
+                                      ...editor,
+                                      images: editor.images.filter(
+                                        (_, i) => i !== index
+                                      ),
+                                    });
+                                  }}
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   )}
                   {fieldErrors.images ? (
