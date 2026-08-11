@@ -229,6 +229,12 @@ describe("parseProjectPatchBody", () => {
     if (parsed.ok) assert.equal(parsed.values.kind, "sold");
   });
 
+  it("accepte kind for_sale", () => {
+    const parsed = parseProjectPatchBody({ kind: "for_sale" });
+    assert.equal(parsed.ok, true);
+    if (parsed.ok) assert.equal(parsed.values.kind, "for_sale");
+  });
+
   it("patch businessTypeIds : max + whitelist", () => {
     const tooMany = parseProjectPatchBody({
       businessTypeIds: PROJECT_BUSINESS_TYPE_IDS.slice(0, 5),

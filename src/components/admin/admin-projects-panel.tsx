@@ -661,7 +661,11 @@ export function AdminProjectsPanel({
                     ) : null}
                     <p className="truncate font-medium leading-snug">{name}</p>
                     <p className="mt-1 text-xs text-foreground/50">
-                      {p.kind === "sold" ? t("kindSold") : t("kindPersonal")}
+                      {p.kind === "sold"
+                        ? t("kindSold")
+                        : p.kind === "for_sale"
+                          ? t("kindForSale")
+                          : t("kindPersonal")}
                       {p.featured ? ` · ${t("featured")}` : ""}
                     </p>
                   </div>
@@ -816,6 +820,9 @@ export function AdminProjectsPanel({
                           {t("kindPersonal")}
                         </SelectItem>
                         <SelectItem value="sold">{t("kindSold")}</SelectItem>
+                        <SelectItem value="for_sale">
+                          {t("kindForSale")}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </FormField>

@@ -17,6 +17,7 @@ async function categoryLabels(
   return {
     personal: t("categories.personal"),
     sold: t("categories.sold"),
+    for_sale: t("categories.for_sale"),
   };
 }
 

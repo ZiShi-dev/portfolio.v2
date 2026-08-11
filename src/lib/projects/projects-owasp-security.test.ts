@@ -234,6 +234,7 @@ describe("OWASP A05 — Security Misconfiguration", () => {
     assert.equal(parseProjectWriteBody(valid({ kind: "client" })).ok, false);
     assert.equal(parseProjectWriteBody(valid({ kind: "sold" })).ok, true);
     assert.equal(parseProjectWriteBody(valid({ kind: "personal" })).ok, true);
+    assert.equal(parseProjectWriteBody(valid({ kind: "for_sale" })).ok, true);
   });
 
   it("slug pattern strict (pas d’espaces / unicode libre)", () => {

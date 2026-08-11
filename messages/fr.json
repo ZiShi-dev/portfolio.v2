@@ -243,7 +243,8 @@
     },
     "categories": {
       "personal": "Projet perso",
-      "sold": "Projet vendu"
+      "sold": "Projet vendu",
+      "for_sale": "Projet à vendre"
     },
     "businessTypes": {
       "showcase": "Site vitrine",
@@ -738,6 +739,7 @@
       },
       "kindPersonal": "Projet personnel",
       "kindSold": "Projet vendu / client",
+      "kindForSale": "Projet à vendre",
       "upload": "Uploader",
       "imagesEmpty": "Ajoutez des images (obligatoire pour publier).",
       "moveUp": "Monter",

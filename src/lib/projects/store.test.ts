@@ -153,6 +153,7 @@ describe("projects/store", () => {
     const items = await store.getPublishedProjects("fr", {
       personal: "Perso",
       sold: "Vendu",
+      for_sale: "À vendre",
     });
     assert.equal(items.length, 1);
     assert.equal(items[0]?.title, "Nova FR");

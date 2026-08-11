@@ -241,7 +241,8 @@
     },
     "categories": {
       "personal": "مشروع شخصي",
-      "sold": "مشروع مباع / عميل"
+      "sold": "مشروع مباع / عميل",
+      "for_sale": "مشروع للبيع"
     },
     "businessTypes": {
       "showcase": "موقع تعريفي",
@@ -736,6 +737,7 @@
       },
       "kindPersonal": "مشروع شخصي",
       "kindSold": "مشروع مباع / عميل",
+      "kindForSale": "مشروع للبيع",
       "upload": "رفع",
       "imagesEmpty": "أضف صوراً (مطلوبة للنشر).",
       "moveUp": "أعلى",
