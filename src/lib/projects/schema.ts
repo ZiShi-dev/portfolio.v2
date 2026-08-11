@@ -30,7 +30,7 @@ export const PROJECT_LIMITS = {
   referenceMax: 32,
 } as const;
 
-export const PROJECT_KINDS = ["personal", "sold"] as const;
+export const PROJECT_KINDS = ["personal", "sold", "for_sale"] as const;
 export type ProjectKind = (typeof PROJECT_KINDS)[number];
 
 export const LOCALES = ["fr", "en", "ar"] as const;

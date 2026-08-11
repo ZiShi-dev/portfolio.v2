@@ -241,7 +241,8 @@
     },
     "categories": {
       "personal": "Personal project",
-      "sold": "Client / sold project"
+      "sold": "Client / sold project",
+      "for_sale": "Project for sale"
     },
     "businessTypes": {
       "showcase": "Showcase site",
@@ -736,6 +737,7 @@
       },
       "kindPersonal": "Personal project",
       "kindSold": "Sold / client project",
+      "kindForSale": "Project for sale",
       "upload": "Upload",
       "imagesEmpty": "Add images (required to publish).",
       "moveUp": "Move up",

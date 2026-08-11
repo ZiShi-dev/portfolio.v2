@@ -1,6 +1,6 @@
 import type { ProjectItem } from "@/components/sections/project-modal";
 
-export type ProjectCategoryKey = "personal" | "sold";
+export type ProjectCategoryKey = "personal" | "sold" | "for_sale";
 
 export type ProjectCatalogItem = {
   id: string;
@@ -56,7 +56,7 @@ export type LocalizedProjectItem = ProjectItem & {
 };
 
 export function getProjectCategoryKeys(): ProjectCategoryKey[] {
-  return ["personal", "sold"];
+  return ["personal", "sold", "for_sale"];
 }
 
 /** @deprecated Utiliser useLocalizedProjects() / getSiteProjects(). */

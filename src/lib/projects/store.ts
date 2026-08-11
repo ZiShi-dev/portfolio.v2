@@ -121,7 +121,12 @@ function normalizeRow(raw: Record<string, unknown>): ProjectRow {
     reference: typeof raw.reference === "string" ? raw.reference : null,
     title: asI18n(raw.title),
     description: asI18n(raw.description),
-    kind: raw.kind === "sold" ? "sold" : "personal",
+    kind:
+      raw.kind === "sold"
+        ? "sold"
+        : raw.kind === "for_sale"
+          ? "for_sale"
+          : "personal",
     business_type_ids: Array.isArray(raw.business_type_ids)
       ? raw.business_type_ids.filter((t): t is string => typeof t === "string")
       : [],
