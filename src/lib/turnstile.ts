@@ -51,7 +51,9 @@ export async function verifyTurnstileToken(
   expectedAction?: string
 ): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
-  if (!secret) return true;
+  // Fail-closed : sans secret, ne jamais accepter un token.
+  // Les appelants doivent court-circuiter via isTurnstileEnabled().
+  if (!secret) return false;
 
   const response = token.trim();
   if (!response || response.length > 2048) return false;

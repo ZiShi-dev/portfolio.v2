@@ -1,10 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ReviewFormPage } from "@/components/sections/review-form-page";
 import { lockBodyScroll } from "@/lib/lock-body-scroll";
 import {
   CLOSE_LEAVE_REVIEW_EVENT,
@@ -13,6 +13,14 @@ import {
 } from "@/lib/open-leave-review-modal";
 import { useModalA11y } from "@/hooks/use-modal-a11y";
 import { REVIEW_MODAL_TITLE_ID } from "@/lib/modal-a11y-ids";
+
+const ReviewFormPage = dynamic(
+  () =>
+    import("@/components/sections/review-form-page").then(
+      (m) => m.ReviewFormPage
+    ),
+  { ssr: false }
+);
 
 type LeaveReviewModalProps = {
   showCallout?: boolean;

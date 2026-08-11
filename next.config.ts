@@ -14,6 +14,8 @@ const securityHeaders = [
     value: "camera=(), microphone=(), geolocation=(), payment=()",
   },
   { key: "X-DNS-Prefetch-Control", value: "on" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
   ...(isProd
     ? [
         {
@@ -32,6 +34,7 @@ const nextConfig: NextConfig = {
      * Inclure 70 (blur placeholder) — Next le pousse en dev et mute le tableau.
      */
     qualities: [70, 75, 90, 95, 100],
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
@@ -41,7 +44,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ["lucide-react", "framer-motion"],
+    optimizePackageImports: ["lucide-react", "framer-motion", "react-icons"],
     // Conservations Client Cache : retour navigateur (admin ↔ site) plus fluide
     staleTimes: {
       dynamic: 30,
@@ -53,6 +56,15 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: securityHeaders,
+      },
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
       },
       {
         // OWASP A02/A05 — admin jamais en cache, jamais indexé

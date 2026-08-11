@@ -219,13 +219,29 @@ describe("OWASP A05 — production-guards (Turnstile)", () => {
     assert.equal(getTurnstileGuardFailure(), "missing_config");
   });
 
-  it("permet de désactiver explicitement Turnstile", () => {
+  it("ignore FORM_REQUIRE_TURNSTILE=false en production sans override", () => {
     process.env = { ...process.env, NODE_ENV: "production" };
     process.env.FORM_REQUIRE_TURNSTILE = "false";
+    delete process.env.FORM_ALLOW_INSECURE;
+    delete process.env.TURNSTILE_SECRET_KEY;
+    delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    assert.equal(isTurnstileRequired(), true);
+    assert.equal(getTurnstileGuardFailure(), "missing_config");
+  });
+
+  it("permet de désactiver Turnstile en prod avec FORM_ALLOW_INSECURE", () => {
+    process.env = { ...process.env, NODE_ENV: "production" };
+    process.env.FORM_REQUIRE_TURNSTILE = "false";
+    process.env.FORM_ALLOW_INSECURE = "true";
     delete process.env.TURNSTILE_SECRET_KEY;
     delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
     assert.equal(isTurnstileRequired(), false);
     assert.equal(getTurnstileGuardFailure(), null);
+  });
+
+  it("verifyTurnstileToken refuse sans secret (fail-closed)", async () => {
+    delete process.env.TURNSTILE_SECRET_KEY;
+    assert.equal(await verifyTurnstileToken("token", "203.0.113.1"), false);
   });
 
   it("ne signale pas d'erreur si Turnstile est configuré", () => {

@@ -19,7 +19,7 @@ export async function OrganizationJsonLd({ nonce }: { nonce?: string }) {
     url: homeUrl,
     email: settings.contactEmail,
     description: brand.description,
-    logo: absoluteUrl(brand.profileImage),
+    logo: absoluteUrl(brand.profileImageLarge),
     sameAs,
   };
 
