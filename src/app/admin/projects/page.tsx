@@ -31,8 +31,8 @@ export default async function AdminProjectsPage() {
   const initialConfigured = listed.ok ? listed.configured : true;
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="min-w-0 space-y-6">
+      <div className="min-w-0">
         <Link
           href={ADMIN_ROUTES.home}
           className="inline-flex items-center gap-2 text-sm text-foreground/55 transition-colors hover:text-foreground"

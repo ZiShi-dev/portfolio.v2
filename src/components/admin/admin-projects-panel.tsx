@@ -596,8 +596,8 @@ export function AdminProjectsPanel({
   }
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="min-w-0 space-y-5">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-foreground/80">
           {t("listTitle")}
           {projects.length > 0 ? (
@@ -615,24 +615,25 @@ export function AdminProjectsPanel({
           {t("empty")}
         </p>
       ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => {
             const cover = p.images[0]?.url;
             const name = p.title.fr || p.slug;
             return (
-              <li key={p.id} className="min-w-0">
+              <li key={p.id} className="min-w-0 max-w-full">
                 <button
                   type="button"
                   onClick={() => openEdit(p)}
-                  className="group w-full max-w-full overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
+                  className="group flex w-full min-w-0 max-w-full flex-col overflow-hidden rounded-2xl border border-border bg-card text-start transition-colors hover:border-primary/35"
                 >
-                  <div className="relative w-full overflow-hidden bg-muted">
+                  {/* Cadre image : largeur = colonne, hauteur bornée, jamais plus large que le viewport */}
+                  <div className="relative w-full min-w-0 max-w-full overflow-hidden bg-muted">
                     {cover ? (
-                      // eslint-disable-next-line @next/next/no-img-element -- ratio naturel, sans crop fill
+                      // eslint-disable-next-line @next/next/no-img-element -- cadre fluide, pas de fill absolu
                       <img
                         src={cover}
                         alt=""
-                        className="block h-auto w-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.01]"
+                        className="mx-auto block h-auto max-h-56 w-full max-w-full object-contain object-center sm:max-h-64"
                         loading="lazy"
                         decoding="async"
                       />
@@ -652,13 +653,15 @@ export function AdminProjectsPanel({
                       {p.published ? t("published") : t("draft")}
                     </span>
                   </div>
-                  <div className="min-w-0 p-4">
+                  <div className="min-w-0 max-w-full p-4">
                     {p.reference ? (
-                      <p className="font-mono text-[10px] tracking-[0.16em] text-primary/80">
+                      <p className="truncate font-mono text-[10px] tracking-[0.16em] text-primary/80">
                         {p.reference}
                       </p>
                     ) : null}
-                    <p className="break-words font-medium leading-snug">{name}</p>
+                    <p className="break-words font-medium leading-snug [overflow-wrap:anywhere]">
+                      {name}
+                    </p>
                     <p className="mt-1 text-xs text-foreground/50">
                       {p.kind === "sold" ? t("kindSold") : t("kindPersonal")}
                       {p.featured ? ` · ${t("featured")}` : ""}
