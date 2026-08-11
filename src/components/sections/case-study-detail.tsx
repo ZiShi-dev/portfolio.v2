@@ -12,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 import type { ReviewItem } from "@/data/reviews";
 import { isSafeHttpUrl } from "@/lib/review-schema";
 import { routes } from "@/lib/routes";
+import { partitionProjectTechAndTypes } from "@/data/project-business-types";
 import type { LocalizedProjectItem } from "@/data/projects";
 
 type CaseStudyDetailProps = {
@@ -30,7 +31,17 @@ export function CaseStudyDetail({
   const cover = project.images[0]?.src;
   const gallery = project.images.slice(1);
   const features = project.features ?? [];
-  const technologies = project.technologies ?? [];
+  const partitioned = partitionProjectTechAndTypes([
+    ...(project.technologies ?? []),
+    ...(project.tags ?? []),
+  ]);
+  const technologies = partitioned.technologyLabels;
+  const businessTypeIds = Array.from(
+    new Set([
+      ...(project.businessTypeIds ?? []),
+      ...partitioned.businessTypeIds,
+    ])
+  );
 
   return (
     <article className="relative overflow-hidden bg-background px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-32">
@@ -51,10 +62,7 @@ export function CaseStudyDetail({
             <span className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
               {project.category}
             </span>
-            <ProjectTypeBadges
-              businessTypeIds={project.businessTypeIds}
-              tags={[]}
-            />
+            <ProjectTypeBadges businessTypeIds={businessTypeIds} tags={[]} />
           </div>
         </Reveal>
 

@@ -54,3 +54,42 @@ export function resolveProjectBusinessTypeLabels(ids: string[]): string[] {
     .map((id) => getProjectBusinessTypeDef(id)?.label)
     .filter((label): label is string => Boolean(label));
 }
+
+/** Id métier depuis un id ou un label FR de secours. */
+export function resolveProjectBusinessTypeId(
+  value: string
+): ProjectBusinessTypeId | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (isProjectBusinessTypeId(trimmed)) return trimmed;
+  const byLabel = PROJECT_BUSINESS_TYPE_DEFS.find(
+    (def) => def.label.toLowerCase() === trimmed.toLowerCase()
+  );
+  return byLabel?.id ?? null;
+}
+
+/**
+ * Sépare stack technique et types métier éventuellement collés dans `technologies`/`tags`.
+ */
+export function partitionProjectTechAndTypes(values: string[]): {
+  technologyLabels: string[];
+  businessTypeIds: ProjectBusinessTypeId[];
+} {
+  const technologyLabels: string[] = [];
+  const businessTypeIds: ProjectBusinessTypeId[] = [];
+  const seenTypes = new Set<ProjectBusinessTypeId>();
+
+  for (const value of values) {
+    const typeId = resolveProjectBusinessTypeId(value);
+    if (typeId) {
+      if (!seenTypes.has(typeId)) {
+        seenTypes.add(typeId);
+        businessTypeIds.push(typeId);
+      }
+      continue;
+    }
+    if (value.trim()) technologyLabels.push(value);
+  }
+
+  return { technologyLabels, businessTypeIds };
+}

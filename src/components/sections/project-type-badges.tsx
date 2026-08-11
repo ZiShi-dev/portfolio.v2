@@ -2,12 +2,15 @@
 
 import { useTranslations } from "next-intl";
 import { getProjectBusinessType } from "@/data/project-business-type-icons";
-import { isProjectBusinessTypeId } from "@/data/project-business-types";
+import {
+  isProjectBusinessTypeId,
+  partitionProjectTechAndTypes,
+} from "@/data/project-business-types";
 import { cn } from "@/lib/utils";
 
 type ProjectTypeBadgesProps = {
   businessTypeIds?: string[];
-  /** Stack technique libre (non i18n). */
+  /** Stack technique libre — les labels métier FR/EN y sont filtrés et traduits. */
   tags?: string[];
   className?: string;
 };
@@ -18,8 +21,14 @@ export function ProjectTypeBadges({
   className,
 }: ProjectTypeBadgesProps) {
   const t = useTranslations("projects.businessTypes");
-  const typeIds = (businessTypeIds ?? []).filter(isProjectBusinessTypeId);
-  const techTags = (tags ?? []).filter((label) => label.trim() !== "");
+  const partitioned = partitionProjectTechAndTypes(tags ?? []);
+  const typeIds = Array.from(
+    new Set([
+      ...(businessTypeIds ?? []).filter(isProjectBusinessTypeId),
+      ...partitioned.businessTypeIds,
+    ])
+  );
+  const techTags = partitioned.technologyLabels;
 
   if (typeIds.length === 0 && techTags.length === 0) return null;
 
