@@ -1,12 +1,11 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
-import { Check, MessageSquareQuote, Send } from "lucide-react";
+import { MessageSquareQuote, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageBackBar } from "@/components/page-back-link";
 import { Reveal } from "@/components/ui/reveal";
@@ -28,6 +27,7 @@ import {
 } from "@/lib/review-form-schema";
 import { REVIEW_LIMITS } from "@/lib/review-schema";
 import { REVIEW_MODAL_TITLE_ID } from "@/lib/modal-a11y-ids";
+import { closeLeaveReviewModal } from "@/lib/open-leave-review-modal";
 import { routes } from "@/lib/routes";
 import {
   translateValidationError,
@@ -47,12 +47,12 @@ type ReviewFormPageProps = {
 
 function ReviewFormBody({
   variant = "page",
+  onClose,
   projectId = null,
 }: ReviewFormPageProps) {
   const locale = useLocale();
   const router = useRouter();
   const t = useTranslations("reviewForm");
-  const tCommon = useTranslations("common");
   const tValidation = useTranslations("validation");
   const translateError = useCallback(
     (key: ValidationErrorKey) => tValidation(key),
@@ -62,7 +62,6 @@ function ReviewFormBody({
     () => createReviewFormSchema(translateError),
     [translateError]
   );
-  const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const { loading, setLoading, trySubmit } = useSubmitGuard();
@@ -76,12 +75,28 @@ function ReviewFormBody({
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ReviewFormValues>({
     resolver: zodResolver(schema),
     defaultValues: reviewFormDefaultValues,
     mode: "onBlur",
   });
+
+  const handleSuccess = useCallback(() => {
+    showAppToast(t("successToast"), "success");
+    reset(reviewFormDefaultValues);
+    setTurnstileToken("");
+
+    // Toujours fermer la modale (prop + événement global).
+    onClose?.();
+    closeLeaveReviewModal();
+    router.refresh();
+
+    if (!onClose && variant !== "modal") {
+      router.push(routes.reviews);
+    }
+  }, [onClose, reset, router, t, variant]);
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");
@@ -95,7 +110,7 @@ function ReviewFormBody({
     }
 
     if (isHoneypotTriggered(values._honeypot)) {
-      setSent(true);
+      handleSuccess();
       return;
     }
 
@@ -125,9 +140,7 @@ function ReviewFormBody({
       });
 
       if (res.ok) {
-        setSent(true);
-        // Force le rechargement RSC (cache client staleTimes) pour afficher l’avis.
-        router.refresh();
+        handleSuccess();
         return;
       }
 
@@ -217,23 +230,7 @@ function ReviewFormBody({
               </p>
             </div>
 
-            {sent ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="mt-10 flex flex-col items-center gap-3 rounded-2xl border border-accent/30 bg-accent/10 p-8 text-center"
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/20 text-accent">
-                  <Check className="h-6 w-6" aria-hidden />
-                </span>
-                <p className="text-lg font-medium">{t("successTitle")}</p>
-                <p className="text-sm text-foreground/55">{t("successBody")}</p>
-                <Button asChild variant="outline" className="mt-2">
-                  <Link href={routes.home}>{tCommon("backHome")}</Link>
-                </Button>
-              </motion.div>
-            ) : (
-              <form
+            <form
                 onSubmit={onSubmit}
                 noValidate
                 className={cn(
@@ -351,7 +348,6 @@ function ReviewFormBody({
 
                 <p className="text-center text-xs text-foreground/45">{t("consent")}</p>
               </form>
-            )}
           </div>
         </Reveal>
       </div>

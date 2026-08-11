@@ -3,7 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, Info, X } from "lucide-react";
+import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   clearAppToast,
@@ -38,7 +38,12 @@ export function AppToastHost() {
 
   if (!mounted) return null;
 
-  const Icon = toast?.variant === "info" ? Info : AlertCircle;
+  const Icon =
+    toast?.variant === "success"
+      ? CheckCircle2
+      : toast?.variant === "info"
+        ? Info
+        : AlertCircle;
 
   return createPortal(
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[1100] flex justify-center p-4 sm:p-6">
@@ -54,7 +59,9 @@ export function AppToastHost() {
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
               "pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-2xl border px-4 py-3.5 shadow-xl backdrop-blur-md",
-              toast.variant === "info"
+              toast.variant === "success"
+                ? "border-primary/35 bg-card/95 text-foreground"
+                : toast.variant === "info"
                 ? "border-accent/30 bg-card/95 text-foreground"
                 : "border-red-500/25 bg-card/95 text-foreground"
             )}
@@ -62,7 +69,11 @@ export function AppToastHost() {
             <Icon
               className={cn(
                 "mt-0.5 h-5 w-5 shrink-0",
-                toast.variant === "info" ? "text-accent" : "text-red-600"
+                toast.variant === "success"
+                  ? "text-primary"
+                  : toast.variant === "info"
+                    ? "text-accent"
+                    : "text-red-600"
               )}
               aria-hidden
             />

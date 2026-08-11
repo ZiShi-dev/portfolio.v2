@@ -158,6 +158,11 @@ describe("projects/store", () => {
     assert.equal(items[0]?.title, "Nova FR");
     assert.equal(items[0]?.categoryKey, "personal");
     assert.equal(items[0]?.businessTypeIds?.[0], "dashboard");
+    assert.deepEqual(items[0]?.tags, sampleRow.technologies);
+    assert.equal(
+      (items[0]?.tags ?? []).some((tag) => tag === "Tableau de bord"),
+      false
+    );
   });
 
   it("createProject écrit business_type_ids snake_case", async () => {

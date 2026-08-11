@@ -5,6 +5,7 @@ import {
   PROJECT_BUSINESS_TYPE_IDS,
   getProjectBusinessTypeDef,
   isProjectBusinessTypeId,
+  partitionProjectTechAndTypes,
   resolveProjectBusinessTypeLabels,
 } from "@/data/project-business-types";
 
@@ -36,5 +37,16 @@ describe("project-business-types catalogue", () => {
       resolveProjectBusinessTypeLabels(["showcase", "hacked", "webapp"]),
       ["Site vitrine", "Application web"]
     );
+  });
+
+  it("partitionProjectTechAndTypes extrait les labels FR/EN métier", () => {
+    const { technologyLabels, businessTypeIds } = partitionProjectTechAndTypes([
+      "Boutique en ligne",
+      "Marketplace",
+      "Next.js",
+      "ecommerce",
+    ]);
+    assert.deepEqual(technologyLabels, ["Next.js"]);
+    assert.deepEqual(businessTypeIds, ["ecommerce", "marketplace"]);
   });
 });

@@ -354,6 +354,7 @@
     "sending": "Sending...",
     "successTitle": "Thank you for your review!",
     "successBody": "Your review is already live on the site. Thank you!",
+    "successToast": "Thank you! Your review is already live on the site.",
     "consent": "By submitting, you agree to publish your first name and review on this portfolio.",
     "formAria": "Client review form",
     "turnstileError": "Complete the anti-spam check before sending."

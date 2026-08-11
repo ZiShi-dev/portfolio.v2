@@ -37,6 +37,11 @@ describe("app-toast bus", () => {
     assert.equal(last?.variant, "error");
   });
 
+  it("accepte le variant success", () => {
+    showAppToast("Avis envoyé", "success");
+    assert.equal(last?.variant, "success");
+  });
+
   it("clearAppToast envoie null", () => {
     showAppToast("x");
     clearAppToast();
