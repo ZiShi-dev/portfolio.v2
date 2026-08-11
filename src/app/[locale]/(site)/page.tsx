@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getLocale } from "next-intl/server";
 import { HomeSection } from "@/components/sections/home";
-import { Services } from "@/components/sections/services";
 import { brand } from "@/lib/brand";
 import { createPageMetadata, routes } from "@/lib/routes";
 import { getPublishedReviews } from "@/lib/reviews/store";
@@ -13,6 +12,9 @@ import { getSiteGeneralFaqs } from "@/lib/faqs/site";
 import { getPublicContactEmail } from "@/lib/social/store";
 import type { Locale } from "@/i18n/routing";
 
+const Services = dynamic(
+  () => import("@/components/sections/services").then((m) => m.Services)
+);
 const Journey = dynamic(
   () => import("@/components/sections/journey").then((m) => m.Journey)
 );

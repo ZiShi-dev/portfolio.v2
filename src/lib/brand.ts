@@ -10,17 +10,20 @@ export const brand = {
   owner: "VORZIX",
   titleSuffix: "Solutions digitales",
   tagline: "Sites, apps & produits digitaux",
-  profileImage: "/images/logo-vorzix.png",
+  /** Marque UI (navbar/footer) — PNG compact opaque nuit. */
+  profileImage: "/images/logo-vorzix-mark.png",
   profileImageAlt: "Logo VORZIX",
-  /** Atlas Céleste HD (3072×1728) — nom versionné pour éviter le cache flou. */
+  /** Logo plus large pour OG / JSON-LD si besoin d’une version 256. */
+  profileImageLarge: "/images/logo-vorzix.png",
+  /** Atlas Céleste compressé (~1920) — variantes WebP dans hero-banner.tsx. */
   heroBanner: "/images/hero-banner-atlas.jpg",
   heroBannerAlt:
     "VORZIX — atlas céleste au lever de soleil : sites web, applications et solutions digitales",
-  heroBannerDark: "/images/hero-banner-atlas-dark.jpg",
+  heroBannerDark: "/images/hero-banner-atlas.jpg",
   heroBannerDarkAlt:
     "VORZIX — atlas céleste, horizon doré et précision digitale",
   email: "contact@zishi.dev", // fallback display — sourcé BDD via getPublicContactEmail()
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zishi.dev",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://vorzix.com",
   description:
     "VORZIX conçoit des sites web, applications et plateformes digitales sur-mesure — design premium, technique fiable et accompagnement par une équipe dédiée.",
   preferredContactText: "Contact préféré · Discord",
