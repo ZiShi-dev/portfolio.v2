@@ -682,7 +682,7 @@ export function AdminProjectsPanel({
       >
         {editor ? (
           <DialogContent
-            className="flex max-h-[min(92dvh,52rem)] w-[calc(100%-1rem)] max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:w-full sm:p-0"
+            className="flex max-h-[min(92dvh,52rem)] w-[calc(100%-1rem)] min-w-0 max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:w-full sm:p-0"
             closeLabel={t("cancel")}
           >
             <DialogHeader className="shrink-0 border-b border-border px-5 py-4 sm:px-6">
@@ -1220,21 +1220,21 @@ export function AdminProjectsPanel({
                       {t("imagesEmpty")}
                     </p>
                   ) : (
-                    <ul className="grid grid-cols-1 gap-3">
+                    <ul className="grid w-full min-w-0 grid-cols-1 gap-3">
                       {editor.images.map((img, index) => {
                         const fileName =
                           img.url.split("/").pop()?.split("?")[0] || img.url;
                         return (
                           <li
                             key={`${img.url}-${index}`}
-                            className="min-w-0 overflow-hidden rounded-xl border border-border bg-card/60"
+                            className="min-w-0 max-w-full overflow-hidden rounded-xl border border-border bg-card/60"
                           >
-                            <div className="relative w-full bg-muted">
-                              {/* eslint-disable-next-line @next/next/no-img-element -- ratio naturel, sans crop fill */}
+                            <div className="relative w-full min-w-0 max-w-full overflow-hidden bg-muted">
+                              {/* eslint-disable-next-line @next/next/no-img-element -- cadre fluide */}
                               <img
                                 src={img.url}
                                 alt=""
-                                className="block h-auto w-full max-w-full object-contain"
+                                className="mx-auto block h-auto max-h-52 w-full max-w-full object-contain object-center sm:max-h-64"
                                 loading="lazy"
                                 decoding="async"
                               />
