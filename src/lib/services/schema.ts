@@ -16,6 +16,7 @@ export const SERVICE_LIMITS = {
   descriptionMax: 4000,
   idealForMax: 500,
   ctaLabelMax: 80,
+  detailCtaUrlMax: 2048,
   featureMax: 200,
   maxFeatures: 24,
   maxCaseStudies: 12,
@@ -43,6 +44,14 @@ export type ServicePricingMode = (typeof SERVICE_PRICING_MODES)[number];
 export const SERVICE_OFFER_KINDS = ["service", "product"] as const;
 export type ServiceOfferKind = (typeof SERVICE_OFFER_KINDS)[number];
 
+export const SERVICE_DETAIL_CTA_TYPES = [
+  "linked_project",
+  "projects",
+  "custom",
+] as const;
+export type ServiceDetailCtaType =
+  (typeof SERVICE_DETAIL_CTA_TYPES)[number];
+
 export const SERVICE_CURRENCIES = ["EUR", "USD", "GBP", "MAD", "CHF"] as const;
 export type ServiceCurrency = (typeof SERVICE_CURRENCIES)[number];
 
@@ -66,6 +75,21 @@ const uuidSchema = z
   .string()
   .trim()
   .uuid("invalid_uuid");
+
+export function isSafeServiceCtaUrl(value: string): boolean {
+  const url = value.trim();
+  if (!url || url.length > SERVICE_LIMITS.detailCtaUrlMax) return false;
+
+  if (url.startsWith("/")) {
+    return (
+      !url.startsWith("//") &&
+      !url.includes("\\") &&
+      !/[\u0000-\u001f\u007f]/.test(url)
+    );
+  }
+
+  return isSafeHttpUrl(url);
+}
 
 export const serviceWriteSchema = z
   .object({
@@ -103,6 +127,26 @@ export const serviceWriteSchema = z
       .max(SERVICE_LIMITS.maxFeatures)
       .default([]),
     ctaLabel: localeOptional(SERVICE_LIMITS.ctaLabelMax),
+    detailCtaType: z.enum(SERVICE_DETAIL_CTA_TYPES).default("linked_project"),
+    detailCtaUrl: z
+      .string()
+      .trim()
+      .max(SERVICE_LIMITS.detailCtaUrlMax)
+      .nullable()
+      .optional()
+      .transform((v) => {
+        if (v === undefined || v === null || v === "") return null;
+        return v;
+      })
+      .refine(
+        (v) => v === null || isSafeServiceCtaUrl(v),
+        "invalid_detail_cta_url"
+      ),
+    detailCtaLabel: localeOptional(SERVICE_LIMITS.ctaLabelMax).default({
+      fr: "",
+      en: "",
+      ar: "",
+    }),
     offerKind: z.enum(SERVICE_OFFER_KINDS).default("service"),
     showCtaBuy: z.boolean().default(false),
     showCtaStart: z.boolean().default(true),
@@ -154,6 +198,14 @@ export const serviceWriteSchema = z
     seoDescription: localeOptional(SERVICE_LIMITS.seoDescriptionMax),
   })
   .superRefine((data, ctx) => {
+    if (data.detailCtaType === "custom" && !data.detailCtaUrl) {
+      ctx.addIssue({
+        code: "custom",
+        message: "detail_cta_url_required",
+        path: ["detailCtaUrl"],
+      });
+    }
+
     if (
       data.pricingMode === "starting_at" ||
       data.pricingMode === "fixed"
@@ -211,6 +263,27 @@ export const servicePatchSchema = z
     idealFor: serviceWriteSchema.shape.idealFor.optional(),
     includedFeatures: serviceWriteSchema.shape.includedFeatures.optional(),
     ctaLabel: serviceWriteSchema.shape.ctaLabel.optional(),
+    detailCtaType: z.enum(SERVICE_DETAIL_CTA_TYPES).optional(),
+    detailCtaUrl: z
+      .string()
+      .trim()
+      .max(SERVICE_LIMITS.detailCtaUrlMax)
+      .nullable()
+      .optional()
+      .refine(
+        (v) =>
+          v === undefined ||
+          v === null ||
+          v === "" ||
+          isSafeServiceCtaUrl(v),
+        "invalid_detail_cta_url"
+      )
+      .transform((v) => {
+        if (v === undefined) return undefined;
+        if (v === null || v === "") return null;
+        return v;
+      }),
+    detailCtaLabel: localeOptional(SERVICE_LIMITS.ctaLabelMax).optional(),
     offerKind: serviceWriteSchema.shape.offerKind.optional(),
     showCtaBuy: z.boolean().optional(),
     showCtaStart: z.boolean().optional(),
@@ -263,6 +336,14 @@ export const servicePatchSchema = z
   })
   .strict()
   .superRefine((data, ctx) => {
+    if (data.detailCtaType === "custom" && !data.detailCtaUrl) {
+      ctx.addIssue({
+        code: "custom",
+        message: "detail_cta_url_required",
+        path: ["detailCtaUrl"],
+      });
+    }
+
     if (
       (data.pricingMode === "starting_at" || data.pricingMode === "fixed") &&
       data.startingPriceCents === null
@@ -318,6 +399,13 @@ function mapServiceZodError(issues: z.core.$ZodIssue[]): string {
   }
   if (msg === "publish_requires_reference") return "publish_requires_reference";
   if (msg === "starting_price_required") return "starting_price_required";
+  if (
+    msg === "detail_cta_url_required" ||
+    msg === "invalid_detail_cta_url" ||
+    path === "detailCtaUrl"
+  ) {
+    return "service_invalid_detail_cta_url";
+  }
   if (msg === "invalid_slug" || path === "slug") return "service_invalid_slug";
   if (msg === "invalid_icon" || path === "icon") return "service_invalid_icon";
   if (msg === "duplicate_case_study") return "duplicate_case_study";

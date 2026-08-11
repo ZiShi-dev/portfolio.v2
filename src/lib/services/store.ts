@@ -2,6 +2,7 @@ import type { Locale } from "@/i18n/routing";
 import type { ProjectInquiryType } from "@/data/project-inquiry-options";
 import {
   type ServiceCurrency,
+  type ServiceDetailCtaType,
   type ServiceLocale,
   type ServiceOfferKind,
   type ServicePatchInput,
@@ -9,6 +10,7 @@ import {
   type ServiceStatus,
   type ServiceWriteInput,
   SERVICE_CURRENCIES,
+  SERVICE_DETAIL_CTA_TYPES,
   SERVICE_OFFER_KINDS,
   SERVICE_PRICING_MODES,
   SERVICE_STATUSES,
@@ -42,6 +44,9 @@ export type ServiceRow = {
   ideal_for: ServiceI18n;
   included_features: ServiceFeatureStored[];
   cta_label: ServiceI18n;
+  detail_cta_type: ServiceDetailCtaType;
+  detail_cta_url: string | null;
+  detail_cta_label: ServiceI18n;
   offer_kind: ServiceOfferKind;
   show_cta_buy: boolean;
   show_cta_start: boolean;
@@ -70,6 +75,9 @@ export type LocalizedService = {
   idealFor: string;
   includedFeatures: string[];
   ctaLabel: string;
+  detailCtaType: ServiceDetailCtaType;
+  detailCtaUrl: string | null;
+  detailCtaLabel: string;
   offerKind: ServiceOfferKind;
   showCtaBuy: boolean;
   showCtaStart: boolean;
@@ -88,7 +96,7 @@ const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const SERVICE_SELECT =
-  "id, created_at, updated_at, reference, slug, icon, status, featured, sort_order, title, short_description, description, ideal_for, included_features, cta_label, offer_kind, show_cta_buy, show_cta_start, cover_image, linked_project_id, pricing_mode, starting_price_cents, currency, inquiry_project_type, seo_title, seo_description, published_at";
+  "id, created_at, updated_at, reference, slug, icon, status, featured, sort_order, title, short_description, description, ideal_for, included_features, cta_label, detail_cta_type, detail_cta_url, detail_cta_label, offer_kind, show_cta_buy, show_cta_start, cover_image, linked_project_id, pricing_mode, starting_price_cents, currency, inquiry_project_type, seo_title, seo_description, published_at";
 
 function asI18n(value: unknown, fallback = ""): ServiceI18n {
   const obj = (value && typeof value === "object" ? value : {}) as Record<
@@ -144,6 +152,16 @@ function asOfferKind(value: unknown): ServiceOfferKind {
   return "service";
 }
 
+function asDetailCtaType(value: unknown): ServiceDetailCtaType {
+  if (
+    typeof value === "string" &&
+    (SERVICE_DETAIL_CTA_TYPES as readonly string[]).includes(value)
+  ) {
+    return value as ServiceDetailCtaType;
+  }
+  return "linked_project";
+}
+
 function asCurrency(value: unknown): ServiceCurrency {
   if (
     typeof value === "string" &&
@@ -191,6 +209,12 @@ function normalizeRow(
     ideal_for: asI18n(raw.ideal_for),
     included_features: asFeatures(raw.included_features),
     cta_label: asI18n(raw.cta_label),
+    detail_cta_type: asDetailCtaType(raw.detail_cta_type),
+    detail_cta_url:
+      typeof raw.detail_cta_url === "string" && raw.detail_cta_url.trim()
+        ? raw.detail_cta_url.trim()
+        : null,
+    detail_cta_label: asI18n(raw.detail_cta_label),
     offer_kind: asOfferKind(raw.offer_kind),
     show_cta_buy: Boolean(raw.show_cta_buy),
     show_cta_start:
@@ -249,6 +273,9 @@ export function serviceRowToLocalized(
       .map((f) => pickLocale(f, locale))
       .filter(Boolean),
     ctaLabel: pickLocale(row.cta_label, locale),
+    detailCtaType: row.detail_cta_type,
+    detailCtaUrl: row.detail_cta_url,
+    detailCtaLabel: pickLocale(row.detail_cta_label, locale),
     offerKind: row.offer_kind,
     showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
@@ -353,6 +380,10 @@ function writeToDbPayload(input: ServiceWriteInput) {
     ideal_for: input.idealFor,
     included_features: input.includedFeatures,
     cta_label: input.ctaLabel,
+    detail_cta_type: input.detailCtaType,
+    detail_cta_url:
+      input.detailCtaType === "custom" ? input.detailCtaUrl : null,
+    detail_cta_label: input.detailCtaLabel,
     offer_kind: input.offerKind,
     show_cta_buy: input.showCtaBuy,
     show_cta_start: input.showCtaStart,
@@ -398,6 +429,19 @@ function patchToDbPayload(
     payload.included_features = input.includedFeatures;
   }
   if (input.ctaLabel !== undefined) payload.cta_label = input.ctaLabel;
+  if (input.detailCtaType !== undefined) {
+    payload.detail_cta_type = input.detailCtaType;
+    if (input.detailCtaType !== "custom") payload.detail_cta_url = null;
+  }
+  if (input.detailCtaUrl !== undefined) {
+    payload.detail_cta_url =
+      (input.detailCtaType ?? current.detail_cta_type) === "custom"
+        ? input.detailCtaUrl
+        : null;
+  }
+  if (input.detailCtaLabel !== undefined) {
+    payload.detail_cta_label = input.detailCtaLabel;
+  }
   if (input.offerKind !== undefined) payload.offer_kind = input.offerKind;
   if (input.showCtaBuy !== undefined) payload.show_cta_buy = input.showCtaBuy;
   if (input.showCtaStart !== undefined) {
@@ -788,6 +832,9 @@ export async function duplicateService(
     idealFor: { ...source.ideal_for },
     includedFeatures: source.included_features.map((f) => ({ ...f })),
     ctaLabel: { ...source.cta_label },
+    detailCtaType: source.detail_cta_type,
+    detailCtaUrl: source.detail_cta_url,
+    detailCtaLabel: { ...source.detail_cta_label },
     offerKind: source.offer_kind,
     showCtaBuy: source.show_cta_buy,
     showCtaStart: source.show_cta_start,

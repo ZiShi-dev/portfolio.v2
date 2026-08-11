@@ -133,6 +133,8 @@
     "viewCaseStudy": "عرض إنجاز",
     "linkedProjectEyebrow": "المشروع المعروض للبيع",
     "viewLinkedProject": "عرض تفاصيل المشروع",
+    "viewProjects": "عرض جميع المشاريع",
+    "visitExternalLink": "اكتشف المشروع",
     "offerKind": {
       "service": "خدمة",
       "product": "للبيع"
@@ -817,6 +819,7 @@
       "service_invalid_features": "عناصر غير صالحة.",
       "service_invalid_pricing": "تسعير غير صالح.",
       "service_invalid_case_studies": "دراسات حالة غير صالحة.",
+      "service_invalid_detail_cta_url": "رابط زر المشروع غير صالح أو مفقود.",
       "starting_price_required": "سعر البداية مطلوب لهذا النمط.",
       "publish_requires_short_description": "وصف قصير بالفرنسية مطلوب للنشر.",
       "publish_requires_reference": "المرجع مطلوب للنشر.",
@@ -1035,6 +1038,11 @@
         "service": "خدمة",
         "product": "للبيع"
       },
+      "detailCtaType": {
+        "linked_project": "المشروع المرتبط",
+        "projects": "صفحة جميع المشاريع",
+        "custom": "رابط مخصص"
+      },
       "commerceHint": "النوع يغذي فلتر الكتالوج. الخانات تتحكم بالأزرار الظاهرة على الموقع.",
       "uploadCover": "رفع صورة",
       "removeCover": "إزالة",
@@ -1043,7 +1051,7 @@
         "commerce": "النوع والأزرار",
         "pricing": "السعر",
         "features": "العناصر المشمولة",
-        "caseStudies": "دراسات الحالة"
+        "caseStudies": "المشاريع ورابط التفاصيل"
       },
       "fields": {
         "reference": "المرجع",
@@ -1066,12 +1074,19 @@
         "shortDescription": "وصف قصير",
         "description": "الوصف",
         "idealFor": "مثالي لـ",
-        "ctaLabel": "نص زر ابدأ"
+        "ctaLabel": "نص زر ابدأ",
+        "detailCtaType": "وجهة زر المشروع",
+        "detailCtaUrl": "رابط مخصص",
+        "detailCtaLabel": "نص زر المشروع"
       },
       "hints": {
         "coverImage": "معطّل: الصورة تأتي من المشروع المرتبط.",
-        "linkedProject": "اربط مشروعاً منشوراً: تظهر صوره على العرض. بدون مشروع مرتبط لا توجد صورة."
+        "linkedProject": "اربط مشروعاً منشوراً: تظهر صوره على العرض. بدون مشروع مرتبط لا توجد صورة.",
+        "detailCtaType": "اختر وجهة الزر الظاهر في صفحة العرض.",
+        "detailCtaUrl": "مسار داخلي (/projets) أو رابط HTTP(S) كامل.",
+        "detailCtaLabel": "اختياري. عند تركه فارغاً يُستخدم نص تلقائي."
       },
+      "detailCtaLabelPlaceholder": "عرض المشروع",
       "linkedProjectNone": "لا يوجد مشروع مرتبط",
       "caseStudiesHint": "دراسات حالة ثانوية تظهر تحت المشروع الرئيسي.",
       "duplicate": "تكرار",

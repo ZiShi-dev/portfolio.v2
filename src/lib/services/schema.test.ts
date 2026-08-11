@@ -98,9 +98,44 @@ describe("services schema", () => {
     if (!parsed.ok) assert.equal(parsed.error, "service_invalid_slug");
   });
 
+  it("accepte les destinations projet lié et page projets", () => {
+    for (const detailCtaType of ["linked_project", "projects"]) {
+      const parsed = parseServiceWriteBody(valid({ detailCtaType }));
+      assert.equal(parsed.ok, true, detailCtaType);
+    }
+  });
+
+  it("accepte une URL CTA interne ou HTTPS", () => {
+    for (const detailCtaUrl of [
+      "/projets",
+      "/projets/atlas-celeste",
+      "https://example.com/project",
+    ]) {
+      const parsed = parseServiceWriteBody(
+        valid({ detailCtaType: "custom", detailCtaUrl })
+      );
+      assert.equal(parsed.ok, true, detailCtaUrl);
+    }
+  });
+
+  it("rejette une destination personnalisée vide ou dangereuse", () => {
+    for (const detailCtaUrl of ["", "//evil.example", "javascript:alert(1)"]) {
+      const parsed = parseServiceWriteBody(
+        valid({ detailCtaType: "custom", detailCtaUrl })
+      );
+      assert.equal(parsed.ok, false, detailCtaUrl || "(vide)");
+      if (!parsed.ok) {
+        assert.equal(parsed.error, "service_invalid_detail_cta_url");
+      }
+    }
+  });
+
   it("parse patch non vide", () => {
     const parsed = parseServicePatchBody({ featured: true });
     assert.equal(parsed.ok, true);
+    if (parsed.ok) {
+      assert.deepEqual(parsed.values, { featured: true });
+    }
   });
 
   it("rejette patch vide", () => {

@@ -31,6 +31,34 @@ type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
+function DetailCtaButton({
+  href,
+  label,
+  className,
+}: {
+  href: string;
+  label: string;
+  className?: string;
+}) {
+  const external = /^https?:\/\//i.test(href);
+
+  return (
+    <Button asChild variant="outline" size="lg" className={className}>
+      {external ? (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {label}
+          <ArrowUpRight className="h-4 w-4" aria-hidden />
+        </a>
+      ) : (
+        <Link href={href}>
+          {label}
+          <ArrowUpRight className="h-4 w-4" aria-hidden />
+        </Link>
+      )}
+    </Button>
+  );
+}
+
 export async function generateStaticParams() {
   const services = await getSiteServices("fr");
   return services.map((s) => ({ slug: s.slug }));
@@ -106,7 +134,29 @@ export default async function OffreDetailPage({ params }: PageProps) {
 
   const linkedProject =
     related.find((p) => p.id === service.linkedProjectId) ?? null;
+  const fallbackProject = linkedProject ?? related[0] ?? null;
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
+  const detailCta =
+    service.detailCtaType === "custom" && service.detailCtaUrl
+      ? {
+          href: service.detailCtaUrl,
+          label: service.detailCtaLabel.trim() || t("visitExternalLink"),
+        }
+      : service.detailCtaType === "projects"
+        ? {
+            href: routes.projects,
+            label: service.detailCtaLabel.trim() || t("viewProjects"),
+          }
+        : fallbackProject
+          ? {
+              href: `${routes.projects}/${fallbackProject.slug}`,
+              label:
+                service.detailCtaLabel.trim() ||
+                (linkedProject
+                  ? t("viewLinkedProject")
+                  : t("viewCaseStudy")),
+            }
+          : null;
   const faqs = await getSiteFaqsForService(locale, service.id);
 
   return (
@@ -247,12 +297,13 @@ export default async function OffreDetailPage({ params }: PageProps) {
                 {linkedProject.reference}
               </p>
             ) : null}
-            <Button asChild size="lg" className="mt-5 min-h-12 w-full sm:w-auto">
-              <Link href={`${routes.projects}/${linkedProject.slug}`}>
-                {t("viewLinkedProject")}
-                <ArrowUpRight className="h-4 w-4" aria-hidden />
-              </Link>
-            </Button>
+            {service.detailCtaType === "linked_project" && detailCta ? (
+              <DetailCtaButton
+                href={detailCta.href}
+                label={detailCta.label}
+                className="mt-5 min-h-12 w-full sm:w-auto"
+              />
+            ) : null}
           </section>
         ) : null}
 
@@ -321,18 +372,12 @@ export default async function OffreDetailPage({ params }: PageProps) {
               </ContactOpenLink>
             </Button>
           ) : null}
-          {linkedProject ? (
-            <Button asChild variant="outline" size="lg" className="min-h-12">
-              <Link href={`${routes.projects}/${linkedProject.slug}`}>
-                {t("viewLinkedProject")}
-              </Link>
-            </Button>
-          ) : related[0] ? (
-            <Button asChild variant="outline" size="lg" className="min-h-12">
-              <Link href={`${routes.projects}/${related[0].slug}`}>
-                {t("viewCaseStudy")}
-              </Link>
-            </Button>
+          {detailCta ? (
+            <DetailCtaButton
+              href={detailCta.href}
+              label={detailCta.label}
+              className="min-h-12"
+            />
           ) : (
             <Button asChild variant="outline" size="lg" className="min-h-12">
               <Link href={routes.services}>{t("backToCatalog")}</Link>

@@ -133,6 +133,8 @@
     "viewCaseStudy": "View a case study",
     "linkedProjectEyebrow": "Project for sale",
     "viewLinkedProject": "View project details",
+    "viewProjects": "View all projects",
+    "visitExternalLink": "Discover the project",
     "offerKind": {
       "service": "Service",
       "product": "For sale"
@@ -817,6 +819,7 @@
       "service_invalid_features": "Invalid included items.",
       "service_invalid_pricing": "Invalid pricing.",
       "service_invalid_case_studies": "Invalid case studies.",
+      "service_invalid_detail_cta_url": "The project button URL is invalid or missing.",
       "starting_price_required": "Starting price required for this mode.",
       "publish_requires_short_description": "FR short description required to publish.",
       "publish_requires_reference": "Reference required to publish.",
@@ -1035,6 +1038,11 @@
         "service": "Service",
         "product": "For sale"
       },
+      "detailCtaType": {
+        "linked_project": "Linked project",
+        "projects": "All projects page",
+        "custom": "Custom URL"
+      },
       "commerceHint": "Offer type powers the catalog filter. Checkboxes control which buttons appear on the site.",
       "uploadCover": "Upload photo",
       "removeCover": "Remove",
@@ -1043,7 +1051,7 @@
         "commerce": "Type & buttons",
         "pricing": "Pricing",
         "features": "Included items",
-        "caseStudies": "Linked case studies"
+        "caseStudies": "Projects & detail link"
       },
       "fields": {
         "reference": "Reference",
@@ -1066,12 +1074,19 @@
         "shortDescription": "Short description",
         "description": "Description",
         "idealFor": "Ideal for",
-        "ctaLabel": "Start CTA label"
+        "ctaLabel": "Start CTA label",
+        "detailCtaType": "Project button destination",
+        "detailCtaUrl": "Custom URL",
+        "detailCtaLabel": "Project button label"
       },
       "hints": {
         "coverImage": "Disabled: the photo comes from the linked project.",
-        "linkedProject": "Link a published project: its images appear on the offer. Without a linked project, no image."
+        "linkedProject": "Link a published project: its images appear on the offer. Without a linked project, no image.",
+        "detailCtaType": "Choose where the button on the offer page leads.",
+        "detailCtaUrl": "Internal path (/projects) or complete HTTP(S) URL.",
+        "detailCtaLabel": "Optional. Empty uses an automatic label for the destination."
       },
+      "detailCtaLabelPlaceholder": "View project",
       "linkedProjectNone": "No linked project",
       "caseStudiesHint": "Secondary case studies shown under the main project.",
       "duplicate": "Duplicate",
