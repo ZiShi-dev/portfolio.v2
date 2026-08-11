@@ -27,9 +27,10 @@ Toute référence aux chemins passe par `src/lib/brand.ts` quand c’est possibl
 
 | Rôle | Fichier | Usage |
 |------|---------|--------|
-| Logo (navbar, footer, SEO) | `public/images/logo-vorzix.png` | Carré, fond nuit opaque `#0A0E1A`, monogramme ivoire + or |
-| Bannière hero | `public/images/hero-banner.jpg` | Visuel principal à droite du hero (accueil) |
-| Bannière (variante dark) | `public/images/hero-banner-dark.jpg` | Même motif, pour thèmes / partages sombres |
+| Logo UI (navbar, footer) | `public/images/logo-vorzix-mark.png` | 96×96, fond nuit opaque `#0A0E1A` |
+| Logo large (OG / SEO) | `public/images/logo-vorzix.png` | 256×256, même monogramme |
+| Bannière hero | `public/images/hero-banner-atlas.jpg` (+ variantes `-1280`/`-1920` `.webp`/`.jpg`) | Visuel plein écran du hero |
+| Bannière (variante dark) | même fichier que `hero-banner-atlas.jpg` | Alias logique via `brand.heroBannerDark` |
 | Favicon 32 | `public/images/favicon-32.png` | Onglet navigateur |
 | Favicon Apple | `public/images/favicon-180.png` | Écran d’accueil iOS |
 | Favicon PWA | `public/images/favicon-192.png` | Icône application |
@@ -37,7 +38,8 @@ Toute référence aux chemins passe par `src/lib/brand.ts` quand c’est possibl
 
 Chemins déclarés dans `src/lib/brand.ts` :
 
-- `brand.profileImage` → logo
+- `brand.profileImage` → logo UI (mark)
+- `brand.profileImageLarge` → logo OG / JSON-LD
 - `brand.heroBanner` / `brand.heroBannerDark` → bannières
 
 ---

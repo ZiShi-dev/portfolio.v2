@@ -21,10 +21,23 @@ const subscribeToHydration = () => () => {};
 const getClientHydrationSnapshot = () => true;
 const getServerHydrationSnapshot = () => false;
 
+/** Variantes responsives — WebP d’abord, JPEG en secours (mauvais Wi‑Fi). */
+const HERO_SOURCES = {
+  webp: [
+    { src: "/images/hero-banner-atlas-1280.webp", width: 1280 },
+    { src: "/images/hero-banner-atlas-1920.webp", width: 1920 },
+  ],
+  jpeg: [
+    { src: "/images/hero-banner-atlas-1280.jpg", width: 1280 },
+    { src: "/images/hero-banner-atlas-1920.jpg", width: 1920 },
+    { src: brand.heroBanner, width: 1920 },
+  ],
+} as const;
+
 /**
- * Bannière en `<img>` natif (pas via /_next/image) :
- * - évite re-encode Sharp / timeouts
- * - sert le JPEG déjà optimisé tel quel
+ * Bannière en `<picture>` natif (pas via /_next/image) :
+ * - sert WebP/JPEG déjà optimisés
+ * - évite de télécharger le plein HD sur mobile
  */
 function HeroImage({
   className,
@@ -35,18 +48,30 @@ function HeroImage({
   alt?: string;
   priority?: boolean;
 }) {
+  const webpSrcSet = HERO_SOURCES.webp
+    .map((item) => `${item.src} ${item.width}w`)
+    .join(", ");
+  const jpegSrcSet = HERO_SOURCES.jpeg
+    .map((item) => `${item.src} ${item.width}w`)
+    .join(", ");
+
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- asset local HD, éviter l’optimiseur Next
-    <img
-      src={brand.heroBanner}
-      alt={alt}
-      width={3072}
-      height={1728}
-      decoding="async"
-      fetchPriority={priority ? "high" : "auto"}
-      draggable={false}
-      className={className}
-    />
+    <picture>
+      <source type="image/webp" srcSet={webpSrcSet} sizes="100vw" />
+      <source type="image/jpeg" srcSet={jpegSrcSet} sizes="100vw" />
+      {/* eslint-disable-next-line @next/next/no-img-element -- asset local HD, éviter l’optimiseur Next */}
+      <img
+        src={brand.heroBanner}
+        alt={alt}
+        width={1920}
+        height={1080}
+        sizes="100vw"
+        decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
+        draggable={false}
+        className={className}
+      />
+    </picture>
   );
 }
 

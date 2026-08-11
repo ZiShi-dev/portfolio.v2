@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
      * Inclure 70 (blur placeholder) — Next le pousse en dev et mute le tableau.
      */
     qualities: [70, 75, 90, 95, 100],
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
@@ -53,6 +54,15 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: securityHeaders,
+      },
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
       },
       {
         // OWASP A02/A05 — admin jamais en cache, jamais indexé

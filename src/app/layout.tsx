@@ -19,29 +19,37 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
+  display: "swap",
 });
 
 const instrumentSans = Instrument_Sans({
   variable: "--font-instrument-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "swap",
 });
 
 const amiri = Amiri({
-  variable: "--font-amiri",
+  variable: "--font-arabic-display",
   subsets: ["arabic"],
   weight: ["400", "700"],
+  display: "swap",
+  preload: false,
 });
 
 const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-arabic-body",
   subsets: ["arabic"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: false,
 });
 
 export const viewport = {
@@ -93,6 +101,7 @@ export default async function RootLayout({
   const locale = (await getLocale()) as Locale;
   const dir = getLocaleDirection(locale);
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const isArabic = locale === "ar";
 
   return (
     <html
@@ -105,8 +114,8 @@ export default async function RootLayout({
         fraunces.variable,
         instrumentSans.variable,
         ibmPlexMono.variable,
-        amiri.variable,
-        ibmPlexArabic.variable,
+        isArabic && amiri.variable,
+        isArabic && ibmPlexArabic.variable,
         "dark h-full antialiased"
       )}
       style={{ colorScheme: "dark" }}

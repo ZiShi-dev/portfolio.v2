@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { BrandName } from "@/components/brand-name";
 import { brand } from "@/lib/brand";
@@ -23,11 +22,13 @@ function VorzixMark({ className }: { className?: string }) {
       aria-hidden
     >
       {/* img natif : évite le cache agressif de next/image sur les assets statiques */}
-      <Image
+      {/* eslint-disable-next-line @next/next/no-img-element -- logo marque, PNG opaque nuit */}
+      <img
         src={brand.profileImage}
         alt=""
-        width={36}
-        height={36}
+        width={96}
+        height={96}
+        decoding="async"
         className="h-full w-full object-cover"
       />
     </span>
