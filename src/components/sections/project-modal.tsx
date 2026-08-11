@@ -145,7 +145,7 @@ function ProjectModalContent({ project, onClose }: ProjectModalProps) {
                 <div className="mt-4 flex flex-wrap items-center gap-2">
                   <ProjectTypeBadges
                     businessTypeIds={project.businessTypeIds}
-                    tags={project.tags}
+                    tags={project.technologies}
                     className="mt-0"
                   />
                   {project.link && isSafeHttpUrl(project.link) && (

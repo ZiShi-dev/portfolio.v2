@@ -64,7 +64,7 @@ export function ProjectCard({
         </p>
         <ProjectTypeBadges
           businessTypeIds={project.businessTypeIds}
-          tags={project.technologies?.length ? project.technologies : project.tags}
+          tags={project.technologies}
         />
         <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary/75">
           {t("viewCase")}

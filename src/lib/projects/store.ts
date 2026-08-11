@@ -1,5 +1,4 @@
 import type { Locale } from "@/i18n/routing";
-import { resolveProjectBusinessTypeLabels } from "@/data/project-business-types";
 import {
   projectCatalog,
   type LocalizedProjectItem,
@@ -193,10 +192,8 @@ export function projectRowToLocalized(
     title: pickLocale(row.title, locale),
     category: categoryLabel,
     desc: pickLocale(row.description, locale),
-    tags: [
-      ...resolveProjectBusinessTypeLabels(row.business_type_ids),
-      ...row.technologies,
-    ],
+    // tags = stack technique uniquement (les types métier passent par businessTypeIds + i18n).
+    tags: row.technologies,
     businessTypeIds: row.business_type_ids,
     technologies: row.technologies,
     images,
