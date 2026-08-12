@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, MessageSquare, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, MessageSquare } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { Button } from "@/components/ui/button";
@@ -18,12 +18,11 @@ type ServiceOfferCardProps = {
 
 /**
  * Carte catalogue compacte : description tronquée (3 lignes).
- * Produits « à vendre » : photo + prix mis en avant.
+ * Image éventuelle via projet lié.
  */
 export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
   const t = useTranslations("services");
   const locale = useLocale();
-  const isProduct = service.offerKind === "product";
 
   const price = resolveServicePriceDisplay({
     pricingMode: service.pricingMode,
@@ -40,7 +39,6 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
 
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
   const detailHref = serviceDetailPath(service.slug);
-  const showBuy = service.showCtaBuy;
   const showStart = service.showCtaStart;
   const showCover = Boolean(service.coverImage);
 
@@ -60,11 +58,6 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
               loading="lazy"
               decoding="async"
             />
-            <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#070A12]/85 to-transparent px-4 pb-3 pt-10">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
-                {t(`offerKind.${service.offerKind}`)}
-              </span>
-            </span>
           </Link>
         ) : null}
 
@@ -72,14 +65,6 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
           <div className="flex items-center justify-between gap-3">
             <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
               {service.reference}
-              {!showCover ? (
-                <>
-                  <span className="mx-1.5 text-border-gold/60">·</span>
-                  <span className="text-muted-foreground">
-                    {t(`offerKind.${service.offerKind}`)}
-                  </span>
-                </>
-              ) : null}
             </span>
             {!showCover ? (
               <div
@@ -107,7 +92,7 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
           <p
             className={cn(
               "mt-4 font-mono tracking-wide text-foreground/80",
-              isProduct || price.mode === "fixed"
+              price.mode === "fixed"
                 ? "text-sm font-medium text-primary sm:text-base"
                 : "text-[11px]"
             )}
@@ -116,27 +101,8 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
           </p>
 
           <div className="mt-auto flex flex-col gap-2 pt-5">
-            {showBuy ? (
-              <Button asChild size="default" className="min-h-11 w-full">
-                <ContactOpenLink
-                  serviceSlug={service.slug}
-                  serviceId={service.id}
-                  serviceReference={service.reference}
-                  projectType={service.inquiryProjectType}
-                  intent="buy"
-                >
-                  <ShoppingBag className="h-4 w-4" aria-hidden />
-                  {t("ctaBuy")}
-                </ContactOpenLink>
-              </Button>
-            ) : null}
             {showStart ? (
-              <Button
-                asChild
-                size="default"
-                variant={showBuy ? "outline" : "default"}
-                className="min-h-11 w-full"
-              >
+              <Button asChild size="default" className="min-h-11 w-full">
                 <ContactOpenLink
                   serviceSlug={service.slug}
                   serviceId={service.id}

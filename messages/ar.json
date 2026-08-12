@@ -86,7 +86,7 @@
     "eyebrow": "كتالوج · العروض",
     "title": "منتجات رقمية صُمّمت بـ",
     "titleHighlight": "دقة.",
-    "subtitle": "كل تسليم مُخطَّط: واضح، قابل للقياس، جاهز للتحويل — مواقع وتطبيقات ومنصات.",
+    "subtitle": "خدمات وروابط إلى إنجازاتنا — كل مشروع يُعرض بصورته الخاصة.",
     "discover": "اكتشف",
     "cta": "التحدث عن احتياجك",
     "page": {
@@ -131,16 +131,20 @@
     "detailPricing": "التسعير",
     "relatedProjects": "أعمال مرتبطة",
     "viewCaseStudy": "عرض إنجاز",
-    "linkedProjectEyebrow": "المشروع المعروض للبيع",
+    "linkedProjectEyebrow": "مشروع منجز",
     "viewLinkedProject": "عرض تفاصيل المشروع",
+    "projectLinksHeading": "روابط المشاريع المنجزة",
+    "servicesHeading": "خدماتنا",
+    "projectLinkBadge": "إنجاز",
+    "viewProjectLink": "عرض المشروع",
     "offerKind": {
       "service": "خدمة",
-      "product": "للبيع"
+      "product": "خدمة"
     },
     "filter": {
       "label": "تصفية العروض",
       "all": "الكل",
-      "product": "للبيع",
+      "product": "خدمات",
       "service": "خدمات",
       "empty": "لا عروض في هذا التصفية."
     },
@@ -154,7 +158,7 @@
     },
     "catalogTitle": "عروضنا",
     "catalogTitleHighlight": "التجارية.",
-    "catalogSubtitle": "اختر الحل المناسب لاحتياجك — لكل عرض صفحة تفصيلية.",
+    "catalogSubtitle": "تصفّح مشاريعنا المنجزة وخدماتنا — صورة كل مشروع تأتي من المشروع نفسه.",
     "viewAll": "عرض كل العروض"
   },
   "engagements": {
@@ -1034,14 +1038,14 @@
       },
       "offerKind": {
         "service": "خدمة",
-        "product": "للبيع"
+        "product": "خدمة"
       },
-      "commerceHint": "النوع يغذي فلتر الكتالوج. الخانات تتحكم بالأزرار الظاهرة على الموقع.",
+      "commerceHint": "يتحكم بزر « ابدأ مشروعاً » في الصفحة العامة. روابط المشاريع المنجزة تأتي من المشروع المرتبط.",
       "uploadCover": "رفع صورة",
       "removeCover": "إزالة",
       "sections": {
         "identity": "الهوية",
-        "commerce": "النوع والأزرار",
+        "commerce": "الأزرار",
         "pricing": "السعر",
         "features": "العناصر المشمولة",
         "caseStudies": "دراسات الحالة"

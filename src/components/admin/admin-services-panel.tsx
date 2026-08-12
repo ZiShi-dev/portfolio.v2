@@ -51,7 +51,6 @@ import { SERVICE_ICON_KEYS } from "@/lib/services/icons";
 import {
   SERVICE_CURRENCIES,
   SERVICE_LIMITS,
-  SERVICE_OFFER_KINDS,
   SERVICE_PRICING_MODES,
   SERVICE_STATUSES,
   parseServiceWriteBody,
@@ -150,8 +149,8 @@ function rowToEditor(row: ServiceRow): EditorState {
     idealFor: { ...row.ideal_for },
     includedFeatures: row.included_features.map((f) => ({ ...f })),
     ctaLabel: { ...row.cta_label },
-    offerKind: row.offer_kind,
-    showCtaBuy: row.show_cta_buy,
+    offerKind: "service",
+    showCtaBuy: false,
     showCtaStart: row.show_cta_start,
     linkedProjectId: row.linked_project_id ?? "",
     pricingMode: row.pricing_mode,
@@ -183,8 +182,9 @@ function editorToPayload(editor: EditorState) {
     idealFor: editor.idealFor,
     includedFeatures: editor.includedFeatures.filter((f) => f.fr.trim()),
     ctaLabel: editor.ctaLabel,
-    offerKind: editor.offerKind,
-    showCtaBuy: editor.showCtaBuy,
+    // Catalogue public : plus d’offres « à vendre ».
+    offerKind: "service" as const,
+    showCtaBuy: false,
     showCtaStart: editor.showCtaStart,
     // Image publique = images du projet lié uniquement (plus de cover admin).
     coverImage: null,
@@ -466,9 +466,6 @@ export function AdminServicesPanel({
                         {row.reference}
                       </span>
                       <StatusBadge status={row.status} t={t} />
-                      <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground/70">
-                        {t(`offerKind.${row.offer_kind}`)}
-                      </span>
                       {row.featured ? (
                         <span className="rounded-full border border-border-gold/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-primary/80">
                           {t("cols.featured")}
@@ -735,68 +732,22 @@ export function AdminServicesPanel({
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.commerce")}
               </h3>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <FormField label={t("fields.offerKind")} id="svc-kind">
-                  <Select
-                    value={editor.offerKind}
-                    onValueChange={(v) => {
-                      const kind = v as ServiceOfferKind;
+              <div className="flex flex-col gap-2">
+                <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
+                  <input
+                    type="checkbox"
+                    checked={editor.showCtaStart}
+                    onChange={(e) =>
                       setEditor((p) => ({
                         ...p,
-                        offerKind: kind,
-                        showCtaBuy:
-                          kind === "product" ? true : p.showCtaBuy,
-                        showCtaStart:
-                          kind === "service" ? true : p.showCtaStart,
-                        pricingMode:
-                          kind === "product" &&
-                          (p.pricingMode === "quote_only" ||
-                            p.pricingMode === "contact")
-                            ? "fixed"
-                            : p.pricingMode,
-                      }));
-                    }}
-                  >
-                    <SelectTrigger id="svc-kind">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SERVICE_OFFER_KINDS.map((k) => (
-                        <SelectItem key={k} value={k}>
-                          {t(`offerKind.${k}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormField>
-                <div className="flex flex-col justify-end gap-2 sm:col-span-1">
-                  <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
-                    <input
-                      type="checkbox"
-                      checked={editor.showCtaBuy}
-                      onChange={(e) =>
-                        setEditor((p) => ({
-                          ...p,
-                          showCtaBuy: e.target.checked,
-                        }))
-                      }
-                    />
-                    {t("fields.showCtaBuy")}
-                  </label>
-                  <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
-                    <input
-                      type="checkbox"
-                      checked={editor.showCtaStart}
-                      onChange={(e) =>
-                        setEditor((p) => ({
-                          ...p,
-                          showCtaStart: e.target.checked,
-                        }))
-                      }
-                    />
-                    {t("fields.showCtaStart")}
-                  </label>
-                </div>
+                        offerKind: "service",
+                        showCtaBuy: false,
+                        showCtaStart: e.target.checked,
+                      }))
+                    }
+                  />
+                  {t("fields.showCtaStart")}
+                </label>
               </div>
               <p className="text-xs text-foreground/50">{t("commerceHint")}</p>
             </section>

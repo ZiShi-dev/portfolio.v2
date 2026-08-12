@@ -48,16 +48,19 @@ function localizeWithLinkedCover(
  * Offres publiées pour le site. Tableau vide si BDD absente / vide
  * (pas de hardcode frontend — le seed SQL porte le contenu initial).
  * Image : uniquement via projet lié (sinon null).
+ * Les offres « à vendre » (product) sont exclues du catalogue public.
  */
 export async function getSiteServices(
   locale: Locale
 ): Promise<LocalizedService[]> {
   const rows = await listPublishedServiceRows();
   if (!rows || rows.length === 0) return [];
+  const catalogRows = rows.filter((row) => row.offer_kind !== "product");
+  if (catalogRows.length === 0) return [];
   const covers = await linkedProjectCoverById(
-    rows.map((r) => r.linked_project_id)
+    catalogRows.map((r) => r.linked_project_id)
   );
-  return rows.map((row) => localizeWithLinkedCover(row, locale, covers));
+  return catalogRows.map((row) => localizeWithLinkedCover(row, locale, covers));
 }
 
 export async function getSiteServiceBySlug(
@@ -65,7 +68,7 @@ export async function getSiteServiceBySlug(
   slug: string
 ): Promise<LocalizedService | null> {
   const row = await getPublishedServiceBySlug(slug);
-  if (!row) return null;
+  if (!row || row.offer_kind === "product") return null;
   const covers = await linkedProjectCoverById([row.linked_project_id]);
   return localizeWithLinkedCover(row, locale, covers);
 }

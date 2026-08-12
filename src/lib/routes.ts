@@ -19,7 +19,8 @@ export const homeAnchors = {
   services: "#services",
   engagements: "#engagements",
   journey: "#parcours",
-  projects: "#projets",
+  /** Les projets s’affichent dans Catalogue · Offres (#services). */
+  projects: "#services",
   about: "#a-propos",
   reviews: "#avis",
   faq: "#faq",

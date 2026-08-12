@@ -16,9 +16,6 @@ import type { Locale } from "@/i18n/routing";
 const Journey = dynamic(
   () => import("@/components/sections/journey").then((m) => m.Journey)
 );
-const Projects = dynamic(
-  () => import("@/components/sections/projects").then((m) => m.Projects)
-);
 const About = dynamic(
   () => import("@/components/sections/about").then((m) => m.About)
 );
@@ -57,10 +54,9 @@ export default async function Home() {
   return (
     <>
       <HomeSection />
-      <Services services={services} />
+      <Services services={services} projects={projects} />
       <Engagements engagements={engagements} />
       <Journey />
-      <Projects projects={projects} />
       <Testimonials reviews={reviews} />
       <FaqSection faqs={faqs} />
       <About />

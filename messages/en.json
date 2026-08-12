@@ -86,7 +86,7 @@
     "eyebrow": "Catalog · Offers",
     "title": "Digital products crafted with",
     "titleHighlight": "precision.",
-    "subtitle": "Every deliverable is mapped: clear, measurable, built to convert — sites, apps and platforms.",
+    "subtitle": "Services and links to our work — each project is shown with its own image.",
     "discover": "Discover",
     "cta": "Talk about your needs",
     "page": {
@@ -131,16 +131,20 @@
     "detailPricing": "Pricing",
     "relatedProjects": "Related work",
     "viewCaseStudy": "View a case study",
-    "linkedProjectEyebrow": "Project for sale",
+    "linkedProjectEyebrow": "Completed project",
     "viewLinkedProject": "View project details",
+    "projectLinksHeading": "Completed project links",
+    "servicesHeading": "Our services",
+    "projectLinkBadge": "Project",
+    "viewProjectLink": "View project",
     "offerKind": {
       "service": "Service",
-      "product": "For sale"
+      "product": "Service"
     },
     "filter": {
       "label": "Filter offers",
       "all": "All",
-      "product": "For sale",
+      "product": "Services",
       "service": "Services",
       "empty": "No offers in this filter."
     },
@@ -154,7 +158,7 @@
     },
     "catalogTitle": "Our commercial",
     "catalogTitleHighlight": "offers.",
-    "catalogSubtitle": "Pick the solution that fits your need — each offer has a dedicated detail page.",
+    "catalogSubtitle": "Browse our completed projects and services — each project image comes from the project itself.",
     "viewAll": "View all offers"
   },
   "engagements": {
@@ -1034,14 +1038,14 @@
       },
       "offerKind": {
         "service": "Service",
-        "product": "For sale"
+        "product": "Service"
       },
-      "commerceHint": "Offer type powers the catalog filter. Checkboxes control which buttons appear on the site.",
+      "commerceHint": "Controls the “Start a project” button on the public page. Completed project links come from the linked project.",
       "uploadCover": "Upload photo",
       "removeCover": "Remove",
       "sections": {
         "identity": "Identity",
-        "commerce": "Type & buttons",
+        "commerce": "Buttons",
         "pricing": "Pricing",
         "features": "Included items",
         "caseStudies": "Linked case studies"

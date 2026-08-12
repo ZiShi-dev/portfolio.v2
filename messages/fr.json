@@ -86,7 +86,7 @@
     "eyebrow": "Catalogue · Offres",
     "title": "Des produits numériques conçus avec",
     "titleHighlight": "précision.",
-    "subtitle": "Chaque livrable est cartographié : clair, mesurable, prêt à convertir — sites, apps et plateformes.",
+    "subtitle": "Services et liens vers nos réalisations — chaque projet s’affiche avec son image.",
     "discover": "Découvrir",
     "cta": "Parler de votre besoin",
     "page": {
@@ -131,16 +131,20 @@
     "detailPricing": "Tarification",
     "relatedProjects": "Réalisations associées",
     "viewCaseStudy": "Voir une réalisation",
-    "linkedProjectEyebrow": "Projet à vendre",
+    "linkedProjectEyebrow": "Réalisation",
     "viewLinkedProject": "Voir le détail du projet",
+    "projectLinksHeading": "Liens de projets réalisés",
+    "servicesHeading": "Nos services",
+    "projectLinkBadge": "Réalisation",
+    "viewProjectLink": "Voir le projet",
     "offerKind": {
       "service": "Service",
-      "product": "À vendre"
+      "product": "Service"
     },
     "filter": {
       "label": "Filtrer les offres",
       "all": "Tout",
-      "product": "À vendre",
+      "product": "Services",
       "service": "Services",
       "empty": "Aucune offre dans ce filtre."
     },
@@ -154,7 +158,7 @@
     },
     "catalogTitle": "Nos offres",
     "catalogTitleHighlight": "commerciales.",
-    "catalogSubtitle": "Choisissez la solution adaptée à votre besoin — chaque offre peut être explorée en détail.",
+    "catalogSubtitle": "Parcourez nos réalisations et nos services — l’image de chaque projet vient du projet lui-même.",
     "viewAll": "Voir toutes les offres"
   },
   "engagements": {
@@ -1036,14 +1040,14 @@
       },
       "offerKind": {
         "service": "Service",
-        "product": "À vendre"
+        "product": "Service"
       },
-      "commerceHint": "Le type sert au filtre du catalogue. Les cases contrôlent quels boutons apparaissent sur le site.",
+      "commerceHint": "Contrôle le bouton « Démarrer un projet » sur la fiche publique. Les liens de projets réalisés s’affichent via le projet lié.",
       "uploadCover": "Uploader une photo",
       "removeCover": "Retirer",
       "sections": {
         "identity": "Identité",
-        "commerce": "Type & boutons",
+        "commerce": "Boutons",
         "pricing": "Prix",
         "features": "Éléments inclus",
         "caseStudies": "Case Studies associées"
