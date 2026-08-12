@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Services } from "@/components/sections/services";
+import { SaleOffers } from "@/components/sections/sale-offers";
 import { brand } from "@/lib/brand";
 import { createPageMetadata, routes } from "@/lib/routes";
-import { getSiteProjects } from "@/lib/projects/site";
-import { getSiteServices } from "@/lib/services/site";
+import { getSiteSaleOffers } from "@/lib/services/site";
 import type { Locale } from "@/i18n/routing";
 
 type PageProps = {
@@ -15,26 +14,23 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "services" });
+  const t = await getTranslations({ locale, namespace: "sales" });
 
   return createPageMetadata({
     title: t("page.metaTitle", { brand: brand.name }),
     description: t("page.metaDescription", { brand: brand.name }),
-    path: routes.services,
+    path: routes.forSale,
   });
 }
 
-/** Catalogue public — عروضنا التجارية / Nos offres commerciales */
-export default async function OffresCatalogPage() {
+/** Catalogue public — offres à vendre */
+export default async function AVendreCatalogPage() {
   const locale = (await getLocale()) as Locale;
-  const [services, projects] = await Promise.all([
-    getSiteServices(locale),
-    getSiteProjects(locale),
-  ]);
+  const offers = await getSiteSaleOffers(locale);
 
   return (
     <main id="main-content">
-      <Services services={services} projects={projects} variant="page" />
+      <SaleOffers offers={offers} variant="page" />
     </main>
   );
 }

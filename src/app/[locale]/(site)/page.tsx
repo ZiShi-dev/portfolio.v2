@@ -7,7 +7,7 @@ import { brand } from "@/lib/brand";
 import { createPageMetadata, routes } from "@/lib/routes";
 import { getPublishedReviews } from "@/lib/reviews/store";
 import { getSiteProjects } from "@/lib/projects/site";
-import { getSiteServices } from "@/lib/services/site";
+import { getSiteSaleOffers, getSiteServices } from "@/lib/services/site";
 import { getSiteEngagements } from "@/lib/engagements/site";
 import { getSiteGeneralFaqs } from "@/lib/faqs/site";
 import { getPublicContactEmail } from "@/lib/social/store";
@@ -16,8 +16,8 @@ import type { Locale } from "@/i18n/routing";
 const Journey = dynamic(
   () => import("@/components/sections/journey").then((m) => m.Journey)
 );
-const Projects = dynamic(
-  () => import("@/components/sections/projects").then((m) => m.Projects)
+const SaleOffers = dynamic(
+  () => import("@/components/sections/sale-offers").then((m) => m.SaleOffers)
 );
 const About = dynamic(
   () => import("@/components/sections/about").then((m) => m.About)
@@ -44,23 +44,32 @@ export const metadata: Metadata = createPageMetadata({
 
 export default async function Home() {
   const locale = (await getLocale()) as Locale;
-  const [reviews, projects, contactEmail, services, engagements, faqs] =
-    await Promise.all([
-      getPublishedReviews(),
-      getSiteProjects(locale),
-      getPublicContactEmail(),
-      getSiteServices(locale),
-      getSiteEngagements(locale),
-      getSiteGeneralFaqs(locale),
-    ]);
+  const [
+    reviews,
+    projects,
+    contactEmail,
+    services,
+    saleOffers,
+    engagements,
+    faqs,
+  ] = await Promise.all([
+    getPublishedReviews(),
+    getSiteProjects(locale),
+    getPublicContactEmail(),
+    getSiteServices(locale),
+    getSiteSaleOffers(locale),
+    getSiteEngagements(locale),
+    getSiteGeneralFaqs(locale),
+  ]);
 
   return (
     <>
       <HomeSection />
-      <Services services={services} />
+      {/* Deux blocs distincts : services proposés vs sites à vendre */}
+      <Services services={services} projects={projects} />
+      <SaleOffers offers={saleOffers} />
       <Engagements engagements={engagements} />
       <Journey />
-      <Projects projects={projects} />
       <Testimonials reviews={reviews} />
       <FaqSection faqs={faqs} />
       <About />

@@ -15,12 +15,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getAdminLocale();
   const t = await getTranslations({ locale, namespace: "admin.meta" });
   return {
-    title: t("servicesTitle"),
+    title: t("forSaleTitle"),
     robots: { index: false, follow: false },
   };
 }
 
-export default async function AdminServicesPage() {
+export default async function AdminForSalePage() {
   const locale = await getAdminLocale();
   setRequestLocale(locale);
   const t = await getTranslations("admin.dashboard");
@@ -54,15 +54,15 @@ export default async function AdminServicesPage() {
           {t("backToDashboard")}
         </Link>
         <h1 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">
-          {t("servicesPageTitle")}
+          {t("forSalePageTitle")}
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-foreground/60">
-          {t("servicesPageSubtitle")}
+          {t("forSalePageSubtitle")}
         </p>
       </div>
 
       <AdminServicesPanel
-        catalogKind="service"
+        catalogKind="product"
         initialServices={initialServices}
         initialConfigured={initialConfigured}
         caseStudyOptions={caseStudyOptions}

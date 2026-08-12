@@ -5,7 +5,7 @@
     "jobTitle": "وكالة تقنية"
   },
   "nav": {
-    "services": "عروضنا",
+    "services": "الخدمات",
     "engagements": "التزامات",
     "projects": "المشاريع",
     "faq": "أسئلة",
@@ -15,7 +15,8 @@
     "workTogether": "لنعمل معاً",
     "workTogetherShort": "ابدأ",
     "menu": "القائمة",
-    "closeMenu": "إغلاق القائمة"
+    "closeMenu": "إغلاق القائمة",
+    "forSale": "مواقع للبيع"
   },
   "footer": {
     "navigation": "التنقل",
@@ -83,15 +84,15 @@
     }
   },
   "services": {
-    "eyebrow": "كتالوج · العروض",
-    "title": "منتجات رقمية صُمّمت بـ",
-    "titleHighlight": "دقة.",
-    "subtitle": "كل تسليم مُخطَّط: واضح، قابل للقياس، جاهز للتحويل — مواقع وتطبيقات ومنصات.",
+    "eyebrow": "الخدمات",
+    "title": "الخدمات التي أستطيع",
+    "titleHighlight": "تقديمها لكم.",
+    "subtitle": "خدمات مخصّصة: مواقع وتطبيقات ومنصات. لكل خدمة صفحة تفاصيل خاصة — مع روابط لمشاريع (شخصية أو مباعة أو للبيع).",
     "discover": "اكتشف",
     "cta": "التحدث عن احتياجك",
     "page": {
-      "metaTitle": "عروضنا التجارية — {brand}",
-      "metaDescription": "كتالوج عروضنا التجارية لدى {brand}: مواقع، تجارة إلكترونية، تطبيقات، SaaS وحلول مخصصة."
+      "metaTitle": "الخدمات — {brand}",
+      "metaDescription": "خدمات {brand}: مواقع وتطبيقات وحلول رقمية مخصّصة."
     },
     "items": {
       "web": {
@@ -119,20 +120,24 @@
         "desc": "إصلاحات وتحسينات ونصائح بعد النشر — يبقى موقعك مستقراً وقابلاً للتطور."
       }
     },
-    "empty": "العروض ستتوفر قريباً.",
+    "empty": "الخدمات ستتوفر قريباً.",
     "idealFor": "مثالي لـ",
     "included": "يشمل عادةً",
     "learnMore": "اعرف المزيد",
     "ctaStart": "ابدأ مشروعاً",
     "ctaBuy": "اشترِ هذا العرض",
-    "backToServices": "العودة إلى العروض",
-    "backToCatalog": "العودة إلى العروض",
-    "detailAbout": "عن العرض",
-    "detailPricing": "التسعير",
-    "relatedProjects": "أعمال مرتبطة",
+    "backToServices": "العودة إلى الخدمات",
+    "backToCatalog": "العودة إلى الخدمات",
+    "detailAbout": "ما يشمله هذا الخدمة",
+    "detailPricing": "سعر الخدمة",
+    "relatedProjects": "مشاريع مرتبطة بهذه الخدمة",
     "viewCaseStudy": "عرض إنجاز",
-    "linkedProjectEyebrow": "المشروع المعروض للبيع",
+    "linkedProjectEyebrow": "مشروع مرتبط",
     "viewLinkedProject": "عرض تفاصيل المشروع",
+    "projectLinksHeading": "أمثلة مشاريع",
+    "servicesHeading": "خدماتنا",
+    "projectLinkBadge": "مشروع",
+    "viewProjectLink": "عرض المشروع",
     "offerKind": {
       "service": "خدمة",
       "product": "للبيع"
@@ -140,7 +145,7 @@
     "filter": {
       "label": "تصفية العروض",
       "all": "الكل",
-      "product": "للبيع",
+      "product": "خدمات",
       "service": "خدمات",
       "empty": "لا عروض في هذا التصفية."
     },
@@ -152,10 +157,12 @@
       "disclaimer": "السعر النهائي يعتمد على النطاق والميزات واحتياجات المشروع.",
       "fixedDisclaimer": "سعر العرض كما هو معروض. أي خيارات أو تعديلات تُسعَّر بشكل منفصل."
     },
-    "catalogTitle": "عروضنا",
-    "catalogTitleHighlight": "التجارية.",
-    "catalogSubtitle": "اختر الحل المناسب لاحتياجك — لكل عرض صفحة تفصيلية.",
-    "viewAll": "عرض كل العروض"
+    "catalogTitle": "خدماتنا",
+    "catalogTitleHighlight": "المتاحة.",
+    "catalogSubtitle": "اختر خدمة — لكل واحدة صفحة تفاصيل مع روابط مشاريع.",
+    "viewAll": "عرض كل الخدمات",
+    "relatedProjectsHint": "أمثلة إنجازات — مشروع شخصي أو مباع أو ما زال متاحاً.",
+    "projectLinksSubtitle": "مشاريع شخصية أو مباعة أو للبيع — الصورة والرابط من المشروع نفسه."
   },
   "engagements": {
     "eyebrow": "الالتزامات · VORZIX",
@@ -436,9 +443,10 @@
       "projectsTitle": "المشاريع",
       "inquiriesTitle": "طلبات المشاريع",
       "settingsTitle": "الإعدادات",
-      "servicesTitle": "الخدمات / العروض",
+      "servicesTitle": "الخدمات",
       "engagementsTitle": "الالتزامات",
-      "faqsTitle": "الأسئلة الشائعة"
+      "faqsTitle": "الأسئلة الشائعة",
+      "forSaleTitle": "للبيع"
     },
     "language": {
       "label": "اللغة",
@@ -532,8 +540,10 @@
         "projectsHint": "قابلة للتعديل في /admin/projects",
         "newInquiries": "طلبات جديدة",
         "newInquiriesHint": "العملاء المحتملون في /admin/inquiries",
-        "services": "العروض",
-        "servicesHint": "تُدار في /admin/services"
+        "services": "الخدمات",
+        "servicesHint": "الخدمات (/offres)",
+        "forSale": "للبيع",
+        "forSaleHint": "عروض المنتجات (/a-vendre)"
       },
       "reviewsTitle": "إدارة المراجعات",
       "reviewsBody": "يزرك الزوار رأياً (البريد إلزامي). يظهر فوراً على الموقع: تسحبه أو تحذفه لاحقاً إن لزم.",
@@ -571,12 +581,12 @@
       "inquiriesBody": "أدر طلبات المسار التفاعلي.",
       "manageInquiries": "عرض الطلبات",
       "inquiriesNewBadge": "{count} جديدة",
-      "servicesTitle": "العروض التجارية",
-      "servicesBody": "أنشئ وانشر ورتّب العروض المعروضة في الموقع. الأسعار والترجمات ودراسات الحالة.",
-      "servicesNext": "أدِر كل شيء من /admin/services — دون تعديل الشيفرة.",
-      "manageServices": "إدارة العروض",
-      "servicesPageTitle": "إدارة العروض",
-      "servicesPageSubtitle": "CMS · FR/EN/AR · تسعير · دراسات حالة · نشر.",
+      "servicesTitle": "الخدمات",
+      "servicesBody": "إدارة الخدمات المخصّصة المعروضة على /offres.",
+      "servicesNext": "أدِر كل شيء من /admin/services — منفصل عن عروض البيع.",
+      "manageServices": "إدارة الخدمات",
+      "servicesPageTitle": "إدارة الخدمات",
+      "servicesPageSubtitle": "CMS · FR/EN/AR · أسعار · دراسات حالة · نشر.",
       "engagementsTitle": "التزامات VORZIX",
       "engagementsBody": "عدّل الالتزامات المعروضة على الموقع: العناوين والنصوص FR/EN/AR والترتيب والنشر.",
       "engagementsNext": "أدِر كل شيء من /admin/engagements — دون تعديل الشيفرة.",
@@ -588,7 +598,13 @@
       "faqsNext": "أدِر كل شيء من /admin/faqs — دون تعديل الشيفرة.",
       "manageFaqs": "إدارة الأسئلة الشائعة",
       "faqsPageTitle": "إدارة الأسئلة الشائعة",
-      "faqsPageSubtitle": "CMS · FR/EN/AR · النطاق · الخدمات · الترتيب · النشر."
+      "faqsPageSubtitle": "CMS · FR/EN/AR · النطاق · الخدمات · الترتيب · النشر.",
+      "forSaleTitle": "عروض للبيع",
+      "forSaleBody": "مواقع ومنتجات جاهزة للشراء، تُعرض على /a-vendre.",
+      "forSaleNext": "أدِر كل شيء من /admin/a-vendre — منفصل عن الخدمات.",
+      "manageForSale": "إدارة عروض البيع",
+      "forSalePageTitle": "إدارة عروض البيع",
+      "forSalePageSubtitle": "CMS · FR/EN/AR · السعر · مشروع مرتبط · نشر."
     },
     "reviews": {
       "title": "مراجعة المراجعات",
@@ -983,10 +999,10 @@
       }
     },
     "services": {
-      "listTitle": "العروض",
-      "create": "إنشاء عرض",
-      "createTitle": "عرض جديد",
-      "editTitle": "تعديل العرض",
+      "listTitle": "الخدمات",
+      "create": "إنشاء خدمة",
+      "createTitle": "خدمة جديدة",
+      "editTitle": "تعديل الخدمة",
       "formHint": "المسودة يمكن أن تكون ناقصة. النشر يتطلب عنواناً ووصفاً قصيراً بالفرنسية.",
       "edit": "تعديل",
       "preview": "معاينة",
@@ -995,7 +1011,7 @@
       "saveDraft": "حفظ مسودة",
       "savePublish": "حفظ ونشر",
       "cancel": "إلغاء",
-      "empty": "لا توجد عروض بعد. أنشئ الأولى.",
+      "empty": "لا خدمات بعد. أنشئ الأولى.",
       "loadError": "تعذر تحميل العروض.",
       "duplicateError": "تعذر التكرار.",
       "deleteError": "تعذر الحذف.",
@@ -1036,12 +1052,12 @@
         "service": "خدمة",
         "product": "للبيع"
       },
-      "commerceHint": "النوع يغذي فلتر الكتالوج. الخانات تتحكم بالأزرار الظاهرة على الموقع.",
+      "commerceHint": "يتحكم بزر « ابدأ مشروعاً » على /offres.",
       "uploadCover": "رفع صورة",
       "removeCover": "إزالة",
       "sections": {
         "identity": "الهوية",
-        "commerce": "النوع والأزرار",
+        "commerce": "الأزرار",
         "pricing": "السعر",
         "features": "العناصر المشمولة",
         "caseStudies": "دراسات الحالة"
@@ -1076,7 +1092,13 @@
       "linkedProjectNone": "لا يوجد مشروع مرتبط",
       "caseStudiesHint": "دراسات حالة ثانوية تظهر تحت المشروع الرئيسي.",
       "duplicate": "تكرار",
-      "archive": "أرشفة"
+      "archive": "أرشفة",
+      "listTitleSale": "عروض للبيع",
+      "createSale": "إنشاء عرض للبيع",
+      "createTitleSale": "عرض جديد للبيع",
+      "editTitleSale": "تعديل عرض البيع",
+      "emptySale": "لا عروض للبيع بعد. أنشئ الأولى.",
+      "commerceHintSale": "يتحكم بأزرار الشراء / التواصل على /a-vendre. اربط مشروعاً للحصول على الصورة."
     }
   },
   "caseStudy": {
@@ -1240,5 +1262,46 @@
       "submit": "تعذّر إرسال الطلب. أعد المحاولة.",
       "turnstile": "التحقق من مكافحة الإزعاج مطلوب."
     }
+  },
+  "sales": {
+    "eyebrow": "مواقع للبيع",
+    "title": "مواقع جاهزة",
+    "titleHighlight": "للشراء.",
+    "subtitle": "مواقع منجزة ومتاحة فوراً. كل بطاقة تشرح تفاصيل الموقع وثمنه وما يمكنني تكييفه لكم.",
+    "cta": "التحدث عن عملية شراء",
+    "page": {
+      "metaTitle": "مواقع للبيع — {brand}",
+      "metaDescription": "مواقع للبيع لدى {brand}: السعر وتفاصيل الموقع وخيارات التكييف."
+    },
+    "empty": "لا مواقع للبيع حالياً.",
+    "idealFor": "هذا الموقع يناسب",
+    "included": "مشمول في البيع",
+    "learnMore": "عرض التفاصيل",
+    "ctaStart": "اطلب تكييفاً",
+    "ctaBuy": "اشترِ هذا الموقع",
+    "backToCatalog": "العودة إلى المواقع للبيع",
+    "detailAbout": "تفاصيل الموقع",
+    "detailPricing": "ثمن الموقع",
+    "linkedProjectEyebrow": "معاينة الموقع",
+    "viewProjectLink": "عرض صفحة المشروع",
+    "offerKind": {
+      "service": "خدمة",
+      "product": "موقع للبيع"
+    },
+    "pricing": {
+      "startingAt": "ابتداءً من {price}",
+      "fixed": "{price}",
+      "quoteOnly": "حسب العرض",
+      "contact": "لنتحدث عن عملية الشراء",
+      "disclaimer": "قد يتغيّر السعر النهائي بحسب التكييفات المطلوبة.",
+      "fixedDisclaimer": "ثمن الموقع كما هو معروض. أي تكييفات تُسعَّر بشكل منفصل."
+    },
+    "catalogTitle": "مواقع",
+    "catalogTitleHighlight": "للبيع.",
+    "catalogSubtitle": "لكل موقع صفحة تفاصيل: الوصف والثمن والمشمول وإمكانيات التكييف.",
+    "viewAll": "عرض كل المواقع للبيع",
+    "includedHint": "ما تحصل عليه عند شراء الموقع.",
+    "whatICanOfferTitle": "ما أستطيع أن أقدّمه لكم أيضاً",
+    "whatICanOfferBody": "بعد الشراء: تكييف المحتوى والألوان والنصوص أو تطويرات صغيرة لتناسب نشاطكم — دون البدء من الصفر."
   }
 }

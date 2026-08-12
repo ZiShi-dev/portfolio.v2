@@ -3,6 +3,7 @@ import {
   listPublishedProjectRows,
   projectCoverUrl,
 } from "@/lib/projects/store";
+import type { ServiceOfferKind } from "@/lib/services/schema";
 import {
   getPublishedServiceBySlug,
   getServiceByIdForAdmin,
@@ -44,33 +45,64 @@ function localizeWithLinkedCover(
   return serviceRowToLocalized(row, locale, { coverImage: linkedCover });
 }
 
+async function getSiteOffersByKind(
+  locale: Locale,
+  kind: ServiceOfferKind
+): Promise<LocalizedService[]> {
+  const rows = await listPublishedServiceRows();
+  if (!rows || rows.length === 0) return [];
+  const catalogRows = rows.filter((row) => row.offer_kind === kind);
+  if (catalogRows.length === 0) return [];
+  const covers = await linkedProjectCoverById(
+    catalogRows.map((r) => r.linked_project_id)
+  );
+  return catalogRows.map((row) => localizeWithLinkedCover(row, locale, covers));
+}
+
+async function getSiteOfferBySlugAndKind(
+  locale: Locale,
+  slug: string,
+  kind: ServiceOfferKind
+): Promise<LocalizedService | null> {
+  const row = await getPublishedServiceBySlug(slug);
+  if (!row || row.offer_kind !== kind) return null;
+  const covers = await linkedProjectCoverById([row.linked_project_id]);
+  return localizeWithLinkedCover(row, locale, covers);
+}
+
 /**
- * Offres publiées pour le site. Tableau vide si BDD absente / vide
- * (pas de hardcode frontend — le seed SQL porte le contenu initial).
- * Image : uniquement via projet lié (sinon null).
+ * Services publiés (/offres). Image via projet lié uniquement.
  */
 export async function getSiteServices(
   locale: Locale
 ): Promise<LocalizedService[]> {
-  const rows = await listPublishedServiceRows();
-  if (!rows || rows.length === 0) return [];
-  const covers = await linkedProjectCoverById(
-    rows.map((r) => r.linked_project_id)
-  );
-  return rows.map((row) => localizeWithLinkedCover(row, locale, covers));
+  return getSiteOffersByKind(locale, "service");
 }
 
 export async function getSiteServiceBySlug(
   locale: Locale,
   slug: string
 ): Promise<LocalizedService | null> {
-  const row = await getPublishedServiceBySlug(slug);
-  if (!row) return null;
-  const covers = await linkedProjectCoverById([row.linked_project_id]);
-  return localizeWithLinkedCover(row, locale, covers);
+  return getSiteOfferBySlugAndKind(locale, slug, "service");
 }
 
-/** Preview admin uniquement (drafts inclus). */
+/**
+ * Offres à vendre publiées (/a-vendre). Image via projet lié uniquement.
+ */
+export async function getSiteSaleOffers(
+  locale: Locale
+): Promise<LocalizedService[]> {
+  return getSiteOffersByKind(locale, "product");
+}
+
+export async function getSiteSaleOfferBySlug(
+  locale: Locale,
+  slug: string
+): Promise<LocalizedService | null> {
+  return getSiteOfferBySlugAndKind(locale, slug, "product");
+}
+
+/** Preview admin uniquement (drafts inclus, tout kind). */
 export async function getAdminPreviewService(
   locale: Locale,
   id: string

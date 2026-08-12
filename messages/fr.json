@@ -5,17 +5,18 @@
     "jobTitle": "Agence technologique"
   },
   "nav": {
-    "services": "Offres",
+    "services": "Services",
     "engagements": "Engagements",
     "projects": "Projets",
     "faq": "FAQ",
-    "about": "À\u00a0propos",
+    "about": "À propos",
     "reviews": "Avis",
     "leaveReview": "Laisser un avis",
     "workTogether": "Travaillons ensemble",
     "workTogetherShort": "Démarrer",
     "menu": "Menu",
-    "closeMenu": "Fermer le menu"
+    "closeMenu": "Fermer le menu",
+    "forSale": "Sites à vendre"
   },
   "footer": {
     "navigation": "Navigation",
@@ -83,15 +84,15 @@
     }
   },
   "services": {
-    "eyebrow": "Catalogue · Offres",
-    "title": "Des produits numériques conçus avec",
-    "titleHighlight": "précision.",
-    "subtitle": "Chaque livrable est cartographié : clair, mesurable, prêt à convertir — sites, apps et plateformes.",
+    "eyebrow": "Services",
+    "title": "Les services que je peux",
+    "titleHighlight": "vous offrir.",
+    "subtitle": "Prestations sur-mesure : sites, apps et plateformes. Chaque fiche a sa page détail — avec des liens vers des projets (perso, vendus ou à vendre).",
     "discover": "Découvrir",
     "cta": "Parler de votre besoin",
     "page": {
-      "metaTitle": "Nos offres commerciales — {brand}",
-      "metaDescription": "Catalogue des offres commerciales {brand} : sites, e-commerce, applications, SaaS et solutions sur mesure."
+      "metaTitle": "Services — {brand}",
+      "metaDescription": "Services {brand} : sites, applications et solutions digitales sur-mesure."
     },
     "items": {
       "web": {
@@ -119,20 +120,24 @@
         "desc": "Corrections, améliorations et conseils après mise en ligne — votre site reste stable et évolutif."
       }
     },
-    "empty": "Les offres seront bientôt disponibles.",
+    "empty": "Les services seront bientôt disponibles.",
     "idealFor": "Idéal pour",
     "included": "Généralement inclus",
     "learnMore": "En savoir plus",
     "ctaStart": "Démarrer un projet",
     "ctaBuy": "Acheter cette offre",
-    "backToServices": "Retour aux offres",
-    "backToCatalog": "Retour aux offres",
-    "detailAbout": "À propos de l’offre",
-    "detailPricing": "Tarification",
-    "relatedProjects": "Réalisations associées",
+    "backToServices": "Retour aux services",
+    "backToCatalog": "Retour aux services",
+    "detailAbout": "Ce que comprend ce service",
+    "detailPricing": "Tarif du service",
+    "relatedProjects": "Projets liés à ce service",
     "viewCaseStudy": "Voir une réalisation",
-    "linkedProjectEyebrow": "Projet à vendre",
+    "linkedProjectEyebrow": "Projet associé",
     "viewLinkedProject": "Voir le détail du projet",
+    "projectLinksHeading": "Exemples de projets",
+    "servicesHeading": "Nos services",
+    "projectLinkBadge": "Projet",
+    "viewProjectLink": "Voir le projet",
     "offerKind": {
       "service": "Service",
       "product": "À vendre"
@@ -140,7 +145,7 @@
     "filter": {
       "label": "Filtrer les offres",
       "all": "Tout",
-      "product": "À vendre",
+      "product": "Services",
       "service": "Services",
       "empty": "Aucune offre dans ce filtre."
     },
@@ -152,10 +157,12 @@
       "disclaimer": "Le tarif final dépend du périmètre, des fonctionnalités et des besoins du projet.",
       "fixedDisclaimer": "Prix de l’offre telle que présentée. Options ou adaptations éventuelles sur devis."
     },
-    "catalogTitle": "Nos offres",
-    "catalogTitleHighlight": "commerciales.",
-    "catalogSubtitle": "Choisissez la solution adaptée à votre besoin — chaque offre peut être explorée en détail.",
-    "viewAll": "Voir toutes les offres"
+    "catalogTitle": "Nos",
+    "catalogTitleHighlight": "services.",
+    "catalogSubtitle": "Choisissez une prestation — chaque service a une page détail dédiée, avec des liens projets.",
+    "viewAll": "Voir tous les services",
+    "relatedProjectsHint": "Exemples de réalisations — projet perso, déjà vendu, ou encore disponible.",
+    "projectLinksSubtitle": "Projets personnels, vendus ou à vendre — image et lien issus du projet."
   },
   "engagements": {
     "eyebrow": "Engagements · VORZIX",
@@ -438,9 +445,10 @@
       "projectsTitle": "Projets",
       "inquiriesTitle": "Demandes de projet",
       "settingsTitle": "Paramètres",
-      "servicesTitle": "Services / Offres",
+      "servicesTitle": "Services",
       "engagementsTitle": "Engagements",
-      "faqsTitle": "FAQ"
+      "faqsTitle": "FAQ",
+      "forSaleTitle": "À vendre"
     },
     "language": {
       "label": "Langue",
@@ -534,8 +542,10 @@
         "projectsHint": "Gérables dans /admin/projects",
         "newInquiries": "Demandes nouvelles",
         "newInquiriesHint": "Leads à traiter dans /admin/inquiries",
-        "services": "Offres",
-        "servicesHint": "Gérables dans /admin/services"
+        "services": "Services",
+        "servicesHint": "Prestations (/offres)",
+        "forSale": "À vendre",
+        "forSaleHint": "Offres produit (/a-vendre)"
       },
       "reviewsTitle": "Gestion des avis",
       "reviewsBody": "Les visiteurs laissent un avis (email obligatoire). Il s’affiche tout de suite sur le site : vous le retirez ou le supprimez ensuite si besoin.",
@@ -573,11 +583,11 @@
       "inquiriesBody": "Gérez les leads du parcours interactif.",
       "manageInquiries": "Voir les demandes",
       "inquiriesNewBadge": "{count} nouvelle(s)",
-      "servicesTitle": "Offres commerciales",
-      "servicesBody": "Créez, publiez et ordonnez les offres affichées sur le site. Prix, traductions et Case Studies associées.",
-      "servicesNext": "Gérez tout depuis /admin/services — aucune modification de code.",
-      "manageServices": "Gérer les offres",
-      "servicesPageTitle": "Gestion des offres",
+      "servicesTitle": "Services",
+      "servicesBody": "Gérez les prestations sur-mesure affichées sur /offres.",
+      "servicesNext": "Gérez tout depuis /admin/services — séparément des offres à vendre.",
+      "manageServices": "Gérer les services",
+      "servicesPageTitle": "Gestion des services",
       "servicesPageSubtitle": "CMS · FR/EN/AR · tarifs · Case Studies · publication.",
       "engagementsTitle": "Engagements VORZIX",
       "engagementsBody": "Cadrez les engagements affichés sur le site : titres, textes FR/EN/AR, ordre et publication.",
@@ -590,7 +600,13 @@
       "faqsNext": "Gérez tout depuis /admin/faqs — aucune modification de code.",
       "manageFaqs": "Gérer la FAQ",
       "faqsPageTitle": "Gestion de la FAQ",
-      "faqsPageSubtitle": "CMS · FR/EN/AR · scope · Services · ordre · publication."
+      "faqsPageSubtitle": "CMS · FR/EN/AR · scope · Services · ordre · publication.",
+      "forSaleTitle": "Offres à vendre",
+      "forSaleBody": "Sites et produits prêts à l’achat, affichés sur /a-vendre.",
+      "forSaleNext": "Gérez tout depuis /admin/a-vendre — séparément des services.",
+      "manageForSale": "Gérer les ventes",
+      "forSalePageTitle": "Gestion des offres à vendre",
+      "forSalePageSubtitle": "CMS · FR/EN/AR · prix · projet lié · publication."
     },
     "reviews": {
       "title": "Modération des avis",
@@ -985,10 +1001,10 @@
       }
     },
     "services": {
-      "listTitle": "Offres",
-      "create": "Créer une offre",
-      "createTitle": "Nouvelle offre",
-      "editTitle": "Modifier l’offre",
+      "listTitle": "Services",
+      "create": "Créer un service",
+      "createTitle": "Nouveau service",
+      "editTitle": "Modifier le service",
       "formHint": "Brouillon autorisé incomplet. La publication exige titre et description courte FR.",
       "edit": "Modifier",
       "preview": "Prévisualiser",
@@ -997,7 +1013,7 @@
       "saveDraft": "Enregistrer brouillon",
       "savePublish": "Enregistrer & publier",
       "cancel": "Annuler",
-      "empty": "Aucune offre pour l’instant. Créez la première.",
+      "empty": "Aucun service pour l’instant. Créez le premier.",
       "loadError": "Impossible de charger les offres.",
       "duplicateError": "Duplication impossible.",
       "deleteError": "Suppression impossible.",
@@ -1038,12 +1054,12 @@
         "service": "Service",
         "product": "À vendre"
       },
-      "commerceHint": "Le type sert au filtre du catalogue. Les cases contrôlent quels boutons apparaissent sur le site.",
+      "commerceHint": "Contrôle le bouton « Démarrer un projet » sur /offres.",
       "uploadCover": "Uploader une photo",
       "removeCover": "Retirer",
       "sections": {
         "identity": "Identité",
-        "commerce": "Type & boutons",
+        "commerce": "Boutons",
         "pricing": "Prix",
         "features": "Éléments inclus",
         "caseStudies": "Case Studies associées"
@@ -1078,7 +1094,13 @@
       "linkedProjectNone": "Aucun projet lié",
       "caseStudiesHint": "Réalisations secondaires affichées sous le projet principal.",
       "duplicate": "Dupliquer",
-      "archive": "Archiver"
+      "archive": "Archiver",
+      "listTitleSale": "Offres à vendre",
+      "createSale": "Créer une offre à vendre",
+      "createTitleSale": "Nouvelle offre à vendre",
+      "editTitleSale": "Modifier l’offre à vendre",
+      "emptySale": "Aucune offre à vendre pour l’instant. Créez la première.",
+      "commerceHintSale": "Contrôle les boutons d’achat / contact sur /a-vendre. Liez un projet pour l’image."
     }
   },
   "caseStudy": {
@@ -1242,5 +1264,46 @@
       "submit": "Impossible d’envoyer la demande. Réessayez.",
       "turnstile": "Vérification anti-spam requise."
     }
+  },
+  "sales": {
+    "eyebrow": "Sites à vendre",
+    "title": "Sites prêts",
+    "titleHighlight": "à l’achat.",
+    "subtitle": "Des sites déjà réalisés, disponibles immédiatement. Chaque fiche détaille le site, son prix, et ce que je peux encore adapter pour vous.",
+    "cta": "Parler d’un achat",
+    "page": {
+      "metaTitle": "Sites à vendre — {brand}",
+      "metaDescription": "Sites à vendre chez {brand} : prix, détails du site et options d’adaptation."
+    },
+    "empty": "Aucun site à vendre pour le moment.",
+    "idealFor": "Ce site convient à",
+    "included": "Inclus dans la vente",
+    "learnMore": "Voir le détail",
+    "ctaStart": "Demander une adaptation",
+    "ctaBuy": "Acheter ce site",
+    "backToCatalog": "Retour aux sites à vendre",
+    "detailAbout": "Détails du site",
+    "detailPricing": "Prix du site",
+    "linkedProjectEyebrow": "Aperçu du site",
+    "viewProjectLink": "Voir la fiche projet",
+    "offerKind": {
+      "service": "Service",
+      "product": "Site à vendre"
+    },
+    "pricing": {
+      "startingAt": "À partir de {price}",
+      "fixed": "{price}",
+      "quoteOnly": "Sur devis",
+      "contact": "Parlons de votre achat",
+      "disclaimer": "Le prix final peut varier selon les adaptations demandées.",
+      "fixedDisclaimer": "Prix du site tel que présenté. Adaptations éventuelles sur devis."
+    },
+    "catalogTitle": "Sites",
+    "catalogTitleHighlight": "à vendre.",
+    "catalogSubtitle": "Chaque site a sa page détail : description, prix, contenu inclus et possibilités d’adaptation.",
+    "viewAll": "Voir tous les sites à vendre",
+    "includedHint": "Ce que vous recevez avec l’achat du site.",
+    "whatICanOfferTitle": "Ce que je peux encore vous offrir",
+    "whatICanOfferBody": "Après l’achat : adaptations de contenu, couleurs, textes, ou petites évolutions pour coller à votre activité — sans repartir de zéro."
   }
 }

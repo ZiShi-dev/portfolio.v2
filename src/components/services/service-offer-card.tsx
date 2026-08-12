@@ -8,20 +8,25 @@ import { GlowCard } from "@/components/ui/glow-card";
 import { Link } from "@/i18n/navigation";
 import { ServiceIcon } from "@/lib/services/icons";
 import { resolveServicePriceDisplay } from "@/lib/services/pricing";
-import { serviceDetailPath } from "@/lib/routes";
+import { offerDetailPath } from "@/lib/routes";
 import type { LocalizedService } from "@/lib/services/store";
 import { cn } from "@/lib/utils";
 
 type ServiceOfferCardProps = {
   service: LocalizedService;
+  /** Namespace i18n pour les libellés (services | sales). */
+  i18nNamespace?: "services" | "sales";
 };
 
 /**
  * Carte catalogue compacte : description tronquée (3 lignes).
- * Produits « à vendre » : photo + prix mis en avant.
+ * Image via projet lié. Produits « à vendre » : prix + CTA achat.
  */
-export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
-  const t = useTranslations("services");
+export function ServiceOfferCard({
+  service,
+  i18nNamespace = "services",
+}: ServiceOfferCardProps) {
+  const t = useTranslations(i18nNamespace);
   const locale = useLocale();
   const isProduct = service.offerKind === "product";
 
@@ -39,8 +44,8 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
   });
 
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
-  const detailHref = serviceDetailPath(service.slug);
-  const showBuy = service.showCtaBuy;
+  const detailHref = offerDetailPath(service.slug, service.offerKind);
+  const showBuy = isProduct && service.showCtaBuy;
   const showStart = service.showCtaStart;
   const showCover = Boolean(service.coverImage);
 
@@ -60,11 +65,13 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
               loading="lazy"
               decoding="async"
             />
-            <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#070A12]/85 to-transparent px-4 pb-3 pt-10">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
-                {t(`offerKind.${service.offerKind}`)}
+            {isProduct ? (
+              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#070A12]/85 to-transparent px-4 pb-3 pt-10">
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+                  {t("offerKind.product")}
+                </span>
               </span>
-            </span>
+            ) : null}
           </Link>
         ) : null}
 
@@ -72,11 +79,11 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
           <div className="flex items-center justify-between gap-3">
             <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
               {service.reference}
-              {!showCover ? (
+              {isProduct && !showCover ? (
                 <>
                   <span className="mx-1.5 text-border-gold/60">·</span>
                   <span className="text-muted-foreground">
-                    {t(`offerKind.${service.offerKind}`)}
+                    {t("offerKind.product")}
                   </span>
                 </>
               ) : null}

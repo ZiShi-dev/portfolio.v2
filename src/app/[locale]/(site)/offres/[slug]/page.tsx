@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { ArrowLeft, ArrowUpRight, Check, MessageSquare, ShoppingBag } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check, ExternalLink, MessageSquare } from "lucide-react";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { Button } from "@/components/ui/button";
 import { CelestialAtlas } from "@/components/ui/celestial-atlas";
@@ -22,13 +22,25 @@ import {
 } from "@/lib/services/site";
 import { getSiteFaqsForService } from "@/lib/faqs/site";
 import { FaqSection } from "@/components/sections/faq";
+import { isSafeHttpUrl } from "@/lib/review-schema";
 import {
   listPublishedProjectRows,
+  projectCoverUrl,
   projectRowToLocalized,
 } from "@/lib/projects/store";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
+};
+
+type RelatedProject = {
+  id: string;
+  slug: string;
+  title: string;
+  reference?: string;
+  category: string;
+  coverImage: string | null;
+  liveUrl: string | null;
 };
 
 export async function generateStaticParams() {
@@ -56,11 +68,15 @@ export async function generateMetadata({
   });
 }
 
-/** Page détail d’une offre — « en savoir plus » */
+/**
+ * Détail d’un service — prestation + liens projets associés
+ * (perso / vendu / exemples). Distinct de /a-vendre.
+ */
 export default async function OffreDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("services");
+  const tProjects = await getTranslations("projects");
   const service = await getSiteServiceBySlug(locale, slug);
   if (!service) notFound();
 
@@ -77,12 +93,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
     },
   });
 
-  const related: {
-    slug: string;
-    title: string;
-    reference?: string;
-    id: string;
-  }[] = [];
+  const related: RelatedProject[] = [];
   if (service.caseStudyIds.length > 0 || service.linkedProjectId) {
     const published = await listPublishedProjectRows();
     if (published) {
@@ -92,11 +103,18 @@ export default async function OffreDetailPage({ params }: PageProps) {
         const row = byId.get(id);
         if (!row) return;
         const localized = projectRowToLocalized(row, locale, row.kind);
+        const live =
+          localized.link && isSafeHttpUrl(localized.link)
+            ? localized.link
+            : null;
         related.push({
           id,
           slug: localized.slug ?? row.slug,
           title: localized.title,
           reference: localized.reference,
+          category: localized.category,
+          coverImage: projectCoverUrl(row) ?? null,
+          liveUrl: live,
         });
       };
       if (service.linkedProjectId) pushRelated(service.linkedProjectId);
@@ -104,8 +122,6 @@ export default async function OffreDetailPage({ params }: PageProps) {
     }
   }
 
-  const linkedProject =
-    related.find((p) => p.id === service.linkedProjectId) ?? null;
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
   const faqs = await getSiteFaqsForService(locale, service.id);
 
@@ -125,18 +141,6 @@ export default async function OffreDetailPage({ params }: PageProps) {
           {t("backToCatalog")}
         </Link>
 
-        {service.coverImage ? (
-          <div className="mt-8 overflow-hidden rounded-xl border border-border-gold/30">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={service.coverImage}
-              alt=""
-              className="aspect-[16/9] w-full object-cover"
-              decoding="async"
-            />
-          </div>
-        ) : null}
-
         <header className="mt-8 flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -144,7 +148,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
                 {service.reference}
               </p>
               <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
-                {t(`offerKind.${service.offerKind}`)}
+                {t("offerKind.service")}
               </span>
             </div>
             <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">
@@ -154,14 +158,12 @@ export default async function OffreDetailPage({ params }: PageProps) {
               {price.label}
             </p>
           </div>
-          {!service.coverImage ? (
-            <div
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border text-primary sm:h-14 sm:w-14"
-              aria-hidden
-            >
-              <ServiceIcon name={service.icon} className="h-5 w-5 sm:h-6 sm:w-6" />
-            </div>
-          ) : null}
+          <div
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border text-primary sm:h-14 sm:w-14"
+            aria-hidden
+          >
+            <ServiceIcon name={service.icon} className="h-5 w-5 sm:h-6 sm:w-6" />
+          </div>
         </header>
 
         <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -234,51 +236,65 @@ export default async function OffreDetailPage({ params }: PageProps) {
           ) : null}
         </section>
 
-        {linkedProject ? (
-          <section className="mt-10 rounded-xl border border-border-gold/50 bg-surface-elevated/50 p-5 sm:p-6">
-            <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
-              {t("linkedProjectEyebrow")}
-            </h2>
-            <p className="mt-2 font-display text-lg font-semibold text-foreground sm:text-xl">
-              {linkedProject.title}
-            </p>
-            {linkedProject.reference ? (
-              <p className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground">
-                {linkedProject.reference}
-              </p>
-            ) : null}
-            <Button asChild size="lg" className="mt-5 min-h-12 w-full sm:w-auto">
-              <Link href={`${routes.projects}/${linkedProject.slug}`}>
-                {t("viewLinkedProject")}
-                <ArrowUpRight className="h-4 w-4" aria-hidden />
-              </Link>
-            </Button>
-          </section>
-        ) : null}
-
-        {related.filter((p) => p.id !== linkedProject?.id).length > 0 ? (
+        {related.length > 0 ? (
           <section className="mt-10">
             <h2 className="font-display text-xl font-semibold text-foreground">
               {t("relatedProjects")}
             </h2>
-            <ul className="mt-4 space-y-2">
-              {related
-                .filter((p) => p.id !== linkedProject?.id)
-                .map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`${routes.projects}/${p.slug}`}
-                    className="group flex min-h-12 items-center justify-between gap-3 rounded-lg border border-border bg-surface-elevated/30 px-4 py-3 transition-colors hover:border-primary/40"
-                  >
-                    <span className="text-sm text-foreground group-hover:text-primary">
-                      {p.title}
-                    </span>
-                    {p.reference ? (
-                      <span className="font-mono text-[10px] tracking-wider text-muted-foreground">
-                        {p.reference}
-                      </span>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("relatedProjectsHint")}
+            </p>
+            <ul className="mt-4 space-y-3">
+              {related.map((p) => (
+                <li key={p.id}>
+                  <div className="overflow-hidden rounded-xl border border-border bg-surface-elevated/30 transition-colors hover:border-primary/40">
+                    <Link
+                      href={`${routes.projects}/${p.slug}`}
+                      className="flex gap-3 p-3 sm:p-4"
+                    >
+                      {p.coverImage ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={p.coverImage}
+                          alt=""
+                          className="h-16 w-24 shrink-0 rounded-md object-cover sm:h-20 sm:w-28"
+                          loading="lazy"
+                        />
+                      ) : null}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-primary/70">
+                            {p.category}
+                          </span>
+                          {p.reference ? (
+                            <span className="font-mono text-[9px] tracking-wider text-muted-foreground">
+                              {p.reference}
+                            </span>
+                          ) : null}
+                        </div>
+                        <p className="mt-1 font-display text-base font-semibold text-foreground">
+                          {p.title}
+                        </p>
+                        <span className="mt-1 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] text-primary/80">
+                          {t("viewProjectLink")}
+                          <ArrowUpRight className="h-3 w-3" aria-hidden />
+                        </span>
+                      </div>
+                    </Link>
+                    {p.liveUrl ? (
+                      <div className="border-t border-border px-3 py-2 sm:px-4">
+                        <a
+                          href={p.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex min-h-9 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+                        >
+                          {tProjects("seeSite")}
+                          <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                        </a>
+                      </div>
                     ) : null}
-                  </Link>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -288,27 +304,8 @@ export default async function OffreDetailPage({ params }: PageProps) {
         <FaqSection faqs={faqs} compact headingId="offre-faq-heading" />
 
         <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          {service.showCtaBuy ? (
-            <Button asChild size="lg" className="min-h-12">
-              <ContactOpenLink
-                serviceSlug={service.slug}
-                serviceId={service.id}
-                serviceReference={service.reference}
-                projectType={service.inquiryProjectType}
-                intent="buy"
-              >
-                <ShoppingBag className="h-4 w-4" aria-hidden />
-                {t("ctaBuy")}
-              </ContactOpenLink>
-            </Button>
-          ) : null}
           {service.showCtaStart ? (
-            <Button
-              asChild
-              size="lg"
-              variant={service.showCtaBuy ? "outline" : "default"}
-              className="min-h-12"
-            >
+            <Button asChild size="lg" className="min-h-12">
               <ContactOpenLink
                 serviceSlug={service.slug}
                 serviceId={service.id}
@@ -321,23 +318,9 @@ export default async function OffreDetailPage({ params }: PageProps) {
               </ContactOpenLink>
             </Button>
           ) : null}
-          {linkedProject ? (
-            <Button asChild variant="outline" size="lg" className="min-h-12">
-              <Link href={`${routes.projects}/${linkedProject.slug}`}>
-                {t("viewLinkedProject")}
-              </Link>
-            </Button>
-          ) : related[0] ? (
-            <Button asChild variant="outline" size="lg" className="min-h-12">
-              <Link href={`${routes.projects}/${related[0].slug}`}>
-                {t("viewCaseStudy")}
-              </Link>
-            </Button>
-          ) : (
-            <Button asChild variant="outline" size="lg" className="min-h-12">
-              <Link href={routes.services}>{t("backToCatalog")}</Link>
-            </Button>
-          )}
+          <Button asChild variant="outline" size="lg" className="min-h-12">
+            <Link href={routes.services}>{t("backToCatalog")}</Link>
+          </Button>
         </div>
       </div>
     </main>

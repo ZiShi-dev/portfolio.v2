@@ -5,6 +5,8 @@ export const ADMIN_ROUTES = {
   about: "/admin/about",
   projects: "/admin/projects",
   services: "/admin/services",
+  /** CMS des offres à vendre (offer_kind = product). */
+  forSale: "/admin/a-vendre",
   engagements: "/admin/engagements",
   faqs: "/admin/faqs",
   inquiries: "/admin/inquiries",
