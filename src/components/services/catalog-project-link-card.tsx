@@ -13,7 +13,8 @@ type CatalogProjectLinkCardProps = {
 };
 
 /**
- * Carte catalogue : lien vers une réalisation, image issue du projet.
+ * Carte lien projet dans la section Services.
+ * Affiche la catégorie (perso / vendu) et l’image du projet.
  */
 export function CatalogProjectLinkCard({ project }: CatalogProjectLinkCardProps) {
   const t = useTranslations("services");
@@ -22,6 +23,11 @@ export function CatalogProjectLinkCard({ project }: CatalogProjectLinkCardProps)
   const detailHref = `${routes.projects}/${project.slug ?? project.id}`;
   const liveUrl =
     project.link && isSafeHttpUrl(project.link) ? project.link : null;
+  const kindLabel =
+    project.category ||
+    (project.categoryKey
+      ? tProjects(`categories.${project.categoryKey}`)
+      : t("projectLinkBadge"));
 
   return (
     <GlowCard className="h-full overflow-hidden p-0">
@@ -41,22 +47,25 @@ export function CatalogProjectLinkCard({ project }: CatalogProjectLinkCardProps)
             />
             <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#070A12]/85 to-transparent px-4 pb-3 pt-10">
               <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
-                {t("projectLinkBadge")}
+                {kindLabel}
               </span>
             </span>
           </Link>
         ) : null}
 
         <div className="flex flex-1 flex-col p-5 sm:p-6">
-          {project.reference ? (
-            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
-              {project.reference}
-            </span>
-          ) : (
-            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
-              {t("projectLinkBadge")}
-            </span>
-          )}
+          <div className="flex flex-wrap items-center gap-2">
+            {project.reference ? (
+              <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
+                {project.reference}
+              </span>
+            ) : null}
+            {!cover ? (
+              <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+                {kindLabel}
+              </span>
+            ) : null}
+          </div>
 
           <h3 className="mt-4 font-display text-lg font-semibold leading-snug text-foreground sm:text-xl">
             <Link

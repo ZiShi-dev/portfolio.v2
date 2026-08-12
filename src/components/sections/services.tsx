@@ -16,11 +16,17 @@ import type { LocalizedService } from "@/lib/services/store";
 
 type ServicesProps = {
   services: LocalizedService[];
+  /** Projets liés en exemple : perso, vendus, ou à vendre. */
   projects?: LocalizedProjectItem[];
   /** Accueil : aperçu + lien catalogue. Page : liste complète. */
   variant?: "home" | "page";
 };
 
+/**
+ * Section Services — prestations que VORZIX peut fournir,
+ * avec liens vers des projets (perso / vendu / à vendre).
+ * Distinct de la section Sites à vendre.
+ */
 export function Services({
   services,
   projects = [],
@@ -82,36 +88,39 @@ export function Services({
           </p>
         ) : (
           <div className="mt-10 space-y-14 sm:mt-12 lg:mt-14">
-            {previewProjects.length > 0 ? (
+            {previewServices.length > 0 ? (
               <div>
                 <Reveal delay={0.12}>
                   <h3 className="text-center font-mono text-[10px] uppercase tracking-[0.22em] text-primary/80">
-                    {t("projectLinksHeading")}
+                    {t("servicesHeading")}
                   </h3>
                 </Reveal>
                 <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-                  {previewProjects.map((project, i) => (
-                    <Reveal key={project.id} delay={0.12 + i * 0.05}>
-                      <CatalogProjectLinkCard project={project} />
+                  {previewServices.map((service, i) => (
+                    <Reveal key={service.id} delay={0.12 + i * 0.05}>
+                      <ServiceOfferCard service={service} />
                     </Reveal>
                   ))}
                 </div>
               </div>
             ) : null}
 
-            {previewServices.length > 0 ? (
+            {previewProjects.length > 0 ? (
               <div>
-                {previewProjects.length > 0 ? (
-                  <Reveal delay={0.12}>
-                    <h3 className="text-center font-mono text-[10px] uppercase tracking-[0.22em] text-primary/80">
-                      {t("servicesHeading")}
+                <Reveal delay={0.12}>
+                  <div className="mx-auto max-w-2xl text-center">
+                    <h3 className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary/80">
+                      {t("projectLinksHeading")}
                     </h3>
-                  </Reveal>
-                ) : null}
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {t("projectLinksSubtitle")}
+                    </p>
+                  </div>
+                </Reveal>
                 <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-                  {previewServices.map((service, i) => (
-                    <Reveal key={service.id} delay={0.12 + i * 0.05}>
-                      <ServiceOfferCard service={service} />
+                  {previewProjects.map((project, i) => (
+                    <Reveal key={project.id} delay={0.12 + i * 0.05}>
+                      <CatalogProjectLinkCard project={project} />
                     </Reveal>
                   ))}
                 </div>

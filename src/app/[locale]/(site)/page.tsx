@@ -65,8 +65,9 @@ export default async function Home() {
   return (
     <>
       <HomeSection />
+      {/* Deux blocs distincts : services proposés vs sites à vendre */}
       <Services services={services} projects={projects} />
-      {saleOffers.length > 0 ? <SaleOffers offers={saleOffers} /> : null}
+      <SaleOffers offers={saleOffers} />
       <Engagements engagements={engagements} />
       <Journey />
       <Testimonials reviews={reviews} />

@@ -16,7 +16,7 @@
     "workTogetherShort": "ابدأ",
     "menu": "القائمة",
     "closeMenu": "إغلاق القائمة",
-    "forSale": "للبيع"
+    "forSale": "مواقع للبيع"
   },
   "footer": {
     "navigation": "التنقل",
@@ -84,15 +84,15 @@
     }
   },
   "services": {
-    "eyebrow": "كتالوج · العروض",
-    "title": "منتجات رقمية صُمّمت بـ",
-    "titleHighlight": "دقة.",
-    "subtitle": "خدمات وروابط إلى إنجازاتنا — كل مشروع يُعرض بصورته الخاصة.",
+    "eyebrow": "الخدمات",
+    "title": "الخدمات التي أستطيع",
+    "titleHighlight": "تقديمها لكم.",
+    "subtitle": "خدمات مخصّصة: مواقع وتطبيقات ومنصات. لكل خدمة صفحة تفاصيل خاصة — مع روابط لمشاريع (شخصية أو مباعة أو للبيع).",
     "discover": "اكتشف",
     "cta": "التحدث عن احتياجك",
     "page": {
-      "metaTitle": "عروضنا التجارية — {brand}",
-      "metaDescription": "كتالوج عروضنا التجارية لدى {brand}: مواقع، تجارة إلكترونية، تطبيقات، SaaS وحلول مخصصة."
+      "metaTitle": "الخدمات — {brand}",
+      "metaDescription": "خدمات {brand}: مواقع وتطبيقات وحلول رقمية مخصّصة."
     },
     "items": {
       "web": {
@@ -120,23 +120,23 @@
         "desc": "إصلاحات وتحسينات ونصائح بعد النشر — يبقى موقعك مستقراً وقابلاً للتطور."
       }
     },
-    "empty": "العروض ستتوفر قريباً.",
+    "empty": "الخدمات ستتوفر قريباً.",
     "idealFor": "مثالي لـ",
     "included": "يشمل عادةً",
     "learnMore": "اعرف المزيد",
     "ctaStart": "ابدأ مشروعاً",
     "ctaBuy": "اشترِ هذا العرض",
-    "backToServices": "العودة إلى العروض",
-    "backToCatalog": "العودة إلى العروض",
-    "detailAbout": "عن العرض",
-    "detailPricing": "التسعير",
-    "relatedProjects": "أعمال مرتبطة",
+    "backToServices": "العودة إلى الخدمات",
+    "backToCatalog": "العودة إلى الخدمات",
+    "detailAbout": "ما يشمله هذا الخدمة",
+    "detailPricing": "سعر الخدمة",
+    "relatedProjects": "مشاريع مرتبطة بهذه الخدمة",
     "viewCaseStudy": "عرض إنجاز",
-    "linkedProjectEyebrow": "مشروع منجز",
+    "linkedProjectEyebrow": "مشروع مرتبط",
     "viewLinkedProject": "عرض تفاصيل المشروع",
-    "projectLinksHeading": "روابط المشاريع المنجزة",
+    "projectLinksHeading": "أمثلة مشاريع",
     "servicesHeading": "خدماتنا",
-    "projectLinkBadge": "إنجاز",
+    "projectLinkBadge": "مشروع",
     "viewProjectLink": "عرض المشروع",
     "offerKind": {
       "service": "خدمة",
@@ -157,10 +157,12 @@
       "disclaimer": "السعر النهائي يعتمد على النطاق والميزات واحتياجات المشروع.",
       "fixedDisclaimer": "سعر العرض كما هو معروض. أي خيارات أو تعديلات تُسعَّر بشكل منفصل."
     },
-    "catalogTitle": "عروضنا",
-    "catalogTitleHighlight": "التجارية.",
-    "catalogSubtitle": "تصفّح مشاريعنا المنجزة وخدماتنا — صورة كل مشروع تأتي من المشروع نفسه.",
-    "viewAll": "عرض كل العروض"
+    "catalogTitle": "خدماتنا",
+    "catalogTitleHighlight": "المتاحة.",
+    "catalogSubtitle": "اختر خدمة — لكل واحدة صفحة تفاصيل مع روابط مشاريع.",
+    "viewAll": "عرض كل الخدمات",
+    "relatedProjectsHint": "أمثلة إنجازات — مشروع شخصي أو مباع أو ما زال متاحاً.",
+    "projectLinksSubtitle": "مشاريع شخصية أو مباعة أو للبيع — الصورة والرابط من المشروع نفسه."
   },
   "engagements": {
     "eyebrow": "الالتزامات · VORZIX",
@@ -1262,41 +1264,44 @@
     }
   },
   "sales": {
-    "eyebrow": "كتالوج · للبيع",
-    "title": "مواقع ومنتجات",
-    "titleHighlight": "جاهزة للشراء.",
-    "subtitle": "إنجازات متاحة فوراً — الصورة والرابط يأتيان من المشروع نفسه.",
+    "eyebrow": "مواقع للبيع",
+    "title": "مواقع جاهزة",
+    "titleHighlight": "للشراء.",
+    "subtitle": "مواقع منجزة ومتاحة فوراً. كل بطاقة تشرح تفاصيل الموقع وثمنه وما يمكنني تكييفه لكم.",
     "cta": "التحدث عن عملية شراء",
     "page": {
-      "metaTitle": "للبيع — {brand}",
-      "metaDescription": "عروض للبيع لدى {brand}: مواقع ومنتجات رقمية جاهزة للاستخدام."
+      "metaTitle": "مواقع للبيع — {brand}",
+      "metaDescription": "مواقع للبيع لدى {brand}: السعر وتفاصيل الموقع وخيارات التكييف."
     },
-    "empty": "لا عروض للبيع حالياً.",
-    "idealFor": "مثالي لـ",
-    "included": "يشمل عادةً",
-    "learnMore": "اعرف المزيد",
+    "empty": "لا مواقع للبيع حالياً.",
+    "idealFor": "هذا الموقع يناسب",
+    "included": "مشمول في البيع",
+    "learnMore": "عرض التفاصيل",
     "ctaStart": "اطلب تكييفاً",
-    "ctaBuy": "اشترِ هذا العرض",
-    "backToCatalog": "العودة إلى عروض البيع",
-    "detailAbout": "عن العرض",
-    "detailPricing": "التسعير",
-    "linkedProjectEyebrow": "المشروع المرتبط",
-    "viewProjectLink": "عرض المشروع",
+    "ctaBuy": "اشترِ هذا الموقع",
+    "backToCatalog": "العودة إلى المواقع للبيع",
+    "detailAbout": "تفاصيل الموقع",
+    "detailPricing": "ثمن الموقع",
+    "linkedProjectEyebrow": "معاينة الموقع",
+    "viewProjectLink": "عرض صفحة المشروع",
     "offerKind": {
       "service": "خدمة",
-      "product": "للبيع"
+      "product": "موقع للبيع"
     },
     "pricing": {
       "startingAt": "ابتداءً من {price}",
       "fixed": "{price}",
       "quoteOnly": "حسب العرض",
       "contact": "لنتحدث عن عملية الشراء",
-      "disclaimer": "السعر النهائي يعتمد على النطاق والميزات واحتياجات المشروع.",
-      "fixedDisclaimer": "سعر العرض كما هو معروض. أي خيارات أو تعديلات تُسعَّر بشكل منفصل."
+      "disclaimer": "قد يتغيّر السعر النهائي بحسب التكييفات المطلوبة.",
+      "fixedDisclaimer": "ثمن الموقع كما هو معروض. أي تكييفات تُسعَّر بشكل منفصل."
     },
-    "catalogTitle": "عروض",
+    "catalogTitle": "مواقع",
     "catalogTitleHighlight": "للبيع.",
-    "catalogSubtitle": "اختر إنجازاً جاهزاً — كل بطاقة تعرض المشروع وصورته.",
-    "viewAll": "عرض كل عروض البيع"
+    "catalogSubtitle": "لكل موقع صفحة تفاصيل: الوصف والثمن والمشمول وإمكانيات التكييف.",
+    "viewAll": "عرض كل المواقع للبيع",
+    "includedHint": "ما تحصل عليه عند شراء الموقع.",
+    "whatICanOfferTitle": "ما أستطيع أن أقدّمه لكم أيضاً",
+    "whatICanOfferBody": "بعد الشراء: تكييف المحتوى والألوان والنصوص أو تطويرات صغيرة لتناسب نشاطكم — دون البدء من الصفر."
   }
 }

@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import {
   ArrowLeft,
-  ArrowUpRight,
   Check,
   ExternalLink,
   MessageSquare,
@@ -65,7 +64,10 @@ export async function generateMetadata({
   });
 }
 
-/** Page détail d’une offre à vendre */
+/**
+ * Détail d’un site à vendre — distinct des services :
+ * image du site, prix, contenu inclus, ce que je peux adapter.
+ */
 export default async function AVendreDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const locale = (await getLocale()) as Locale;
@@ -112,9 +114,9 @@ export default async function AVendreDetailPage({ params }: PageProps) {
     }
   }
 
-  const startLabel = offer.ctaLabel.trim() || t("ctaStart");
+  const adaptLabel = offer.ctaLabel.trim() || t("ctaStart");
   const faqs = await getSiteFaqsForService(locale, offer.id);
-  const projectCover = linkedProject?.coverImage || offer.coverImage;
+  const siteCover = linkedProject?.coverImage || offer.coverImage;
 
   return (
     <main
@@ -132,11 +134,11 @@ export default async function AVendreDetailPage({ params }: PageProps) {
           {t("backToCatalog")}
         </Link>
 
-        {projectCover ? (
+        {siteCover ? (
           <div className="mt-8 overflow-hidden rounded-xl border border-border-gold/30">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={projectCover}
+              src={siteCover}
               alt=""
               className="aspect-[16/9] w-full object-cover"
               decoding="async"
@@ -157,11 +159,8 @@ export default async function AVendreDetailPage({ params }: PageProps) {
             <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">
               {offer.title}
             </h1>
-            <p className="mt-4 font-mono text-lg tracking-wide text-primary sm:text-xl">
-              {price.label}
-            </p>
           </div>
-          {!projectCover ? (
+          {!siteCover ? (
             <div
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border text-primary sm:h-14 sm:w-14"
               aria-hidden
@@ -174,6 +173,37 @@ export default async function AVendreDetailPage({ params }: PageProps) {
         <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
           {offer.shortDescription}
         </p>
+
+        {/* Prix mis en avant — cœur de la fiche vente */}
+        <section className="mt-8 rounded-xl border border-border-gold/50 bg-surface-elevated/50 p-5 sm:p-6">
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+            {t("detailPricing")}
+          </h2>
+          <p className="mt-2 font-mono text-2xl tracking-wide text-primary sm:text-3xl">
+            {price.label}
+          </p>
+          {price.mode === "starting_at" ? (
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+              {t("pricing.disclaimer")}
+            </p>
+          ) : null}
+          {price.mode === "fixed" ? (
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+              {t("pricing.fixedDisclaimer")}
+            </p>
+          ) : null}
+          {linkedProject?.liveUrl ? (
+            <a
+              href={linkedProject.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex min-h-10 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-primary transition-colors hover:text-primary-hover"
+            >
+              {tProjects("visitSite")}
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+            </a>
+          ) : null}
+        </section>
 
         <CelestialDivider className="mt-10" />
 
@@ -188,22 +218,14 @@ export default async function AVendreDetailPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        {offer.idealFor ? (
-          <section className="mt-10 rounded-xl border border-border bg-surface-elevated/40 p-5 sm:p-6">
-            <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
-              {t("idealFor")}
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
-              {offer.idealFor}
-            </p>
-          </section>
-        ) : null}
-
         {offer.includedFeatures.length > 0 ? (
           <section className="mt-10">
             <h2 className="font-display text-xl font-semibold text-foreground">
               {t("included")}
             </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("includedHint")}
+            </p>
             <ul className="mt-4 space-y-2.5">
               {offer.includedFeatures.map((feature) => (
                 <li
@@ -221,92 +243,40 @@ export default async function AVendreDetailPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface/60 p-5 sm:p-6">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
-            {t("detailPricing")}
-          </h2>
-          <p className="mt-2 font-mono text-base tracking-wide text-foreground sm:text-lg">
-            {price.label}
-          </p>
-          {price.mode === "starting_at" ? (
-            <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-              {t("pricing.disclaimer")}
+        {offer.idealFor ? (
+          <section className="mt-10 rounded-xl border border-border bg-surface-elevated/40 p-5 sm:p-6">
+            <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+              {t("idealFor")}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
+              {offer.idealFor}
             </p>
-          ) : null}
-          {price.mode === "fixed" ? (
-            <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-              {t("pricing.fixedDisclaimer")}
-            </p>
-          ) : null}
-        </section>
-
-        {linkedProject ? (
-          <section className="mt-10 overflow-hidden rounded-xl border border-border-gold/50 bg-surface-elevated/50">
-            {linkedProject.coverImage &&
-            linkedProject.coverImage !== projectCover ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={linkedProject.coverImage}
-                alt=""
-                className="aspect-[16/9] w-full object-cover"
-                decoding="async"
-              />
-            ) : null}
-            <div className="p-5 sm:p-6">
-              <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
-                {t("linkedProjectEyebrow")}
-              </h2>
-              <p className="mt-2 font-display text-lg font-semibold text-foreground sm:text-xl">
-                {linkedProject.title}
-              </p>
-              {linkedProject.reference ? (
-                <p className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground">
-                  {linkedProject.reference}
-                </p>
-              ) : null}
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                {linkedProject.liveUrl ? (
-                  <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
-                    <a
-                      href={linkedProject.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {tProjects("seeSite")}
-                      <ExternalLink className="h-4 w-4" aria-hidden />
-                    </a>
-                  </Button>
-                ) : (
-                  <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
-                    <Link href={`${routes.projects}/${linkedProject.slug}`}>
-                      {t("viewProjectLink")}
-                      <ArrowUpRight className="h-4 w-4" aria-hidden />
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            </div>
           </section>
         ) : null}
 
-        <FaqSection faqs={faqs} compact headingId="vente-faq-heading" />
-
-        <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          {offer.showCtaBuy ? (
-            <Button asChild size="lg" className="min-h-12">
-              <ContactOpenLink
-                serviceSlug={offer.slug}
-                serviceId={offer.id}
-                serviceReference={offer.reference}
-                projectType={offer.inquiryProjectType}
-                intent="buy"
-              >
-                <ShoppingBag className="h-4 w-4" aria-hidden />
-                {t("ctaBuy")}
-              </ContactOpenLink>
-            </Button>
-          ) : null}
-          {offer.showCtaStart ? (
+        {/* Ce que je peux encore offrir (adaptations) — distinct du service sur-mesure */}
+        <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface/60 p-5 sm:p-6">
+          <h2 className="font-display text-xl font-semibold text-foreground">
+            {t("whatICanOfferTitle")}
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {t("whatICanOfferBody")}
+          </p>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            {offer.showCtaBuy ? (
+              <Button asChild size="lg" className="min-h-12">
+                <ContactOpenLink
+                  serviceSlug={offer.slug}
+                  serviceId={offer.id}
+                  serviceReference={offer.reference}
+                  projectType={offer.inquiryProjectType}
+                  intent="buy"
+                >
+                  <ShoppingBag className="h-4 w-4" aria-hidden />
+                  {t("ctaBuy")}
+                </ContactOpenLink>
+              </Button>
+            ) : null}
             <Button
               asChild
               size="lg"
@@ -321,10 +291,15 @@ export default async function AVendreDetailPage({ params }: PageProps) {
                 intent="start"
               >
                 <MessageSquare className="h-4 w-4" aria-hidden />
-                {startLabel}
+                {adaptLabel}
               </ContactOpenLink>
             </Button>
-          ) : null}
+          </div>
+        </section>
+
+        <FaqSection faqs={faqs} compact headingId="vente-faq-heading" />
+
+        <div className="mt-12">
           <Button asChild variant="outline" size="lg" className="min-h-12">
             <Link href={routes.forSale}>{t("backToCatalog")}</Link>
           </Button>
