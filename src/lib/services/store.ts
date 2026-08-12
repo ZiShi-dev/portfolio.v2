@@ -551,17 +551,22 @@ export async function getServiceBySlugForAdmin(
   return { ...row, case_study_ids: caseMap.get(row.id) ?? [] };
 }
 
-export async function listPublishedServiceSlugs(): Promise<
-  { slug: string; updated_at: string }[]
-> {
+export async function listPublishedServiceSlugs(
+  offerKind?: "service" | "product"
+): Promise<{ slug: string; updated_at: string; offer_kind: "service" | "product" }[]> {
   if (!isSupabaseServiceConfigured()) return [];
   const supabase = createSupabaseServiceClient();
   if (!supabase) return [];
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("services")
-    .select("slug, updated_at")
+    .select("slug, updated_at, offer_kind")
     .eq("status", "published");
+  if (offerKind) {
+    query = query.eq("offer_kind", offerKind);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("[services] list slugs", error.message);
@@ -570,6 +575,10 @@ export async function listPublishedServiceSlugs(): Promise<
   return (data ?? []).map((row) => ({
     slug: String(row.slug),
     updated_at: String(row.updated_at),
+    offer_kind:
+      row.offer_kind === "product"
+        ? ("product" as const)
+        : ("service" as const),
   }));
 }
 

@@ -5,6 +5,8 @@ export const routes = {
   home: "/",
   projects: "/projets",
   services: "/offres",
+  /** Catalogue des offres à vendre (sites / produits prêts). */
+  forSale: "/a-vendre",
   reviews: "/avis",
   leaveReview: "/laisser-un-avis",
   contact: "/contact",
@@ -17,6 +19,7 @@ export const routes = {
 /** Ancres sur la page d'accueil (scroll interne uniquement). */
 export const homeAnchors = {
   services: "#services",
+  forSale: "#a-vendre",
   engagements: "#engagements",
   journey: "#parcours",
   /** Les projets s’affichent dans Catalogue · Offres (#services). */
@@ -38,9 +41,22 @@ export function homeSectionUrl(section: keyof typeof homeAnchors) {
   return `${routes.home}${homeAnchors[section]}`;
 }
 
-/** URL détail d’une offre. */
+/** URL détail d’une offre service (/offres). */
 export function serviceDetailPath(slug: string) {
   return `${routes.services}/${slug}`;
+}
+
+/** URL détail d’une offre à vendre (/a-vendre). */
+export function saleDetailPath(slug: string) {
+  return `${routes.forSale}/${slug}`;
+}
+
+/** URL publique détail selon le type d’offre. */
+export function offerDetailPath(
+  slug: string,
+  kind: "service" | "product" = "service"
+) {
+  return kind === "product" ? saleDetailPath(slug) : serviceDetailPath(slug);
 }
 
 /** Lien public d’un avis publié. */

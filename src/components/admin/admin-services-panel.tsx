@@ -106,7 +106,8 @@ type EditorState = {
 
 const emptyI18n = (): ServiceI18n => ({ fr: "", en: "", ar: "" });
 
-function emptyEditor(): EditorState {
+function emptyEditor(catalogKind: ServiceOfferKind): EditorState {
+  const isSale = catalogKind === "product";
   return {
     reference: "",
     slug: "",
@@ -120,11 +121,11 @@ function emptyEditor(): EditorState {
     idealFor: emptyI18n(),
     includedFeatures: [],
     ctaLabel: emptyI18n(),
-    offerKind: "service",
-    showCtaBuy: false,
-    showCtaStart: true,
+    offerKind: catalogKind,
+    showCtaBuy: isSale,
+    showCtaStart: !isSale,
     linkedProjectId: "",
-    pricingMode: "quote_only",
+    pricingMode: isSale ? "fixed" : "quote_only",
     startingPriceEuros: "",
     currency: "EUR",
     inquiryProjectType: "",
@@ -149,8 +150,8 @@ function rowToEditor(row: ServiceRow): EditorState {
     idealFor: { ...row.ideal_for },
     includedFeatures: row.included_features.map((f) => ({ ...f })),
     ctaLabel: { ...row.cta_label },
-    offerKind: "service",
-    showCtaBuy: false,
+    offerKind: row.offer_kind,
+    showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
     linkedProjectId: row.linked_project_id ?? "",
     pricingMode: row.pricing_mode,
@@ -163,7 +164,7 @@ function rowToEditor(row: ServiceRow): EditorState {
   };
 }
 
-function editorToPayload(editor: EditorState) {
+function editorToPayload(editor: EditorState, catalogKind: ServiceOfferKind) {
   const startingPriceCents =
     editor.pricingMode === "starting_at" || editor.pricingMode === "fixed"
       ? parseEurosToCents(editor.startingPriceEuros)
@@ -182,9 +183,9 @@ function editorToPayload(editor: EditorState) {
     idealFor: editor.idealFor,
     includedFeatures: editor.includedFeatures.filter((f) => f.fr.trim()),
     ctaLabel: editor.ctaLabel,
-    // Catalogue public : plus d’offres « à vendre ».
-    offerKind: "service" as const,
-    showCtaBuy: false,
+    // Figé selon la page admin (services vs à vendre).
+    offerKind: catalogKind,
+    showCtaBuy: catalogKind === "product" ? editor.showCtaBuy : false,
     showCtaStart: editor.showCtaStart,
     // Image publique = images du projet lié uniquement (plus de cover admin).
     coverImage: null,
@@ -200,12 +201,15 @@ function editorToPayload(editor: EditorState) {
 }
 
 type AdminServicesPanelProps = {
+  /** Filtre et fige le type : services (/offres) ou produits (/a-vendre). */
+  catalogKind?: ServiceOfferKind;
   initialServices?: ServiceRow[];
   initialConfigured?: boolean;
   caseStudyOptions?: CaseStudyOption[];
 };
 
 export function AdminServicesPanel({
+  catalogKind = "service",
   initialServices = [],
   initialConfigured = true,
   caseStudyOptions = [],
@@ -213,11 +217,16 @@ export function AdminServicesPanel({
   const t = useTranslations("admin.services");
   const tErrors = useTranslations("admin.errors");
   const { loading, setLoading, trySubmit } = useSubmitGuard();
+  const isSale = catalogKind === "product";
 
-  const [services, setServices] = useState<ServiceRow[]>(initialServices);
+  const [services, setServices] = useState<ServiceRow[]>(() =>
+    initialServices.filter((s) => s.offer_kind === catalogKind)
+  );
   const [configured, setConfigured] = useState(initialConfigured);
   const [editorOpen, setEditorOpen] = useState(false);
-  const [editor, setEditor] = useState<EditorState>(emptyEditor);
+  const [editor, setEditor] = useState<EditorState>(() =>
+    emptyEditor(catalogKind)
+  );
   const [localeTab, setLocaleTab] = useState<LocaleTab>("fr");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [listError, setListError] = useState<string | null>(null);
@@ -235,15 +244,17 @@ export function AdminServicesPanel({
         return;
       }
       setConfigured(Boolean(body.configured));
-      setServices(body.services ?? []);
+      setServices(
+        (body.services ?? []).filter((s) => s.offer_kind === catalogKind)
+      );
       setListError(null);
     } catch {
       setListError(t("loadError"));
     }
-  }, [t]);
+  }, [t, catalogKind]);
 
   const openCreate = () => {
-    setEditor(emptyEditor());
+    setEditor(emptyEditor(catalogKind));
     setLocaleTab("fr");
     setSubmitError(null);
     setEditorOpen(true);
@@ -280,7 +291,7 @@ export function AdminServicesPanel({
       draft.slug = slugifyServiceTitle(draft.title.fr);
     }
 
-    const payload = editorToPayload(draft);
+    const payload = editorToPayload(draft, catalogKind);
     const parsed = parseServiceWriteBody(payload);
     if (!parsed.ok) {
       setSubmitError(translateErr(parsed.error, tErrors));
@@ -426,14 +437,14 @@ export function AdminServicesPanel({
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-sm font-semibold text-foreground/80 sm:text-base">
-          {t("listTitle")}
+          {isSale ? t("listTitleSale") : t("listTitle")}
           {services.length > 0 ? (
             <span className="ms-2 text-foreground/45">({services.length})</span>
           ) : null}
         </h2>
         <Button type="button" onClick={openCreate} className="w-full sm:w-auto">
           <Plus className="h-4 w-4" aria-hidden />
-          {t("create")}
+          {isSale ? t("createSale") : t("create")}
         </Button>
       </div>
 
@@ -441,7 +452,7 @@ export function AdminServicesPanel({
 
       {services.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-border bg-card/50 px-4 py-10 text-center text-sm text-foreground/55">
-          {t("empty")}
+          {isSale ? t("emptySale") : t("empty")}
         </p>
       ) : (
         <ul className="grid gap-3 sm:gap-4">
@@ -630,7 +641,13 @@ export function AdminServicesPanel({
         <DialogContent className="max-h-[min(92dvh,900px)] w-[calc(100%-1.5rem)] max-w-3xl overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>
-              {editor.id ? t("editTitle") : t("createTitle")}
+              {editor.id
+                ? isSale
+                  ? t("editTitleSale")
+                  : t("editTitle")
+                : isSale
+                  ? t("createTitleSale")
+                  : t("createTitle")}
             </DialogTitle>
             <DialogDescription>{t("formHint")}</DialogDescription>
           </DialogHeader>
@@ -733,6 +750,21 @@ export function AdminServicesPanel({
                 {t("sections.commerce")}
               </h3>
               <div className="flex flex-col gap-2">
+                {isSale ? (
+                  <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
+                    <input
+                      type="checkbox"
+                      checked={editor.showCtaBuy}
+                      onChange={(e) =>
+                        setEditor((p) => ({
+                          ...p,
+                          showCtaBuy: e.target.checked,
+                        }))
+                      }
+                    />
+                    {t("fields.showCtaBuy")}
+                  </label>
+                ) : null}
                 <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
                   <input
                     type="checkbox"
@@ -740,8 +772,6 @@ export function AdminServicesPanel({
                     onChange={(e) =>
                       setEditor((p) => ({
                         ...p,
-                        offerKind: "service",
-                        showCtaBuy: false,
                         showCtaStart: e.target.checked,
                       }))
                     }
@@ -749,7 +779,9 @@ export function AdminServicesPanel({
                   {t("fields.showCtaStart")}
                 </label>
               </div>
-              <p className="text-xs text-foreground/50">{t("commerceHint")}</p>
+              <p className="text-xs text-foreground/50">
+                {isSale ? t("commerceHintSale") : t("commerceHint")}
+              </p>
             </section>
 
             <section className="space-y-3">

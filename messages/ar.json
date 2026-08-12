@@ -5,7 +5,7 @@
     "jobTitle": "وكالة تقنية"
   },
   "nav": {
-    "services": "عروضنا",
+    "services": "الخدمات",
     "engagements": "التزامات",
     "projects": "المشاريع",
     "faq": "أسئلة",
@@ -15,7 +15,8 @@
     "workTogether": "لنعمل معاً",
     "workTogetherShort": "ابدأ",
     "menu": "القائمة",
-    "closeMenu": "إغلاق القائمة"
+    "closeMenu": "إغلاق القائمة",
+    "forSale": "للبيع"
   },
   "footer": {
     "navigation": "التنقل",
@@ -139,7 +140,7 @@
     "viewProjectLink": "عرض المشروع",
     "offerKind": {
       "service": "خدمة",
-      "product": "خدمة"
+      "product": "للبيع"
     },
     "filter": {
       "label": "تصفية العروض",
@@ -440,9 +441,10 @@
       "projectsTitle": "المشاريع",
       "inquiriesTitle": "طلبات المشاريع",
       "settingsTitle": "الإعدادات",
-      "servicesTitle": "الخدمات / العروض",
+      "servicesTitle": "الخدمات",
       "engagementsTitle": "الالتزامات",
-      "faqsTitle": "الأسئلة الشائعة"
+      "faqsTitle": "الأسئلة الشائعة",
+      "forSaleTitle": "للبيع"
     },
     "language": {
       "label": "اللغة",
@@ -537,7 +539,9 @@
         "newInquiries": "طلبات جديدة",
         "newInquiriesHint": "العملاء المحتملون في /admin/inquiries",
         "services": "العروض",
-        "servicesHint": "تُدار في /admin/services"
+        "servicesHint": "الخدمات (/offres)",
+        "forSale": "للبيع",
+        "forSaleHint": "عروض المنتجات (/a-vendre)"
       },
       "reviewsTitle": "إدارة المراجعات",
       "reviewsBody": "يزرك الزوار رأياً (البريد إلزامي). يظهر فوراً على الموقع: تسحبه أو تحذفه لاحقاً إن لزم.",
@@ -575,12 +579,12 @@
       "inquiriesBody": "أدر طلبات المسار التفاعلي.",
       "manageInquiries": "عرض الطلبات",
       "inquiriesNewBadge": "{count} جديدة",
-      "servicesTitle": "العروض التجارية",
-      "servicesBody": "أنشئ وانشر ورتّب العروض المعروضة في الموقع. الأسعار والترجمات ودراسات الحالة.",
-      "servicesNext": "أدِر كل شيء من /admin/services — دون تعديل الشيفرة.",
-      "manageServices": "إدارة العروض",
-      "servicesPageTitle": "إدارة العروض",
-      "servicesPageSubtitle": "CMS · FR/EN/AR · تسعير · دراسات حالة · نشر.",
+      "servicesTitle": "الخدمات",
+      "servicesBody": "إدارة الخدمات المخصّصة المعروضة على /offres.",
+      "servicesNext": "أدِر كل شيء من /admin/services — منفصل عن عروض البيع.",
+      "manageServices": "إدارة الخدمات",
+      "servicesPageTitle": "إدارة الخدمات",
+      "servicesPageSubtitle": "CMS · FR/EN/AR · أسعار · دراسات حالة · نشر.",
       "engagementsTitle": "التزامات VORZIX",
       "engagementsBody": "عدّل الالتزامات المعروضة على الموقع: العناوين والنصوص FR/EN/AR والترتيب والنشر.",
       "engagementsNext": "أدِر كل شيء من /admin/engagements — دون تعديل الشيفرة.",
@@ -592,7 +596,13 @@
       "faqsNext": "أدِر كل شيء من /admin/faqs — دون تعديل الشيفرة.",
       "manageFaqs": "إدارة الأسئلة الشائعة",
       "faqsPageTitle": "إدارة الأسئلة الشائعة",
-      "faqsPageSubtitle": "CMS · FR/EN/AR · النطاق · الخدمات · الترتيب · النشر."
+      "faqsPageSubtitle": "CMS · FR/EN/AR · النطاق · الخدمات · الترتيب · النشر.",
+      "forSaleTitle": "عروض للبيع",
+      "forSaleBody": "مواقع ومنتجات جاهزة للشراء، تُعرض على /a-vendre.",
+      "forSaleNext": "أدِر كل شيء من /admin/a-vendre — منفصل عن الخدمات.",
+      "manageForSale": "إدارة عروض البيع",
+      "forSalePageTitle": "إدارة عروض البيع",
+      "forSalePageSubtitle": "CMS · FR/EN/AR · السعر · مشروع مرتبط · نشر."
     },
     "reviews": {
       "title": "مراجعة المراجعات",
@@ -987,10 +997,10 @@
       }
     },
     "services": {
-      "listTitle": "العروض",
-      "create": "إنشاء عرض",
-      "createTitle": "عرض جديد",
-      "editTitle": "تعديل العرض",
+      "listTitle": "الخدمات",
+      "create": "إنشاء خدمة",
+      "createTitle": "خدمة جديدة",
+      "editTitle": "تعديل الخدمة",
       "formHint": "المسودة يمكن أن تكون ناقصة. النشر يتطلب عنواناً ووصفاً قصيراً بالفرنسية.",
       "edit": "تعديل",
       "preview": "معاينة",
@@ -999,7 +1009,7 @@
       "saveDraft": "حفظ مسودة",
       "savePublish": "حفظ ونشر",
       "cancel": "إلغاء",
-      "empty": "لا توجد عروض بعد. أنشئ الأولى.",
+      "empty": "لا خدمات بعد. أنشئ الأولى.",
       "loadError": "تعذر تحميل العروض.",
       "duplicateError": "تعذر التكرار.",
       "deleteError": "تعذر الحذف.",
@@ -1038,9 +1048,9 @@
       },
       "offerKind": {
         "service": "خدمة",
-        "product": "خدمة"
+        "product": "للبيع"
       },
-      "commerceHint": "يتحكم بزر « ابدأ مشروعاً » في الصفحة العامة. روابط المشاريع المنجزة تأتي من المشروع المرتبط.",
+      "commerceHint": "يتحكم بزر « ابدأ مشروعاً » على /offres.",
       "uploadCover": "رفع صورة",
       "removeCover": "إزالة",
       "sections": {
@@ -1080,7 +1090,13 @@
       "linkedProjectNone": "لا يوجد مشروع مرتبط",
       "caseStudiesHint": "دراسات حالة ثانوية تظهر تحت المشروع الرئيسي.",
       "duplicate": "تكرار",
-      "archive": "أرشفة"
+      "archive": "أرشفة",
+      "listTitleSale": "عروض للبيع",
+      "createSale": "إنشاء عرض للبيع",
+      "createTitleSale": "عرض جديد للبيع",
+      "editTitleSale": "تعديل عرض البيع",
+      "emptySale": "لا عروض للبيع بعد. أنشئ الأولى.",
+      "commerceHintSale": "يتحكم بأزرار الشراء / التواصل على /a-vendre. اربط مشروعاً للحصول على الصورة."
     }
   },
   "caseStudy": {
@@ -1244,5 +1260,43 @@
       "submit": "تعذّر إرسال الطلب. أعد المحاولة.",
       "turnstile": "التحقق من مكافحة الإزعاج مطلوب."
     }
+  },
+  "sales": {
+    "eyebrow": "كتالوج · للبيع",
+    "title": "مواقع ومنتجات",
+    "titleHighlight": "جاهزة للشراء.",
+    "subtitle": "إنجازات متاحة فوراً — الصورة والرابط يأتيان من المشروع نفسه.",
+    "cta": "التحدث عن عملية شراء",
+    "page": {
+      "metaTitle": "للبيع — {brand}",
+      "metaDescription": "عروض للبيع لدى {brand}: مواقع ومنتجات رقمية جاهزة للاستخدام."
+    },
+    "empty": "لا عروض للبيع حالياً.",
+    "idealFor": "مثالي لـ",
+    "included": "يشمل عادةً",
+    "learnMore": "اعرف المزيد",
+    "ctaStart": "اطلب تكييفاً",
+    "ctaBuy": "اشترِ هذا العرض",
+    "backToCatalog": "العودة إلى عروض البيع",
+    "detailAbout": "عن العرض",
+    "detailPricing": "التسعير",
+    "linkedProjectEyebrow": "المشروع المرتبط",
+    "viewProjectLink": "عرض المشروع",
+    "offerKind": {
+      "service": "خدمة",
+      "product": "للبيع"
+    },
+    "pricing": {
+      "startingAt": "ابتداءً من {price}",
+      "fixed": "{price}",
+      "quoteOnly": "حسب العرض",
+      "contact": "لنتحدث عن عملية الشراء",
+      "disclaimer": "السعر النهائي يعتمد على النطاق والميزات واحتياجات المشروع.",
+      "fixedDisclaimer": "سعر العرض كما هو معروض. أي خيارات أو تعديلات تُسعَّر بشكل منفصل."
+    },
+    "catalogTitle": "عروض",
+    "catalogTitleHighlight": "للبيع.",
+    "catalogSubtitle": "اختر إنجازاً جاهزاً — كل بطاقة تعرض المشروع وصورته.",
+    "viewAll": "عرض كل عروض البيع"
   }
 }

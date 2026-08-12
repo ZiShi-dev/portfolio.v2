@@ -9,6 +9,7 @@ import {
   Orbit,
   Share2,
   Sparkles,
+  ShoppingBag,
   ShieldCheck,
   CircleHelp,
 } from "lucide-react";
@@ -59,10 +60,14 @@ export default async function AdminDashboardPage() {
       ? projectsAdmin.projects.length
       : countDemoProjects();
   const servicesAdmin = configured ? await listServicesForAdmin() : null;
-  const servicesCount =
+  const allOffers =
     servicesAdmin?.ok && servicesAdmin.configured
-      ? servicesAdmin.services.length
-      : 0;
+      ? servicesAdmin.services
+      : [];
+  const servicesCount = allOffers.filter((s) => s.offer_kind === "service")
+    .length;
+  const forSaleCount = allOffers.filter((s) => s.offer_kind === "product")
+    .length;
 
   const stats = [
     {
@@ -84,6 +89,12 @@ export default async function AdminDashboardPage() {
       value: servicesCount,
       icon: Sparkles,
       hint: t("stats.servicesHint"),
+    },
+    {
+      label: t("stats.forSale"),
+      value: forSaleCount,
+      icon: ShoppingBag,
+      hint: t("stats.forSaleHint"),
     },
     {
       label: t("stats.newInquiries"),
@@ -220,6 +231,27 @@ export default async function AdminDashboardPage() {
           <Button asChild className="shrink-0 self-start">
             <Link href={ADMIN_ROUTES.services}>
               {t("manageServices")}
+              <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h2 className="flex items-center gap-2 text-lg font-semibold">
+              <ShoppingBag className="h-5 w-5 text-primary" aria-hidden />
+              {t("forSaleTitle")}
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-foreground/65">
+              {t("forSaleBody")}
+            </p>
+            <p className="mt-3 text-sm text-foreground/55">{t("forSaleNext")}</p>
+          </div>
+          <Button asChild className="shrink-0 self-start">
+            <Link href={ADMIN_ROUTES.forSale}>
+              {t("manageForSale")}
               <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </Link>
           </Button>

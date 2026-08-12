@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, MessageSquare } from "lucide-react";
+import { ArrowUpRight, MessageSquare, ShoppingBag } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { Button } from "@/components/ui/button";
@@ -8,21 +8,27 @@ import { GlowCard } from "@/components/ui/glow-card";
 import { Link } from "@/i18n/navigation";
 import { ServiceIcon } from "@/lib/services/icons";
 import { resolveServicePriceDisplay } from "@/lib/services/pricing";
-import { serviceDetailPath } from "@/lib/routes";
+import { offerDetailPath } from "@/lib/routes";
 import type { LocalizedService } from "@/lib/services/store";
 import { cn } from "@/lib/utils";
 
 type ServiceOfferCardProps = {
   service: LocalizedService;
+  /** Namespace i18n pour les libellés (services | sales). */
+  i18nNamespace?: "services" | "sales";
 };
 
 /**
  * Carte catalogue compacte : description tronquée (3 lignes).
- * Image éventuelle via projet lié.
+ * Image via projet lié. Produits « à vendre » : prix + CTA achat.
  */
-export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
-  const t = useTranslations("services");
+export function ServiceOfferCard({
+  service,
+  i18nNamespace = "services",
+}: ServiceOfferCardProps) {
+  const t = useTranslations(i18nNamespace);
   const locale = useLocale();
+  const isProduct = service.offerKind === "product";
 
   const price = resolveServicePriceDisplay({
     pricingMode: service.pricingMode,
@@ -38,7 +44,8 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
   });
 
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
-  const detailHref = serviceDetailPath(service.slug);
+  const detailHref = offerDetailPath(service.slug, service.offerKind);
+  const showBuy = isProduct && service.showCtaBuy;
   const showStart = service.showCtaStart;
   const showCover = Boolean(service.coverImage);
 
@@ -58,6 +65,13 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
               loading="lazy"
               decoding="async"
             />
+            {isProduct ? (
+              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#070A12]/85 to-transparent px-4 pb-3 pt-10">
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+                  {t("offerKind.product")}
+                </span>
+              </span>
+            ) : null}
           </Link>
         ) : null}
 
@@ -65,6 +79,14 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
           <div className="flex items-center justify-between gap-3">
             <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
               {service.reference}
+              {isProduct && !showCover ? (
+                <>
+                  <span className="mx-1.5 text-border-gold/60">·</span>
+                  <span className="text-muted-foreground">
+                    {t("offerKind.product")}
+                  </span>
+                </>
+              ) : null}
             </span>
             {!showCover ? (
               <div
@@ -92,7 +114,7 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
           <p
             className={cn(
               "mt-4 font-mono tracking-wide text-foreground/80",
-              price.mode === "fixed"
+              isProduct || price.mode === "fixed"
                 ? "text-sm font-medium text-primary sm:text-base"
                 : "text-[11px]"
             )}
@@ -101,8 +123,27 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
           </p>
 
           <div className="mt-auto flex flex-col gap-2 pt-5">
-            {showStart ? (
+            {showBuy ? (
               <Button asChild size="default" className="min-h-11 w-full">
+                <ContactOpenLink
+                  serviceSlug={service.slug}
+                  serviceId={service.id}
+                  serviceReference={service.reference}
+                  projectType={service.inquiryProjectType}
+                  intent="buy"
+                >
+                  <ShoppingBag className="h-4 w-4" aria-hidden />
+                  {t("ctaBuy")}
+                </ContactOpenLink>
+              </Button>
+            ) : null}
+            {showStart ? (
+              <Button
+                asChild
+                size="default"
+                variant={showBuy ? "outline" : "default"}
+                className="min-h-11 w-full"
+              >
                 <ContactOpenLink
                   serviceSlug={service.slug}
                   serviceId={service.id}

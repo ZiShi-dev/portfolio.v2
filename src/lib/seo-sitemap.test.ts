@@ -11,6 +11,7 @@ describe("SEO — sitemap & robots", () => {
     assert.ok(urls.some((u) => /\/projets$/.test(u)));
     assert.ok(urls.some((u) => /\/avis$/.test(u)));
     assert.ok(urls.some((u) => /\/offres$/.test(u)));
+    assert.ok(urls.some((u) => /\/a-vendre$/.test(u)));
     assert.equal(
       urls.some((u) => u.includes("/a-propos")),
       false

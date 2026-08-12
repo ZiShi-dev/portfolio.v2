@@ -32,6 +32,7 @@ export function Navbar() {
 
   const primary: NavItem[] = [
     { id: "services", label: t("services"), href: routes.services },
+    { id: "for-sale", label: t("forSale"), href: routes.forSale },
     { id: "projects", label: t("projects"), href: routes.projects },
     {
       id: "engagements",

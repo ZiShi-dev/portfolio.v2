@@ -5,7 +5,7 @@
     "jobTitle": "Technology agency"
   },
   "nav": {
-    "services": "Offers",
+    "services": "Services",
     "engagements": "Commitments",
     "projects": "Projects",
     "faq": "FAQ",
@@ -15,7 +15,8 @@
     "workTogether": "Let's work together",
     "workTogetherShort": "Start",
     "menu": "Menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "forSale": "For sale"
   },
   "footer": {
     "navigation": "Navigation",
@@ -139,7 +140,7 @@
     "viewProjectLink": "View project",
     "offerKind": {
       "service": "Service",
-      "product": "Service"
+      "product": "For sale"
     },
     "filter": {
       "label": "Filter offers",
@@ -440,9 +441,10 @@
       "projectsTitle": "Projects",
       "inquiriesTitle": "Project inquiries",
       "settingsTitle": "Settings",
-      "servicesTitle": "Services / Offers",
+      "servicesTitle": "Services",
       "engagementsTitle": "Commitments",
-      "faqsTitle": "FAQ"
+      "faqsTitle": "FAQ",
+      "forSaleTitle": "For sale"
     },
     "language": {
       "label": "Language",
@@ -537,7 +539,9 @@
         "newInquiries": "New inquiries",
         "newInquiriesHint": "Leads to process in /admin/inquiries",
         "services": "Offers",
-        "servicesHint": "Managed in /admin/services"
+        "servicesHint": "Services (/offres)",
+        "forSale": "For sale",
+        "forSaleHint": "Product offers (/a-vendre)"
       },
       "reviewsTitle": "Review management",
       "reviewsBody": "Visitors leave a review (email required). It goes live immediately: you then withdraw or delete if needed.",
@@ -575,11 +579,11 @@
       "inquiriesBody": "Manage leads from the interactive journey.",
       "manageInquiries": "View inquiries",
       "inquiriesNewBadge": "{count} new",
-      "servicesTitle": "Commercial offers",
-      "servicesBody": "Create, publish and order offers shown on the site. Pricing, translations and linked case studies.",
-      "servicesNext": "Manage everything from /admin/services — no code changes.",
-      "manageServices": "Manage offers",
-      "servicesPageTitle": "Offers management",
+      "servicesTitle": "Services",
+      "servicesBody": "Manage custom services shown on /offres.",
+      "servicesNext": "Manage everything from /admin/services — separate from for-sale offers.",
+      "manageServices": "Manage services",
+      "servicesPageTitle": "Services management",
       "servicesPageSubtitle": "CMS · FR/EN/AR · pricing · case studies · publishing.",
       "engagementsTitle": "VORZIX commitments",
       "engagementsBody": "Edit commitments shown on the site: titles, FR/EN/AR copy, order and publishing.",
@@ -592,7 +596,13 @@
       "faqsNext": "Manage everything from /admin/faqs — no code changes.",
       "manageFaqs": "Manage FAQ",
       "faqsPageTitle": "FAQ management",
-      "faqsPageSubtitle": "CMS · FR/EN/AR · scope · Services · order · publishing."
+      "faqsPageSubtitle": "CMS · FR/EN/AR · scope · Services · order · publishing.",
+      "forSaleTitle": "Offers for sale",
+      "forSaleBody": "Ready-to-buy sites and products shown on /a-vendre.",
+      "forSaleNext": "Manage everything from /admin/a-vendre — separate from services.",
+      "manageForSale": "Manage for-sale offers",
+      "forSalePageTitle": "For-sale offers management",
+      "forSalePageSubtitle": "CMS · FR/EN/AR · price · linked project · publishing."
     },
     "reviews": {
       "title": "Review moderation",
@@ -987,10 +997,10 @@
       }
     },
     "services": {
-      "listTitle": "Offers",
-      "create": "Create offer",
-      "createTitle": "New offer",
-      "editTitle": "Edit offer",
+      "listTitle": "Services",
+      "create": "Create a service",
+      "createTitle": "New service",
+      "editTitle": "Edit service",
       "formHint": "Incomplete drafts allowed. Publishing requires FR title and short description.",
       "edit": "Edit",
       "preview": "Preview",
@@ -999,7 +1009,7 @@
       "saveDraft": "Save draft",
       "savePublish": "Save & publish",
       "cancel": "Cancel",
-      "empty": "No offers yet. Create the first one.",
+      "empty": "No services yet. Create the first one.",
       "loadError": "Could not load offers.",
       "duplicateError": "Could not duplicate.",
       "deleteError": "Could not delete.",
@@ -1038,9 +1048,9 @@
       },
       "offerKind": {
         "service": "Service",
-        "product": "Service"
+        "product": "For sale"
       },
-      "commerceHint": "Controls the “Start a project” button on the public page. Completed project links come from the linked project.",
+      "commerceHint": "Controls the “Start a project” button on /offres.",
       "uploadCover": "Upload photo",
       "removeCover": "Remove",
       "sections": {
@@ -1080,7 +1090,13 @@
       "linkedProjectNone": "No linked project",
       "caseStudiesHint": "Secondary case studies shown under the main project.",
       "duplicate": "Duplicate",
-      "archive": "Archive"
+      "archive": "Archive",
+      "listTitleSale": "Offers for sale",
+      "createSale": "Create a for-sale offer",
+      "createTitleSale": "New for-sale offer",
+      "editTitleSale": "Edit for-sale offer",
+      "emptySale": "No for-sale offers yet. Create the first one.",
+      "commerceHintSale": "Controls buy / contact buttons on /a-vendre. Link a project for the image."
     }
   },
   "caseStudy": {
@@ -1244,5 +1260,43 @@
       "submit": "Unable to send the request. Please try again.",
       "turnstile": "Anti-spam verification required."
     }
+  },
+  "sales": {
+    "eyebrow": "Catalog · For sale",
+    "title": "Sites and products",
+    "titleHighlight": "ready to buy.",
+    "subtitle": "Completed work available now — image and link come from the project.",
+    "cta": "Talk about a purchase",
+    "page": {
+      "metaTitle": "For sale — {brand}",
+      "metaDescription": "{brand} offers for sale: ready-to-use websites and digital products."
+    },
+    "empty": "No offers for sale right now.",
+    "idealFor": "Ideal for",
+    "included": "Typically included",
+    "learnMore": "Learn more",
+    "ctaStart": "Request a customization",
+    "ctaBuy": "Buy this offer",
+    "backToCatalog": "Back to for-sale offers",
+    "detailAbout": "About this offer",
+    "detailPricing": "Pricing",
+    "linkedProjectEyebrow": "Linked project",
+    "viewProjectLink": "View project",
+    "offerKind": {
+      "service": "Service",
+      "product": "For sale"
+    },
+    "pricing": {
+      "startingAt": "From {price}",
+      "fixed": "{price}",
+      "quoteOnly": "On quote",
+      "contact": "Let's talk about your purchase",
+      "disclaimer": "The final price depends on scope, features and project needs.",
+      "fixedDisclaimer": "Price for the offer as presented. Options or custom work may be quoted separately."
+    },
+    "catalogTitle": "Offers",
+    "catalogTitleHighlight": "for sale.",
+    "catalogSubtitle": "Pick a ready-made delivery — each page shows the project and its image.",
+    "viewAll": "View all for-sale offers"
   }
 }

@@ -1,5 +1,9 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl, routes, serviceDetailPath } from "@/lib/routes";
+import {
+  absoluteUrl,
+  offerDetailPath,
+  routes,
+} from "@/lib/routes";
 import { listPublishedProjectSlugs } from "@/lib/projects/store";
 import { listPublishedServiceSlugs } from "@/lib/services/store";
 
@@ -14,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }> = [
     { path: routes.home, changeFrequency: "monthly", priority: 1 },
     { path: routes.services, changeFrequency: "weekly", priority: 0.85 },
+    { path: routes.forSale, changeFrequency: "weekly", priority: 0.85 },
     { path: routes.projects, changeFrequency: "weekly", priority: 0.85 },
     { path: routes.reviews, changeFrequency: "weekly", priority: 0.7 },
     { path: routes.contact, changeFrequency: "monthly", priority: 0.8 },
@@ -31,10 +36,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  const services = await listPublishedServiceSlugs();
-  for (const svc of services) {
+  const offers = await listPublishedServiceSlugs();
+  for (const svc of offers) {
     pages.push({
-      path: serviceDetailPath(svc.slug),
+      path: offerDetailPath(svc.slug, svc.offer_kind),
       changeFrequency: "monthly",
       priority: 0.7,
       lastModified: new Date(svc.updated_at),
