@@ -538,7 +538,7 @@
         "projectsHint": "Editable in /admin/projects",
         "newInquiries": "New inquiries",
         "newInquiriesHint": "Leads to process in /admin/inquiries",
-        "services": "Offers",
+        "services": "Services",
         "servicesHint": "Services (/offres)",
         "forSale": "For sale",
         "forSaleHint": "Product offers (/a-vendre)"

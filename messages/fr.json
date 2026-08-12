@@ -540,7 +540,7 @@
         "projectsHint": "Gérables dans /admin/projects",
         "newInquiries": "Demandes nouvelles",
         "newInquiriesHint": "Leads à traiter dans /admin/inquiries",
-        "services": "Offres",
+        "services": "Services",
         "servicesHint": "Prestations (/offres)",
         "forSale": "À vendre",
         "forSaleHint": "Offres produit (/a-vendre)"
