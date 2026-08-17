@@ -576,11 +576,11 @@
       "manageInquiries": "Voir les demandes",
       "inquiriesNewBadge": "{count} nouvelle(s)",
       "servicesTitle": "Offres commerciales",
-      "servicesBody": "Créez, publiez et ordonnez les offres affichées sur le site. Prix, traductions et Case Studies associées.",
+      "servicesBody": "Créez, publiez et ordonnez les offres affichées sur le site. Prix, traductions et exemples liés.",
       "servicesNext": "Gérez tout depuis /admin/services — aucune modification de code.",
       "manageServices": "Gérer les offres",
       "servicesPageTitle": "Gestion des offres",
-      "servicesPageSubtitle": "CMS · FR/EN/AR · tarifs · Case Studies · publication.",
+      "servicesPageSubtitle": "CMS · FR/EN/AR · tarifs · exemples projets · publication.",
       "engagementsTitle": "Engagements VORZIX",
       "engagementsBody": "Cadrez les engagements affichés sur le site : titres, textes FR/EN/AR, ordre et publication.",
       "engagementsNext": "Gérez tout depuis /admin/engagements — aucune modification de code.",
@@ -991,7 +991,7 @@
       "create": "Créer une offre",
       "createTitle": "Nouvelle offre",
       "editTitle": "Modifier l’offre",
-      "formHint": "Brouillon autorisé incomplet. La publication exige titre et description courte FR.",
+      "formHint": "Catalogue = service seul (sans images projet). Page détail = zone Exemple avec images + liens du projet lié. Publication : titre et description courte FR requis.",
       "edit": "Modifier",
       "preview": "Prévisualiser",
       "publish": "Publier",
@@ -1012,7 +1012,13 @@
       "removeFeature": "Retirer",
       "ctaPlaceholder": "Démarrer un projet",
       "inquiryNone": "Aucune pré-sélection",
-      "noCaseStudies": "Aucune Case Study disponible.",
+      "noCaseStudies": "Aucun projet disponible pour servir d’exemple.",
+      "exampleStructureHint": "Sur la page détail de l’offre, la zone « Exemple » affiche les images et le lien du projet. L’accueil et le catalogue n’affichent que le service.",
+      "examplePreviewLabel": "Aperçu de l’exemple",
+      "exampleNoImages": "Ce projet n’a pas encore d’images — ajoutez-en dans Projets.",
+      "exampleOpenCaseStudy": "Ouvrir la fiche projet",
+      "exampleOpenLive": "Ouvrir le site live",
+      "exampleNoLiveLink": "Pas d’URL live sur ce projet",
       "notConfiguredTitle": "Gestion indisponible",
       "notConfiguredBody": "Ajoutez SUPABASE_SERVICE_ROLE_KEY et exécutez npm run db:migrate (table services).",
       "cols": {
@@ -1048,7 +1054,7 @@
         "commerce": "Type & boutons",
         "pricing": "Prix",
         "features": "Éléments inclus",
-        "caseStudies": "Case Studies associées"
+        "caseStudies": "Exemple"
       },
       "fields": {
         "reference": "Référence",
@@ -1061,7 +1067,8 @@
         "showCtaBuy": "Bouton « Acheter »",
         "showCtaStart": "Bouton « Démarrer un projet »",
         "coverImage": "Photo du produit",
-        "linkedProject": "Projet lié (/projets)",
+        "linkedProject": "Exemple principal",
+        "otherExamples": "Autres exemples",
         "pricingMode": "Mode tarifaire",
         "currency": "Devise",
         "startingPrice": "Prix de départ",
@@ -1074,11 +1081,11 @@
         "ctaLabel": "Libellé CTA démarrer"
       },
       "hints": {
-        "coverImage": "Désactivé sur le catalogue : les images viennent du projet lié, uniquement en page détail.",
-        "linkedProject": "Associez un projet publié : liens + images du projet s’affichent sur la page détail de l’offre."
+        "coverImage": "Non utilisé sur le catalogue. Les images viennent du projet exemple, uniquement en page détail.",
+        "linkedProject": "Projet publié dont les images et le lien s’affichent dans la zone Exemple de /offres/[slug]."
       },
-      "linkedProjectNone": "Aucun projet lié",
-      "caseStudiesHint": "Réalisations secondaires : liens + images sur la page détail de l’offre.",
+      "linkedProjectNone": "Aucun exemple",
+      "caseStudiesHint": "Exemples secondaires affichés sous l’exemple principal sur la page détail.",
       "duplicate": "Dupliquer",
       "archive": "Archiver"
     }

@@ -76,6 +76,12 @@ type CaseStudyOption = {
   reference: string | null;
   title: string;
   published: boolean;
+  /** Première image du projet (cover ou galerie). */
+  coverImage: string | null;
+  /** Quelques URLs d’images du projet (aperçu admin). */
+  images: string[];
+  /** URL live du projet, si renseignée. */
+  link: string | null;
 };
 
 type EditorState = {
@@ -412,6 +418,10 @@ export function AdminServicesPanel({
     for (const opt of caseStudyOptions) map.set(opt.id, opt);
     return map;
   }, [caseStudyOptions]);
+
+  const linkedExample = editor.linkedProjectId
+    ? caseStudyLabel.get(editor.linkedProjectId) ?? null
+    : null;
 
   if (!configured) {
     return (
@@ -1111,6 +1121,9 @@ export function AdminServicesPanel({
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.caseStudies")}
               </h3>
+              <p className="text-xs leading-relaxed text-foreground/55">
+                {t("exampleStructureHint")}
+              </p>
 
               <FormField
                 label={t("fields.linkedProject")}
@@ -1119,12 +1132,16 @@ export function AdminServicesPanel({
               >
                 <Select
                   value={editor.linkedProjectId || "__none__"}
-                  onValueChange={(v) =>
+                  onValueChange={(v) => {
+                    const nextId = v === "__none__" ? "" : v;
                     setEditor((p) => ({
                       ...p,
-                      linkedProjectId: v === "__none__" ? "" : v,
-                    }))
-                  }
+                      linkedProjectId: nextId,
+                      caseStudyIds: nextId
+                        ? p.caseStudyIds.filter((id) => id !== nextId)
+                        : p.caseStudyIds,
+                    }));
+                  }}
                 >
                   <SelectTrigger id="svc-linked-project">
                     <SelectValue placeholder={t("linkedProjectNone")} />
@@ -1145,57 +1162,141 @@ export function AdminServicesPanel({
                 </Select>
               </FormField>
 
-              <p className="text-xs text-foreground/50">{t("caseStudiesHint")}</p>
-              <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg border border-border p-3">
-                {caseStudyOptions.length === 0 ? (
-                  <p className="text-xs text-foreground/55">{t("noCaseStudies")}</p>
-                ) : (
-                  caseStudyOptions.map((opt) => {
-                    const checked = editor.caseStudyIds.includes(opt.id);
-                    return (
-                      <label
-                        key={opt.id}
-                        className="flex items-start gap-2 text-sm"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={(e) => {
-                            setEditor((p) => ({
-                              ...p,
-                              caseStudyIds: e.target.checked
-                                ? [...p.caseStudyIds, opt.id]
-                                : p.caseStudyIds.filter((id) => id !== opt.id),
-                            }));
-                          }}
+              {linkedExample ? (
+                <div className="rounded-xl border border-border-gold/40 bg-surface-elevated/40 p-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+                    {t("examplePreviewLabel")}
+                  </p>
+                  <p className="mt-1 font-display text-base font-semibold text-foreground">
+                    {linkedExample.title}
+                  </p>
+                  {linkedExample.reference ? (
+                    <p className="mt-0.5 font-mono text-[10px] tracking-wider text-muted-foreground">
+                      {linkedExample.reference}
+                    </p>
+                  ) : null}
+
+                  {linkedExample.images.length > 0 ? (
+                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {linkedExample.images.map((src) => (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          key={src}
+                          src={src}
+                          alt=""
+                          className="aspect-[4/3] w-full rounded-md border border-border object-cover"
+                          loading="lazy"
+                          decoding="async"
                         />
-                        <span>
-                          <span className="font-medium">
-                            {opt.title}
-                          </span>
-                          {opt.reference ? (
-                            <span className="ms-2 font-mono text-[10px] text-muted-foreground">
-                              {opt.reference}
-                            </span>
-                          ) : null}
-                          {!opt.published ? (
-                            <span className="ms-2 text-[10px] text-amber-500/80">
-                              ({t("status.draft")})
-                            </span>
-                          ) : null}
-                        </span>
-                      </label>
-                    );
-                  })
-                )}
-              </div>
-              {editor.caseStudyIds.length > 0 ? (
-                <p className="text-xs text-foreground/55">
-                  {editor.caseStudyIds
-                    .map((id) => caseStudyLabel.get(id)?.title ?? id)
-                    .join(" · ")}
-                </p>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-3 text-xs text-foreground/50">
+                      {t("exampleNoImages")}
+                    </p>
+                  )}
+
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    <a
+                      href={`/projets/${linkedExample.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-9 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80 transition-colors hover:text-primary"
+                    >
+                      {t("exampleOpenCaseStudy")}
+                      <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                    </a>
+                    {linkedExample.link ? (
+                      <a
+                        href={linkedExample.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-9 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-primary"
+                      >
+                        {t("exampleOpenLive")}
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                      </a>
+                    ) : (
+                      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/40">
+                        {t("exampleNoLiveLink")}
+                      </span>
+                    )}
+                  </div>
+                </div>
               ) : null}
+
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-foreground/85">
+                  {t("fields.otherExamples")}
+                </p>
+                <p className="text-xs text-foreground/50">{t("caseStudiesHint")}</p>
+                <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg border border-border p-3">
+                  {caseStudyOptions.length === 0 ? (
+                    <p className="text-xs text-foreground/55">{t("noCaseStudies")}</p>
+                  ) : (
+                    caseStudyOptions
+                      .filter((opt) => opt.id !== editor.linkedProjectId)
+                      .map((opt) => {
+                        const checked = editor.caseStudyIds.includes(opt.id);
+                        return (
+                          <label
+                            key={opt.id}
+                            className="flex items-start gap-2 text-sm"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={(e) => {
+                                setEditor((p) => ({
+                                  ...p,
+                                  caseStudyIds: e.target.checked
+                                    ? [...p.caseStudyIds, opt.id]
+                                    : p.caseStudyIds.filter(
+                                        (id) => id !== opt.id
+                                      ),
+                                }));
+                              }}
+                            />
+                            <span className="min-w-0 flex-1">
+                              <span className="flex items-center gap-2">
+                                {opt.coverImage ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img
+                                    src={opt.coverImage}
+                                    alt=""
+                                    className="h-8 w-10 shrink-0 rounded border border-border object-cover"
+                                    loading="lazy"
+                                    decoding="async"
+                                  />
+                                ) : null}
+                                <span>
+                                  <span className="font-medium">{opt.title}</span>
+                                  {opt.reference ? (
+                                    <span className="ms-2 font-mono text-[10px] text-muted-foreground">
+                                      {opt.reference}
+                                    </span>
+                                  ) : null}
+                                  {!opt.published ? (
+                                    <span className="ms-2 text-[10px] text-amber-500/80">
+                                      ({t("status.draft")})
+                                    </span>
+                                  ) : null}
+                                </span>
+                              </span>
+                            </span>
+                          </label>
+                        );
+                      })
+                  )}
+                </div>
+                {editor.caseStudyIds.length > 0 ? (
+                  <p className="text-xs text-foreground/55">
+                    {editor.caseStudyIds
+                      .map((id) => caseStudyLabel.get(id)?.title ?? id)
+                      .join(" · ")}
+                  </p>
+                ) : null}
+              </div>
             </section>
 
             {submitError ? <FormError message={submitError} /> : null}

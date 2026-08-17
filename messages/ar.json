@@ -574,11 +574,11 @@
       "manageInquiries": "عرض الطلبات",
       "inquiriesNewBadge": "{count} جديدة",
       "servicesTitle": "العروض التجارية",
-      "servicesBody": "أنشئ وانشر ورتّب العروض المعروضة في الموقع. الأسعار والترجمات ودراسات الحالة.",
+      "servicesBody": "أنشئ وانشر ورتّب العروض المعروضة في الموقع. الأسعار والترجمات والأمثلة المرتبطة.",
       "servicesNext": "أدِر كل شيء من /admin/services — دون تعديل الشيفرة.",
       "manageServices": "إدارة العروض",
       "servicesPageTitle": "إدارة العروض",
-      "servicesPageSubtitle": "CMS · FR/EN/AR · تسعير · دراسات حالة · نشر.",
+      "servicesPageSubtitle": "CMS · FR/EN/AR · تسعير · أمثلة مشاريع · نشر.",
       "engagementsTitle": "التزامات VORZIX",
       "engagementsBody": "عدّل الالتزامات المعروضة على الموقع: العناوين والنصوص FR/EN/AR والترتيب والنشر.",
       "engagementsNext": "أدِر كل شيء من /admin/engagements — دون تعديل الشيفرة.",
@@ -989,7 +989,7 @@
       "create": "إنشاء عرض",
       "createTitle": "عرض جديد",
       "editTitle": "تعديل العرض",
-      "formHint": "المسودة يمكن أن تكون ناقصة. النشر يتطلب عنواناً ووصفاً قصيراً بالفرنسية.",
+      "formHint": "الكتالوج = الخدمة فقط (بدون صور مشروع). صفحة التفاصيل = منطقة مثال مع صور وروابط المشروع المرتبط. النشر يتطلب عنواناً ووصفاً قصيراً بالفرنسية.",
       "edit": "تعديل",
       "preview": "معاينة",
       "publish": "نشر",
@@ -1010,7 +1010,13 @@
       "removeFeature": "إزالة",
       "ctaPlaceholder": "ابدأ مشروعاً",
       "inquiryNone": "بدون اختيار مسبق",
-      "noCaseStudies": "لا توجد دراسات حالة.",
+      "noCaseStudies": "لا توجد مشاريع متاحة لاستخدامها كأمثلة.",
+      "exampleStructureHint": "في صفحة تفاصيل العرض، تعرض منطقة « مثال » صور المشروع وروابطه. الصفحة الرئيسية والكتالوج يعرضان الخدمة فقط.",
+      "examplePreviewLabel": "معاينة المثال",
+      "exampleNoImages": "هذا المشروع بلا صور بعد — أضف صوراً من المشاريع.",
+      "exampleOpenCaseStudy": "فتح صفحة المشروع",
+      "exampleOpenLive": "فتح الموقع المباشر",
+      "exampleNoLiveLink": "لا يوجد رابط مباشر لهذا المشروع",
       "notConfiguredTitle": "غير متاح",
       "notConfiguredBody": "أضف SUPABASE_SERVICE_ROLE_KEY ونفّذ npm run db:migrate.",
       "cols": {
@@ -1046,7 +1052,7 @@
         "commerce": "النوع والأزرار",
         "pricing": "السعر",
         "features": "العناصر المشمولة",
-        "caseStudies": "دراسات الحالة"
+        "caseStudies": "مثال"
       },
       "fields": {
         "reference": "المرجع",
@@ -1059,7 +1065,8 @@
         "showCtaBuy": "زر « اشترِ »",
         "showCtaStart": "زر « ابدأ مشروعاً »",
         "coverImage": "صورة المنتج",
-        "linkedProject": "المشروع المرتبط (/projets)",
+        "linkedProject": "المثال الرئيسي",
+        "otherExamples": "أمثلة أخرى",
         "pricingMode": "نمط التسعير",
         "currency": "العملة",
         "startingPrice": "سعر البداية",
@@ -1072,11 +1079,11 @@
         "ctaLabel": "نص زر ابدأ"
       },
       "hints": {
-        "coverImage": "معطّل في الكتالوج: الصور تأتي من المشروع المرتبط في صفحة التفاصيل فقط.",
-        "linkedProject": "اربط مشروعاً منشوراً: تظهر روابطه وصوره في صفحة تفاصيل العرض."
+        "coverImage": "غير مستخدم في الكتالوج. الصور تأتي من مشروع المثال في صفحة التفاصيل فقط.",
+        "linkedProject": "مشروع منشور تظهر صوره وروابطه في منطقة المثال على /offres/[slug]."
       },
-      "linkedProjectNone": "لا يوجد مشروع مرتبط",
-      "caseStudiesHint": "دراسات حالة ثانوية: روابط وصور في صفحة تفاصيل العرض.",
+      "linkedProjectNone": "لا يوجد مثال",
+      "caseStudiesHint": "أمثلة ثانوية تظهر تحت المثال الرئيسي في صفحة التفاصيل.",
       "duplicate": "تكرار",
       "archive": "أرشفة"
     }
