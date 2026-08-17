@@ -18,16 +18,7 @@ type PageProps = {
 
 export async function generateStaticParams() {
   const fromDb = await listPublishedProjectSlugs();
-  if (fromDb.length > 0) {
-    return fromDb.map((p) => ({ slug: p.slug }));
-  }
-  // Démo locale
-  return [
-    { slug: "nova" },
-    { slug: "maison-belle" },
-    { slug: "atelier-lumiere" },
-    { slug: "fitpro" },
-  ];
+  return fromDb.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({

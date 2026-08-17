@@ -49,7 +49,9 @@ export async function getSiteServices(
 ): Promise<LocalizedService[]> {
   const rows = await listPublishedServiceRows();
   if (!rows || rows.length === 0) return [];
-  return rows.map((row) => serviceRowToLocalized(row, locale));
+  return rows
+    .filter((row) => row.offer_kind === "service")
+    .map((row) => serviceRowToLocalized(row, locale));
 }
 
 export async function getSiteServiceBySlug(
@@ -57,7 +59,7 @@ export async function getSiteServiceBySlug(
   slug: string
 ): Promise<LocalizedService | null> {
   const row = await getPublishedServiceBySlug(slug);
-  if (!row) return null;
+  if (!row || row.offer_kind !== "service") return null;
   return serviceRowToLocalized(row, locale);
 }
 

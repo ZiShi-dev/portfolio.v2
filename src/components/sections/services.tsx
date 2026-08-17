@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Reveal } from "@/components/ui/reveal";
@@ -12,31 +11,16 @@ import { ServiceOfferCard } from "@/components/services/service-offer-card";
 import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
 import type { LocalizedService } from "@/lib/services/store";
-import { cn } from "@/lib/utils";
-
-type CatalogFilter = "all" | "product" | "service";
 
 type ServicesProps = {
   services: LocalizedService[];
-  /** Accueil : aperçu + lien catalogue. Page : liste complète + filtres. */
+  /** Accueil : aperçu + lien catalogue. Page : liste complète. */
   variant?: "home" | "page";
 };
 
 export function Services({ services, variant = "home" }: ServicesProps) {
   const t = useTranslations("services");
   const isPage = variant === "page";
-  const [filter, setFilter] = useState<CatalogFilter>("all");
-
-  const filtered = useMemo(() => {
-    if (!isPage || filter === "all") return services;
-    return services.filter((s) => s.offerKind === filter);
-  }, [filter, isPage, services]);
-
-  const filters: { id: CatalogFilter; label: string }[] = [
-    { id: "all", label: t("filter.all") },
-    { id: "product", label: t("filter.product") },
-    { id: "service", label: t("filter.service") },
-  ];
 
   return (
     <section
@@ -81,41 +65,13 @@ export function Services({ services, variant = "home" }: ServicesProps) {
 
         <CelestialDivider className="mt-10 sm:mt-12" />
 
-        {isPage ? (
-          <Reveal delay={0.12}>
-            <div
-              className="mt-8 flex flex-wrap items-center justify-center gap-2"
-              role="tablist"
-              aria-label={t("filter.label")}
-            >
-              {filters.map((f) => (
-                <button
-                  key={f.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={filter === f.id}
-                  onClick={() => setFilter(f.id)}
-                  className={cn(
-                    "min-h-10 rounded-full border px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] transition-colors",
-                    filter === f.id
-                      ? "border-primary/50 bg-primary/10 text-primary"
-                      : "border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
-                  )}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-          </Reveal>
-        ) : null}
-
-        {filtered.length === 0 ? (
+        {services.length === 0 ? (
           <p className="mt-10 text-center text-sm text-muted-foreground">
-            {services.length === 0 ? t("empty") : t("filter.empty")}
+            {t("empty")}
           </p>
         ) : (
           <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-3 sm:mt-12 sm:grid-cols-2 sm:gap-5 lg:mt-14 lg:grid-cols-3">
-            {filtered.map((service, i) => (
+            {services.map((service, i) => (
               <Reveal key={service.id} delay={0.12 + i * 0.05}>
                 <ServiceOfferCard service={service} />
               </Reveal>

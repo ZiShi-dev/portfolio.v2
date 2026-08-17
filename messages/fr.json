@@ -84,39 +84,39 @@
   },
   "services": {
     "eyebrow": "Catalogue · Offres",
-    "title": "Des produits numériques conçus avec",
-    "titleHighlight": "précision.",
-    "subtitle": "Chaque livrable est cartographié : clair, mesurable, prêt à convertir — sites, apps et plateformes.",
+    "title": "Des solutions pensées pour",
+    "titleHighlight": "faire grandir votre activité.",
+    "subtitle": "Présentez mieux votre entreprise, attirez plus de clients et gagnez du temps au quotidien.",
     "discover": "Découvrir",
-    "cta": "Parler de votre besoin",
+    "cta": "Discuter de votre projet",
     "page": {
-      "metaTitle": "Nos offres commerciales — {brand}",
-      "metaDescription": "Catalogue des offres commerciales {brand} : sites, e-commerce, applications, SaaS et solutions sur mesure."
+      "metaTitle": "Nos solutions pour votre activité — {brand}",
+      "metaDescription": "Découvrez comment {brand} peut vous aider à attirer plus de clients, mieux présenter votre activité et gagner du temps."
     },
     "items": {
       "web": {
-        "title": "Site ou application web",
-        "desc": "Une présence en ligne claire et rapide, conçue pour présenter votre offre et générer des demandes de contact."
+        "title": "Un site qui attire vos clients",
+        "desc": "Présentez clairement votre activité, inspirez confiance et transformez davantage de visiteurs en demandes."
       },
       "backend": {
-        "title": "Back-office & automatisation",
-        "desc": "Comptes, formulaires, données et outils métier fiables — pour que votre site travaille vraiment pour vous."
+        "title": "Gagnez du temps au quotidien",
+        "desc": "Simplifiez les tâches répétitives et retrouvez toutes les informations utiles au même endroit."
       },
       "design": {
-        "title": "Design UX/UI",
-        "desc": "Une interface élégante et lisible : vos visiteurs comprennent vite qui vous êtes et quoi faire ensuite."
+        "title": "Une image qui inspire confiance",
+        "desc": "Offrez à vos clients une présentation élégante, claire et fidèle à la qualité de votre entreprise."
       },
       "mobile": {
-        "title": "Expérience mobile-first",
-        "desc": "Un rendu impeccable sur téléphone — là où la majorité de vos clients vous découvrent."
+        "title": "Une expérience parfaite sur téléphone",
+        "desc": "Vos clients profitent d’un parcours simple et agréable, où qu’ils soient."
       },
       "seo": {
-        "title": "Référencement de base",
-        "desc": "Structure, perf et balises prêtes pour Google : plus de chances d’être trouvé sur les bonnes recherches."
+        "title": "Soyez trouvé par les bons clients",
+        "desc": "Améliorez votre présence sur Google pour toucher les personnes qui recherchent déjà vos services."
       },
       "maintenance": {
-        "title": "Suivi après lancement",
-        "desc": "Corrections, améliorations et conseils après mise en ligne — votre site reste stable et évolutif."
+        "title": "Restez serein après le lancement",
+        "desc": "Nous restons à vos côtés pour les améliorations, les ajustements et les questions."
       }
     },
     "empty": "Les offres seront bientôt disponibles.",
@@ -128,7 +128,7 @@
     "backToServices": "Retour aux offres",
     "backToCatalog": "Retour aux offres",
     "detailAbout": "À propos de l’offre",
-    "detailPricing": "Tarification",
+    "detailPricing": "Votre investissement",
     "relatedProjects": "Autres exemples",
     "viewCaseStudy": "Voir l’exemple",
     "linkedProjectEyebrow": "Exemple",
@@ -136,7 +136,7 @@
     "viewLiveProject": "Voir le site exemple",
     "exampleSubtitle": "Un aperçu concret de ce que cette offre peut produire.",
     "offerKind": {
-      "service": "Service",
+      "service": "Accompagnement",
       "product": "À vendre"
     },
     "filter": {
@@ -151,13 +151,13 @@
       "fixed": "{price}",
       "quoteOnly": "Sur devis",
       "contact": "Parlons de votre projet",
-      "disclaimer": "Le tarif final dépend du périmètre, des fonctionnalités et des besoins du projet.",
-      "fixedDisclaimer": "Prix de l’offre telle que présentée. Options ou adaptations éventuelles sur devis."
+      "disclaimer": "Le prix final dépend de vos besoins et de vos objectifs. Vous recevez une proposition claire avant de commencer.",
+      "fixedDisclaimer": "Ce prix correspond à l’offre présentée. Toute demande particulière est chiffrée clairement avant de commencer."
     },
-    "catalogTitle": "Nos offres",
-    "catalogTitleHighlight": "commerciales.",
-    "catalogSubtitle": "Choisissez la solution adaptée à votre besoin — chaque offre peut être explorée en détail.",
-    "viewAll": "Voir toutes les offres"
+    "catalogTitle": "Ce que nous pouvons faire",
+    "catalogTitleHighlight": "pour vous.",
+    "catalogSubtitle": "Choisissez votre objectif et découvrez comment nous pouvons vous aider à l’atteindre.",
+    "viewAll": "Découvrir toutes nos solutions"
   },
   "engagements": {
     "eyebrow": "Engagements · VORZIX",
@@ -257,41 +257,6 @@
       "blog": "Blog / contenu",
       "marketplace": "Marketplace",
       "other": "Autre"
-    },
-    "items": {
-      "nova": {
-        "title": "Nova — Dashboard",
-        "desc": "Concept d'application analytics : tableau de bord clair, graphiques et navigation pensée pour une lecture rapide.",
-        "images": {
-          "home": "Page d'accueil",
-          "dashboard": "Tableau de bord",
-          "mobile": "Version mobile"
-        }
-      },
-      "maison-belle": {
-        "title": "Maison Belle — E-commerce",
-        "desc": "Maquette de boutique en ligne : catalogue, fiche produit et parcours d'achat simplifié.",
-        "images": {
-          "shop": "Boutique",
-          "product": "Fiche produit"
-        }
-      },
-      "atelier-lumiere": {
-        "title": "Atelier Lumière — Vitrine",
-        "desc": "Site vitrine pour un studio créatif : galerie immersive et formulaire de contact intégré.",
-        "images": {
-          "home": "Accueil",
-          "gallery": "Galerie"
-        }
-      },
-      "fitpro": {
-        "title": "FitPro — Coaching sportif",
-        "desc": "Concept de plateforme coaching : landing page, programmes et espace membre.",
-        "images": {
-          "landing": "Landing page",
-          "member": "Espace membre"
-        }
-      }
     },
     "viewCase": "→ Voir l’étude de cas"
   },
@@ -1149,20 +1114,20 @@
         "description": "Vendre vos produits en ligne."
       },
       "web_app": {
-        "title": "Application web",
-        "description": "Un produit interactif dans le navigateur."
+        "title": "Un espace pour mes clients",
+        "description": "Permettre à vos clients d’accéder facilement à vos services."
       },
       "saas": {
-        "title": "SaaS / plateforme",
-        "description": "Un service multi-utilisateurs évolutif."
+        "title": "Un service accessible en ligne",
+        "description": "Proposer votre service à plusieurs clients depuis un même espace."
       },
       "redesign": {
-        "title": "Refonte",
-        "description": "Moderniser un produit existant."
+        "title": "Améliorer ce qui existe déjà",
+        "description": "Rendre votre site plus clair, moderne et efficace."
       },
       "automation": {
-        "title": "Automatisation / back-office",
-        "description": "Fluidifier un processus interne."
+        "title": "Gagner du temps au quotidien",
+        "description": "Simplifier les tâches répétitives de votre activité."
       },
       "other": {
         "title": "Autre",
@@ -1171,11 +1136,11 @@
     },
     "objectives": {
       "present_activity": "Présenter mon activité",
-      "generate_leads": "Générer des prospects",
+      "generate_leads": "Recevoir plus de demandes",
       "sell_online": "Vendre en ligne",
-      "create_product": "Créer un produit numérique",
-      "automate_process": "Automatiser un processus",
-      "modernize": "Moderniser un produit existant",
+      "create_product": "Proposer un nouveau service en ligne",
+      "automate_process": "Gagner du temps sur mes tâches",
+      "modernize": "Améliorer ce qui existe déjà",
       "other": "Autre"
     },
     "budgets": {

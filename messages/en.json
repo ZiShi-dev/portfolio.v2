@@ -84,39 +84,39 @@
   },
   "services": {
     "eyebrow": "Catalog · Offers",
-    "title": "Digital products crafted with",
-    "titleHighlight": "precision.",
-    "subtitle": "Every deliverable is mapped: clear, measurable, built to convert — sites, apps and platforms.",
+    "title": "Solutions designed to",
+    "titleHighlight": "grow your business.",
+    "subtitle": "Present your business better, attract more customers and save time every day.",
     "discover": "Discover",
-    "cta": "Talk about your needs",
+    "cta": "Discuss your project",
     "page": {
-      "metaTitle": "Our commercial offers — {brand}",
-      "metaDescription": "{brand} commercial offers catalog: websites, e-commerce, apps, SaaS and custom solutions."
+      "metaTitle": "Solutions for your business — {brand}",
+      "metaDescription": "Discover how {brand} can help you attract more customers, present your business better and save time."
     },
     "items": {
       "web": {
-        "title": "Website or web app",
-        "desc": "A clear, fast online presence built to present your offer and generate contact requests."
+        "title": "A website that wins customers",
+        "desc": "Present your business clearly, build trust and turn more visitors into enquiries."
       },
       "backend": {
-        "title": "Back-office & automation",
-        "desc": "Accounts, forms, data and business tools that work reliably — so your site actually works for you."
+        "title": "Save time every day",
+        "desc": "Simplify repetitive tasks and keep all the information you need in one place."
       },
       "design": {
-        "title": "UX/UI design",
-        "desc": "An elegant, readable interface: visitors quickly understand who you are and what to do next."
+        "title": "An image that inspires trust",
+        "desc": "Give customers an elegant, clear presentation that reflects the quality of your business."
       },
       "mobile": {
-        "title": "Mobile-first experience",
-        "desc": "Impeccable on phone — where most of your clients discover you."
+        "title": "A perfect experience on every phone",
+        "desc": "Give customers a simple, pleasant journey wherever they are."
       },
       "seo": {
-        "title": "Foundational SEO",
-        "desc": "Structure, performance and tags ready for Google: better odds of being found on the right searches."
+        "title": "Be found by the right customers",
+        "desc": "Improve your presence on Google and reach people already looking for your services."
       },
       "maintenance": {
-        "title": "Post-launch support",
-        "desc": "Fixes, improvements and advice after go-live — your site stays stable and ready to evolve."
+        "title": "Enjoy peace of mind after launch",
+        "desc": "We stay by your side for improvements, adjustments and questions."
       }
     },
     "empty": "Offers will be available soon.",
@@ -128,7 +128,7 @@
     "backToServices": "Back to offers",
     "backToCatalog": "Back to offers",
     "detailAbout": "About this offer",
-    "detailPricing": "Pricing",
+    "detailPricing": "Your investment",
     "relatedProjects": "More examples",
     "viewCaseStudy": "View example",
     "linkedProjectEyebrow": "Example",
@@ -136,7 +136,7 @@
     "viewLiveProject": "View live example",
     "exampleSubtitle": "A concrete preview of what this offer can deliver.",
     "offerKind": {
-      "service": "Service",
+      "service": "Support",
       "product": "For sale"
     },
     "filter": {
@@ -151,13 +151,13 @@
       "fixed": "{price}",
       "quoteOnly": "On quote",
       "contact": "Let's talk about your project",
-      "disclaimer": "The final price depends on scope, features and project needs.",
-      "fixedDisclaimer": "Price for the offer as presented. Options or custom work may be quoted separately."
+      "disclaimer": "The final price depends on your needs and goals. You receive a clear proposal before we begin.",
+      "fixedDisclaimer": "This price covers the offer as presented. Any special request is priced clearly before we begin."
     },
-    "catalogTitle": "Our commercial",
-    "catalogTitleHighlight": "offers.",
-    "catalogSubtitle": "Pick the solution that fits your need — each offer has a dedicated detail page.",
-    "viewAll": "View all offers"
+    "catalogTitle": "What we can do",
+    "catalogTitleHighlight": "for you.",
+    "catalogSubtitle": "Choose your goal and discover how we can help you achieve it.",
+    "viewAll": "Discover all our solutions"
   },
   "engagements": {
     "eyebrow": "Commitments · VORZIX",
@@ -255,41 +255,6 @@
       "blog": "Blog / content",
       "marketplace": "Marketplace",
       "other": "Other"
-    },
-    "items": {
-      "nova": {
-        "title": "Nova — Dashboard",
-        "desc": "Analytics app concept: clear dashboard, charts and navigation designed for quick reading.",
-        "images": {
-          "home": "Home page",
-          "dashboard": "Dashboard",
-          "mobile": "Mobile version"
-        }
-      },
-      "maison-belle": {
-        "title": "Maison Belle — E-commerce",
-        "desc": "Online store mockup: catalog, product page and a simplified checkout flow.",
-        "images": {
-          "shop": "Shop",
-          "product": "Product page"
-        }
-      },
-      "atelier-lumiere": {
-        "title": "Atelier Lumière — Showcase",
-        "desc": "Showcase site for a creative studio: immersive gallery and integrated contact form.",
-        "images": {
-          "home": "Home",
-          "gallery": "Gallery"
-        }
-      },
-      "fitpro": {
-        "title": "FitPro — Sports coaching",
-        "desc": "Coaching platform concept: landing page, programs and member area.",
-        "images": {
-          "landing": "Landing page",
-          "member": "Member area"
-        }
-      }
     },
     "viewCase": "→ View case study"
   },
@@ -1147,20 +1112,20 @@
         "description": "Sell your products online."
       },
       "web_app": {
-        "title": "Web application",
-        "description": "An interactive product in the browser."
+        "title": "A space for my customers",
+        "description": "Give customers easy access to your services."
       },
       "saas": {
-        "title": "SaaS / platform",
-        "description": "A scalable multi-user service."
+        "title": "A service available online",
+        "description": "Offer your service to many customers from one place."
       },
       "redesign": {
-        "title": "Redesign",
-        "description": "Modernize an existing product."
+        "title": "Improve what I already have",
+        "description": "Make your website clearer, more modern and more effective."
       },
       "automation": {
-        "title": "Automation / back-office",
-        "description": "Streamline an internal process."
+        "title": "Save time every day",
+        "description": "Simplify repetitive tasks in your business."
       },
       "other": {
         "title": "Other",
@@ -1169,11 +1134,11 @@
     },
     "objectives": {
       "present_activity": "Present my activity",
-      "generate_leads": "Generate leads",
+      "generate_leads": "Receive more enquiries",
       "sell_online": "Sell online",
-      "create_product": "Create a digital product",
-      "automate_process": "Automate a process",
-      "modernize": "Modernize an existing product",
+      "create_product": "Offer a new service online",
+      "automate_process": "Save time on daily tasks",
+      "modernize": "Improve what I already have",
       "other": "Other"
     },
     "budgets": {

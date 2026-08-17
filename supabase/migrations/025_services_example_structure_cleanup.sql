@@ -61,22 +61,14 @@ WHERE scs.service_id = s.id
   AND s.linked_project_id IS NOT NULL
   AND scs.project_id = s.linked_project_id;
 
--- Produits « à vendre » sans exemple : repasser en service (catalogue cohérent)
+-- Le catalogue public ne contient plus de projets / produits à vendre :
+-- toutes les anciennes lignes sont ramenées vers un service.
 UPDATE public.services
 SET
   offer_kind = 'service',
   show_cta_buy = false,
   show_cta_start = true
-WHERE offer_kind = 'product'
-  AND linked_project_id IS NULL;
-
--- Produits avec exemple : garder Acheter, pas d’image service
-UPDATE public.services
-SET
-  cover_image = NULL,
-  show_cta_buy = true
-WHERE offer_kind = 'product'
-  AND linked_project_id IS NOT NULL;
+WHERE offer_kind = 'product';
 
 -- ---------------------------------------------------------------------------
 -- 3. Réaligner le seed des 6 offres (contenu service, sans cover)
@@ -90,49 +82,49 @@ INSERT INTO public.services (
 VALUES
 (
   'VZ—01', 'web', 'code-2', 'published', true, 10,
-  '{"fr":"Site ou application web","en":"Website or web app","ar":"موقع أو تطبيق ويب"}'::jsonb,
-  '{"fr":"Une présence en ligne claire et rapide, conçue pour présenter votre offre et générer des demandes de contact.","en":"A clear, fast online presence built to present your offer and generate contact requests.","ar":"حضور واضح وسريع على الإنترنت، مصمم لعرض خدمتك وتوليد طلبات التواصل."}'::jsonb,
-  '{"fr":"Une présence en ligne claire et rapide, conçue pour présenter votre offre et générer des demandes de contact.","en":"A clear, fast online presence built to present your offer and generate contact requests.","ar":"حضور واضح وسريع على الإنترنت، مصمم لعرض خدمتك وتوليد طلبات التواصل."}'::jsonb,
+  '{"fr":"Un site qui attire vos clients","en":"A website that wins customers","ar":"موقع يجذب عملاءك"}'::jsonb,
+  '{"fr":"Présentez clairement votre activité, inspirez confiance et transformez davantage de visiteurs en demandes.","en":"Present your business clearly, build trust and turn more visitors into enquiries.","ar":"قدّم نشاطك بوضوح، وابنِ الثقة، وحوّل مزيداً من الزوار إلى عملاء محتملين."}'::jsonb,
+  '{"fr":"Nous créons une présence en ligne qui explique votre valeur en quelques secondes et guide naturellement vos visiteurs vers la prise de contact.","en":"We create an online presence that explains your value in seconds and naturally guides visitors towards getting in touch.","ar":"ننشئ حضوراً واضحاً يشرح قيمة نشاطك خلال ثوانٍ ويوجّه الزوار بسهولة إلى التواصل معك."}'::jsonb,
   'service', false, true, NULL,
   'contact', 'EUR', 'showcase', now()
 ),
 (
   'VZ—02', 'backend', 'server', 'published', false, 20,
-  '{"fr":"Back-office & automatisation","en":"Back-office & automation","ar":"لوحة تحكم وأتمتة"}'::jsonb,
-  '{"fr":"Comptes, formulaires, données et outils métier fiables — pour que votre site travaille vraiment pour vous.","en":"Accounts, forms, data and business tools that work reliably — so your site actually works for you.","ar":"حسابات ونماذج وبيانات وأدوات عمل موثوقة — ليخدمك موقعك فعلياً."}'::jsonb,
-  '{"fr":"Comptes, formulaires, données et outils métier fiables — pour que votre site travaille vraiment pour vous.","en":"Accounts, forms, data and business tools that work reliably — so your site actually works for you.","ar":"حسابات ونماذج وبيانات وأدوات عمل موثوقة — ليخدمك موقعك فعلياً."}'::jsonb,
+  '{"fr":"Gagnez du temps au quotidien","en":"Save time every day","ar":"وفّر وقتك كل يوم"}'::jsonb,
+  '{"fr":"Simplifiez les tâches répétitives et retrouvez toutes les informations utiles au même endroit.","en":"Simplify repetitive tasks and keep all the information you need in one place.","ar":"بسّط المهام المتكررة واجمع كل المعلومات المهمة في مكان واحد."}'::jsonb,
+  '{"fr":"Nous simplifions votre organisation pour vous permettre de consacrer plus de temps à vos clients et au développement de votre activité.","en":"We simplify your day-to-day organisation so you can spend more time on customers and growing your business.","ar":"نبسّط طريقة عملك اليومية لتمنح وقتاً أكبر لعملائك ولنمو نشاطك."}'::jsonb,
   'service', false, true, NULL,
   'contact', 'EUR', 'automation', now()
 ),
 (
   'VZ—03', 'design', 'palette', 'published', false, 30,
-  '{"fr":"Design UX/UI","en":"UX/UI design","ar":"تصميم تجربة وواجهة"}'::jsonb,
-  '{"fr":"Une interface élégante et lisible : vos visiteurs comprennent vite qui vous êtes et quoi faire ensuite.","en":"An elegant, readable interface: visitors quickly understand who you are and what to do next.","ar":"واجهة أنيقة وواضحة: يفهم زوارك بسرعة من أنت وماذا يفعلون لاحقاً."}'::jsonb,
-  '{"fr":"Une interface élégante et lisible : vos visiteurs comprennent vite qui vous êtes et quoi faire ensuite.","en":"An elegant, readable interface: visitors quickly understand who you are and what to do next.","ar":"واجهة أنيقة وواضحة: يفهم زوارك بسرعة من أنت وماذا يفعلون لاحقاً."}'::jsonb,
+  '{"fr":"Une image qui inspire confiance","en":"An image that inspires trust","ar":"صورة تمنح عملاءك الثقة"}'::jsonb,
+  '{"fr":"Offrez à vos clients une présentation élégante, claire et fidèle à la qualité de votre entreprise.","en":"Give customers an elegant, clear presentation that reflects the quality of your business.","ar":"قدّم لعملائك صورة أنيقة وواضحة تعكس جودة نشاطك."}'::jsonb,
+  '{"fr":"Nous construisons une image cohérente et mémorable qui rassure vos visiteurs et donne envie de choisir votre entreprise.","en":"We build a consistent, memorable image that reassures visitors and makes them want to choose your business.","ar":"نبني صورة متناسقة ولا تُنسى تطمئن زوارك وتشجعهم على اختيار نشاطك."}'::jsonb,
   'service', false, true, NULL,
   'contact', 'EUR', 'redesign', now()
 ),
 (
   'VZ—04', 'mobile', 'smartphone', 'published', false, 40,
-  '{"fr":"Expérience mobile-first","en":"Mobile-first experience","ar":"تجربة للجوال أولاً"}'::jsonb,
-  '{"fr":"Un rendu impeccable sur téléphone — là où la majorité de vos clients vous découvrent.","en":"Impeccable on phone — where most of your clients discover you.","ar":"عرض مثالي على الهاتف — حيث يكتشفك معظم عملائك."}'::jsonb,
-  '{"fr":"Un rendu impeccable sur téléphone — là où la majorité de vos clients vous découvrent.","en":"Impeccable on phone — where most of your clients discover you.","ar":"عرض مثالي على الهاتف — حيث يكتشفك معظم عملائك."}'::jsonb,
+  '{"fr":"Une expérience parfaite sur téléphone","en":"A perfect experience on every phone","ar":"تجربة ممتازة على الهاتف"}'::jsonb,
+  '{"fr":"Vos clients profitent d’un parcours simple et agréable, où qu’ils soient.","en":"Give customers a simple, pleasant journey wherever they are.","ar":"امنح عملاءك تجربة بسيطة ومريحة أينما كانوا."}'::jsonb,
+  '{"fr":"Nous veillons à ce que chaque visite soit fluide et convaincante sur téléphone, là où vos clients vous découvrent le plus souvent.","en":"We make every visit smooth and convincing on mobile, where customers are most likely to discover you.","ar":"نحرص على أن تكون كل زيارة سهلة ومقنعة على الهاتف، حيث يكتشفك معظم عملائك."}'::jsonb,
   'service', false, true, NULL,
   'contact', 'EUR', 'web_app', now()
 ),
 (
   'VZ—05', 'seo', 'search', 'published', false, 50,
-  '{"fr":"Référencement de base","en":"Foundational SEO","ar":"أساسيات الظهور في البحث"}'::jsonb,
-  '{"fr":"Structure, perf et balises prêtes pour Google : plus de chances d’être trouvé sur les bonnes recherches.","en":"Structure, performance and tags ready for Google: better odds of being found on the right searches.","ar":"بنية وأداء ووسوم جاهزة لـ Google: فرص أفضل للظهور في عمليات البحث المناسبة."}'::jsonb,
-  '{"fr":"Structure, perf et balises prêtes pour Google : plus de chances d’être trouvé sur les bonnes recherches.","en":"Structure, performance and tags ready for Google: better odds of being found on the right searches.","ar":"بنية وأداء ووسوم جاهزة لـ Google: فرص أفضل للظهور في عمليات البحث المناسبة."}'::jsonb,
+  '{"fr":"Soyez trouvé par les bons clients","en":"Be found by the right customers","ar":"اجعل العملاء المناسبين يجدونك"}'::jsonb,
+  '{"fr":"Améliorez votre présence sur Google pour toucher les personnes qui recherchent déjà vos services.","en":"Improve your presence on Google and reach people already looking for your services.","ar":"حسّن ظهورك على Google للوصول إلى أشخاص يبحثون بالفعل عن خدماتك."}'::jsonb,
+  '{"fr":"Nous rendons votre activité plus facile à trouver afin que les bonnes personnes puissent vous découvrir au bon moment.","en":"We make your business easier to find so the right people can discover you at the right time.","ar":"نجعل نشاطك أسهل في الوصول إليه ليكتشفك الأشخاص المناسبون في الوقت المناسب."}'::jsonb,
   'service', false, true, NULL,
   'contact', 'EUR', 'showcase', now()
 ),
 (
   'VZ—06', 'maintenance', 'rocket', 'published', false, 60,
-  '{"fr":"Suivi après lancement","en":"Post-launch support","ar":"متابعة بعد الإطلاق"}'::jsonb,
-  '{"fr":"Corrections, améliorations et conseils après mise en ligne — votre site reste stable et évolutif.","en":"Fixes, improvements and advice after go-live — your site stays stable and ready to evolve.","ar":"إصلاحات وتحسينات ونصائح بعد النشر — يبقى موقعك مستقراً وقابلاً للتطور."}'::jsonb,
-  '{"fr":"Corrections, améliorations et conseils après mise en ligne — votre site reste stable et évolutif.","en":"Fixes, improvements and advice after go-live — your site stays stable and ready to evolve.","ar":"إصلاحات وتحسينات ونصائح بعد النشر — يبقى موقعك مستقراً وقابلاً للتطور."}'::jsonb,
+  '{"fr":"Restez serein après le lancement","en":"Enjoy peace of mind after launch","ar":"راحة بال بعد الإطلاق"}'::jsonb,
+  '{"fr":"Nous restons à vos côtés pour les améliorations, les ajustements et les questions.","en":"We stay by your side for improvements, adjustments and questions.","ar":"نبقى إلى جانبك للتحسينات والتعديلات والإجابة عن أسئلتك."}'::jsonb,
+  '{"fr":"Vous n’êtes pas seul après la mise en ligne : nous vous accompagnons pour garder une présence fiable et adaptée à l’évolution de votre activité.","en":"You are not alone after launch: we stay with you to keep your online presence reliable and suited to your growing business.","ar":"لن تكون وحدك بعد الإطلاق: نبقى معك للحفاظ على حضور موثوق يواكب نمو نشاطك."}'::jsonb,
   'service', false, true, NULL,
   'contact', 'EUR', 'other', now()
 )
@@ -155,49 +147,7 @@ ON CONFLICT (slug) DO UPDATE SET
   published_at = COALESCE(public.services.published_at, EXCLUDED.published_at),
   updated_at = now();
 
--- ---------------------------------------------------------------------------
--- 4. Exemple principal : lier le 1er projet publié aux offres sans exemple
---    (round-robin) pour que la zone Exemple soit remplie côté détail.
--- ---------------------------------------------------------------------------
-DO $$
-DECLARE
-  project_ids uuid[];
-  svc RECORD;
-  idx integer := 0;
-  n integer;
-BEGIN
-  SELECT array_agg(id ORDER BY sort_order ASC, created_at ASC)
-  INTO project_ids
-  FROM public.projects
-  WHERE published = true;
-
-  IF project_ids IS NULL THEN
-    RETURN;
-  END IF;
-
-  n := array_length(project_ids, 1);
-  IF n IS NULL OR n < 1 THEN
-    RETURN;
-  END IF;
-
-  FOR svc IN
-    SELECT id
-    FROM public.services
-    WHERE status = 'published'
-      AND linked_project_id IS NULL
-    ORDER BY sort_order ASC, created_at ASC
-  LOOP
-    UPDATE public.services
-    SET linked_project_id = project_ids[(idx % n) + 1]
-    WHERE id = svc.id;
-
-    -- Retirer ce projet des « autres exemples » s’il y était
-    DELETE FROM public.service_case_studies
-    WHERE service_id = svc.id
-      AND project_id = project_ids[(idx % n) + 1];
-
-    idx := idx + 1;
-  END LOOP;
-END $$;
+-- Aucun projet n’est créé ou associé automatiquement.
+-- Les exemples réels sont choisis manuellement depuis l’administration.
 
 NOTIFY pgrst, 'reload schema';
