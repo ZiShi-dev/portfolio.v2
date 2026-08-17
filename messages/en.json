@@ -129,11 +129,12 @@
     "backToCatalog": "Back to offers",
     "detailAbout": "About this offer",
     "detailPricing": "Pricing",
-    "relatedProjects": "Related work",
-    "viewCaseStudy": "View a case study",
-    "linkedProjectEyebrow": "Related project",
-    "viewLinkedProject": "View project details",
-    "viewLiveProject": "View live project",
+    "relatedProjects": "More examples",
+    "viewCaseStudy": "View example",
+    "linkedProjectEyebrow": "Example",
+    "viewLinkedProject": "View example details",
+    "viewLiveProject": "View live example",
+    "exampleSubtitle": "A concrete preview of what this offer can deliver.",
     "offerKind": {
       "service": "Service",
       "product": "For sale"

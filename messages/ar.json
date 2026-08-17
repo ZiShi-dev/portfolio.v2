@@ -129,11 +129,12 @@
     "backToCatalog": "العودة إلى العروض",
     "detailAbout": "عن العرض",
     "detailPricing": "التسعير",
-    "relatedProjects": "أعمال مرتبطة",
-    "viewCaseStudy": "عرض إنجاز",
-    "linkedProjectEyebrow": "مشروع مرتبط",
-    "viewLinkedProject": "عرض تفاصيل المشروع",
-    "viewLiveProject": "عرض موقع المشروع",
+    "relatedProjects": "أمثلة أخرى",
+    "viewCaseStudy": "عرض المثال",
+    "linkedProjectEyebrow": "مثال",
+    "viewLinkedProject": "عرض تفاصيل المثال",
+    "viewLiveProject": "عرض الموقع المثال",
+    "exampleSubtitle": "معاينة ملموسة لما يمكن أن تقدّمه هذه العرض.",
     "offerKind": {
       "service": "خدمة",
       "product": "للبيع"

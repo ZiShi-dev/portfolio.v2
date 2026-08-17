@@ -207,6 +207,9 @@ export default async function OffreDetailPage({ params }: PageProps) {
             <p className="mt-2 font-display text-lg font-semibold text-foreground sm:text-xl">
               {linkedProject.title}
             </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {t("exampleSubtitle")}
+            </p>
             {linkedProject.reference ? (
               <p className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground">
                 {linkedProject.reference}
