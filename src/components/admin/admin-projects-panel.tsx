@@ -381,7 +381,7 @@ export function AdminProjectsPanel({
       sortOrder: editor.sortOrder,
       published: editor.published,
       featured: editor.featured,
-      coverImage: editor.coverImage.trim() || null,
+      coverImage: editor.images[0]?.url ?? null,
       technologies: editor.technologies,
       features: editor.features
         .filter((f) => f.fr.trim())
@@ -527,9 +527,11 @@ export function AdminProjectsPanel({
         }
         return;
       }
+      const nextImages = [...editor.images, { url: body.url }];
       setEditor({
         ...editor,
-        images: [...editor.images, { url: body.url }],
+        images: nextImages,
+        coverImage: nextImages[0]?.url ?? "",
       });
     } catch {
       setFieldErrors({ images: tErrors("generic") });
@@ -546,7 +548,11 @@ export function AdminProjectsPanel({
     const tmp = images[index]!;
     images[index] = images[next]!;
     images[next] = tmp;
-    setEditor({ ...editor, images });
+    setEditor({
+      ...editor,
+      images,
+      coverImage: images[0]?.url ?? "",
+    });
   }
 
   function toggleBusinessType(id: string) {
@@ -1363,11 +1369,13 @@ export function AdminProjectsPanel({
                               aria-label={t("removeImage")}
                               onClick={() => {
                                 clearFieldError("images");
+                                const images = editor.images.filter(
+                                  (_, i) => i !== index
+                                );
                                 setEditor({
                                   ...editor,
-                                  images: editor.images.filter(
-                                    (_, i) => i !== index
-                                  ),
+                                  images,
+                                  coverImage: images[0]?.url ?? "",
                                 });
                               }}
                             >

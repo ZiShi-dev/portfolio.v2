@@ -107,6 +107,8 @@ const sampleRow = {
   result: { fr: "", en: "", ar: "" },
   seo_title: { fr: "", en: "", ar: "" },
   seo_description: { fr: "", en: "", ar: "" },
+  listing_price_cents: null as number | null,
+  listing_intent: { fr: "", en: "", ar: "" },
   published_at: "2026-07-16T00:00:00Z",
 };
 
@@ -276,5 +278,29 @@ describe("projects/store", () => {
   it("updateProject invalid_id", async () => {
     const result = await store.updateProject("bad", { published: true });
     assert.deepEqual(result, { ok: false, reason: "invalid_id" });
+  });
+
+  it("projectCoverUrl ignore une cover orpheline hors galerie", () => {
+    const stale = {
+      ...sampleRow,
+      cover_image:
+        "https://abc.supabase.co/storage/v1/object/public/portfolio-projects/old.jpg",
+      images: [
+        {
+          url: "https://abc.supabase.co/storage/v1/object/public/portfolio-projects/new.jpg",
+        },
+      ],
+    };
+    assert.equal(
+      store.projectCoverUrl(stale),
+      "https://abc.supabase.co/storage/v1/object/public/portfolio-projects/new.jpg"
+    );
+
+    const localized = store.projectRowToLocalized(stale, "fr", "Perso");
+    assert.equal(
+      localized.images[0]?.src,
+      "https://abc.supabase.co/storage/v1/object/public/portfolio-projects/new.jpg"
+    );
+    assert.equal(localized.images.length, 1);
   });
 });
