@@ -26,6 +26,11 @@ export type ServiceI18n = {
 
 export type ServiceFeatureStored = ServiceI18n;
 
+export type ServiceCaseStudyLink = {
+  project_id: string;
+  blurb: ServiceI18n;
+};
+
 export type ServiceRow = {
   id: string;
   created_at: string;
@@ -54,6 +59,7 @@ export type ServiceRow = {
   seo_title: ServiceI18n;
   seo_description: ServiceI18n;
   published_at: string | null;
+  case_studies: ServiceCaseStudyLink[];
   case_study_ids: string[];
 };
 
@@ -81,6 +87,7 @@ export type LocalizedService = {
   inquiryProjectType: ProjectInquiryType | null;
   seoTitle?: string;
   seoDescription?: string;
+  caseStudies: Array<{ projectId: string; blurb: string }>;
   caseStudyIds: string[];
 };
 
@@ -217,6 +224,7 @@ function normalizeRow(
     seo_description: asI18n(raw.seo_description),
     published_at:
       typeof raw.published_at === "string" ? raw.published_at : null,
+    case_studies: [],
     case_study_ids: caseStudyIds,
   };
 }
@@ -231,8 +239,7 @@ export function pickLocale(
 
 export function serviceRowToLocalized(
   row: ServiceRow,
-  locale: Locale | string,
-  overrides?: { coverImage?: string | null }
+  locale: Locale | string
 ): LocalizedService {
   return {
     id: row.id,
@@ -250,13 +257,9 @@ export function serviceRowToLocalized(
       .filter(Boolean),
     ctaLabel: pickLocale(row.cta_label, locale),
     offerKind: row.offer_kind,
-    showCtaBuy: row.show_cta_buy,
+    showCtaBuy: false,
     showCtaStart: row.show_cta_start,
-    // Public : image uniquement via projet lié (override). Jamais la cover admin legacy.
-    coverImage:
-      overrides && "coverImage" in overrides
-        ? overrides.coverImage ?? null
-        : null,
+    coverImage: null,
     linkedProjectId: row.linked_project_id,
     pricingMode: row.pricing_mode,
     startingPriceCents: row.starting_price_cents,
@@ -264,14 +267,55 @@ export function serviceRowToLocalized(
     inquiryProjectType: row.inquiry_project_type,
     seoTitle: pickLocale(row.seo_title, locale) || undefined,
     seoDescription: pickLocale(row.seo_description, locale) || undefined,
+    caseStudies: row.case_studies.map((item) => ({
+      projectId: item.project_id,
+      blurb: pickLocale(item.blurb, locale),
+    })),
     caseStudyIds: row.case_study_ids,
   };
 }
 
-async function loadCaseStudyIds(
+function emptyBlurb(): ServiceI18n {
+  return { fr: "", en: "", ar: "" };
+}
+
+function asBlurb(value: unknown): ServiceI18n {
+  return asI18n(value);
+}
+
+function withCaseStudies(
+  row: ServiceRow,
+  links: ServiceCaseStudyLink[]
+): ServiceRow {
+  return {
+    ...row,
+    case_studies: links,
+    case_study_ids: links.map((item) => item.project_id),
+  };
+}
+
+function linksFromWriteInput(input: ServiceWriteInput): ServiceCaseStudyLink[] {
+  const studies =
+    input.caseStudies && input.caseStudies.length > 0
+      ? input.caseStudies
+      : (input.caseStudyIds ?? []).map((projectId) => ({
+          projectId,
+          blurb: emptyBlurb(),
+        }));
+  return studies.map((item) => ({
+    project_id: item.projectId,
+    blurb: {
+      fr: item.blurb?.fr ?? "",
+      en: item.blurb?.en ?? "",
+      ar: item.blurb?.ar ?? "",
+    },
+  }));
+}
+
+async function loadCaseStudies(
   serviceIds: string[]
-): Promise<Map<string, string[]>> {
-  const map = new Map<string, string[]>();
+): Promise<Map<string, ServiceCaseStudyLink[]>> {
+  const map = new Map<string, ServiceCaseStudyLink[]>();
   if (serviceIds.length === 0) return map;
   if (!isSupabaseServiceConfigured()) return map;
   const supabase = createSupabaseServiceClient();
@@ -279,20 +323,43 @@ async function loadCaseStudyIds(
 
   const { data, error } = await supabase
     .from("service_case_studies")
-    .select("service_id, project_id, sort_order")
+    .select("service_id, project_id, sort_order, blurb")
     .in("service_id", serviceIds)
     .order("sort_order", { ascending: true });
 
   if (error) {
+    if (String(error.message ?? "").toLowerCase().includes("blurb")) {
+      const fallback = await supabase
+        .from("service_case_studies")
+        .select("service_id, project_id, sort_order")
+        .in("service_id", serviceIds)
+        .order("sort_order", { ascending: true });
+      if (fallback.error) {
+        console.error("[services] case studies", fallback.error.message);
+        return map;
+      }
+      for (const row of fallback.data ?? []) {
+        const sid = String(row.service_id);
+        const list = map.get(sid) ?? [];
+        list.push({
+          project_id: String(row.project_id),
+          blurb: emptyBlurb(),
+        });
+        map.set(sid, list);
+      }
+      return map;
+    }
     console.error("[services] case studies", error.message);
     return map;
   }
 
   for (const row of data ?? []) {
     const sid = String(row.service_id);
-    const pid = String(row.project_id);
     const list = map.get(sid) ?? [];
-    list.push(pid);
+    list.push({
+      project_id: String(row.project_id),
+      blurb: asBlurb(row.blurb),
+    });
     map.set(sid, list);
   }
   return map;
@@ -300,7 +367,7 @@ async function loadCaseStudyIds(
 
 async function replaceCaseStudies(
   serviceId: string,
-  projectIds: string[]
+  links: ServiceCaseStudyLink[]
 ): Promise<boolean> {
   const supabase = createSupabaseServiceClient();
   if (!supabase) return false;
@@ -315,13 +382,16 @@ async function replaceCaseStudies(
     return false;
   }
 
-  if (projectIds.length === 0) return true;
+  if (links.length === 0) return true;
 
-  const rows = projectIds.map((project_id, index) => ({
-    service_id: serviceId,
-    project_id,
-    sort_order: (index + 1) * 10,
-  }));
+  const rows = links
+    .filter((link) => UUID_RE.test(link.project_id))
+    .map((link, index) => ({
+      service_id: serviceId,
+      project_id: link.project_id,
+      sort_order: (index + 1) * 10,
+      blurb: link.blurb,
+    }));
 
   const { error: insError } = await supabase
     .from("service_case_studies")
@@ -452,11 +522,8 @@ export async function listPublishedServiceRows(): Promise<ServiceRow[] | null> {
   const rows = (data ?? []).map((row) =>
     normalizeRow(row as Record<string, unknown>)
   );
-  const caseMap = await loadCaseStudyIds(rows.map((r) => r.id));
-  return rows.map((r) => ({
-    ...r,
-    case_study_ids: caseMap.get(r.id) ?? [],
-  }));
+  const caseMap = await loadCaseStudies(rows.map((r) => r.id));
+  return rows.map((r) => withCaseStudies(r, caseMap.get(r.id) ?? []));
 }
 
 export async function getPublishedServiceBySlug(
@@ -481,8 +548,8 @@ export async function getPublishedServiceBySlug(
   if (!data) return null;
 
   const row = normalizeRow(data as Record<string, unknown>);
-  const caseMap = await loadCaseStudyIds([row.id]);
-  return { ...row, case_study_ids: caseMap.get(row.id) ?? [] };
+  const caseMap = await loadCaseStudies([row.id]);
+  return withCaseStudies(row, caseMap.get(row.id) ?? []);
 }
 
 /** Résout côté serveur le contexte d'offre envoyé par le formulaire public. */
@@ -526,8 +593,8 @@ export async function getServiceByIdForAdmin(
 
   if (error || !data) return null;
   const row = normalizeRow(data as Record<string, unknown>);
-  const caseMap = await loadCaseStudyIds([row.id]);
-  return { ...row, case_study_ids: caseMap.get(row.id) ?? [] };
+  const caseMap = await loadCaseStudies([row.id]);
+  return withCaseStudies(row, caseMap.get(row.id) ?? []);
 }
 
 /** Preview admin : n’importe quel statut, jamais exposé publiquement sans auth. */
@@ -547,8 +614,8 @@ export async function getServiceBySlugForAdmin(
 
   if (error || !data) return null;
   const row = normalizeRow(data as Record<string, unknown>);
-  const caseMap = await loadCaseStudyIds([row.id]);
-  return { ...row, case_study_ids: caseMap.get(row.id) ?? [] };
+  const caseMap = await loadCaseStudies([row.id]);
+  return withCaseStudies(row, caseMap.get(row.id) ?? []);
 }
 
 export async function listPublishedServiceSlugs(): Promise<
@@ -603,15 +670,12 @@ export async function listServicesForAdmin(limit = 100): Promise<
   const rows = (data ?? []).map((row) =>
     normalizeRow(row as Record<string, unknown>)
   );
-  const caseMap = await loadCaseStudyIds(rows.map((r) => r.id));
+  const caseMap = await loadCaseStudies(rows.map((r) => r.id));
 
   return {
     ok: true,
     configured: true,
-    services: rows.map((r) => ({
-      ...r,
-      case_study_ids: caseMap.get(r.id) ?? [],
-    })),
+    services: rows.map((r) => withCaseStudies(r, caseMap.get(r.id) ?? [])),
   };
 }
 
@@ -650,14 +714,15 @@ export async function createService(
   }
 
   const row = normalizeRow(data as Record<string, unknown>);
-  const linked = await replaceCaseStudies(row.id, input.caseStudyIds);
+  const links = linksFromWriteInput(input);
+  const linked = await replaceCaseStudies(row.id, links);
   if (!linked) {
     console.error("[services] create case studies failed");
   }
 
   return {
     ok: true,
-    service: { ...row, case_study_ids: input.caseStudyIds },
+    service: withCaseStudies(row, links),
   };
 }
 
@@ -705,7 +770,11 @@ export async function updateService(
   }
 
   const payload = patchToDbPayload(input, current);
-  if (Object.keys(payload).length === 0 && input.caseStudyIds === undefined) {
+  if (
+    Object.keys(payload).length === 0 &&
+    input.caseStudies === undefined &&
+    input.caseStudyIds === undefined
+  ) {
     return { ok: true, service: current };
   }
 
@@ -732,23 +801,35 @@ export async function updateService(
     row = normalizeRow(data as Record<string, unknown>);
   }
 
-  let caseIds = current.case_study_ids;
-  if (input.caseStudyIds !== undefined) {
-    // Filtrer les IDs invalides pour éviter un 503 sur FK cassée
-    const validIds = input.caseStudyIds.filter((pid) => UUID_RE.test(pid));
-    const linked = await replaceCaseStudies(id, validIds);
+  let links = current.case_studies;
+  if (input.caseStudies !== undefined || input.caseStudyIds !== undefined) {
+    const nextLinks =
+      input.caseStudies && input.caseStudies.length > 0
+        ? input.caseStudies.map((item) => ({
+            project_id: item.projectId,
+            blurb: {
+              fr: item.blurb?.fr ?? "",
+              en: item.blurb?.en ?? "",
+              ar: item.blurb?.ar ?? "",
+            },
+          }))
+        : (input.caseStudyIds ?? []).map((project_id) => ({
+            project_id,
+            blurb: emptyBlurb(),
+          }));
+    const validLinks = nextLinks.filter((link) => UUID_RE.test(link.project_id));
+    const linked = await replaceCaseStudies(id, validLinks);
     if (!linked) {
       console.error("[services] case studies link failed after update", id);
-      // L’offre est déjà à jour — renvoyer le row sans faire échouer tout le PATCH
-      return { ok: true, service: { ...row, case_study_ids: validIds } };
+      return { ok: true, service: withCaseStudies(row, validLinks) };
     }
-    caseIds = validIds;
+    links = validLinks;
   } else {
-    const caseMap = await loadCaseStudyIds([id]);
-    caseIds = caseMap.get(id) ?? [];
+    const caseMap = await loadCaseStudies([id]);
+    links = caseMap.get(id) ?? [];
   }
 
-  return { ok: true, service: { ...row, case_study_ids: caseIds } };
+  return { ok: true, service: withCaseStudies(row, links) };
 }
 
 export async function duplicateService(
@@ -788,16 +869,20 @@ export async function duplicateService(
     idealFor: { ...source.ideal_for },
     includedFeatures: source.included_features.map((f) => ({ ...f })),
     ctaLabel: { ...source.cta_label },
-    offerKind: source.offer_kind,
-    showCtaBuy: source.show_cta_buy,
+    offerKind: "service",
+    showCtaBuy: false,
     showCtaStart: source.show_cta_start,
-    coverImage: source.cover_image,
-    linkedProjectId: source.linked_project_id,
+    coverImage: null,
+    linkedProjectId: null,
     pricingMode: source.pricing_mode,
     startingPriceCents: source.starting_price_cents,
     currency: source.currency,
     inquiryProjectType: source.inquiry_project_type,
-    caseStudyIds: [...source.case_study_ids],
+    caseStudies: source.case_studies.map((item) => ({
+      projectId: item.project_id,
+      blurb: { ...item.blurb },
+    })),
+    caseStudyIds: source.case_studies.map((item) => item.project_id),
     seoTitle: { ...source.seo_title },
     seoDescription: { ...source.seo_description },
   };

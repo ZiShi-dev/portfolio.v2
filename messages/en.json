@@ -130,6 +130,7 @@
     "detailAbout": "About this offer",
     "detailPricing": "Pricing",
     "relatedProjects": "Related work",
+    "relatedProjectsSubtitle": "Open a card to view the project details.",
     "viewCaseStudy": "View a case study",
     "linkedProjectEyebrow": "Project for sale",
     "viewLinkedProject": "View project details",
@@ -1009,6 +1010,14 @@
       "ctaPlaceholder": "Start a project",
       "inquiryNone": "No preselection",
       "noCaseStudies": "No case studies available.",
+      "addProject": "Add",
+      "alreadyLinked": "This project is already linked.",
+      "tooManyProjects": "Maximum linked projects reached.",
+      "projectNotFound": "Project not found. Check the URL or slug.",
+      "noLinkedProjects": "No linked projects yet.",
+      "pickProjectPlaceholder": "Choose a project…",
+      "removeProject": "Remove project",
+      "projectBlurbPlaceholder": "Short description shown on the offer page",
       "notConfiguredTitle": "Unavailable",
       "notConfiguredBody": "Add SUPABASE_SERVICE_ROLE_KEY and run npm run db:migrate (services table).",
       "cols": {
@@ -1067,14 +1076,18 @@
         "shortDescription": "Short description",
         "description": "Description",
         "idealFor": "Ideal for",
-        "ctaLabel": "Start CTA label"
+        "ctaLabel": "Start CTA label",
+        "projectUrl": "Project URL or slug",
+        "pickProject": "Choose a project",
+        "projectBlurb": "Short description (offer page)"
       },
       "hints": {
         "coverImage": "Disabled: the photo comes from the linked project.",
-        "linkedProject": "Link a published project: its images appear on the offer. Without a linked project, no image."
+        "linkedProject": "Link a published project: its images appear on the offer. Without a linked project, no image.",
+        "projectUrl": "Paste /projets/my-project, the full URL, or the slug."
       },
       "linkedProjectNone": "No linked project",
-      "caseStudiesHint": "Secondary case studies shown under the main project.",
+      "caseStudiesHint": "Add several projects: their images and descriptions appear on /offres/[slug]. Clicking opens the project page.",
       "duplicate": "Duplicate",
       "archive": "Archive"
     }

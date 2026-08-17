@@ -19,6 +19,7 @@ export const SERVICE_LIMITS = {
   featureMax: 200,
   maxFeatures: 24,
   maxCaseStudies: 12,
+  caseStudyBlurbMax: 280,
   sortOrderMin: -9999,
   sortOrderMax: 9999,
   seoTitleMax: 120,
@@ -66,6 +67,48 @@ const uuidSchema = z
   .string()
   .trim()
   .uuid("invalid_uuid");
+
+export const emptyServiceI18n = () => ({ fr: "", en: "", ar: "" });
+
+export const serviceCaseStudySchema = z.object({
+  projectId: uuidSchema,
+  blurb: localeOptional(SERVICE_LIMITS.caseStudyBlurbMax),
+});
+
+export type ServiceCaseStudyInput = z.infer<typeof serviceCaseStudySchema>;
+
+function uniqueProjectIds(items: Array<{ projectId: string }>): boolean {
+  return new Set(items.map((item) => item.projectId)).size === items.length;
+}
+
+export function normalizeServiceCaseStudies(input: {
+  caseStudies?: ServiceCaseStudyInput[];
+  caseStudyIds?: string[];
+}): ServiceCaseStudyInput[] {
+  if (input.caseStudies && input.caseStudies.length > 0) {
+    const seen = new Set<string>();
+    const out: ServiceCaseStudyInput[] = [];
+    for (const item of input.caseStudies) {
+      if (seen.has(item.projectId)) continue;
+      seen.add(item.projectId);
+      out.push({
+        projectId: item.projectId,
+        blurb: {
+          fr: item.blurb?.fr ?? "",
+          en: item.blurb?.en ?? "",
+          ar: item.blurb?.ar ?? "",
+        },
+      });
+    }
+    return out.slice(0, SERVICE_LIMITS.maxCaseStudies);
+  }
+  const ids = input.caseStudyIds ?? [];
+  const unique = [...new Set(ids)].slice(0, SERVICE_LIMITS.maxCaseStudies);
+  return unique.map((projectId) => ({
+    projectId,
+    blurb: emptyServiceI18n(),
+  }));
+}
 
 export const serviceWriteSchema = z
   .object({
@@ -142,6 +185,14 @@ export const serviceWriteSchema = z
       .nullable()
       .optional()
       .transform((v) => (v === undefined ? null : v)),
+    caseStudies: z
+      .array(serviceCaseStudySchema)
+      .max(SERVICE_LIMITS.maxCaseStudies)
+      .optional()
+      .refine(
+        (items) => items === undefined || uniqueProjectIds(items),
+        "duplicate_case_study"
+      ),
     caseStudyIds: z
       .array(uuidSchema)
       .max(SERVICE_LIMITS.maxCaseStudies)
@@ -257,6 +308,7 @@ export const servicePatchSchema = z
       .enum(PROJECT_INQUIRY_TYPES)
       .nullable()
       .optional(),
+    caseStudies: serviceWriteSchema.shape.caseStudies,
     caseStudyIds: serviceWriteSchema.shape.caseStudyIds.optional(),
     seoTitle: serviceWriteSchema.shape.seoTitle.optional(),
     seoDescription: serviceWriteSchema.shape.seoDescription.optional(),
@@ -330,7 +382,9 @@ function mapServiceZodError(issues: z.core.$ZodIssue[]): string {
   if (path === "startingPriceCents" || path === "pricingMode") {
     return "service_invalid_pricing";
   }
-  if (path === "caseStudyIds") return "service_invalid_case_studies";
+  if (path === "caseStudyIds" || path.startsWith("caseStudies")) {
+    return "service_invalid_case_studies";
+  }
   return msg || "invalid_request";
 }
 
@@ -343,7 +397,15 @@ export function parseServiceWriteBody(
   if (!parsed.success) {
     return { ok: false, error: mapServiceZodError(parsed.error.issues) };
   }
-  return { ok: true, values: parsed.data };
+  const caseStudies = normalizeServiceCaseStudies(parsed.data);
+  return {
+    ok: true,
+    values: {
+      ...parsed.data,
+      caseStudies,
+      caseStudyIds: caseStudies.map((item) => item.projectId),
+    },
+  };
 }
 
 export function parseServicePatchBody(
@@ -366,6 +428,14 @@ export function parseServicePatchBody(
   const values = Object.fromEntries(
     Object.entries(parsed.data).filter(([, v]) => v !== undefined)
   ) as ServicePatchInput;
+  if (values.caseStudies !== undefined || values.caseStudyIds !== undefined) {
+    const caseStudies = normalizeServiceCaseStudies({
+      caseStudies: values.caseStudies,
+      caseStudyIds: values.caseStudyIds,
+    });
+    values.caseStudies = caseStudies;
+    values.caseStudyIds = caseStudies.map((item) => item.projectId);
+  }
   if (Object.keys(values).length === 0) {
     return { ok: false, error: "empty_patch" };
   }

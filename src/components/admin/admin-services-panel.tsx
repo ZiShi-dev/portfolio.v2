@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/ui/form-error";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,15 +52,16 @@ import { SERVICE_ICON_KEYS } from "@/lib/services/icons";
 import {
   SERVICE_CURRENCIES,
   SERVICE_LIMITS,
-  SERVICE_OFFER_KINDS,
   SERVICE_PRICING_MODES,
   SERVICE_STATUSES,
+  emptyServiceI18n,
   parseServiceWriteBody,
   slugifyServiceTitle,
-  type ServiceOfferKind,
+  type ServiceCaseStudyInput,
   type ServicePricingMode,
   type ServiceStatus,
 } from "@/lib/services/schema";
+import { parseProjectSlugFromInput } from "@/lib/services/project-ref";
 import {
   centsToEurosInput,
   parseEurosToCents,
@@ -92,15 +94,12 @@ type EditorState = {
   idealFor: ServiceI18n;
   includedFeatures: ServiceI18n[];
   ctaLabel: ServiceI18n;
-  offerKind: ServiceOfferKind;
-  showCtaBuy: boolean;
   showCtaStart: boolean;
-  linkedProjectId: string;
   pricingMode: ServicePricingMode;
   startingPriceEuros: string;
   currency: (typeof SERVICE_CURRENCIES)[number];
   inquiryProjectType: string;
-  caseStudyIds: string[];
+  caseStudies: ServiceCaseStudyInput[];
   seoTitle: ServiceI18n;
   seoDescription: ServiceI18n;
 };
@@ -121,15 +120,12 @@ function emptyEditor(): EditorState {
     idealFor: emptyI18n(),
     includedFeatures: [],
     ctaLabel: emptyI18n(),
-    offerKind: "service",
-    showCtaBuy: false,
     showCtaStart: true,
-    linkedProjectId: "",
     pricingMode: "quote_only",
     startingPriceEuros: "",
     currency: "EUR",
     inquiryProjectType: "",
-    caseStudyIds: [],
+    caseStudies: [],
     seoTitle: emptyI18n(),
     seoDescription: emptyI18n(),
   };
@@ -150,15 +146,25 @@ function rowToEditor(row: ServiceRow): EditorState {
     idealFor: { ...row.ideal_for },
     includedFeatures: row.included_features.map((f) => ({ ...f })),
     ctaLabel: { ...row.cta_label },
-    offerKind: row.offer_kind,
-    showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
-    linkedProjectId: row.linked_project_id ?? "",
     pricingMode: row.pricing_mode,
     startingPriceEuros: centsToEurosInput(row.starting_price_cents),
     currency: row.currency,
     inquiryProjectType: row.inquiry_project_type ?? "",
-    caseStudyIds: [...row.case_study_ids],
+    caseStudies: (row.case_studies?.length
+      ? row.case_studies
+      : row.case_study_ids.map((project_id) => ({
+          project_id,
+          blurb: emptyServiceI18n(),
+        }))
+    ).map((item) => ({
+      projectId: item.project_id,
+      blurb: {
+        fr: item.blurb?.fr ?? "",
+        en: item.blurb?.en ?? "",
+        ar: item.blurb?.ar ?? "",
+      },
+    })),
     seoTitle: { ...row.seo_title },
     seoDescription: { ...row.seo_description },
   };
@@ -183,17 +189,17 @@ function editorToPayload(editor: EditorState) {
     idealFor: editor.idealFor,
     includedFeatures: editor.includedFeatures.filter((f) => f.fr.trim()),
     ctaLabel: editor.ctaLabel,
-    offerKind: editor.offerKind,
-    showCtaBuy: editor.showCtaBuy,
+    offerKind: "service" as const,
+    showCtaBuy: false,
     showCtaStart: editor.showCtaStart,
-    // Image publique = images du projet lié uniquement (plus de cover admin).
     coverImage: null,
-    linkedProjectId: editor.linkedProjectId.trim() || null,
+    linkedProjectId: null,
     pricingMode: editor.pricingMode,
     startingPriceCents,
     currency: editor.currency,
     inquiryProjectType: editor.inquiryProjectType || null,
-    caseStudyIds: editor.caseStudyIds,
+    caseStudies: editor.caseStudies,
+    caseStudyIds: editor.caseStudies.map((item) => item.projectId),
     seoTitle: editor.seoTitle,
     seoDescription: editor.seoDescription,
   };
@@ -221,6 +227,8 @@ export function AdminServicesPanel({
   const [localeTab, setLocaleTab] = useState<LocaleTab>("fr");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [listError, setListError] = useState<string | null>(null);
+  const [projectRefInput, setProjectRefInput] = useState("");
+  const [projectLinkError, setProjectLinkError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     try {
@@ -246,6 +254,8 @@ export function AdminServicesPanel({
     setEditor(emptyEditor());
     setLocaleTab("fr");
     setSubmitError(null);
+    setProjectRefInput("");
+    setProjectLinkError(null);
     setEditorOpen(true);
   };
 
@@ -253,6 +263,8 @@ export function AdminServicesPanel({
     setEditor(rowToEditor(row));
     setLocaleTab("fr");
     setSubmitError(null);
+    setProjectRefInput("");
+    setProjectLinkError(null);
     setEditorOpen(true);
   };
 
@@ -263,6 +275,52 @@ export function AdminServicesPanel({
       if (target < 0 || target >= next.length) return prev;
       [next[index], next[target]] = [next[target], next[index]];
       return { ...prev, includedFeatures: next };
+    });
+  };
+
+  const addCaseStudy = (projectId: string): boolean => {
+    if (editor.caseStudies.some((item) => item.projectId === projectId)) {
+      setProjectLinkError(t("alreadyLinked"));
+      return false;
+    }
+    if (editor.caseStudies.length >= SERVICE_LIMITS.maxCaseStudies) {
+      setProjectLinkError(t("tooManyProjects"));
+      return false;
+    }
+    setEditor((prev) => ({
+      ...prev,
+      caseStudies: [
+        ...prev.caseStudies,
+        { projectId, blurb: emptyServiceI18n() },
+      ],
+    }));
+    setProjectLinkError(null);
+    return true;
+  };
+
+  const addCaseStudyFromInput = () => {
+    const slug = parseProjectSlugFromInput(projectRefInput);
+    if (!slug) {
+      setProjectLinkError(t("projectNotFound"));
+      return;
+    }
+    const match = caseStudyOptions.find((opt) => opt.slug === slug);
+    if (!match) {
+      setProjectLinkError(t("projectNotFound"));
+      return;
+    }
+    if (addCaseStudy(match.id)) {
+      setProjectRefInput("");
+    }
+  };
+
+  const moveCaseStudy = (index: number, dir: -1 | 1) => {
+    setEditor((prev) => {
+      const next = [...prev.caseStudies];
+      const target = index + dir;
+      if (target < 0 || target >= next.length) return prev;
+      [next[index], next[target]] = [next[target], next[index]];
+      return { ...prev, caseStudies: next };
     });
   };
 
@@ -466,9 +524,6 @@ export function AdminServicesPanel({
                         {row.reference}
                       </span>
                       <StatusBadge status={row.status} t={t} />
-                      <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground/70">
-                        {t(`offerKind.${row.offer_kind}`)}
-                      </span>
                       {row.featured ? (
                         <span className="rounded-full border border-border-gold/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-primary/80">
                           {t("cols.featured")}
@@ -735,70 +790,19 @@ export function AdminServicesPanel({
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.commerce")}
               </h3>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <FormField label={t("fields.offerKind")} id="svc-kind">
-                  <Select
-                    value={editor.offerKind}
-                    onValueChange={(v) => {
-                      const kind = v as ServiceOfferKind;
-                      setEditor((p) => ({
-                        ...p,
-                        offerKind: kind,
-                        showCtaBuy:
-                          kind === "product" ? true : p.showCtaBuy,
-                        showCtaStart:
-                          kind === "service" ? true : p.showCtaStart,
-                        pricingMode:
-                          kind === "product" &&
-                          (p.pricingMode === "quote_only" ||
-                            p.pricingMode === "contact")
-                            ? "fixed"
-                            : p.pricingMode,
-                      }));
-                    }}
-                  >
-                    <SelectTrigger id="svc-kind">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SERVICE_OFFER_KINDS.map((k) => (
-                        <SelectItem key={k} value={k}>
-                          {t(`offerKind.${k}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormField>
-                <div className="flex flex-col justify-end gap-2 sm:col-span-1">
-                  <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
-                    <input
-                      type="checkbox"
-                      checked={editor.showCtaBuy}
-                      onChange={(e) =>
-                        setEditor((p) => ({
-                          ...p,
-                          showCtaBuy: e.target.checked,
-                        }))
-                      }
-                    />
-                    {t("fields.showCtaBuy")}
-                  </label>
-                  <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
-                    <input
-                      type="checkbox"
-                      checked={editor.showCtaStart}
-                      onChange={(e) =>
-                        setEditor((p) => ({
-                          ...p,
-                          showCtaStart: e.target.checked,
-                        }))
-                      }
-                    />
-                    {t("fields.showCtaStart")}
-                  </label>
-                </div>
-              </div>
-              <p className="text-xs text-foreground/50">{t("commerceHint")}</p>
+              <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
+                <input
+                  type="checkbox"
+                  checked={editor.showCtaStart}
+                  onChange={(e) =>
+                    setEditor((p) => ({
+                      ...p,
+                      showCtaStart: e.target.checked,
+                    }))
+                  }
+                />
+                {t("fields.showCtaStart")}
+              </label>
             </section>
 
             <section className="space-y-3">
@@ -1111,91 +1115,176 @@ export function AdminServicesPanel({
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.caseStudies")}
               </h3>
-
-              <FormField
-                label={t("fields.linkedProject")}
-                id="svc-linked-project"
-                hint={t("hints.linkedProject")}
-              >
-                <Select
-                  value={editor.linkedProjectId || "__none__"}
-                  onValueChange={(v) =>
-                    setEditor((p) => ({
-                      ...p,
-                      linkedProjectId: v === "__none__" ? "" : v,
-                    }))
-                  }
-                >
-                  <SelectTrigger id="svc-linked-project">
-                    <SelectValue placeholder={t("linkedProjectNone")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__none__">
-                      {t("linkedProjectNone")}
-                    </SelectItem>
-                    {caseStudyOptions
-                      .filter((opt) => opt.published)
-                      .map((opt) => (
-                        <SelectItem key={opt.id} value={opt.id}>
-                          {opt.title}
-                          {opt.reference ? ` · ${opt.reference}` : ""}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </FormField>
-
               <p className="text-xs text-foreground/50">{t("caseStudiesHint")}</p>
-              <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg border border-border p-3">
-                {caseStudyOptions.length === 0 ? (
-                  <p className="text-xs text-foreground/55">{t("noCaseStudies")}</p>
-                ) : (
-                  caseStudyOptions.map((opt) => {
-                    const checked = editor.caseStudyIds.includes(opt.id);
-                    return (
-                      <label
-                        key={opt.id}
-                        className="flex items-start gap-2 text-sm"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={(e) => {
-                            setEditor((p) => ({
-                              ...p,
-                              caseStudyIds: e.target.checked
-                                ? [...p.caseStudyIds, opt.id]
-                                : p.caseStudyIds.filter((id) => id !== opt.id),
-                            }));
-                          }}
-                        />
-                        <span>
-                          <span className="font-medium">
-                            {opt.title}
-                          </span>
-                          {opt.reference ? (
-                            <span className="ms-2 font-mono text-[10px] text-muted-foreground">
-                              {opt.reference}
-                            </span>
-                          ) : null}
-                          {!opt.published ? (
-                            <span className="ms-2 text-[10px] text-amber-500/80">
-                              ({t("status.draft")})
-                            </span>
-                          ) : null}
-                        </span>
-                      </label>
-                    );
-                  })
-                )}
+
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+                <FormField
+                  label={t("fields.projectUrl")}
+                  id="svc-project-url"
+                  hint={t("hints.projectUrl")}
+                >
+                  <Input
+                    id="svc-project-url"
+                    value={projectRefInput}
+                    onChange={(e) => {
+                      setProjectRefInput(e.target.value);
+                      setProjectLinkError(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        addCaseStudyFromInput();
+                      }
+                    }}
+                    placeholder="/projets/mon-projet"
+                  />
+                </FormField>
+                <div className="flex items-end">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="min-h-10 w-full sm:w-auto"
+                    onClick={addCaseStudyFromInput}
+                  >
+                    {t("addProject")}
+                  </Button>
+                </div>
               </div>
-              {editor.caseStudyIds.length > 0 ? (
-                <p className="text-xs text-foreground/55">
-                  {editor.caseStudyIds
-                    .map((id) => caseStudyLabel.get(id)?.title ?? id)
-                    .join(" · ")}
-                </p>
+
+              {caseStudyOptions.length > 0 ? (
+                <FormField label={t("fields.pickProject")} id="svc-pick-project">
+                  <Select
+                    value="__none__"
+                    onValueChange={(v) => {
+                      if (v && v !== "__none__") addCaseStudy(v);
+                    }}
+                  >
+                    <SelectTrigger id="svc-pick-project">
+                      <SelectValue placeholder={t("pickProjectPlaceholder")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">
+                        {t("pickProjectPlaceholder")}
+                      </SelectItem>
+                      {caseStudyOptions
+                        .filter(
+                          (opt) =>
+                            !editor.caseStudies.some(
+                              (item) => item.projectId === opt.id
+                            )
+                        )
+                        .map((opt) => (
+                          <SelectItem key={opt.id} value={opt.id}>
+                            {opt.title}
+                            {opt.slug ? ` · /projets/${opt.slug}` : ""}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </FormField>
+              ) : (
+                <p className="text-xs text-foreground/55">{t("noCaseStudies")}</p>
+              )}
+
+              {projectLinkError ? (
+                <FormError message={projectLinkError} />
               ) : null}
+
+              {editor.caseStudies.length === 0 ? (
+                <p className="text-xs text-foreground/55">{t("noLinkedProjects")}</p>
+              ) : (
+                <ul className="space-y-3">
+                  {editor.caseStudies.map((item, index) => {
+                    const opt = caseStudyLabel.get(item.projectId);
+                    return (
+                      <li
+                        key={item.projectId}
+                        className="space-y-3 rounded-xl border border-border bg-surface-elevated/30 p-3"
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="font-medium text-foreground">
+                              {opt?.title ?? item.projectId}
+                            </p>
+                            {opt?.slug ? (
+                              <p className="font-mono text-[10px] tracking-wider text-muted-foreground">
+                                /projets/{opt.slug}
+                              </p>
+                            ) : null}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => moveCaseStudy(index, -1)}
+                              disabled={index === 0}
+                              aria-label={t("moveUp")}
+                            >
+                              <ChevronUp className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => moveCaseStudy(index, 1)}
+                              disabled={index === editor.caseStudies.length - 1}
+                              aria-label={t("moveDown")}
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              onClick={() =>
+                                setEditor((p) => ({
+                                  ...p,
+                                  caseStudies: p.caseStudies.filter(
+                                    (c) => c.projectId !== item.projectId
+                                  ),
+                                }))
+                              }
+                              aria-label={t("removeProject")}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <FormField
+                          label={t("fields.projectBlurb")}
+                          id={`svc-blurb-${item.projectId}-${localeTab}`}
+                        >
+                          <Textarea
+                            id={`svc-blurb-${item.projectId}-${localeTab}`}
+                            className="min-h-20"
+                            maxLength={SERVICE_LIMITS.caseStudyBlurbMax}
+                            value={item.blurb[localeTab] ?? ""}
+                            dir={localeTab === "ar" ? "rtl" : "ltr"}
+                            placeholder={t("projectBlurbPlaceholder")}
+                            onChange={(e) =>
+                              setEditor((p) => ({
+                                ...p,
+                                caseStudies: p.caseStudies.map((c) =>
+                                  c.projectId === item.projectId
+                                    ? {
+                                        ...c,
+                                        blurb: {
+                                          ...c.blurb,
+                                          [localeTab]: e.target.value,
+                                        },
+                                      }
+                                    : c
+                                ),
+                              }))
+                            }
+                          />
+                        </FormField>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </section>
 
             {submitError ? <FormError message={submitError} /> : null}

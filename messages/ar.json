@@ -130,6 +130,7 @@
     "detailAbout": "عن العرض",
     "detailPricing": "التسعير",
     "relatedProjects": "أعمال مرتبطة",
+    "relatedProjectsSubtitle": "انقر على بطاقة لفتح تفاصيل المشروع.",
     "viewCaseStudy": "عرض إنجاز",
     "linkedProjectEyebrow": "المشروع المعروض للبيع",
     "viewLinkedProject": "عرض تفاصيل المشروع",
@@ -1009,6 +1010,14 @@
       "ctaPlaceholder": "ابدأ مشروعاً",
       "inquiryNone": "بدون اختيار مسبق",
       "noCaseStudies": "لا توجد دراسات حالة.",
+      "addProject": "إضافة",
+      "alreadyLinked": "هذا المشروع مرتبط مسبقاً.",
+      "tooManyProjects": "تم بلوغ الحد الأقصى للمشاريع المرتبطة.",
+      "projectNotFound": "المشروع غير موجود. تحقق من الرابط أو المعرّف.",
+      "noLinkedProjects": "لا مشاريع مرتبطة حالياً.",
+      "pickProjectPlaceholder": "اختر مشروعاً…",
+      "removeProject": "إزالة المشروع",
+      "projectBlurbPlaceholder": "وصف قصير يظهر في صفحة العرض",
       "notConfiguredTitle": "غير متاح",
       "notConfiguredBody": "أضف SUPABASE_SERVICE_ROLE_KEY ونفّذ npm run db:migrate.",
       "cols": {
@@ -1067,14 +1076,18 @@
         "shortDescription": "وصف قصير",
         "description": "الوصف",
         "idealFor": "مثالي لـ",
-        "ctaLabel": "نص زر ابدأ"
+        "ctaLabel": "نص زر ابدأ",
+        "projectUrl": "رابط المشروع أو المعرّف",
+        "pickProject": "اختر مشروعاً",
+        "projectBlurb": "وصف قصير (صفحة العرض)"
       },
       "hints": {
         "coverImage": "معطّل: الصورة تأتي من المشروع المرتبط.",
-        "linkedProject": "اربط مشروعاً منشوراً: تظهر صوره على العرض. بدون مشروع مرتبط لا توجد صورة."
+        "linkedProject": "اربط مشروعاً منشوراً: تظهر صوره على العرض. بدون مشروع مرتبط لا توجد صورة.",
+        "projectUrl": "الصق /projets/mon-projet أو الرابط الكامل أو المعرّف."
       },
       "linkedProjectNone": "لا يوجد مشروع مرتبط",
-      "caseStudiesHint": "دراسات حالة ثانوية تظهر تحت المشروع الرئيسي.",
+      "caseStudiesHint": "أضف عدة مشاريع: تظهر صورها ووصفها في /offres/[slug]. النقر يفتح صفحة المشروع.",
       "duplicate": "تكرار",
       "archive": "أرشفة"
     }

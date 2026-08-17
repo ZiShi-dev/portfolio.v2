@@ -6,6 +6,7 @@ import {
   parseServiceWriteBody,
   slugifyServiceTitle,
 } from "@/lib/services/schema";
+import { parseProjectSlugFromInput } from "@/lib/services/project-ref";
 import {
   formatServicePrice,
   parseEurosToCents,
@@ -115,6 +116,45 @@ describe("services schema", () => {
 
   it("slugify titre", () => {
     assert.equal(slugifyServiceTitle("Sites Professionnels"), "sites-professionnels");
+  });
+
+  it("accepte plusieurs projets liés avec blurb", () => {
+    const idA = "11111111-1111-4111-8111-111111111111";
+    const idB = "22222222-2222-4222-8222-222222222222";
+    const parsed = parseServiceWriteBody(
+      valid({
+        caseStudies: [
+          { projectId: idA, blurb: { fr: "Un tableau de bord.", en: "", ar: "" } },
+          { projectId: idB, blurb: { fr: "", en: "", ar: "" } },
+        ],
+      })
+    );
+    assert.equal(parsed.ok, true);
+    if (!parsed.ok) return;
+    assert.equal(parsed.values.caseStudies?.length, 2);
+    assert.deepEqual(parsed.values.caseStudyIds, [idA, idB]);
+    assert.equal(parsed.values.caseStudies?.[0]?.blurb.fr, "Un tableau de bord.");
+  });
+});
+
+describe("project-ref", () => {
+  it("extrait le slug depuis une URL locale", () => {
+    assert.equal(
+      parseProjectSlugFromInput("https://vorzix.dev/fr/projets/quotishop"),
+      "quotishop"
+    );
+  });
+
+  it("extrait le slug depuis un chemin", () => {
+    assert.equal(parseProjectSlugFromInput("/projets/quotishop"), "quotishop");
+  });
+
+  it("accepte un slug nu", () => {
+    assert.equal(parseProjectSlugFromInput("quotishop"), "quotishop");
+  });
+
+  it("refuse une valeur invalide", () => {
+    assert.equal(parseProjectSlugFromInput("https://example.com/about"), null);
   });
 });
 

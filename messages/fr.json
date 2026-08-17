@@ -130,6 +130,7 @@
     "detailAbout": "À propos de l’offre",
     "detailPricing": "Tarification",
     "relatedProjects": "Réalisations associées",
+    "relatedProjectsSubtitle": "Cliquez une carte pour ouvrir le détail du projet.",
     "viewCaseStudy": "Voir une réalisation",
     "linkedProjectEyebrow": "Projet à vendre",
     "viewLinkedProject": "Voir le détail du projet",
@@ -1011,6 +1012,14 @@
       "ctaPlaceholder": "Démarrer un projet",
       "inquiryNone": "Aucune pré-sélection",
       "noCaseStudies": "Aucune Case Study disponible.",
+      "addProject": "Ajouter",
+      "alreadyLinked": "Ce projet est déjà lié.",
+      "tooManyProjects": "Maximum de projets liés atteint.",
+      "projectNotFound": "Projet introuvable. Vérifiez l’URL ou le slug.",
+      "noLinkedProjects": "Aucun projet lié pour l’instant.",
+      "pickProjectPlaceholder": "Choisir un projet…",
+      "removeProject": "Retirer le projet",
+      "projectBlurbPlaceholder": "Courte description affichée sur la page offre",
       "notConfiguredTitle": "Gestion indisponible",
       "notConfiguredBody": "Ajoutez SUPABASE_SERVICE_ROLE_KEY et exécutez npm run db:migrate (table services).",
       "cols": {
@@ -1069,14 +1078,18 @@
         "shortDescription": "Description courte",
         "description": "Description",
         "idealFor": "Idéal pour",
-        "ctaLabel": "Libellé CTA démarrer"
+        "ctaLabel": "Libellé CTA démarrer",
+        "projectUrl": "URL ou slug du projet",
+        "pickProject": "Choisir un projet",
+        "projectBlurb": "Courte description (page offre)"
       },
       "hints": {
         "coverImage": "Désactivé : la photo vient du projet lié.",
-        "linkedProject": "Associez un projet publié : ses images s’affichent sur l’offre. Sans projet lié, aucune image."
+        "linkedProject": "Associez un projet publié : ses images s’affichent sur l’offre. Sans projet lié, aucune image.",
+        "projectUrl": "Collez /projets/mon-projet, l’URL complète, ou le slug."
       },
       "linkedProjectNone": "Aucun projet lié",
-      "caseStudiesHint": "Réalisations secondaires affichées sous le projet principal.",
+      "caseStudiesHint": "Ajoutez plusieurs projets : leurs images et descriptions apparaissent sur /offres/[slug]. Le clic ouvre la page projet.",
       "duplicate": "Dupliquer",
       "archive": "Archiver"
     }
