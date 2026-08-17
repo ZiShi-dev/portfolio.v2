@@ -12,9 +12,16 @@ import { cn } from "@/lib/utils";
 type ProjectCarouselProps = {
   projects: ProjectItem[];
   className?: string;
+  padded?: boolean;
+  showHint?: boolean;
 };
 
-export function ProjectCarousel({ projects, className }: ProjectCarouselProps) {
+export function ProjectCarousel({
+  projects,
+  className,
+  padded = true,
+  showHint = true,
+}: ProjectCarouselProps) {
   const t = useTranslations("projects");
   const locale = useLocale() as Locale;
   const direction = getLocaleDirection(locale);
@@ -66,7 +73,10 @@ export function ProjectCarousel({ projects, className }: ProjectCarouselProps) {
   return (
     <div className={cn("relative", className)}>
       <div
-        className="overflow-hidden px-4 select-none sm:px-6"
+        className={cn(
+          "overflow-hidden select-none",
+          padded && "px-4 sm:px-6"
+        )}
         ref={emblaRef}
         style={{ touchAction: "manipulation" }}
       >
@@ -128,9 +138,11 @@ export function ProjectCarousel({ projects, className }: ProjectCarouselProps) {
         </div>
       )}
 
-      <p className="mt-3 text-center text-xs text-foreground/40">
-        {t("swipeHint")}
-      </p>
+      {showHint ? (
+        <p className="mt-3 text-center text-xs text-foreground/40">
+          {t("swipeHint")}
+        </p>
+      ) : null}
     </div>
   );
 }

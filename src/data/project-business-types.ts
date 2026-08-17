@@ -88,7 +88,10 @@ export function partitionProjectTechAndTypes(values: string[]): {
       }
       continue;
     }
-    if (value.trim()) technologyLabels.push(value);
+    const label = value.trim();
+    if (label && !technologyLabels.includes(label)) {
+      technologyLabels.push(label);
+    }
   }
 
   return { technologyLabels, businessTypeIds };

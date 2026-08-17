@@ -54,6 +54,7 @@ import {
 } from "@/lib/projects/schema";
 import { resolveProjectSlug, slugifyProjectTitle } from "@/lib/projects/slug";
 import type { ProjectI18n, ProjectRow } from "@/lib/projects/store";
+import { centsToEurosInput, parseEurosToCents } from "@/lib/services/pricing";
 import { cn } from "@/lib/utils";
 import { useSubmitGuard } from "@/hooks/use-submit-guard";
 
@@ -66,6 +67,8 @@ type EditorState = {
   title: ProjectI18n;
   description: ProjectI18n;
   kind: ProjectKind;
+  listingPriceEuros: string;
+  listingIntent: ProjectI18n;
   businessTypeIds: string[];
   images: { url: string; label?: Partial<ProjectI18n> }[];
   coverImage: string;
@@ -86,6 +89,15 @@ type EditorState = {
 
 const emptyI18n = (): ProjectI18n => ({ fr: "", en: "", ar: "" });
 
+function kindLabel(
+  kind: ProjectKind,
+  t: ReturnType<typeof useTranslations>
+): string {
+  if (kind === "for_sale") return t("kindForSale");
+  if (kind === "sold") return t("kindSold");
+  return t("kindPersonal");
+}
+
 function emptyEditor(): EditorState {
   return {
     slug: "",
@@ -93,6 +105,8 @@ function emptyEditor(): EditorState {
     title: emptyI18n(),
     description: emptyI18n(),
     kind: "personal",
+    listingPriceEuros: "",
+    listingIntent: emptyI18n(),
     businessTypeIds: [],
     images: [],
     coverImage: "",
@@ -120,6 +134,8 @@ function rowToEditor(row: ProjectRow): EditorState {
     title: { ...row.title },
     description: { ...row.description },
     kind: row.kind,
+    listingPriceEuros: centsToEurosInput(row.listing_price_cents),
+    listingIntent: { ...row.listing_intent },
     businessTypeIds: [...row.business_type_ids],
     images: row.images.map((img) => ({
       url: img.url,
@@ -163,7 +179,9 @@ type FieldKey =
   | "appLink"
   | "images"
   | "businessTypes"
-  | "sortOrder";
+  | "sortOrder"
+  | "listingPrice"
+  | "listingIntent";
 
 type FieldErrors = Partial<Record<FieldKey, string>>;
 
@@ -181,6 +199,11 @@ const ERROR_CODE_TO_FIELD: Record<string, FieldKey> = {
   project_too_many_business_types: "businessTypes",
   invalid_business_type: "businessTypes",
   duplicate_business_type: "businessTypes",
+  publish_requires_listing_price: "listingPrice",
+  publish_requires_sold_price: "listingPrice",
+  project_invalid_listing: "listingPrice",
+  publish_requires_listing_intent: "listingIntent",
+  publish_requires_sold_work: "listingIntent",
 };
 
 function translateErrorCode(
@@ -340,6 +363,14 @@ export function AdminProjectsPanel({
       title,
       description: fillFromFr(editor.description),
       kind: editor.kind,
+      listingPriceCents:
+        editor.kind === "personal"
+          ? null
+          : parseEurosToCents(editor.listingPriceEuros),
+      listingIntent:
+        editor.kind === "for_sale" || editor.kind === "sold"
+          ? fillOptional(editor.listingIntent)
+          : emptyI18n(),
       businessTypeIds: editor.businessTypeIds,
       images: editor.images.map((img) => ({
         url: img.url,
@@ -661,7 +692,7 @@ export function AdminProjectsPanel({
                     ) : null}
                     <p className="truncate font-medium leading-snug">{name}</p>
                     <p className="mt-1 truncate text-xs text-foreground/50">
-                      {p.kind === "sold" ? t("kindSold") : t("kindPersonal")}
+                      {kindLabel(p.kind, t)}
                       {p.featured ? ` · ${t("featured")}` : ""}
                     </p>
                   </div>
@@ -815,6 +846,9 @@ export function AdminProjectsPanel({
                         <SelectItem value="personal">
                           {t("kindPersonal")}
                         </SelectItem>
+                        <SelectItem value="for_sale">
+                          {t("kindForSale")}
+                        </SelectItem>
                         <SelectItem value="sold">{t("kindSold")}</SelectItem>
                       </SelectContent>
                     </Select>
@@ -881,6 +915,73 @@ export function AdminProjectsPanel({
                   </FormField>
                 </div>
 
+                {editor.kind === "for_sale" || editor.kind === "sold" ? (
+                  <div className="space-y-4 rounded-xl border border-border-gold/25 bg-background/40 p-4">
+                    <p className="text-xs leading-relaxed text-foreground/55">
+                      {editor.kind === "for_sale"
+                        ? t("kindForSaleHint")
+                        : t("kindSoldHint")}
+                    </p>
+                    <FormField
+                      id="proj-listing-price"
+                      label={t("fields.listingPrice")}
+                      hint={t("listingPriceHint")}
+                      required
+                      error={fieldErrors.listingPrice}
+                    >
+                      <Input
+                        id="proj-listing-price"
+                        inputMode="decimal"
+                        placeholder="2500"
+                        aria-invalid={Boolean(fieldErrors.listingPrice)}
+                        value={editor.listingPriceEuros}
+                        onChange={(e) => {
+                          clearFieldError("listingPrice");
+                          setEditor({
+                            ...editor,
+                            listingPriceEuros: e.target.value,
+                          });
+                        }}
+                      />
+                    </FormField>
+                    <FormField
+                      id="proj-listing-intent"
+                      label={
+                        editor.kind === "sold"
+                          ? t("fields.soldWork")
+                          : t("fields.listingIntent")
+                      }
+                      required
+                      error={fieldErrors.listingIntent}
+                    >
+                      <textarea
+                        id="proj-listing-intent"
+                        rows={4}
+                        dir={localeTab === "ar" ? "rtl" : "ltr"}
+                        maxLength={PROJECT_LIMITS.listingIntentMax}
+                        placeholder={
+                          editor.kind === "sold"
+                            ? t("soldWorkPlaceholder")
+                            : t("listingIntentPlaceholder")
+                        }
+                        aria-invalid={Boolean(fieldErrors.listingIntent)}
+                        value={editor.listingIntent[localeTab]}
+                        onChange={(e) => {
+                          clearFieldError("listingIntent");
+                          setEditor({
+                            ...editor,
+                            listingIntent: {
+                              ...editor.listingIntent,
+                              [localeTab]: e.target.value,
+                            },
+                          });
+                        }}
+                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-step-accent/50"
+                      />
+                    </FormField>
+                  </div>
+                ) : null}
+
                 <label className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
@@ -902,6 +1003,9 @@ export function AdminProjectsPanel({
                   />
                   {t("fields.featured")}
                 </label>
+                <p className="-mt-2 text-xs text-foreground/45">
+                  {t("featuredHint")}
+                </p>
 
                 {editor.reference ? (
                   <p className="font-mono text-xs tracking-[0.16em] text-foreground/55">

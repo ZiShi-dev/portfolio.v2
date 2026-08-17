@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/routing";
+import type { ProjectCategoryKey } from "@/data/projects";
 import {
   listPublishedProjectRows,
   projectCoverUrl,
@@ -20,6 +21,8 @@ export type LinkedOfferProject = {
   reference?: string;
   description: string;
   image: string | null;
+  categoryKey: ProjectCategoryKey;
+  listingPriceLabel?: string;
 };
 
 /**
@@ -29,9 +32,14 @@ export type LinkedOfferProject = {
 export async function getSiteServices(
   locale: Locale
 ): Promise<LocalizedService[]> {
-  const rows = await listPublishedServiceRows();
-  if (!rows || rows.length === 0) return [];
-  return rows.map((row) => serviceRowToLocalized(row, locale));
+  try {
+    const rows = await listPublishedServiceRows();
+    if (!rows || rows.length === 0) return [];
+    return rows.map((row) => serviceRowToLocalized(row, locale));
+  } catch (err) {
+    console.error("[services] getSiteServices", err);
+    return [];
+  }
 }
 
 export async function getSiteServiceBySlug(
@@ -62,9 +70,6 @@ export async function getLinkedProjectsForService(
   locale: Locale
 ): Promise<LinkedOfferProject[]> {
   const orderedIds = service.caseStudies.map((item) => item.projectId);
-  if (service.linkedProjectId && !orderedIds.includes(service.linkedProjectId)) {
-    orderedIds.unshift(service.linkedProjectId);
-  }
   if (orderedIds.length === 0) return [];
 
   const published = await listPublishedProjectRows();
@@ -88,6 +93,8 @@ export async function getLinkedProjectsForService(
       reference: localized.reference,
       description: blurb || localized.desc,
       image: projectCoverUrl(row) ?? localized.images[0]?.src ?? null,
+      categoryKey: localized.categoryKey,
+      listingPriceLabel: localized.listingPriceLabel,
     });
   }
   return result;

@@ -65,6 +65,12 @@ describe("projects case study schema", () => {
     const parsed = parseProjectWriteBody({
       ...baseWrite,
       published: true,
+      listingPriceCents: 450000,
+      listingIntent: {
+        fr: "Site vitrine livré et accompagnement à la mise en ligne.",
+        en: "",
+        ar: "",
+      },
       clientNeed: {
         fr: "Besoin client clair pour le site.",
         en: "",

@@ -36,6 +36,8 @@ describe("API admin project-inquiries", () => {
         }),
         deleteProjectInquiry: async () => false,
         countNewProjectInquiries: async () => 0,
+        listUnseenNewProjectInquiries: async () => [],
+        markNewProjectInquiriesSeen: async () => 0,
       },
     });
 

@@ -31,7 +31,7 @@ export function Reveal({
       variants={activeVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-40px" }}
+      viewport={{ once: true, amount: 0.05 }}
       transition={{
         duration: reduceMotion ? 0.2 : 0.6,
         delay: reduceMotion ? 0 : delay,

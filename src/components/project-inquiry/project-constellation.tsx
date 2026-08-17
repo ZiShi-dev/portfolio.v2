@@ -6,21 +6,22 @@ import { cn } from "@/lib/utils";
 import {
   PROJECT_INQUIRY_BRANCH,
   PROJECT_INQUIRY_CONSTELLATION_NODES,
-  type ProjectInquiryConstellationNode,
   type ProjectInquiryType,
 } from "@/data/project-inquiry-options";
 
 type NodeState = "future" | "current" | "completed";
 
 type ProjectConstellationProps = {
-  /** Nombre de nœuds complétés (0–6). */
+  /** Nombre de nœuds complétés. */
   completedCount: number;
-  /** Index du nœud courant (0–5), ou null si hors parcours questions. */
+  /** Index du nœud courant, ou null si hors parcours questions. */
   currentIndex: number | null;
   projectType?: ProjectInquiryType | null;
   className?: string;
   /** Label accessible, ex. « Étape 3 sur 6 — Budget ». */
   ariaLabel: string;
+  /** Nombre d’étoiles (parcours de base = 6, offre = 5). */
+  nodeCount?: number;
 };
 
 /** Positions de base (viewBox 320×120). */
@@ -32,6 +33,20 @@ const BASE_NODES: Array<{ x: number; y: number }> = [
   { x: 228, y: 70 },
   { x: 282, y: 48 },
 ];
+
+function layoutNodes(count: number): Array<{ x: number; y: number }> {
+  if (count >= BASE_NODES.length) return BASE_NODES;
+  const start = 36;
+  const end = 284;
+  const ys = [68, 42, 78, 40, 62];
+  return Array.from({ length: count }, (_, i) => {
+    const t = count === 1 ? 0.5 : i / (count - 1);
+    return {
+      x: start + (end - start) * t,
+      y: ys[i] ?? 55,
+    };
+  });
+}
 
 function branchOffset(
   branch: "a" | "b" | "c" | "d" | "e",
@@ -57,6 +72,7 @@ export function ProjectConstellation({
   className,
   ariaLabel,
   rtl = false,
+  nodeCount = PROJECT_INQUIRY_CONSTELLATION_NODES.length,
 }: ProjectConstellationProps & { rtl?: boolean }) {
   const reduceMotion = useReducedMotion();
   const branch = projectType
@@ -65,20 +81,18 @@ export function ProjectConstellation({
 
   const nodes = useMemo(
     () =>
-      BASE_NODES.map((n, i) => {
+      layoutNodes(nodeCount).map((n, i) => {
         const o = branchOffset(branch, i);
         return { x: n.x + o.x, y: n.y + o.y };
       }),
-    [branch]
+    [branch, nodeCount]
   );
 
-  const states: NodeState[] = PROJECT_INQUIRY_CONSTELLATION_NODES.map(
-    (_, i) => {
-      if (i < completedCount) return "completed";
-      if (currentIndex === i) return "current";
-      return "future";
-    }
-  );
+  const states: NodeState[] = nodes.map((_, i) => {
+    if (i < completedCount) return "completed";
+    if (currentIndex === i) return "current";
+    return "future";
+  });
 
   return (
     <div
@@ -175,10 +189,9 @@ export function ProjectConstellation({
 }
 
 export function constellationIndexForStep(
-  step: string
+  step: string,
+  nodes: readonly string[] = PROJECT_INQUIRY_CONSTELLATION_NODES
 ): number | null {
-  const idx = (
-    PROJECT_INQUIRY_CONSTELLATION_NODES as readonly string[]
-  ).indexOf(step as ProjectInquiryConstellationNode);
+  const idx = nodes.indexOf(step);
   return idx >= 0 ? idx : null;
 }

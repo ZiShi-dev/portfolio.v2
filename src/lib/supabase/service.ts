@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseConfig } from "@/lib/supabase/config";
+import { supabaseFetch } from "@/lib/supabase/fetch";
 
 function readEnv(name: string): string {
   return process.env[name]?.trim() ?? "";
@@ -18,6 +19,7 @@ export function createSupabaseServiceClient(): SupabaseClient | null {
   }
 
   return createClient(config.config.url, serviceKey, {
+    global: { fetch: supabaseFetch },
     auth: {
       persistSession: false,
       autoRefreshToken: false,

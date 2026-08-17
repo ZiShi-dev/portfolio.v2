@@ -70,7 +70,6 @@ export default async function OffreDetailPage({ params }: PageProps) {
     labels: {
       startingAt: (amount) => t("pricing.startingAt", { price: amount }),
       fixed: (amount) => t("pricing.fixed", { price: amount }),
-      quoteOnly: t("pricing.quoteOnly"),
       contact: t("pricing.contact"),
     },
   });
@@ -103,9 +102,11 @@ export default async function OffreDetailPage({ params }: PageProps) {
             <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">
               {service.title}
             </h1>
-            <p className="mt-4 font-mono text-lg tracking-wide text-primary sm:text-xl">
-              {price.label}
-            </p>
+            {price.mode === "starting_at" || price.mode === "fixed" ? (
+              <p className="mt-4 font-mono text-lg tracking-wide text-primary sm:text-xl">
+                {price.label}
+              </p>
+            ) : null}
           </div>
           <div
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border text-primary sm:h-14 sm:w-14"
@@ -166,19 +167,21 @@ export default async function OffreDetailPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface/60 p-5 sm:p-6">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
-            {t("detailPricing")}
-          </h2>
-          <p className="mt-2 font-mono text-base tracking-wide text-foreground sm:text-lg">
-            {price.label}
-          </p>
-          {price.mode === "starting_at" ? (
-            <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-              {t("pricing.disclaimer")}
+        {price.mode === "starting_at" || price.mode === "fixed" ? (
+          <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface/60 p-5 sm:p-6">
+            <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+              {t("detailPricing")}
+            </h2>
+            <p className="mt-2 font-mono text-base tracking-wide text-foreground sm:text-lg">
+              {price.label}
             </p>
-          ) : null}
-        </section>
+            {price.mode === "starting_at" ? (
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                {t("pricing.disclaimer")}
+              </p>
+            ) : null}
+          </section>
+        ) : null}
 
         {linkedProjects.length > 0 ? (
           <section className="mt-10">

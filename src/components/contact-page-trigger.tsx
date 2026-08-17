@@ -11,7 +11,11 @@ export function ContactPageTrigger() {
 
   useEffect(() => {
     startNavigationProgress();
-    router.replace(routes.startProject);
+    try {
+      router.replace(routes.startProject);
+    } catch {
+      window.location.replace(routes.startProject);
+    }
   }, [router]);
 
   return null;

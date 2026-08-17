@@ -33,15 +33,13 @@ export function formatServicePrice(
 export type ServicePriceDisplay =
   | { mode: "starting_at"; label: string; formattedAmount: string }
   | { mode: "fixed"; label: string; formattedAmount: string }
-  | { mode: "quote_only"; label: string }
   | { mode: "contact"; label: string };
 
 type PriceLabels = {
   /** next-intl : t("pricing.startingAt", { price }) */
   startingAt: (formattedPrice: string) => string;
-  /** next-intl : t("pricing.fixed", { price }) — prix exact « à vendre » */
+  /** next-intl : t("pricing.fixed", { price }) */
   fixed: (formattedPrice: string) => string;
-  quoteOnly: string;
   contact: string;
 };
 
@@ -80,10 +78,8 @@ export function resolveServicePriceDisplay(input: {
       label: input.labels.startingAt(formattedAmount),
     };
   }
-  if (input.pricingMode === "contact") {
-    return { mode: "contact", label: input.labels.contact };
-  }
-  return { mode: "quote_only", label: input.labels.quoteOnly };
+
+  return { mode: "contact", label: input.labels.contact };
 }
 
 export function eurosToCents(euros: number): number {

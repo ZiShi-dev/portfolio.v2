@@ -1,9 +1,12 @@
+"use client";
+
 import { ArrowUpRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { GlowCard } from "@/components/ui/glow-card";
 import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
 import type { LinkedOfferProject } from "@/lib/services/site";
+import { ProjectStatusBadge } from "@/components/sections/project-status-badge";
 
 type ServiceLinkedProjectCardProps = {
   project: LinkedOfferProject;
@@ -32,8 +35,21 @@ export function ServiceLinkedProjectCard({
               loading="lazy"
               decoding="async"
             />
+            <span className="absolute start-3 top-3 z-10">
+              <ProjectStatusBadge
+                categoryKey={project.categoryKey}
+                priceLabel={project.listingPriceLabel}
+              />
+            </span>
           </span>
-        ) : null}
+        ) : (
+          <span className="px-5 pt-5 sm:px-6 sm:pt-6">
+            <ProjectStatusBadge
+              categoryKey={project.categoryKey}
+              priceLabel={project.listingPriceLabel}
+            />
+          </span>
+        )}
         <span className="flex flex-1 flex-col p-5 sm:p-6">
           {project.reference ? (
             <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary/70">

@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ProjectInquiryFlow } from "@/components/project-inquiry/project-inquiry-flow";
+import { resolveOfferInquiryProfile } from "@/data/project-inquiry-offer-profiles";
 import {
   PROJECT_INQUIRY_TYPES,
   type ProjectInquirySource,
   type ProjectInquiryType,
 } from "@/data/project-inquiry-options";
 import { brand } from "@/lib/brand";
+import type { Locale } from "@/i18n/routing";
 import { createPageMetadata, routes } from "@/lib/routes";
-import { getPublishedServiceBySlug } from "@/lib/services/store";
+import { getSiteServiceBySlug } from "@/lib/services/site";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -35,7 +37,11 @@ export async function generateMetadata({
   });
 }
 
-export default async function StartProjectPage({ searchParams }: PageProps) {
+export default async function StartProjectPage({
+  params,
+  searchParams,
+}: PageProps) {
+  const { locale } = await params;
   const sp = await searchParams;
   const serviceSlug = firstParam(sp.service);
   const typeParam = firstParam(sp.type);
@@ -44,6 +50,8 @@ export default async function StartProjectPage({ searchParams }: PageProps) {
   let initialProjectType: ProjectInquiryType | null = null;
   let serviceId: string | null = null;
   let serviceReference: string | null = null;
+  let resolvedServiceSlug: string | null = null;
+  let serviceTitle: string | null = null;
   let source: ProjectInquirySource = "start-project-page";
 
   if (
@@ -54,14 +62,21 @@ export default async function StartProjectPage({ searchParams }: PageProps) {
   }
 
   if (serviceSlug) {
-    const service = await getPublishedServiceBySlug(serviceSlug);
+    const service = await getSiteServiceBySlug(locale as Locale, serviceSlug);
     if (service) {
       serviceId = service.id;
       serviceReference = service.reference;
-      source =
-        intentParam === "buy" ? "service-buy" : "service";
-      if (!initialProjectType && service.inquiry_project_type) {
-        initialProjectType = service.inquiry_project_type;
+      resolvedServiceSlug = service.slug;
+      serviceTitle = service.title;
+      source = intentParam === "buy" ? "service-buy" : "service";
+      const profile = resolveOfferInquiryProfile(
+        service.slug,
+        service.inquiryProjectType
+      );
+      if (profile) {
+        initialProjectType = profile.projectType;
+      } else if (!initialProjectType && service.inquiryProjectType) {
+        initialProjectType = service.inquiryProjectType;
       }
     }
   }
@@ -74,6 +89,8 @@ export default async function StartProjectPage({ searchParams }: PageProps) {
         initialProjectType={initialProjectType}
         serviceId={serviceId}
         serviceReference={serviceReference}
+        serviceSlug={resolvedServiceSlug}
+        serviceTitle={serviceTitle}
       />
     </main>
   );

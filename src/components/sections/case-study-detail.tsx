@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
+import { ProjectStatusBadge } from "@/components/sections/project-status-badge";
 import { ReviewCard } from "@/components/sections/review-card";
 import { Link } from "@/i18n/navigation";
 import type { ReviewItem } from "@/data/reviews";
 import { isSafeHttpUrl } from "@/lib/review-schema";
 import { routes } from "@/lib/routes";
-import { partitionProjectTechAndTypes } from "@/data/project-business-types";
 import type { LocalizedProjectItem } from "@/data/projects";
 
 type CaseStudyDetailProps = {
@@ -31,16 +31,8 @@ export function CaseStudyDetail({
   const cover = project.images[0]?.src;
   const gallery = project.images.slice(1);
   const features = project.features ?? [];
-  const partitioned = partitionProjectTechAndTypes([
-    ...(project.technologies ?? []),
-    ...(project.tags ?? []),
-  ]);
-  const technologies = partitioned.technologyLabels;
   const businessTypeIds = Array.from(
-    new Set([
-      ...(project.businessTypeIds ?? []),
-      ...partitioned.businessTypeIds,
-    ])
+    new Set(project.businessTypeIds ?? [])
   );
 
   return (
@@ -58,17 +50,22 @@ export function CaseStudyDetail({
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {project.desc}
           </p>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
-              {project.category}
-            </span>
-            <ProjectTypeBadges businessTypeIds={businessTypeIds} tags={[]} />
-          </div>
+          {businessTypeIds.length > 0 ? (
+            <div className="mt-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
+                {t("applicationType")}
+              </p>
+              <ProjectTypeBadges
+                businessTypeIds={businessTypeIds}
+                className="mt-3"
+              />
+            </div>
+          ) : null}
         </Reveal>
 
         {cover ? (
           <Reveal delay={0.08}>
-            <figure className="mt-10 overflow-hidden rounded-xl border border-border-gold bg-surface-elevated sm:mt-12">
+            <figure className="relative mt-10 overflow-hidden rounded-xl border border-border-gold bg-surface-elevated sm:mt-12">
               <Image
                 src={cover}
                 alt={project.title}
@@ -78,9 +75,17 @@ export function CaseStudyDetail({
                 className="h-auto w-full object-cover"
                 sizes="(max-width: 896px) 100vw, 896px"
               />
+              <div className="absolute start-3 top-3 sm:start-4 sm:top-4">
+                <ProjectStatusBadge
+                  categoryKey={project.categoryKey}
+                  priceLabel={project.listingPriceLabel}
+                />
+              </div>
             </figure>
           </Reveal>
         ) : null}
+
+        <ProjectListingDetails project={project} />
 
         <CelestialDivider className="mt-12 sm:mt-16" />
 
@@ -148,26 +153,6 @@ export function CaseStudyDetail({
                   </figure>
                 ))}
               </div>
-            </section>
-          </Reveal>
-        ) : null}
-
-        {technologies.length > 0 ? (
-          <Reveal delay={0.05}>
-            <section className="mt-12 sm:mt-14">
-              <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
-                {t("technologies")}
-              </h2>
-              <ul className="mt-5 flex flex-wrap gap-2">
-                {technologies.map((tech) => (
-                  <li
-                    key={tech}
-                    className="rounded-md border border-border-gold bg-surface px-3 py-1.5 font-mono text-[11px] tracking-wide text-primary/90"
-                  >
-                    {tech}
-                  </li>
-                ))}
-              </ul>
             </section>
           </Reveal>
         ) : null}
@@ -285,6 +270,64 @@ function SectionBlock({ title, body }: { title: string; body: string }) {
         <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-muted-foreground sm:text-lg">
           {body}
         </p>
+      </section>
+    </Reveal>
+  );
+}
+
+function ProjectListingDetails({ project }: { project: LocalizedProjectItem }) {
+  const t = useTranslations("caseStudy");
+
+  if (project.categoryKey === "personal") return null;
+
+  if (project.categoryKey === "for_sale") {
+    return (
+      <Reveal delay={0.05}>
+        <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface-elevated/60 p-5 sm:mt-12 sm:p-6">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
+            {t("forSaleEyebrow")}
+          </p>
+          {project.listingPriceLabel ? (
+            <p className="mt-3 font-mono text-xl tracking-wide text-primary sm:text-2xl">
+              {project.listingPriceLabel}
+            </p>
+          ) : null}
+          {project.listingIntent ? (
+            <div className="mt-4">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55">
+                {t("listingIntent")}
+              </p>
+              <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-base">
+                {project.listingIntent}
+              </p>
+            </div>
+          ) : null}
+        </section>
+      </Reveal>
+    );
+  }
+
+  return (
+    <Reveal delay={0.05}>
+      <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface-elevated/60 p-5 sm:mt-12 sm:p-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
+          {t("soldEyebrow")}
+        </p>
+        {project.listingPriceLabel ? (
+          <p className="mt-3 font-mono text-xl tracking-wide text-primary sm:text-2xl">
+            {t("soldPrice", { price: project.listingPriceLabel })}
+          </p>
+        ) : null}
+        {project.listingIntent ? (
+          <div className="mt-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55">
+              {t("soldWork")}
+            </p>
+            <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-base">
+              {project.listingIntent}
+            </p>
+          </div>
+        ) : null}
       </section>
     </Reveal>
   );

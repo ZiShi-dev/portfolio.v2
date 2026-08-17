@@ -8,7 +8,11 @@ const isProd = process.env.NODE_ENV === "production";
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+  { key: "Origin-Agent-Cluster", value: "?1" },
   {
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), payment=()",
@@ -67,6 +71,21 @@ const nextConfig: NextConfig = {
         source: "/api/admin/:path*",
         headers: [
           { key: "Cache-Control", value: "no-store, max-age=0" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      },
+      {
+        source: "/admin-push-sw.js",
+        headers: [
+          { key: "Service-Worker-Allowed", value: "/admin/" },
+          { key: "Cache-Control", value: "no-cache" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      },
+      {
+        source: "/admin-manifest.webmanifest",
+        headers: [
+          { key: "Cache-Control", value: "no-cache" },
           { key: "X-Robots-Tag", value: "noindex, nofollow" },
         ],
       },

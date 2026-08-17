@@ -117,7 +117,7 @@ export default async function RootLayout({
           strategy="beforeInteractive"
           nonce={nonce}
         >
-          {`try{localStorage.removeItem('portfolio-theme');document.cookie='portfolio-theme=;path=/;max-age=0;SameSite=Lax'}catch(e){}`}
+          {`try{localStorage.removeItem('portfolio-theme');document.cookie='portfolio-theme=;path=/;max-age=0;SameSite=Lax';if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){var urls=[r.active,r.waiting,r.installing].filter(Boolean).map(function(w){return w.scriptURL||''});if(urls.some(function(u){return u.indexOf('admin-push-sw')!==-1}))return;r.unregister()})})}}catch(e){}`}
         </Script>
         <OrganizationJsonLd nonce={nonce} />
         {children}

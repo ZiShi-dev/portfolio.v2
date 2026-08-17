@@ -3,17 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  AppWindow,
-  Bot,
-  Building2,
-  Globe,
-  Layers,
-  RefreshCw,
-  ShoppingBag,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { Building2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/ui/form-error";
 import { FormField } from "@/components/ui/form-field";
@@ -30,9 +20,11 @@ import {
   ProjectConstellation,
   constellationIndexForStep,
 } from "@/components/project-inquiry/project-constellation";
+import { PROJECT_INQUIRY_TYPE_ICONS } from "@/components/project-inquiry/project-inquiry-type-icons";
 import { Link } from "@/i18n/navigation";
 import { BrandLogo } from "@/components/brand-logo";
 import { routes } from "@/lib/routes";
+import { resolveOfferInquiryProfile } from "@/data/project-inquiry-offer-profiles";
 import {
   PROJECT_INQUIRY_BUDGETS,
   PROJECT_INQUIRY_CUSTOM_BUDGET,
@@ -190,7 +182,7 @@ function formatBudgetSummary(
   return label(answers.budgetRange);
 }
 
-const QUESTION_STEPS: ProjectInquiryStep[] = [
+const BASE_QUESTION_STEPS: ProjectInquiryStep[] = [
   "type",
   "objective",
   "budget",
@@ -199,38 +191,78 @@ const QUESTION_STEPS: ProjectInquiryStep[] = [
   "contact",
 ];
 
-function completedCountFromAnswers(
-  answers: Answers,
-  step: ProjectInquiryStep
-): number {
-  let n = 0;
-  if (answers.projectType) n = 1;
-  if (answers.objective) n = 2;
-  if (answers.budgetRange) n = 3;
-  if (answers.timeline || answers.targetLaunchDate) n = 4;
-  if (answers.description.trim().length >= 10) n = 5;
-  if (
-    answers.name.trim().length >= 2 &&
-    answers.email.includes("@")
-  ) {
-    n = 6;
-  }
-  // Pendant une étape question, ne pas compter au-delà de l'étape courante-1
-  // sauf si déjà répondu — on synchronise avec les réponses réelles.
-  if (step === "intro") return 0;
-  if (step === "summary" || step === "success") return 6;
-  return n;
+const OFFER_QUESTION_STEPS: ProjectInquiryStep[] = [
+  "objective",
+  "budget",
+  "timeline",
+  "description",
+  "contact",
+];
+
+function questionStepsFor(lockType: boolean): ProjectInquiryStep[] {
+  return lockType ? OFFER_QUESTION_STEPS : BASE_QUESTION_STEPS;
 }
 
-const TYPE_ICONS: Record<ProjectInquiryType, React.ReactNode> = {
-  showcase: <Globe className="h-4 w-4" />,
-  ecommerce: <ShoppingBag className="h-4 w-4" />,
-  web_app: <AppWindow className="h-4 w-4" />,
-  saas: <Layers className="h-4 w-4" />,
-  redesign: <RefreshCw className="h-4 w-4" />,
-  automation: <Bot className="h-4 w-4" />,
-  other: <Sparkles className="h-4 w-4" />,
-};
+function applyOfferLock(
+  answers: Answers,
+  profile: ReturnType<typeof resolveOfferInquiryProfile>,
+  offerTitle: string | null | undefined
+): Answers {
+  if (!profile) return answers;
+  const next: Answers = { ...answers, projectType: profile.projectType };
+  if (profile.projectType === "other") {
+    const fallback = (offerTitle ?? "").trim().slice(
+      0,
+      PROJECT_INQUIRY_OTHER_TEXT.max
+    );
+    if (
+      !next.projectTypeOther.trim() &&
+      fallback.length >= PROJECT_INQUIRY_OTHER_TEXT.min
+    ) {
+      next.projectTypeOther = fallback;
+    }
+  } else {
+    next.projectTypeOther = "";
+  }
+  if (next.objective && !profile.objectives.includes(next.objective)) {
+    next.objective = null;
+    next.objectiveOther = "";
+  }
+  return next;
+}
+
+function completedCountFromAnswers(
+  answers: Answers,
+  step: ProjectInquiryStep,
+  lockType: boolean
+): number {
+  const flags = lockType
+    ? [
+        Boolean(answers.objective),
+        Boolean(answers.budgetRange),
+        Boolean(answers.timeline || answers.targetLaunchDate),
+        answers.description.trim().length >= 10,
+        answers.name.trim().length >= 2 && answers.email.includes("@"),
+      ]
+    : [
+        Boolean(answers.projectType),
+        Boolean(answers.objective),
+        Boolean(answers.budgetRange),
+        Boolean(answers.timeline || answers.targetLaunchDate),
+        answers.description.trim().length >= 10,
+        answers.name.trim().length >= 2 && answers.email.includes("@"),
+      ];
+
+  let n = 0;
+  for (const done of flags) {
+    if (!done) break;
+    n += 1;
+  }
+
+  if (step === "intro") return 0;
+  if (step === "summary" || step === "success") return flags.length;
+  return n;
+}
 
 export function ProjectInquiryFlow({
   source,
@@ -238,19 +270,36 @@ export function ProjectInquiryFlow({
   initialProjectType,
   serviceId,
   serviceReference,
+  serviceSlug,
+  serviceTitle,
 }: {
   source?: ProjectInquirySource;
   fullscreen?: boolean;
-  /** Pré-sélection depuis une offre — modifiable par le visiteur. */
+  /** Pré-sélection depuis une offre ou `?type=` — verrouillée si une offre est en contexte. */
   initialProjectType?: ProjectInquiryType | null;
   serviceId?: string | null;
   serviceReference?: string | null;
+  serviceSlug?: string | null;
+  serviceTitle?: string | null;
 }) {
   const t = useTranslations("projectInquiry");
   const tVal = useTranslations("validation");
   const locale = useLocale() as "fr" | "en" | "ar";
   const reduceMotion = useReducedMotion();
   const { loading, setLoading, trySubmit } = useSubmitGuard();
+
+  const offerProfile = useMemo(
+    () =>
+      resolveOfferInquiryProfile(
+        serviceSlug,
+        initialProjectType ?? null
+      ),
+    [serviceSlug, initialProjectType]
+  );
+  const lockType = Boolean(serviceSlug && offerProfile);
+  const questionSteps = questionStepsFor(lockType);
+  const firstQuestionStep = questionSteps[0] ?? "type";
+  const offerCopySlug = offerProfile?.slug ?? null;
 
   const [step, setStep] = useState<ProjectInquiryStep>("intro");
   const [answers, setAnswers] = useState<Answers>(() => {
@@ -261,7 +310,11 @@ export function ProjectInquiryFlow({
     ) {
       base.projectType = initialProjectType;
     }
-    return base;
+    return applyOfferLock(
+      base,
+      resolveOfferInquiryProfile(serviceSlug, initialProjectType ?? null),
+      serviceTitle
+    );
   });
   const [transitioning, setTransitioning] = useState(false);
   const [honeypot, setHoneypot] = useState("");
@@ -320,11 +373,14 @@ export function ProjectInquiryFlow({
             ...emptyAnswers(),
             ...parseSafeDraft(parsed.answers),
           };
-          // Contexte offre : pré-sélection seulement si le brouillon n’a pas encore de type
           if (!merged.projectType && initialProjectType) {
             merged.projectType = initialProjectType;
           }
-          restoredAnswers = merged;
+          restoredAnswers = applyOfferLock(
+            merged,
+            resolveOfferInquiryProfile(serviceSlug, initialProjectType ?? null),
+            serviceTitle
+          );
         }
       }
     } catch {
@@ -392,30 +448,40 @@ export function ProjectInquiryFlow({
     [goNext, loading, transitioning]
   );
 
-  const currentIndex = constellationIndexForStep(step);
-  const completed = completedCountFromAnswers(answers, step);
+  const currentIndex = constellationIndexForStep(step, questionSteps);
+  const completed = completedCountFromAnswers(answers, step, lockType);
 
   const stepLabel = useMemo(() => {
-    const qi = QUESTION_STEPS.indexOf(step);
+    const qi = questionSteps.indexOf(step);
     if (qi < 0) return t("progress.overview");
     return t("progress.step", {
       current: qi + 1,
-      total: QUESTION_STEPS.length,
-      label: t(`nodes.${QUESTION_STEPS[qi]}`),
+      total: questionSteps.length,
+      label: t(`nodes.${questionSteps[qi]}`),
     });
-  }, [step, t]);
+  }, [questionSteps, step, t]);
 
   const typeOptions = PROJECT_INQUIRY_TYPES.map((id) => ({
     id,
     title: t(`types.${id}.title`),
     description: t(`types.${id}.description`),
-    icon: TYPE_ICONS[id],
+    icon: PROJECT_INQUIRY_TYPE_ICONS[id],
   }));
 
-  const objectiveOptions = PROJECT_INQUIRY_OBJECTIVES.map((id) => ({
-    id,
-    title: t(`objectives.${id}`),
-  }));
+  const objectiveIds = offerProfile?.objectives ?? PROJECT_INQUIRY_OBJECTIVES;
+
+  const objectiveOptions = objectiveIds.map((id) => {
+    const offerKey = offerCopySlug
+      ? `offers.${offerCopySlug}.objectives.${id}`
+      : null;
+    return {
+      id,
+      title:
+        offerKey && t.has(offerKey)
+          ? t(offerKey)
+          : t(`objectives.${id}`),
+    };
+  });
 
   const budgetOptions = PROJECT_INQUIRY_BUDGETS.map((id) => ({
     id,
@@ -523,7 +589,7 @@ export function ProjectInquiryFlow({
           setStep("objective");
           setFieldErr("objectiveOther", t("errors.otherText"));
         } else if (body.field === "projectTypeOther") {
-          setStep("type");
+          setStep(lockType ? "intro" : "type");
           setFieldErr("projectTypeOther", t("errors.otherText"));
         } else if (body.field === "currentWebsite") {
           setStep("contact");
@@ -566,32 +632,49 @@ export function ProjectInquiryFlow({
 
   function renderQuestionBody() {
     switch (step) {
-      case "intro":
+      case "intro": {
+        const introTitle =
+          lockType && offerCopySlug
+            ? t.has(`offers.${offerCopySlug}.introTitle`)
+              ? t(`offers.${offerCopySlug}.introTitle`, {
+                  offer: serviceTitle ?? "",
+                })
+              : t("offers.generic.introTitle", {
+                  offer: serviceTitle ?? "",
+                })
+            : t("intro.title");
+        const introSubtitle =
+          lockType && offerCopySlug
+            ? t.has(`offers.${offerCopySlug}.introSubtitle`)
+              ? t(`offers.${offerCopySlug}.introSubtitle`)
+              : t("offers.generic.introSubtitle")
+            : t("intro.subtitle");
         return (
           <div className="space-y-6 text-center sm:text-start">
             <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
-              {t("brand")}
+              {serviceReference ?? t("brand")}
             </p>
             <h1
               data-step-heading
               tabIndex={-1}
               className="font-display text-3xl font-semibold tracking-tight text-foreground outline-none sm:text-4xl"
             >
-              {t("intro.title")}
+              {introTitle}
             </h1>
             <p className="mx-auto max-w-lg text-sm leading-relaxed text-muted-foreground sm:mx-0 sm:text-base">
-              {t("intro.subtitle")}
+              {introSubtitle}
             </p>
             <Button
               type="button"
               size="lg"
               className="min-h-12 w-full sm:w-auto"
-              onClick={() => goNext("type")}
+              onClick={() => goNext(firstQuestionStep)}
             >
               {t("intro.cta")}
             </Button>
           </div>
         );
+      }
 
       case "type":
         return (
@@ -670,11 +753,17 @@ export function ProjectInquiryFlow({
           </StepShell>
         );
 
-      case "objective":
+      case "objective": {
+        const objectiveQuestion =
+          lockType && offerCopySlug
+            ? t.has(`offers.${offerCopySlug}.objectiveQuestion`)
+              ? t(`offers.${offerCopySlug}.objectiveQuestion`)
+              : t("offers.generic.objectiveQuestion")
+            : t("questions.objective");
         return (
-          <StepShell title={t("questions.objective")} hint={stepLabel}>
+          <StepShell title={objectiveQuestion} hint={stepLabel}>
             <ChoiceCards
-              name={t("questions.objective")}
+              name={objectiveQuestion}
               options={objectiveOptions}
               value={answers.objective}
               disabled={transitioning}
@@ -744,9 +833,13 @@ export function ProjectInquiryFlow({
                 </Button>
               </div>
             ) : null}
-            <BackLink onClick={() => setStep("type")} label={t("nav.back")} />
+            <BackLink
+              onClick={() => setStep(lockType ? "intro" : "type")}
+              label={t("nav.back")}
+            />
           </StepShell>
         );
+      }
 
       case "budget":
         return (
@@ -948,11 +1041,29 @@ export function ProjectInquiryFlow({
           </StepShell>
         );
 
-      case "description":
+      case "description": {
+        const descriptionQuestion =
+          lockType && offerCopySlug
+            ? t.has(`offers.${offerCopySlug}.descriptionQuestion`)
+              ? t(`offers.${offerCopySlug}.descriptionQuestion`)
+              : t("offers.generic.descriptionQuestion")
+            : t("questions.description");
+        const descriptionHelp =
+          lockType && offerCopySlug
+            ? t.has(`offers.${offerCopySlug}.descriptionHelp`)
+              ? t(`offers.${offerCopySlug}.descriptionHelp`)
+              : t("offers.generic.descriptionHelp")
+            : t("fields.descriptionHelp");
+        const descriptionPlaceholder =
+          lockType && offerCopySlug
+            ? t.has(`offers.${offerCopySlug}.descriptionPlaceholder`)
+              ? t(`offers.${offerCopySlug}.descriptionPlaceholder`)
+              : t("offers.generic.descriptionPlaceholder")
+            : t("fields.descriptionPlaceholder");
         return (
-          <StepShell title={t("questions.description")} hint={stepLabel}>
+          <StepShell title={descriptionQuestion} hint={stepLabel}>
             <p className="mb-4 text-sm text-muted-foreground">
-              {t("fields.descriptionHelp")}
+              {descriptionHelp}
             </p>
             <FormField
               id="proj-desc"
@@ -964,6 +1075,7 @@ export function ProjectInquiryFlow({
                 rows={7}
                 value={answers.description}
                 maxLength={PROJECT_INQUIRY_TEXT_LIMITS.descriptionMax}
+                placeholder={descriptionPlaceholder}
                 onChange={(e) => {
                   const value = e.target.value;
                   setAnswers((a) => ({ ...a, description: value }));
@@ -1006,6 +1118,7 @@ export function ProjectInquiryFlow({
             <BackLink onClick={() => setStep("timeline")} label={t("nav.back")} />
           </StepShell>
         );
+      }
 
       case "contact":
         return (
@@ -1254,14 +1367,20 @@ export function ProjectInquiryFlow({
             <div className="min-w-0 overflow-hidden rounded-2xl border border-border-gold/80 bg-surface-elevated/90 shadow-[inset_0_1px_0_rgba(244,241,232,0.04)]">
               <div className="grid gap-0 sm:grid-cols-2">
                 <SummaryCell
-                  label={t("summary.type")}
+                  label={
+                    lockType && serviceTitle
+                      ? t("summary.offer")
+                      : t("summary.type")
+                  }
                   value={
-                    answers.projectType === "other" &&
-                    answers.projectTypeOther.trim()
-                      ? answers.projectTypeOther.trim()
-                      : answers.projectType
-                        ? t(`types.${answers.projectType}.title`)
-                        : "—"
+                    lockType && serviceTitle
+                      ? serviceTitle
+                      : answers.projectType === "other" &&
+                          answers.projectTypeOther.trim()
+                        ? answers.projectTypeOther.trim()
+                        : answers.projectType
+                          ? t(`types.${answers.projectType}.title`)
+                          : "—"
                   }
                 />
                 <SummaryCell
@@ -1271,7 +1390,14 @@ export function ProjectInquiryFlow({
                     answers.objectiveOther.trim()
                       ? answers.objectiveOther.trim()
                       : answers.objective
-                        ? t(`objectives.${answers.objective}`)
+                        ? offerCopySlug &&
+                          t.has(
+                            `offers.${offerCopySlug}.objectives.${answers.objective}`
+                          )
+                          ? t(
+                              `offers.${offerCopySlug}.objectives.${answers.objective}`
+                            )
+                          : t(`objectives.${answers.objective}`)
                         : "—"
                   }
                 />
@@ -1385,7 +1511,7 @@ export function ProjectInquiryFlow({
         <button
           type="button"
           disabled={loading}
-          onClick={() => setStep("type")}
+          onClick={() => setStep(firstQuestionStep)}
           className="min-h-10 text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50"
         >
           {t("summary.edit")}
@@ -1464,6 +1590,7 @@ export function ProjectInquiryFlow({
             completedCount={completed}
             currentIndex={currentIndex}
             projectType={answers.projectType}
+            nodeCount={questionSteps.length}
             ariaLabel={stepLabel}
             rtl={locale === "ar"}
             className="mx-auto flex justify-center"
@@ -1475,7 +1602,7 @@ export function ProjectInquiryFlow({
             className="flex items-center justify-center gap-1.5"
             aria-hidden
           >
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: questionSteps.length }).map((_, i) => (
               <span
                 key={i}
                 className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(201,169,106,0.45)]"

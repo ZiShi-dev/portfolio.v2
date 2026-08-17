@@ -44,7 +44,6 @@ export default async function AdminServicePreviewPage({ params }: PageProps) {
     labels: {
       startingAt: (price) => t("pricing.startingAt", { price }),
       fixed: (price) => t("pricing.fixed", { price }),
-      quoteOnly: t("pricing.quoteOnly"),
       contact: t("pricing.contact"),
     },
   });
@@ -63,7 +62,9 @@ export default async function AdminServicePreviewPage({ params }: PageProps) {
           <h1 className="mt-2 font-display text-3xl font-semibold text-foreground">
             {service.title || "(sans titre)"}
           </h1>
-          <p className="mt-3 font-mono text-lg text-primary">{price.label}</p>
+          {price.mode === "starting_at" || price.mode === "fixed" ? (
+            <p className="mt-3 font-mono text-lg text-primary">{price.label}</p>
+          ) : null}
         </div>
         <div className="flex h-12 w-12 items-center justify-center rounded-md border border-border text-primary">
           <ServiceIcon name={service.icon} className="h-5 w-5" />
@@ -92,9 +93,13 @@ export default async function AdminServicePreviewPage({ params }: PageProps) {
         </ul>
       ) : null}
 
-      <p className="font-mono text-sm">{price.label}</p>
-      {price.mode === "starting_at" ? (
-        <p className="text-xs text-muted-foreground">{t("pricing.disclaimer")}</p>
+      {price.mode === "starting_at" || price.mode === "fixed" ? (
+        <>
+          <p className="font-mono text-sm">{price.label}</p>
+          {price.mode === "starting_at" ? (
+            <p className="text-xs text-muted-foreground">{t("pricing.disclaimer")}</p>
+          ) : null}
+        </>
       ) : null}
     </div>
   );

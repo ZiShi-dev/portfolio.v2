@@ -10,7 +10,6 @@ import { getSiteProjects } from "@/lib/projects/site";
 import { getSiteServices } from "@/lib/services/site";
 import { getSiteEngagements } from "@/lib/engagements/site";
 import { getSiteGeneralFaqs } from "@/lib/faqs/site";
-import { getPublicContactEmail } from "@/lib/social/store";
 import type { Locale } from "@/i18n/routing";
 
 const Journey = dynamic(
@@ -24,9 +23,6 @@ const About = dynamic(
 );
 const Testimonials = dynamic(
   () => import("@/components/sections/testimonials").then((m) => m.Testimonials)
-);
-const Contact = dynamic(
-  () => import("@/components/sections/contact").then((m) => m.Contact)
 );
 const Engagements = dynamic(
   () =>
@@ -44,15 +40,13 @@ export const metadata: Metadata = createPageMetadata({
 
 export default async function Home() {
   const locale = (await getLocale()) as Locale;
-  const [reviews, projects, contactEmail, services, engagements, faqs] =
-    await Promise.all([
-      getPublishedReviews(),
-      getSiteProjects(locale),
-      getPublicContactEmail(),
-      getSiteServices(locale),
-      getSiteEngagements(locale),
-      getSiteGeneralFaqs(locale),
-    ]);
+  const [reviews, projects, services, engagements, faqs] = await Promise.all([
+    getPublishedReviews(),
+    getSiteProjects(locale),
+    getSiteServices(locale),
+    getSiteEngagements(locale),
+    getSiteGeneralFaqs(locale),
+  ]);
 
   return (
     <>
@@ -62,9 +56,8 @@ export default async function Home() {
       <Journey />
       <Projects projects={projects} />
       <Testimonials reviews={reviews} />
-      <FaqSection faqs={faqs} />
       <About />
-      <Contact contactEmail={contactEmail} />
+      <FaqSection faqs={faqs} />
     </>
   );
 }

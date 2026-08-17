@@ -13,9 +13,13 @@ export function AdminPrefetchSite() {
 
   useEffect(() => {
     const prefetch = () => {
-      router.prefetch(routes.home);
-      router.prefetch(routes.projects);
-      router.prefetch(routes.reviews);
+      try {
+        router.prefetch(routes.home);
+        router.prefetch(routes.projects);
+        router.prefetch(routes.reviews);
+      } catch {
+        /* Router pas encore hydraté (HMR / premier paint). */
+      }
     };
 
     if (typeof window.requestIdleCallback === "function") {

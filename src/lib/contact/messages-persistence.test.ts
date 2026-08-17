@@ -124,7 +124,7 @@ describe("messages.ts — persistance (Supabase mocké)", () => {
     dbCalls = 0;
   });
 
-  it("saveContactMessage insert hash IP + status unread", async () => {
+  it("saveContactMessage insert hash IP + UA", async () => {
     nextResult = { data: { id: VALID_UUID }, error: null };
     const r = await messages.saveContactMessage({
       name: "Jean",
@@ -140,7 +140,7 @@ describe("messages.ts — persistance (Supabase mocké)", () => {
     assert.equal(lastOp?.table, "contact_messages");
     assert.equal(lastOp?.method, "insert");
     const row = lastOp?.payload as Record<string, unknown>;
-    assert.equal(row.status, "unread");
+    assert.equal(row.status, undefined);
     assert.equal(row.ip_hash, hashForAudit("203.0.113.10"));
     assert.equal(row.user_agent_hash, hashForAudit("Mozilla/5.0".slice(0, 256)));
     assert.equal(String(row.ip_hash).includes("203.0.113"), false);

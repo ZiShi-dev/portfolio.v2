@@ -12,6 +12,7 @@ import {
   type ProjectPatchInput,
   type ProjectWriteInput,
 } from "@/lib/projects/schema";
+import { formatServicePrice } from "@/lib/services/pricing";
 import {
   createSupabaseServiceClient,
   isSupabaseServiceConfigured,
@@ -56,13 +57,29 @@ export type ProjectRow = {
   result: ProjectI18n;
   seo_title: ProjectI18n;
   seo_description: ProjectI18n;
+  listing_price_cents: number | null;
+  listing_intent: ProjectI18n;
 };
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const PROJECT_SELECT =
-  "id, created_at, updated_at, slug, reference, title, description, kind, business_type_ids, images, cover_image, link, app_link, sort_order, published, featured, published_at, technologies, features, client_need, objective, solution, result, seo_title, seo_description";
+  "id, created_at, updated_at, slug, reference, title, description, kind, business_type_ids, images, cover_image, link, app_link, sort_order, published, featured, published_at, technologies, features, client_need, objective, solution, result, seo_title, seo_description, listing_price_cents, listing_intent";
+
+function asKind(value: unknown): ProjectKind {
+  if (value === "sold" || value === "for_sale" || value === "personal") {
+    return value;
+  }
+  return "personal";
+}
+
+function asCents(value: unknown): number | null {
+  if (typeof value !== "number" || !Number.isFinite(value) || value < 0) {
+    return null;
+  }
+  return Math.round(value);
+}
 
 function asI18n(value: unknown, fallback = ""): ProjectI18n {
   const obj = (value && typeof value === "object" ? value : {}) as Record<
@@ -120,7 +137,7 @@ function normalizeRow(raw: Record<string, unknown>): ProjectRow {
     reference: typeof raw.reference === "string" ? raw.reference : null,
     title: asI18n(raw.title),
     description: asI18n(raw.description),
-    kind: raw.kind === "sold" ? "sold" : "personal",
+    kind: asKind(raw.kind),
     business_type_ids: Array.isArray(raw.business_type_ids)
       ? raw.business_type_ids.filter((t): t is string => typeof t === "string")
       : [],
@@ -141,6 +158,8 @@ function normalizeRow(raw: Record<string, unknown>): ProjectRow {
     result: asI18n(raw.result),
     seo_title: asI18n(raw.seo_title),
     seo_description: asI18n(raw.seo_description),
+    listing_price_cents: asCents(raw.listing_price_cents),
+    listing_intent: asI18n(raw.listing_intent),
   };
 }
 
@@ -155,6 +174,12 @@ function pickLocale(
 export function projectCoverUrl(row: ProjectRow): string | undefined {
   if (row.cover_image) return row.cover_image;
   return row.images[0]?.url;
+}
+
+function comparePublishedRows(a: ProjectRow, b: ProjectRow): number {
+  if (a.featured !== b.featured) return a.featured ? -1 : 1;
+  if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order;
+  return Date.parse(b.created_at) - Date.parse(a.created_at);
 }
 
 export function projectRowToLocalized(
@@ -208,6 +233,15 @@ export function projectRowToLocalized(
       .filter(Boolean),
     seoTitle: pickLocale(row.seo_title, locale) || undefined,
     seoDescription: pickLocale(row.seo_description, locale) || undefined,
+    listingPriceCents: row.listing_price_cents,
+    listingPriceLabel:
+      row.listing_price_cents !== null
+        ? formatServicePrice(row.listing_price_cents, "EUR", locale)
+        : undefined,
+    listingIntent:
+      row.kind === "for_sale" || row.kind === "sold"
+        ? pickLocale(row.listing_intent, locale) || undefined
+        : undefined,
   };
 }
 
@@ -222,6 +256,7 @@ export async function listPublishedProjectRows(): Promise<ProjectRow[] | null> {
     .from("projects")
     .select(PROJECT_SELECT)
     .eq("published", true)
+    .order("featured", { ascending: false })
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
@@ -230,9 +265,9 @@ export async function listPublishedProjectRows(): Promise<ProjectRow[] | null> {
     return null;
   }
 
-  return (data ?? []).map((row) =>
-    normalizeRow(row as Record<string, unknown>)
-  );
+  return (data ?? [])
+    .map((row) => normalizeRow(row as Record<string, unknown>))
+    .sort(comparePublishedRows);
 }
 
 export async function getPublishedProjectBySlug(
@@ -373,6 +408,16 @@ function writeToDbPayload(
   if (values.title !== undefined) payload.title = values.title;
   if (values.description !== undefined) payload.description = values.description;
   if (values.kind !== undefined) payload.kind = values.kind;
+  if (values.listingPriceCents !== undefined) {
+    payload.listing_price_cents = values.listingPriceCents;
+  }
+  if (values.listingIntent !== undefined) {
+    payload.listing_intent = values.listingIntent;
+  }
+  if (values.kind === "personal") {
+    payload.listing_price_cents = null;
+    payload.listing_intent = { fr: "", en: "", ar: "" };
+  }
   if (values.businessTypeIds !== undefined) {
     payload.business_type_ids = values.businessTypeIds;
   }

@@ -13,7 +13,7 @@ export function Journey() {
     <section
       id="parcours"
       aria-labelledby="journey-heading"
-      className="relative scroll-mt-28 overflow-x-clip bg-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 overflow-x-clip bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
       <CelestialAtlas intensity="subtle" />
 

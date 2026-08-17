@@ -4,9 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Reveal } from "@/components/ui/reveal";
 import { CelestialAtlas } from "@/components/ui/celestial-atlas";
-import { TechStrip } from "@/components/sections/tech-strip";
 import { HeroHeadline } from "@/components/sections/hero-headline";
 import { HeroBanner } from "@/components/sections/hero-banner";
 import { Link } from "@/i18n/navigation";
@@ -117,10 +115,6 @@ export function HomeSection() {
           </a>
         </motion.div>
       </div>
-
-      <Reveal delay={0.1}>
-        <TechStrip />
-      </Reveal>
     </section>
   );
 }

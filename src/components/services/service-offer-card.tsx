@@ -10,13 +10,19 @@ import { ServiceIcon } from "@/lib/services/icons";
 import { resolveServicePriceDisplay } from "@/lib/services/pricing";
 import { serviceDetailPath } from "@/lib/routes";
 import type { LocalizedService } from "@/lib/services/store";
+import { cn } from "@/lib/utils";
 
 type ServiceOfferCardProps = {
   service: LocalizedService;
+  /** Accueil : fiche plus courte, sans CTA principal. */
+  compact?: boolean;
 };
 
-/** Carte catalogue compacte : icône, texte, tarif, CTA. Sans image projet. */
-export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
+/** Carte catalogue compacte : icône, texte, CTA. Sans image projet. */
+export function ServiceOfferCard({
+  service,
+  compact = false,
+}: ServiceOfferCardProps) {
   const t = useTranslations("services");
   const locale = useLocale();
 
@@ -28,18 +34,19 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
     labels: {
       startingAt: (amount) => t("pricing.startingAt", { price: amount }),
       fixed: (amount) => t("pricing.fixed", { price: amount }),
-      quoteOnly: t("pricing.quoteOnly"),
       contact: t("pricing.contact"),
     },
   });
 
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
   const detailHref = serviceDetailPath(service.slug);
-  const showStart = service.showCtaStart;
+  const showStart = service.showCtaStart && !compact;
 
   return (
     <GlowCard className="h-full overflow-hidden p-0">
-      <article className="flex h-full flex-col p-5 sm:p-6">
+      <article
+        className={cn("flex h-full flex-col", compact ? "p-5" : "p-5 sm:p-6")}
+      >
         <div className="flex items-center justify-between gap-3">
           <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
             {service.reference}
@@ -61,13 +68,21 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
           </Link>
         </h3>
 
-        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+        <p
+          className={cn(
+            "mt-2 text-sm leading-relaxed text-muted-foreground",
+            compact ? "line-clamp-2" : "line-clamp-3"
+          )}
+        >
           {service.shortDescription}
         </p>
 
-        <p className="mt-4 font-mono text-[11px] tracking-wide text-foreground/80">
-          {price.label}
-        </p>
+        {!compact &&
+        (price.mode === "starting_at" || price.mode === "fixed") ? (
+          <p className="mt-4 font-mono text-[11px] tracking-wide text-foreground/80">
+            {price.label}
+          </p>
+        ) : null}
 
         <div className="mt-auto flex flex-col gap-2 pt-5">
           {showStart ? (

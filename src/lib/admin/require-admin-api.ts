@@ -3,7 +3,10 @@ import { isAllowedAdminEmail } from "@/lib/admin/allowlist";
 import { ADMIN_ERROR_CODES } from "@/lib/admin/error-codes";
 import { adminErrorResponse } from "@/lib/admin/error-response";
 import { hasAdminMfaSatisfied } from "@/lib/admin/mfa";
-import { verifyFormRequestOrigin } from "@/lib/security/request-origin";
+import {
+  requestMethodRequiresOrigin,
+  verifyFormRequestOrigin,
+} from "@/lib/security/request-origin";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -19,7 +22,8 @@ export type AdminGuardFail = {
 };
 
 /**
- * OWASP A01 — session valide + allowlist + AAL2 (+ Origin pour mutations).
+ * OWASP A01: session valide + allowlist + AAL2.
+ * Les mutations verifient l'origine par defaut pour eviter un oubli CSRF.
  */
 export async function requireAdminApi(
   request: Request,
@@ -32,7 +36,10 @@ export async function requireAdminApi(
     };
   }
 
-  if (options?.requireOrigin && !verifyFormRequestOrigin(request)) {
+  const requiresOrigin =
+    options?.requireOrigin ?? requestMethodRequiresOrigin(request.method);
+
+  if (requiresOrigin && !verifyFormRequestOrigin(request)) {
     return {
       ok: false,
       response: adminErrorResponse(ADMIN_ERROR_CODES.UNAUTHORIZED_ORIGIN, 403),

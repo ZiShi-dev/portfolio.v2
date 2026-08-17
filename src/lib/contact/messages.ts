@@ -100,7 +100,6 @@ export async function saveContactMessage(
     user_agent_hash: input.userAgent
       ? hashForAudit(input.userAgent.slice(0, 256))
       : null,
-    status: "unread" as const,
   };
 
   const { data, error } = await supabase

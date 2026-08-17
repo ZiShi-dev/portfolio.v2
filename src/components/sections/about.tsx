@@ -13,7 +13,7 @@ export async function About() {
     <section
       id="a-propos"
       aria-labelledby="about-heading"
-      className="relative scroll-mt-28 bg-surface px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">

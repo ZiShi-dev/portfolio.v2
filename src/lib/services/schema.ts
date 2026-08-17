@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { PROJECT_INQUIRY_TYPES } from "@/data/project-inquiry-options";
-import { isSafeHttpUrl } from "@/lib/review-schema";
 
 export const SERVICE_LIMITS = {
   maxBodyBytes: 120_000,
@@ -26,7 +25,6 @@ export const SERVICE_LIMITS = {
   seoDescriptionMax: 320,
   /** Plafond sécurité : 100 M d’unités majeures en centimes. */
   startingPriceCentsMax: 10_000_000_000,
-  coverImageMax: 2048,
 } as const;
 
 export const SERVICE_STATUSES = ["draft", "published", "archived"] as const;
@@ -35,14 +33,9 @@ export type ServiceStatus = (typeof SERVICE_STATUSES)[number];
 export const SERVICE_PRICING_MODES = [
   "starting_at",
   "fixed",
-  "quote_only",
   "contact",
 ] as const;
 export type ServicePricingMode = (typeof SERVICE_PRICING_MODES)[number];
-
-/** Service sur-mesure vs produit / site à vendre (filtre catalogue). */
-export const SERVICE_OFFER_KINDS = ["service", "product"] as const;
-export type ServiceOfferKind = (typeof SERVICE_OFFER_KINDS)[number];
 
 export const SERVICE_CURRENCIES = ["EUR", "USD", "GBP", "MAD", "CHF"] as const;
 export type ServiceCurrency = (typeof SERVICE_CURRENCIES)[number];
@@ -131,7 +124,6 @@ export const serviceWriteSchema = z
       .max(SERVICE_LIMITS.iconMax)
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "invalid_icon"),
     status: z.enum(SERVICE_STATUSES),
-    featured: z.boolean().default(false),
     sortOrder: z
       .number()
       .int()
@@ -146,30 +138,7 @@ export const serviceWriteSchema = z
       .max(SERVICE_LIMITS.maxFeatures)
       .default([]),
     ctaLabel: localeOptional(SERVICE_LIMITS.ctaLabelMax),
-    offerKind: z.enum(SERVICE_OFFER_KINDS).default("service"),
-    showCtaBuy: z.boolean().default(false),
     showCtaStart: z.boolean().default(true),
-    coverImage: z
-      .string()
-      .trim()
-      .max(SERVICE_LIMITS.coverImageMax)
-      .nullable()
-      .optional()
-      .transform((v) => {
-        if (v === undefined || v === null || v === "") return null;
-        return v;
-      })
-      .refine(
-        (v) => v === null || isSafeHttpUrl(v),
-        "invalid_cover_image"
-      ),
-    linkedProjectId: z
-      .string()
-      .trim()
-      .uuid()
-      .nullable()
-      .optional()
-      .transform((v) => (v === undefined || v === "" ? null : v)),
     pricingMode: z.enum(SERVICE_PRICING_MODES),
     startingPriceCents: z
       .number()
@@ -254,7 +223,6 @@ export const servicePatchSchema = z
     slug: serviceWriteSchema.shape.slug.optional(),
     icon: serviceWriteSchema.shape.icon.optional(),
     status: serviceWriteSchema.shape.status.optional(),
-    featured: z.boolean().optional(),
     sortOrder: serviceWriteSchema.shape.sortOrder.optional(),
     title: serviceWriteSchema.shape.title.optional(),
     shortDescription: serviceWriteSchema.shape.shortDescription.optional(),
@@ -262,39 +230,7 @@ export const servicePatchSchema = z
     idealFor: serviceWriteSchema.shape.idealFor.optional(),
     includedFeatures: serviceWriteSchema.shape.includedFeatures.optional(),
     ctaLabel: serviceWriteSchema.shape.ctaLabel.optional(),
-    offerKind: serviceWriteSchema.shape.offerKind.optional(),
-    showCtaBuy: z.boolean().optional(),
     showCtaStart: z.boolean().optional(),
-    coverImage: z
-      .string()
-      .trim()
-      .max(SERVICE_LIMITS.coverImageMax)
-      .nullable()
-      .optional()
-      .refine(
-        (v) =>
-          v === undefined ||
-          v === null ||
-          v === "" ||
-          isSafeHttpUrl(v),
-        "invalid_cover_image"
-      )
-      .transform((v) => {
-        if (v === undefined) return undefined;
-        if (v === null || v === "") return null;
-        return v;
-      }),
-    linkedProjectId: z
-      .string()
-      .trim()
-      .uuid()
-      .nullable()
-      .optional()
-      .transform((v) => {
-        if (v === undefined) return undefined;
-        if (v === null || v === "") return null;
-        return v;
-      }),
     pricingMode: serviceWriteSchema.shape.pricingMode.optional(),
     startingPriceCents: z
       .number()

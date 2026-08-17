@@ -83,80 +83,76 @@
     }
   },
   "services": {
-    "eyebrow": "Catalogue · Offres",
-    "title": "Des produits numériques conçus avec",
-    "titleHighlight": "précision.",
-    "subtitle": "Chaque livrable est cartographié : clair, mesurable, prêt à convertir — sites, apps et plateformes.",
+    "eyebrow": "Offres · Sites & applications",
+    "title": "Nos offres de",
+    "titleHighlight": "création de sites et d’applications.",
+    "subtitle": "Un site ou une application pour présenter votre activité, vendre, réserver, publier ou lancer une offre — choisissez ce qui correspond à votre besoin.",
+    "homeSubtitle": "Les besoins les plus fréquents — le catalogue complet est à un clic.",
     "discover": "Découvrir",
     "cta": "Parler de votre besoin",
     "page": {
-      "metaTitle": "Nos offres commerciales — {brand}",
-      "metaDescription": "Catalogue des offres commerciales {brand} : sites, e-commerce, applications, SaaS et solutions sur mesure."
+      "metaTitle": "Création de sites et d’applications — {brand}",
+      "metaDescription": "Offres {brand} : site vitrine, e-commerce, réservation, application, blog, portfolio, landing page et site sur mesure."
     },
     "items": {
-      "web": {
-        "title": "Site ou application web",
-        "desc": "Une présence en ligne claire et rapide, conçue pour présenter votre offre et générer des demandes de contact."
+      "vitrine": {
+        "title": "Site vitrine",
+        "desc": "Présenter une entreprise, une activité ou une marque."
       },
-      "backend": {
-        "title": "Back-office & automatisation",
-        "desc": "Comptes, formulaires, données et outils métier fiables — pour que votre site travaille vraiment pour vous."
+      "ecommerce": {
+        "title": "Site e-commerce",
+        "desc": "Vente de produits en ligne : catalogue, panier, commandes et paiement."
       },
-      "design": {
-        "title": "Design UX/UI",
-        "desc": "Une interface élégante et lisible : vos visiteurs comprennent vite qui vous êtes et quoi faire ensuite."
+      "reservation": {
+        "title": "Site de réservation",
+        "desc": "Présentation des services avec prise de rendez-vous ou réservation."
       },
-      "mobile": {
-        "title": "Expérience mobile-first",
-        "desc": "Un rendu impeccable sur téléphone — là où la majorité de vos clients vous découvrent."
+      "plateforme": {
+        "title": "Plateforme / Application web",
+        "desc": "Site avec comptes utilisateurs, tableau de bord et fonctionnalités avancées."
       },
-      "seo": {
-        "title": "Référencement de base",
-        "desc": "Structure, perf et balises prêtes pour Google : plus de chances d’être trouvé sur les bonnes recherches."
+      "blog": {
+        "title": "Blog / Site de contenu",
+        "desc": "Publication et organisation régulière de contenu."
       },
-      "maintenance": {
-        "title": "Suivi après lancement",
-        "desc": "Corrections, améliorations et conseils après mise en ligne — votre site reste stable et évolutif."
+      "portfolio": {
+        "title": "Portfolio",
+        "desc": "Présentation d’un professionnel et de ses réalisations."
+      },
+      "landing": {
+        "title": "Landing page",
+        "desc": "Une page conçue autour d’une offre ou d’un objectif précis."
+      },
+      "sur-mesure": {
+        "title": "Site sur mesure",
+        "desc": "Conception adaptée à un besoin qui ne correspond pas aux offres standards."
       }
     },
     "empty": "Les offres seront bientôt disponibles.",
-    "idealFor": "Idéal pour",
-    "included": "Généralement inclus",
+    "idealFor": "Pour qui",
+    "included": "Ce que cela comprend",
     "learnMore": "En savoir plus",
     "ctaStart": "Démarrer un projet",
-    "ctaBuy": "Acheter cette offre",
     "backToServices": "Retour aux offres",
     "backToCatalog": "Retour aux offres",
     "detailAbout": "À propos de l’offre",
     "detailPricing": "Tarification",
-    "relatedProjects": "Réalisations associées",
-    "relatedProjectsSubtitle": "Cliquez une carte pour ouvrir le détail du projet.",
+    "relatedProjects": "Un exemple réel",
+    "relatedProjectsSubtitle": "Un projet déjà livré — cliquez pour voir le détail.",
     "viewCaseStudy": "Voir une réalisation",
-    "linkedProjectEyebrow": "Projet à vendre",
     "viewLinkedProject": "Voir le détail du projet",
-    "offerKind": {
-      "service": "Service",
-      "product": "À vendre"
-    },
-    "filter": {
-      "label": "Filtrer les offres",
-      "all": "Tout",
-      "product": "À vendre",
-      "service": "Services",
-      "empty": "Aucune offre dans ce filtre."
-    },
     "pricing": {
       "startingAt": "À partir de {price}",
       "fixed": "{price}",
-      "quoteOnly": "Sur devis",
       "contact": "Parlons de votre projet",
-      "disclaimer": "Le tarif final dépend du périmètre, des fonctionnalités et des besoins du projet.",
+      "disclaimer": "Le prix dépend de ce dont vous avez vraiment besoin. Nous le précisons ensemble avant de commencer.",
       "fixedDisclaimer": "Prix de l’offre telle que présentée. Options ou adaptations éventuelles sur devis."
     },
-    "catalogTitle": "Nos offres",
-    "catalogTitleHighlight": "commerciales.",
-    "catalogSubtitle": "Choisissez la solution adaptée à votre besoin — chaque offre peut être explorée en détail.",
-    "viewAll": "Voir toutes les offres"
+    "catalogTitle": "Nos offres de",
+    "catalogTitleHighlight": "création de sites et d’applications.",
+    "catalogSubtitle": "Huit offres claires. Choisissez celle qui correspond à votre activité.",
+    "viewAll": "Voir toutes les offres",
+    "otherOffers": "Également au catalogue"
   },
   "engagements": {
     "eyebrow": "Engagements · VORZIX",
@@ -212,6 +208,11 @@
     "openDetails": "Voir le détail du projet {title}",
     "seeMore": "Voir plus",
     "exploreAll": "Explorer tous les projets",
+    "availableNow": "Disponible à la reprise",
+    "viewListing": "Voir l’offre",
+    "viewProject": "Voir le projet",
+    "otherWork": "Autres réalisations",
+    "listingIndex": "{current} / {total}",
     "seeSite": "Voir le site",
     "seeApp": "Voir l'application",
     "visitSite": "Visiter le site",
@@ -220,7 +221,9 @@
       "allTypes": "Tous les types",
       "allLinks": "Tous les liens",
       "withSite": "Avec site",
-      "withApp": "Avec application"
+      "withApp": "Avec application",
+      "search": "Rechercher un projet",
+      "searchPlaceholder": "Rechercher un projet…"
     },
     "screens": "écrans",
     "all": "Tous",
@@ -243,7 +246,8 @@
       "subtitle": "Filtrez et ouvrez une étude de cas complète."
     },
     "categories": {
-      "personal": "Projet perso",
+      "personal": "Projet personnel",
+      "for_sale": "Projet à vendre",
       "sold": "Projet vendu"
     },
     "businessTypes": {
@@ -450,6 +454,26 @@
     "layout": {
       "backToSite": "{name}"
     },
+    "notifications": {
+      "title": "Notifications",
+      "bellLabel": "Notifications des demandes",
+      "enable": "Activer sur cet appareil",
+      "enabling": "Activation…",
+      "enabled": "Notifications activées sur cet appareil",
+      "disable": "Désactiver cet appareil",
+      "disabling": "Désactivation…",
+      "notSupported": "Ce navigateur ne prend pas en charge les notifications push.",
+      "denied": "Notifications bloquées dans les réglages du navigateur.",
+      "notConfigured": "Les notifications push ne sont pas encore configurées (clés VAPID manquantes).",
+      "iphoneHint": "Sur iPhone ou iPad : Partager → Sur l’écran d’accueil, puis ouvrez l’admin depuis l’icône pour activer les notifications.",
+      "newInquiries": "{count, plural, one {# nouvelle demande} other {# nouvelles demandes}}",
+      "noNew": "Aucune nouvelle demande",
+      "unreadOnly": "Uniquement les demandes pas encore ouvertes — pas tout l’historique.",
+      "openInquiries": "Ouvrir les demandes",
+      "markRead": "Marquer comme lu",
+      "markingRead": "Marquage…",
+      "error": "Impossible d’activer les notifications. Réessayez."
+    },
     "login": {
       "secureSpace": "Espace sécurisé",
       "title": "Connexion admin",
@@ -569,6 +593,34 @@
       "backToDashboard": "Tableau de bord",
       "demoTitle": "Contenu démo",
       "demoBody": "Les projets et avis affichés sur le site sont des exemples. Remplacez-les par vos vraies réalisations et témoignages clients avant la mise en production.",
+      "overview": {
+        "title": "État du site en un coup d’œil",
+        "body": "L’état du site aujourd’hui, en langage simple — ce qui est en ligne, et ce qui attend une action.",
+        "todoTitle": "Actions prioritaires",
+        "total": "Total",
+        "todoNone": "Rien en attente. Tout est à jour.",
+        "todoInquiries": "{count, plural, one {# demande attend une réponse} other {# demandes attendent une réponse}}",
+        "todoReviews": "{count, plural, one {# avis client à relire} other {# avis clients à relire}}",
+        "todoDrafts": "{count, plural, one {# offre encore en préparation} other {# offres encore en préparation}}",
+        "chartOffers": "Offres",
+        "chartOffersSummary": "{live} visibles sur le site, {draft} en préparation.",
+        "chartProjects": "Projets",
+        "chartProjectsSummary": "{live} publiés, {hidden} encore privés.",
+        "chartReviews": "Avis clients",
+        "chartReviewsSummary": "{live} visibles, {pending} en attente de relecture.",
+        "chartInquiries": "Demandes",
+        "chartInquiriesSummary": "{fresh} nouvelles, {open} en discussion.",
+        "barLive": "En ligne",
+        "barDraft": "En préparation",
+        "barArchived": "Archivées",
+        "barHidden": "Privés",
+        "barPending": "À relire",
+        "barRemoved": "Retirés",
+        "barNew": "Nouvelles",
+        "barOpen": "En discussion",
+        "barDone": "Conclues",
+        "barClosed": "Non retenues"
+      },
       "viewSite": "Voir le site",
       "inquiriesTitle": "Demandes de projet",
       "inquiriesBody": "Gérez les leads du parcours interactif.",
@@ -579,7 +631,7 @@
       "servicesNext": "Gérez tout depuis /admin/services — aucune modification de code.",
       "manageServices": "Gérer les offres",
       "servicesPageTitle": "Gestion des offres",
-      "servicesPageSubtitle": "CMS · FR/EN/AR · tarifs · Case Studies · publication.",
+      "servicesPageSubtitle": "Créez, modifiez ou supprimez les offres du site. Tous les textes (FR / EN / AR) sont éditables.",
       "engagementsTitle": "Engagements VORZIX",
       "engagementsBody": "Cadrez les engagements affichés sur le site : titres, textes FR/EN/AR, ordre et publication.",
       "engagementsNext": "Gérez tout depuis /admin/engagements — aucune modification de code.",
@@ -705,7 +757,10 @@
         "title": "Titre",
         "description": "Détail",
         "slug": "Slug (URL)",
-        "kind": "Type",
+        "kind": "Statut",
+        "listingPrice": "Prix",
+        "listingIntent": "Ce que je veux en faire",
+        "soldWork": "Ce que j’ai fait",
         "sortOrder": "Ordre",
         "link": "Lien du site",
         "appLink": "Lien de l'application",
@@ -738,7 +793,13 @@
         "other": "Autre"
       },
       "kindPersonal": "Projet personnel",
-      "kindSold": "Projet vendu / client",
+      "kindForSale": "Projet à vendre",
+      "kindSold": "Projet vendu",
+      "kindForSaleHint": "Indiquez le prix demandé et ce que vous voulez faire de ce projet.",
+      "kindSoldHint": "Indiquez le prix de vente et ce que vous avez fait pour le client.",
+      "listingPriceHint": "Montant en euros, sans symbole.",
+      "listingIntentPlaceholder": "Ex. Céder le code, accompagner le repreneur, livrer clé en main…",
+      "soldWorkPlaceholder": "Ex. Site livré, accompagnement, mise en ligne…",
       "upload": "Uploader",
       "imagesEmpty": "Ajoutez des images (obligatoire pour publier).",
       "moveUp": "Monter",
@@ -760,6 +821,7 @@
       "confirmDeleteAction": "Oui, supprimer",
       "confirmDeleteCancel": "Annuler",
       "featured": "Mis en avant",
+      "featuredHint": "Le projet apparaît en premier sur l’accueil et la liste, avec un cadre plus marqué.",
       "referenceHint": "La référence catalogue (VZ—CASE …) est générée à la création.",
       "hints": {
         "appLink": "Play Store, App Store, ou URL de l’app (optionnel)."
@@ -810,6 +872,11 @@
       "publish_requires_title": "Titre FR requis pour publier.",
       "publish_requires_description": "Description FR requise pour publier.",
       "publish_requires_images": "Au moins une image est requise pour publier.",
+      "publish_requires_listing_price": "Indiquez le prix demandé pour publier un projet à vendre.",
+      "publish_requires_listing_intent": "Expliquez ce que vous voulez faire de ce projet (FR) pour publier.",
+      "publish_requires_sold_price": "Indiquez le prix de vente pour publier un projet vendu.",
+      "publish_requires_sold_work": "Décrivez ce que vous avez fait pour le client (FR) pour publier.",
+      "project_invalid_listing": "Prix ou description invalides.",
       "project_invalid_features": "Fonctionnalités invalides.",
       "project_invalid_technologies": "Technologies invalides.",
       "duplicate_reference": "Cette référence catalogue existe déjà.",
@@ -990,7 +1057,7 @@
       "create": "Créer une offre",
       "createTitle": "Nouvelle offre",
       "editTitle": "Modifier l’offre",
-      "formHint": "Brouillon autorisé incomplet. La publication exige titre et description courte FR.",
+      "formHint": "Tous les champs sont modifiables (FR / EN / AR). Vous pouvez aussi archiver ou supprimer une offre définitivement.",
       "edit": "Modifier",
       "preview": "Prévisualiser",
       "publish": "Publier",
@@ -1005,6 +1072,14 @@
       "deleteTitle": "Supprimer cette offre ?",
       "deleteBody": "Action définitive. Les leads existants conservent la référence figée.",
       "deleteConfirm": "Supprimer",
+      "restore": "Restaurer",
+      "filtersLabel": "Filtrer les offres",
+      "filters": {
+        "all": "Toutes",
+        "published": "Publiées",
+        "draft": "Brouillons",
+        "archived": "Archivées"
+      },
       "moveUp": "Monter",
       "moveDown": "Descendre",
       "addFeature": "Ajouter un élément",
@@ -1027,7 +1102,6 @@
         "name": "Nom",
         "status": "Statut",
         "pricing": "Tarif",
-        "featured": "Vedette",
         "order": "Ordre",
         "updated": "Modifié",
         "actions": "Actions"
@@ -1040,39 +1114,26 @@
       "pricingMode": {
         "starting_at": "À partir de",
         "fixed": "Prix fixe",
-        "quote_only": "Sur devis",
-        "contact": "Contact"
+        "contact": "Sans prix affiché"
       },
-      "offerKind": {
-        "service": "Service",
-        "product": "À vendre"
-      },
-      "commerceHint": "Le type sert au filtre du catalogue. Les cases contrôlent quels boutons apparaissent sur le site.",
-      "uploadCover": "Uploader une photo",
-      "removeCover": "Retirer",
       "sections": {
         "identity": "Identité",
-        "commerce": "Type & boutons",
+        "commerce": "Bouton",
         "pricing": "Prix",
         "features": "Éléments inclus",
-        "caseStudies": "Case Studies associées"
+        "caseStudies": "Projets associés"
       },
       "fields": {
         "reference": "Référence",
         "slug": "Slug",
         "icon": "Icône",
         "status": "Statut",
-        "featured": "Mettre en avant",
         "sortOrder": "Ordre",
-        "offerKind": "Type d’offre",
-        "showCtaBuy": "Bouton « Acheter »",
         "showCtaStart": "Bouton « Démarrer un projet »",
-        "coverImage": "Photo du produit",
-        "linkedProject": "Projet lié (/projets) — fournit aussi la photo",
         "pricingMode": "Mode tarifaire",
         "currency": "Devise",
         "startingPrice": "Prix de départ",
-        "fixedPrice": "Prix de vente",
+        "fixedPrice": "Prix affiché",
         "inquiryType": "Type pré-sélectionné (parcours)",
         "title": "Titre",
         "shortDescription": "Description courte",
@@ -1084,11 +1145,9 @@
         "projectBlurb": "Courte description (page offre)"
       },
       "hints": {
-        "coverImage": "Désactivé : la photo vient du projet lié.",
-        "linkedProject": "Associez un projet publié : ses images s’affichent sur l’offre. Sans projet lié, aucune image.",
-        "projectUrl": "Collez /projets/mon-projet, l’URL complète, ou le slug."
+        "projectUrl": "Collez /projets/mon-projet, l’URL complète, ou le slug.",
+        "slug": "Adresse publique : /offres/votre-slug"
       },
-      "linkedProjectNone": "Aucun projet lié",
       "caseStudiesHint": "Ajoutez plusieurs projets : leurs images et descriptions apparaissent sur /offres/[slug]. Le clic ouvre la page projet.",
       "duplicate": "Dupliquer",
       "archive": "Archiver"
@@ -1109,7 +1168,13 @@
     "ctaSubtitle": "Parlons de votre besoin — réponse claire sous 48h.",
     "ctaPrimary": "Démarrer un projet",
     "ctaNext": "Voir le projet suivant",
-    "backToList": "Toutes les réalisations"
+    "backToList": "Toutes les réalisations",
+    "forSaleEyebrow": "Projet à vendre",
+    "soldEyebrow": "Projet vendu",
+    "soldPrice": "Vendu {price}",
+    "listingIntent": "Ce que je veux en faire",
+    "soldWork": "Ce que j’ai fait",
+    "applicationType": "Type d’application"
   },
   "projectInquiry": {
     "brand": "VZ—PROJECT",
@@ -1120,7 +1185,7 @@
     },
     "intro": {
       "title": "Traçons les contours de votre projet.",
-      "subtitle": "Quelques choix suffisent pour nous aider à comprendre votre besoin.",
+      "subtitle": "Quelques questions suffisent pour comprendre votre besoin — sans jargon.",
       "cta": "Commencer"
     },
     "progress": {
@@ -1146,40 +1211,40 @@
     "types": {
       "showcase": {
         "title": "Site vitrine",
-        "description": "Présenter votre activité avec clarté."
+        "description": "Présenter votre activité et être contacté facilement."
       },
       "ecommerce": {
-        "title": "E-commerce",
-        "description": "Vendre vos produits en ligne."
+        "title": "Boutique en ligne",
+        "description": "Vendre vos produits et encaisser les commandes."
       },
       "web_app": {
-        "title": "Application web",
-        "description": "Un produit interactif dans le navigateur."
+        "title": "Site de réservation",
+        "description": "Permettre à vos clients de prendre rendez-vous."
       },
       "saas": {
-        "title": "SaaS / plateforme",
-        "description": "Un service multi-utilisateurs évolutif."
+        "title": "Application ou plateforme",
+        "description": "Un espace en ligne pour vos clients ou vos équipes."
       },
       "redesign": {
-        "title": "Refonte",
-        "description": "Moderniser un produit existant."
+        "title": "Moderniser un site existant",
+        "description": "Remettre à jour ce que vous avez déjà."
       },
       "automation": {
-        "title": "Automatisation / back-office",
-        "description": "Fluidifier un processus interne."
+        "title": "Simplifier le quotidien",
+        "description": "Moins de relances manuelles, plus de clarté."
       },
       "other": {
-        "title": "Autre",
-        "description": "Un besoin spécifique à préciser."
+        "title": "Projet sur mesure",
+        "description": "Un besoin particulier à préciser ensemble."
       }
     },
     "objectives": {
-      "present_activity": "Présenter mon activité",
-      "generate_leads": "Générer des prospects",
+      "present_activity": "Faire connaître mon activité",
+      "generate_leads": "Recevoir plus de demandes",
       "sell_online": "Vendre en ligne",
-      "create_product": "Créer un produit numérique",
-      "automate_process": "Automatiser un processus",
-      "modernize": "Moderniser un produit existant",
+      "create_product": "Proposer un service en ligne",
+      "automate_process": "Gagner du temps au quotidien",
+      "modernize": "Améliorer ce que j’ai déjà",
       "other": "Autre"
     },
     "budgets": {
@@ -1207,13 +1272,14 @@
       "targetLaunchPlaceholder": "Choisir une date",
       "targetLaunchClear": "Effacer la date",
       "typeOther": "Précisez ce que vous voulez créer",
-      "typeOtherPlaceholder": "Ex. plateforme de réservation",
+      "typeOtherPlaceholder": "Ex. site de réservation pour un cabinet",
       "objectiveOther": "Précisez votre objectif",
       "objectiveOtherPlaceholder": "Ex. fidéliser mes clients",
       "customBudget": "Votre budget",
       "customBudgetPlaceholder": "Ex. 750",
       "customBudgetHint": "Entre {min} € et {max} €.",
-      "descriptionHelp": "Décrivez votre activité, votre idée et les fonctionnalités importantes. Pas besoin de vocabulaire technique.",
+      "descriptionHelp": "Décrivez votre activité, vos clients, et ce que le site devra leur apporter. Inutile d’entrer dans les détails techniques.",
+      "descriptionPlaceholder": "Ex. nous sommes une entreprise à Alger, nous voulons un site clair pour…",
       "name": "Nom",
       "email": "Email",
       "phone": "Téléphone",
@@ -1227,9 +1293,133 @@
       "review": "Voir le récapitulatif",
       "exit": "Fermer"
     },
+    "offers": {
+      "generic": {
+        "introTitle": "Parlons de {offer}.",
+        "introSubtitle": "Quelques questions pour bien comprendre votre besoin — sans jargon.",
+        "objectiveQuestion": "Que souhaitez-vous accomplir avec ce projet ?",
+        "descriptionQuestion": "Parlez-nous de votre activité.",
+        "descriptionHelp": "Indiquez qui vous êtes, ce que vous proposez, et ce que vos visiteurs devront trouver facilement.",
+        "descriptionPlaceholder": "Ex. nous voulons un site qui présente notre activité et facilite le contact."
+      },
+      "vitrine": {
+        "introTitle": "Parlons de votre site vitrine.",
+        "introSubtitle": "Nous allons comprendre votre activité et ce que vos visiteurs doivent retenir.",
+        "objectiveQuestion": "Que doit principalement faire votre site ?",
+        "descriptionQuestion": "Parlez-nous de votre activité.",
+        "descriptionHelp": "Indiquez qui vous êtes, ce que vous proposez, et ce que l’on doit trouver facilement : services, adresse, horaires, formulaire de contact…",
+        "descriptionPlaceholder": "Ex. cabinet à Oran, nous voulons un site clair pour présenter nos services et être contactés facilement.",
+        "objectives": {
+          "present_activity": "Présenter mon activité",
+          "generate_leads": "Recevoir des demandes de contact",
+          "modernize": "Remplacer ou améliorer mon site actuel",
+          "other": "Autre"
+        }
+      },
+      "ecommerce": {
+        "introTitle": "Parlons de votre boutique en ligne.",
+        "introSubtitle": "Nous allons cadrer ce que vous vendez et comment vos clients commanderont.",
+        "objectiveQuestion": "Quel est votre objectif principal ?",
+        "descriptionQuestion": "Que vendez-vous, et comment ?",
+        "descriptionHelp": "Décrivez vos produits, si vous avez déjà un catalogue, et comment vous livrez ou faites retirer les commandes.",
+        "descriptionPlaceholder": "Ex. épicerie fine, une cinquantaine de produits, livraison à Alger et retrait en magasin.",
+        "objectives": {
+          "sell_online": "Vendre mes produits en ligne",
+          "generate_leads": "Attirer plus de clients",
+          "modernize": "Améliorer ma boutique actuelle",
+          "other": "Autre"
+        }
+      },
+      "reservation": {
+        "introTitle": "Parlons de votre site de réservation.",
+        "introSubtitle": "Nous allons voir comment vos clients prennent rendez-vous aujourd’hui, et ce que vous attendez du site.",
+        "objectiveQuestion": "Que doit faciliter votre site ?",
+        "descriptionQuestion": "Comment se prennent les rendez-vous aujourd’hui ?",
+        "descriptionHelp": "Décrivez votre activité, le type de rendez-vous (durée, plusieurs personnes, acompte…) et ce qui pose problème actuellement.",
+        "descriptionPlaceholder": "Ex. salon de coiffure, 4 personnes, les clients réservent surtout par WhatsApp et cela prend trop de temps.",
+        "objectives": {
+          "generate_leads": "Recevoir plus de réservations",
+          "present_activity": "Présenter mes services et mes disponibilités",
+          "automate_process": "Éviter les allers-retours par téléphone",
+          "other": "Autre"
+        }
+      },
+      "plateforme": {
+        "introTitle": "Parlons de votre application.",
+        "introSubtitle": "Nous allons clarifier qui l’utilisera et ce qu’elle devra simplifier au quotidien.",
+        "objectiveQuestion": "Quel est le rôle principal de cette application ?",
+        "descriptionQuestion": "Qui l’utilisera, et pour faire quoi ?",
+        "descriptionHelp": "Expliquez qui l’utilisera (vous, vos équipes, vos clients) et les actions essentielles : s’inscrire, suivre une commande, consulter un espace personnel…",
+        "descriptionPlaceholder": "Ex. nos clients doivent pouvoir suivre leurs dossiers et échanger avec notre équipe, sans nous appeler à chaque fois.",
+        "objectives": {
+          "create_product": "Proposer un service en ligne à mes clients",
+          "automate_process": "Faciliter le travail de mes équipes",
+          "generate_leads": "Attirer et fidéliser des utilisateurs",
+          "other": "Autre"
+        }
+      },
+      "blog": {
+        "introTitle": "Parlons de votre site de contenu.",
+        "introSubtitle": "Nous allons voir comment vous souhaitez publier, et ce que vos lecteurs doivent y trouver.",
+        "objectiveQuestion": "Que doit principalement apporter ce site ?",
+        "descriptionQuestion": "De quoi parlerez-vous ?",
+        "descriptionHelp": "Indiquez les sujets que vous voulez publier, à quelle fréquence, et si le site doit aussi présenter votre activité.",
+        "descriptionPlaceholder": "Ex. articles sur la nutrition, une à deux fois par mois, avec une page pour présenter le cabinet.",
+        "objectives": {
+          "present_activity": "Partager mon expertise",
+          "generate_leads": "Attirer des lecteurs et des contacts",
+          "other": "Autre"
+        }
+      },
+      "portfolio": {
+        "introTitle": "Parlons de votre portfolio.",
+        "introSubtitle": "Nous allons comprendre comment vous voulez présenter votre travail.",
+        "objectiveQuestion": "Que doit surtout permettre ce site ?",
+        "descriptionQuestion": "Quel travail souhaitez-vous montrer ?",
+        "descriptionHelp": "Décrivez votre métier, le type de projets à montrer, et ce que les visiteurs doivent faire ensuite : vous écrire, demander un devis…",
+        "descriptionPlaceholder": "Ex. architecte d’intérieur, une dizaine de projets à mettre en avant, avec un contact simple pour les demandes.",
+        "objectives": {
+          "present_activity": "Mettre en valeur mes réalisations",
+          "generate_leads": "Recevoir des demandes de collaboration",
+          "other": "Autre"
+        }
+      },
+      "landing": {
+        "introTitle": "Parlons de votre page de présentation.",
+        "introSubtitle": "Une page claire, pensée pour convaincre et donner envie d’agir.",
+        "objectiveQuestion": "Quel est le but de cette page ?",
+        "descriptionQuestion": "Quelle offre cette page doit-elle présenter ?",
+        "descriptionHelp": "Décrivez l’offre ou l’événement, le public visé, et l’action que le visiteur doit faire : demander un devis, s’inscrire, acheter…",
+        "descriptionPlaceholder": "Ex. lancement d’une formation en septembre, la page doit présenter le programme et recueillir les inscriptions.",
+        "objectives": {
+          "generate_leads": "Recueillir des inscriptions ou des demandes",
+          "sell_online": "Présenter une offre et inciter à l’achat",
+          "present_activity": "Présenter un lancement ou un événement",
+          "other": "Autre"
+        }
+      },
+      "sur-mesure": {
+        "introTitle": "Parlons de votre projet sur mesure.",
+        "introSubtitle": "Pas de cadre figé : nous partons de votre besoin réel.",
+        "objectiveQuestion": "Que souhaitez-vous accomplir ?",
+        "descriptionQuestion": "Quel est le besoin à résoudre ?",
+        "descriptionHelp": "Expliquez votre activité, le problème à résoudre, et ce qui serait un succès pour vous. Nous nous chargeons du reste.",
+        "descriptionPlaceholder": "Ex. nous gérons des locations et voulons un site qui présente les biens et permet de demander une visite.",
+        "objectives": {
+          "present_activity": "Faire connaître mon activité",
+          "generate_leads": "Recevoir plus de demandes",
+          "sell_online": "Vendre en ligne",
+          "create_product": "Proposer un service en ligne",
+          "automate_process": "Gagner du temps au quotidien",
+          "modernize": "Améliorer ce que j’ai déjà",
+          "other": "Autre"
+        }
+      }
+    },
     "summary": {
       "title": "Votre projet prend forme.",
       "subtitle": "Vérifiez le récapitulatif, puis envoyez votre demande.",
+      "offer": "Offre",
       "type": "Type",
       "objective": "Objectif",
       "budget": "Budget",

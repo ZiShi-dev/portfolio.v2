@@ -28,9 +28,11 @@ export const PROJECT_LIMITS = {
   uploadMaxBytes: 3 * 1024 * 1024,
   allowedMime: ["image/jpeg", "image/png", "image/webp", "image/gif"] as const,
   referenceMax: 32,
+  listingIntentMax: 800,
+  listingPriceCentsMax: 99_999_999,
 } as const;
 
-export const PROJECT_KINDS = ["personal", "sold"] as const;
+export const PROJECT_KINDS = ["personal", "for_sale", "sold"] as const;
 export type ProjectKind = (typeof PROJECT_KINDS)[number];
 
 export const LOCALES = ["fr", "en", "ar"] as const;
@@ -44,6 +46,12 @@ export const projectOptionalI18nSchema = z.object({
   fr: z.string().trim().max(PROJECT_LIMITS.narrativeMax).default(""),
   en: z.string().trim().max(PROJECT_LIMITS.narrativeMax).default(""),
   ar: z.string().trim().max(PROJECT_LIMITS.narrativeMax).default(""),
+});
+
+const listingIntentI18nSchema = z.object({
+  fr: z.string().trim().max(PROJECT_LIMITS.listingIntentMax).default(""),
+  en: z.string().trim().max(PROJECT_LIMITS.listingIntentMax).default(""),
+  ar: z.string().trim().max(PROJECT_LIMITS.listingIntentMax).default(""),
 });
 
 export const projectI18nSchema = z.object({
@@ -138,6 +146,15 @@ export const projectWriteSchema = z
     title: projectI18nSchema,
     description: projectDescriptionI18nSchema,
     kind: z.enum(PROJECT_KINDS),
+    listingPriceCents: z
+      .number()
+      .int()
+      .min(0)
+      .max(PROJECT_LIMITS.listingPriceCentsMax)
+      .nullable()
+      .optional()
+      .transform((v) => (v === undefined ? null : v)),
+    listingIntent: listingIntentI18nSchema.default({ fr: "", en: "", ar: "" }),
     businessTypeIds: z
       .array(z.string())
       .max(PROJECT_LIMITS.maxBusinessTypes)
@@ -228,6 +245,28 @@ export const projectWriteSchema = z
         path: ["images"],
       });
     }
+    if (data.kind === "for_sale" || data.kind === "sold") {
+      if (data.listingPriceCents === null || data.listingPriceCents === undefined) {
+        ctx.addIssue({
+          code: "custom",
+          message:
+            data.kind === "sold"
+              ? "publish_requires_sold_price"
+              : "publish_requires_listing_price",
+          path: ["listingPriceCents"],
+        });
+      }
+      if (!data.listingIntent?.fr?.trim()) {
+        ctx.addIssue({
+          code: "custom",
+          message:
+            data.kind === "sold"
+              ? "publish_requires_sold_work"
+              : "publish_requires_listing_intent",
+          path: ["listingIntent", "fr"],
+        });
+      }
+    }
   });
 
 export type ProjectWriteInput = z.infer<typeof projectWriteSchema>;
@@ -239,6 +278,14 @@ export const projectPatchSchema = z
     title: projectWriteSchema.shape.title.optional(),
     description: projectWriteSchema.shape.description.optional(),
     kind: projectWriteSchema.shape.kind.optional(),
+    listingPriceCents: z
+      .number()
+      .int()
+      .min(0)
+      .max(PROJECT_LIMITS.listingPriceCentsMax)
+      .nullable()
+      .optional(),
+    listingIntent: listingIntentI18nSchema.optional(),
     businessTypeIds: projectWriteSchema.shape.businessTypeIds.optional(),
     images: projectWriteSchema.shape.images.optional(),
     link: projectWriteSchema.shape.link.optional(),
@@ -314,6 +361,12 @@ function mapProjectZodError(issues: z.core.$ZodIssue[]): string {
   if (msg === "publish_requires_title") return "publish_requires_title";
   if (msg === "publish_requires_description") return "publish_requires_description";
   if (msg === "publish_requires_images") return "publish_requires_images";
+  if (msg === "publish_requires_listing_price") return "publish_requires_listing_price";
+  if (msg === "publish_requires_listing_intent") {
+    return "publish_requires_listing_intent";
+  }
+  if (msg === "publish_requires_sold_price") return "publish_requires_sold_price";
+  if (msg === "publish_requires_sold_work") return "publish_requires_sold_work";
   if (msg === "invalid_slug" || path === "slug") return "project_invalid_slug";
   if (msg === "invalid_business_type" || msg === "duplicate_business_type") {
     return msg;
@@ -334,6 +387,9 @@ function mapProjectZodError(issues: z.core.$ZodIssue[]): string {
   }
   if (path.startsWith("features")) return "project_invalid_features";
   if (path.startsWith("technologies")) return "project_invalid_technologies";
+  if (path.startsWith("listingIntent") || path === "listingPriceCents") {
+    return "project_invalid_listing";
+  }
   if (path === "businessTypeIds") return "project_invalid_business_types";
   return msg || "invalid_request";
 }

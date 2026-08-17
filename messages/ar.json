@@ -83,80 +83,76 @@
     }
   },
   "services": {
-    "eyebrow": "كتالوج · العروض",
-    "title": "منتجات رقمية صُمّمت بـ",
-    "titleHighlight": "دقة.",
-    "subtitle": "كل تسليم مُخطَّط: واضح، قابل للقياس، جاهز للتحويل — مواقع وتطبيقات ومنصات.",
+    "eyebrow": "العروض · مواقع وتطبيقات",
+    "title": "عروضنا لإنشاء",
+    "titleHighlight": "المواقع والتطبيقات.",
+    "subtitle": "موقع أو تطبيق لعرض نشاطكم، للبيع، للحجز، للنشر أو لإطلاق عرض — اختاروا ما يناسب احتياجكم.",
+    "homeSubtitle": "الاحتياجات الأكثر شيوعاً. الكتالوج الكامل على بعد نقرة.",
     "discover": "اكتشف",
     "cta": "التحدث عن احتياجك",
     "page": {
-      "metaTitle": "عروضنا التجارية — {brand}",
-      "metaDescription": "كتالوج عروضنا التجارية لدى {brand}: مواقع، تجارة إلكترونية، تطبيقات، SaaS وحلول مخصصة."
+      "metaTitle": "إنشاء مواقع وتطبيقات — {brand}",
+      "metaDescription": "عروض {brand}: موقع تعريفي، متجر، حجز، تطبيق، مدونة، معرض أعمال، صفحة هبوط وموقع حسب الطلب."
     },
     "items": {
-      "web": {
-        "title": "موقع أو تطبيق ويب",
-        "desc": "حضور واضح وسريع على الإنترنت، مصمم لعرض خدمتك وتوليد طلبات التواصل."
+      "vitrine": {
+        "title": "موقع تعريفي",
+        "desc": "عرض شركة أو نشاط أو علامة."
       },
-      "backend": {
-        "title": "لوحة تحكم وأتمتة",
-        "desc": "حسابات ونماذج وبيانات وأدوات عمل موثوقة — ليخدمك موقعك فعلياً."
+      "ecommerce": {
+        "title": "موقع تجارة إلكترونية",
+        "desc": "بيع المنتجات عبر الإنترنت: فهرس وسلة وطلبات ودفع."
       },
-      "design": {
-        "title": "تصميم تجربة وواجهة",
-        "desc": "واجهة أنيقة وواضحة: يفهم زوارك بسرعة من أنت وماذا يفعلون لاحقاً."
+      "reservation": {
+        "title": "موقع حجز",
+        "desc": "عرض الخدمات مع أخذ مواعيد أو حجوزات."
       },
-      "mobile": {
-        "title": "تجربة للجوال أولاً",
-        "desc": "عرض مثالي على الهاتف — حيث يكتشفك معظم عملائك."
+      "plateforme": {
+        "title": "منصة / تطبيق ويب",
+        "desc": "موقع بحسابات مستخدمين ولوحة تحكم ووظائف متقدمة."
       },
-      "seo": {
-        "title": "أساسيات الظهور في البحث",
-        "desc": "بنية وأداء ووسوم جاهزة لـ Google: فرص أفضل للظهور في عمليات البحث المناسبة."
+      "blog": {
+        "title": "مدونة / موقع محتوى",
+        "desc": "نشر المحتوى وتنظيمه بشكل منتظم."
       },
-      "maintenance": {
-        "title": "متابعة بعد الإطلاق",
-        "desc": "إصلاحات وتحسينات ونصائح بعد النشر — يبقى موقعك مستقراً وقابلاً للتطور."
+      "portfolio": {
+        "title": "معرض أعمال",
+        "desc": "عرض محترف وإنجازاته."
+      },
+      "landing": {
+        "title": "صفحة هبوط",
+        "desc": "صفحة مبنية حول عرض أو هدف واحد واضح."
+      },
+      "sur-mesure": {
+        "title": "موقع حسب الطلب",
+        "desc": "تصميم يناسب احتياجاً لا تغطيه العروض القياسية."
       }
     },
     "empty": "العروض ستتوفر قريباً.",
-    "idealFor": "مثالي لـ",
-    "included": "يشمل عادةً",
+    "idealFor": "لمن هذا العرض",
+    "included": "ماذا يشمل",
     "learnMore": "اعرف المزيد",
     "ctaStart": "ابدأ مشروعاً",
-    "ctaBuy": "اشترِ هذا العرض",
     "backToServices": "العودة إلى العروض",
     "backToCatalog": "العودة إلى العروض",
     "detailAbout": "عن العرض",
     "detailPricing": "التسعير",
-    "relatedProjects": "أعمال مرتبطة",
-    "relatedProjectsSubtitle": "انقر على بطاقة لفتح تفاصيل المشروع.",
+    "relatedProjects": "مثال حقيقي",
+    "relatedProjectsSubtitle": "مشروع سُلّم فعلاً — اضغط لرؤية التفاصيل.",
     "viewCaseStudy": "عرض إنجاز",
-    "linkedProjectEyebrow": "المشروع المعروض للبيع",
     "viewLinkedProject": "عرض تفاصيل المشروع",
-    "offerKind": {
-      "service": "خدمة",
-      "product": "للبيع"
-    },
-    "filter": {
-      "label": "تصفية العروض",
-      "all": "الكل",
-      "product": "للبيع",
-      "service": "خدمات",
-      "empty": "لا عروض في هذا التصفية."
-    },
     "pricing": {
       "startingAt": "ابتداءً من {price}",
       "fixed": "{price}",
-      "quoteOnly": "حسب العرض",
       "contact": "لنتحدث عن مشروعك",
-      "disclaimer": "السعر النهائي يعتمد على النطاق والميزات واحتياجات المشروع.",
+      "disclaimer": "السعر يعتمد على ما تحتاجونه فعلاً. نحدّده معاً قبل البدء.",
       "fixedDisclaimer": "سعر العرض كما هو معروض. أي خيارات أو تعديلات تُسعَّر بشكل منفصل."
     },
-    "catalogTitle": "عروضنا",
-    "catalogTitleHighlight": "التجارية.",
-    "catalogSubtitle": "اختر الحل المناسب لاحتياجك — لكل عرض صفحة تفصيلية.",
-    "viewAll": "عرض كل العروض"
+    "catalogTitle": "عروضنا لإنشاء",
+    "catalogTitleHighlight": "المواقع والتطبيقات.",
+    "catalogSubtitle": "ثماني عروض واضحة. اختاروا ما يناسب نشاطكم.",
+    "viewAll": "عرض كل العروض",
+    "otherOffers": "أيضاً في الكتالوج"
   },
   "engagements": {
     "eyebrow": "الالتزامات · VORZIX",
@@ -212,13 +208,20 @@
     "openDetails": "عرض تفاصيل المشروع {title}",
     "seeMore": "عرض المزيد",
     "exploreAll": "استكشف كل المشاريع",
+    "availableNow": "متاح للبيع",
+    "viewListing": "اطلع على العرض",
+    "viewProject": "عرض المشروع",
+    "otherWork": "أعمال أخرى",
+    "listingIndex": "{current} / {total}",
     "seeSite": "زيارة الموقع",
     "seeApp": "عرض التطبيق",
     "filters": {
       "allTypes": "كل الأنواع",
       "allLinks": "كل الروابط",
       "withSite": "مع موقع",
-      "withApp": "مع تطبيق"
+      "withApp": "مع تطبيق",
+      "search": "البحث عن مشروع",
+      "searchPlaceholder": "ابحث عن مشروع…"
     },
     "screens": "شاشات",
     "all": "الكل",
@@ -242,7 +245,8 @@
     },
     "categories": {
       "personal": "مشروع شخصي",
-      "sold": "مشروع مباع / عميل"
+      "for_sale": "مشروع للبيع",
+      "sold": "مشروع مباع"
     },
     "businessTypes": {
       "showcase": "موقع تعريفي",
@@ -448,6 +452,26 @@
     "layout": {
       "backToSite": "{name}"
     },
+    "notifications": {
+      "title": "الإشعارات",
+      "bellLabel": "إشعارات الطلبات",
+      "enable": "تفعيل على هذا الجهاز",
+      "enabling": "جاري التفعيل…",
+      "enabled": "الإشعارات مفعّلة على هذا الجهاز",
+      "disable": "إيقاف هذا الجهاز",
+      "disabling": "جاري الإيقاف…",
+      "notSupported": "هذا المتصفح لا يدعم الإشعارات الفورية.",
+      "denied": "الإشعارات محظورة في إعدادات المتصفح.",
+      "notConfigured": "الإشعارات الفورية غير مُعدّة بعد (مفاتيح VAPID ناقصة).",
+      "iphoneHint": "على iPhone أو iPad: مشاركة → على الشاشة الرئيسية، ثم افتح لوحة الإدارة من الأيقونة لتفعيل الإشعارات.",
+      "newInquiries": "{count, plural, one {طلب جديد واحد} other {# طلبات جديدة}}",
+      "noNew": "لا توجد طلبات جديدة",
+      "unreadOnly": "الطلبات التي لم تُفتح بعد فقط — وليس الأرشيف كاملاً.",
+      "openInquiries": "فتح الطلبات",
+      "markRead": "تعليم كمقروء",
+      "markingRead": "جاري التعليم…",
+      "error": "تعذّر تفعيل الإشعارات. حاول مرة أخرى."
+    },
     "login": {
       "secureSpace": "مساحة آمنة",
       "title": "تسجيل دخول الإدارة",
@@ -567,6 +591,34 @@
       "backToDashboard": "لوحة التحكم",
       "demoTitle": "محتوى تجريبي",
       "demoBody": "المشاريع والمراجعات على الموقع أمثلة. استبدلها بأعمالك وآراء عملائك قبل الإنتاج.",
+      "overview": {
+        "title": "حالة الموقع في لمحة",
+        "body": "حالة الموقع اليوم بلغة بسيطة: ما يظهر للزوار، وما يزال يحتاج إلى إجراء.",
+        "todoTitle": "الإجراءات ذات الأولوية",
+        "total": "الإجمالي",
+        "todoNone": "لا شيء معلّق. كل شيء محدّث.",
+        "todoInquiries": "{count, plural, one {طلب واحد ينتظر الرد} other {# طلبات تنتظر الرد}}",
+        "todoReviews": "{count, plural, one {رأي عميل واحد للمراجعة} other {# آراء عملاء للمراجعة}}",
+        "todoDrafts": "{count, plural, one {عرض واحد ما زال قيد التحضير} other {# عروض ما زالت قيد التحضير}}",
+        "chartOffers": "العروض",
+        "chartOffersSummary": "{live} ظاهرة على الموقع، {draft} قيد التحضير.",
+        "chartProjects": "المشاريع",
+        "chartProjectsSummary": "{live} منشورة، {hidden} ما زالت خاصة.",
+        "chartReviews": "آراء العملاء",
+        "chartReviewsSummary": "{live} ظاهرة، {pending} بانتظار القراءة.",
+        "chartInquiries": "الطلبات",
+        "chartInquiriesSummary": "{fresh} جديدة، {open} قيد النقاش.",
+        "barLive": "ظاهرة",
+        "barDraft": "قيد التحضير",
+        "barArchived": "مؤرشفة",
+        "barHidden": "خاصة",
+        "barPending": "للقراءة",
+        "barRemoved": "مسحوبة",
+        "barNew": "جديدة",
+        "barOpen": "قيد النقاش",
+        "barDone": "مُنجزة",
+        "barClosed": "غير محتفظ بها"
+      },
       "viewSite": "عرض الموقع",
       "inquiriesTitle": "طلبات المشاريع",
       "inquiriesBody": "أدر طلبات المسار التفاعلي.",
@@ -577,7 +629,7 @@
       "servicesNext": "أدِر كل شيء من /admin/services — دون تعديل الشيفرة.",
       "manageServices": "إدارة العروض",
       "servicesPageTitle": "إدارة العروض",
-      "servicesPageSubtitle": "CMS · FR/EN/AR · تسعير · دراسات حالة · نشر.",
+      "servicesPageSubtitle": "أنشئ أو عدّل أو احذف عروض الموقع. كل النصوص (فرنسية / إنجليزية / عربية) قابلة للتحرير.",
       "engagementsTitle": "التزامات VORZIX",
       "engagementsBody": "عدّل الالتزامات المعروضة على الموقع: العناوين والنصوص FR/EN/AR والترتيب والنشر.",
       "engagementsNext": "أدِر كل شيء من /admin/engagements — دون تعديل الشيفرة.",
@@ -703,7 +755,10 @@
         "title": "العنوان",
         "description": "التفاصيل",
         "slug": "المعرّف (URL)",
-        "kind": "النوع",
+        "kind": "الحالة",
+        "listingPrice": "السعر",
+        "listingIntent": "ماذا أريد أن أفعل به",
+        "soldWork": "ما الذي أنجزته له",
         "sortOrder": "الترتيب",
         "link": "رابط الموقع",
         "appLink": "رابط التطبيق",
@@ -736,7 +791,13 @@
         "other": "أخرى"
       },
       "kindPersonal": "مشروع شخصي",
-      "kindSold": "مشروع مباع / عميل",
+      "kindForSale": "مشروع للبيع",
+      "kindSold": "مشروع مباع",
+      "kindForSaleHint": "حدّدوا السعر المطلوب وما تريدون فعله بهذا المشروع.",
+      "kindSoldHint": "حدّدوا سعر البيع وما أنجزتموه للعميل.",
+      "listingPriceHint": "المبلغ باليورو، دون رمز العملة.",
+      "listingIntentPlaceholder": "مثال: تسليم الشفرة، مرافقة المشتري، تسليم جاهز…",
+      "soldWorkPlaceholder": "مثال: موقع مُنجَز، مرافقة، إطلاق…",
       "upload": "رفع",
       "imagesEmpty": "أضف صوراً (مطلوبة للنشر).",
       "moveUp": "أعلى",
@@ -758,6 +819,7 @@
       "confirmDeleteAction": "نعم، احذف",
       "confirmDeleteCancel": "إلغاء",
       "featured": "مميز",
+      "featuredHint": "يظهر المشروع أولاً في الصفحة الرئيسية والقائمة، بإطار أوضح.",
       "referenceHint": "يُنشأ مرجع الكتالوج (VZ—CASE …) عند الإنشاء.",
       "hints": {
         "appLink": "Play Store أو App Store أو رابط التطبيق (اختياري)."
@@ -808,6 +870,11 @@
       "publish_requires_title": "العنوان بالفرنسية مطلوب للنشر.",
       "publish_requires_description": "الوصف بالفرنسية مطلوب للنشر.",
       "publish_requires_images": "صورة واحدة على الأقل مطلوبة للنشر.",
+      "publish_requires_listing_price": "حدّدوا السعر المطلوب لنشر مشروع للبيع.",
+      "publish_requires_listing_intent": "اشرحوا ماذا تريدون فعله بهذا المشروع (بالفرنسية) للنشر.",
+      "publish_requires_sold_price": "حدّدوا سعر البيع لنشر مشروع مباع.",
+      "publish_requires_sold_work": "اشرحوا ما أنجزتموه للعميل (بالفرنسية) للنشر.",
+      "project_invalid_listing": "سعر أو وصف غير صالحين.",
       "project_invalid_features": "ميزات غير صالحة.",
       "project_invalid_technologies": "تقنيات غير صالحة.",
       "duplicate_reference": "مرجع الكتالوج موجود مسبقاً.",
@@ -988,7 +1055,7 @@
       "create": "إنشاء عرض",
       "createTitle": "عرض جديد",
       "editTitle": "تعديل العرض",
-      "formHint": "المسودة يمكن أن تكون ناقصة. النشر يتطلب عنواناً ووصفاً قصيراً بالفرنسية.",
+      "formHint": "كل الحقول قابلة للتعديل (فرنسية / إنجليزية / عربية). يمكن أيضاً أرشفة العرض أو حذفه نهائياً.",
       "edit": "تعديل",
       "preview": "معاينة",
       "publish": "نشر",
@@ -1003,6 +1070,14 @@
       "deleteTitle": "حذف هذا العرض؟",
       "deleteBody": "نهائي. تحتفظ العملاء المحتملون بالمرجع المثبّت.",
       "deleteConfirm": "حذف",
+      "restore": "استعادة",
+      "filtersLabel": "تصفية العروض",
+      "filters": {
+        "all": "الكل",
+        "published": "منشورة",
+        "draft": "مسودات",
+        "archived": "مؤرشفة"
+      },
       "moveUp": "أعلى",
       "moveDown": "أسفل",
       "addFeature": "إضافة عنصر",
@@ -1025,7 +1100,6 @@
         "name": "الاسم",
         "status": "الحالة",
         "pricing": "التسعير",
-        "featured": "مميز",
         "order": "الترتيب",
         "updated": "تعديل",
         "actions": "إجراءات"
@@ -1038,19 +1112,11 @@
       "pricingMode": {
         "starting_at": "ابتداءً من",
         "fixed": "سعر ثابت",
-        "quote_only": "حسب عرض",
-        "contact": "تواصل"
+        "contact": "بدون سعر ظاهر"
       },
-      "offerKind": {
-        "service": "خدمة",
-        "product": "للبيع"
-      },
-      "commerceHint": "النوع يغذي فلتر الكتالوج. الخانات تتحكم بالأزرار الظاهرة على الموقع.",
-      "uploadCover": "رفع صورة",
-      "removeCover": "إزالة",
       "sections": {
         "identity": "الهوية",
-        "commerce": "النوع والأزرار",
+        "commerce": "الزر",
         "pricing": "السعر",
         "features": "العناصر المشمولة",
         "caseStudies": "دراسات الحالة"
@@ -1060,17 +1126,12 @@
         "slug": "المعرّف",
         "icon": "أيقونة",
         "status": "الحالة",
-        "featured": "تمييز",
         "sortOrder": "الترتيب",
-        "offerKind": "نوع العرض",
-        "showCtaBuy": "زر « اشترِ »",
         "showCtaStart": "زر « ابدأ مشروعاً »",
-        "coverImage": "صورة المنتج",
-        "linkedProject": "المشروع المرتبط (/projets) — يوفّر الصورة أيضاً",
         "pricingMode": "نمط التسعير",
         "currency": "العملة",
         "startingPrice": "سعر البداية",
-        "fixedPrice": "سعر البيع",
+        "fixedPrice": "السعر الظاهر",
         "inquiryType": "نوع مسبق",
         "title": "العنوان",
         "shortDescription": "وصف قصير",
@@ -1082,11 +1143,9 @@
         "projectBlurb": "وصف قصير (صفحة العرض)"
       },
       "hints": {
-        "coverImage": "معطّل: الصورة تأتي من المشروع المرتبط.",
-        "linkedProject": "اربط مشروعاً منشوراً: تظهر صوره على العرض. بدون مشروع مرتبط لا توجد صورة.",
-        "projectUrl": "الصق /projets/mon-projet أو الرابط الكامل أو المعرّف."
+        "projectUrl": "الصق /projets/mon-projet أو الرابط الكامل أو المعرّف.",
+        "slug": "العنوان العام: /offres/your-slug"
       },
-      "linkedProjectNone": "لا يوجد مشروع مرتبط",
       "caseStudiesHint": "أضف عدة مشاريع: تظهر صورها ووصفها في /offres/[slug]. النقر يفتح صفحة المشروع.",
       "duplicate": "تكرار",
       "archive": "أرشفة"
@@ -1107,7 +1166,13 @@
     "ctaSubtitle": "أخبرنا باحتياجك — رد واضح خلال 48 ساعة.",
     "ctaPrimary": "ابدأ مشروعاً",
     "ctaNext": "المشروع التالي",
-    "backToList": "كل الإنجازات"
+    "backToList": "كل الإنجازات",
+    "forSaleEyebrow": "مشروع للبيع",
+    "soldEyebrow": "مشروع مباع",
+    "soldPrice": "بيع بـ {price}",
+    "listingIntent": "ماذا أريد أن أفعل به",
+    "soldWork": "ما الذي أنجزته له",
+    "applicationType": "نوع التطبيق"
   },
   "projectInquiry": {
     "brand": "VZ—PROJECT",
@@ -1118,7 +1183,7 @@
     },
     "intro": {
       "title": "لنرسم ملامح مشروعك.",
-      "subtitle": "بعض الاختيارات كافية لنفهم احتياجك.",
+      "subtitle": "بعض الأسئلة كافية لنفهم احتياجك — بلا مصطلحات معقّدة.",
       "cta": "ابدأ"
     },
     "progress": {
@@ -1144,40 +1209,40 @@
     "types": {
       "showcase": {
         "title": "موقع تعريفي",
-        "description": "قدّم نشاطك بوضوح."
+        "description": "عرض نشاطكم وتسهيل التواصل معكم."
       },
       "ecommerce": {
         "title": "متجر إلكتروني",
-        "description": "بِع منتجاتك عبر الإنترنت."
+        "description": "بيع منتجاتكم واستقبال الطلبات."
       },
       "web_app": {
-        "title": "تطبيق ويب",
-        "description": "منتج تفاعلي من المتصفح."
+        "title": "موقع للحجز",
+        "description": "تمكين زبائنكم من حجز موعد بسهولة."
       },
       "saas": {
-        "title": "SaaS / منصة",
-        "description": "خدمة متعددة المستخدمين."
+        "title": "تطبيق أو منصة",
+        "description": "مساحة على الإنترنت لزبائنكم أو لفريقكم."
       },
       "redesign": {
-        "title": "إعادة تصميم",
-        "description": "حدّث منتجاً قائماً."
+        "title": "تحديث موقع قائم",
+        "description": "تطوير ما لديكم أصلاً."
       },
       "automation": {
-        "title": "أتمتة / خلفية",
-        "description": "بسّط عملية داخلية."
+        "title": "تبسيط العمل اليومي",
+        "description": "متابعة أقل يدوياً، ووضوح أكبر."
       },
       "other": {
-        "title": "أخرى",
-        "description": "احتياج خاص للتوضيح."
+        "title": "مشروع حسب الطلب",
+        "description": "احتياج خاص نحدّده معاً."
       }
     },
     "objectives": {
-      "present_activity": "تقديم نشاطي",
-      "generate_leads": "توليد عملاء محتملين",
+      "present_activity": "التعريف بنشاطي",
+      "generate_leads": "استقبال المزيد من الطلبات",
       "sell_online": "البيع عبر الإنترنت",
-      "create_product": "إنشاء منتج رقمي",
-      "automate_process": "أتمتة عملية",
-      "modernize": "تحديث منتج قائم",
+      "create_product": "تقديم خدمة عبر الإنترنت",
+      "automate_process": "توفير الوقت في العمل اليومي",
+      "modernize": "تحسين ما لدي حالياً",
       "other": "أخرى"
     },
     "budgets": {
@@ -1205,13 +1270,14 @@
       "targetLaunchPlaceholder": "اختر تاريخاً",
       "targetLaunchClear": "مسح التاريخ",
       "typeOther": "وضّح ما تريد إنشاءه",
-      "typeOtherPlaceholder": "مثال: منصة حجوزات",
+      "typeOtherPlaceholder": "مثال: موقع حجز لعيادة",
       "objectiveOther": "وضّح هدفك",
       "objectiveOtherPlaceholder": "مثال: الاحتفاظ بعملائي",
       "customBudget": "ميزانيتك",
       "customBudgetPlaceholder": "مثال: 750",
       "customBudgetHint": "بين ‎{min} € و ‎{max} €.",
-      "descriptionHelp": "صف نشاطك وفكرتك والميزات المهمة. لا حاجة لمصطلحات تقنية.",
+      "descriptionHelp": "صف نشاطك وزبائنك، وما الذي يجب أن يقدّمه لهم الموقع. لا حاجة لتفاصيل تقنية.",
+      "descriptionPlaceholder": "مثال: نحن مؤسسة في الجزائر، نريد موقعاً واضحاً لـ…",
       "name": "الاسم",
       "email": "البريد",
       "phone": "الهاتف",
@@ -1225,9 +1291,133 @@
       "review": "عرض الملخص",
       "exit": "إغلاق"
     },
+    "offers": {
+      "generic": {
+        "introTitle": "لنتحدث عن {offer}.",
+        "introSubtitle": "بعض الأسئلة لفهم احتياجك — بلا مصطلحات معقّدة.",
+        "objectiveQuestion": "ماذا تريد أن يحقّق هذا المشروع؟",
+        "descriptionQuestion": "حدّثنا عن نشاطك.",
+        "descriptionHelp": "من أنتم، ماذا تقدّمون، وما الذي يجب أن يجده الزائر بسهولة.",
+        "descriptionPlaceholder": "مثال: نريد موقعاً يعرّف بنشاطنا ويسهّل التواصل معنا."
+      },
+      "vitrine": {
+        "introTitle": "لنتحدث عن موقعك التعريفي.",
+        "introSubtitle": "سنفهم نشاطك وما الذي يجب أن يتذكّره الزائر.",
+        "objectiveQuestion": "ما الدور الأساسي لموقعك؟",
+        "descriptionQuestion": "حدّثنا عن نشاطك.",
+        "descriptionHelp": "من أنتم، ماذا تقدّمون، وما الذي يجب إيجاده بسهولة: الخدمات، العنوان، أوقات العمل، نموذج تواصل…",
+        "descriptionPlaceholder": "مثال: عيادة في وهران، نريد موقعاً واضحاً لعرض خدماتنا وتسهيل التواصل.",
+        "objectives": {
+          "present_activity": "عرض نشاطي",
+          "generate_leads": "استقبال طلبات التواصل",
+          "modernize": "استبدال موقعي الحالي أو تحسينه",
+          "other": "أخرى"
+        }
+      },
+      "ecommerce": {
+        "introTitle": "لنتحدث عن متجرك الإلكتروني.",
+        "introSubtitle": "سنحدّد ما تبيع وكيف سيطلب زبائنك.",
+        "objectiveQuestion": "ما هدفك الأساسي؟",
+        "descriptionQuestion": "ماذا تبيع، وكيف؟",
+        "descriptionHelp": "صف منتجاتك، وهل لديك قائمة جاهزة، وكيف يتم التوصيل أو الاستلام.",
+        "descriptionPlaceholder": "مثال: مواد غذائية فاخرة، نحو خمسين منتجاً، توصيل في الجزائر واستلام من المحل.",
+        "objectives": {
+          "sell_online": "بيع منتجاتي عبر الإنترنت",
+          "generate_leads": "استقطاب المزيد من الزبائن",
+          "modernize": "تحسين متجري الحالي",
+          "other": "أخرى"
+        }
+      },
+      "reservation": {
+        "introTitle": "لنتحدث عن موقع الحجز.",
+        "introSubtitle": "سنرى كيف يحجز زبائنك اليوم، وما الذي تنتظره من الموقع.",
+        "objectiveQuestion": "ماذا يجب أن يسهّل موقعك؟",
+        "descriptionQuestion": "كيف تُحجز المواعيد اليوم؟",
+        "descriptionHelp": "صف نشاطك، ونوع المواعيد (المدّة، أكثر من شخص، عربون…) وما الذي يسبّب صعوبة حالياً.",
+        "descriptionPlaceholder": "مثال: صالون حلاقة، أربعة أشخاص، الزبائن يحجزون غالباً عبر واتساب ويأخذ ذلك وقتاً طويلاً.",
+        "objectives": {
+          "generate_leads": "استقبال المزيد من الحجوزات",
+          "present_activity": "عرض خدماتي وأوقات التوفر",
+          "automate_process": "تجنّب الذهاب والإياب عبر الهاتف",
+          "other": "أخرى"
+        }
+      },
+      "plateforme": {
+        "introTitle": "لنتحدث عن تطبيقك.",
+        "introSubtitle": "سنوضّح من سيستخدمه وما الذي يجب أن يبسّطه يومياً.",
+        "objectiveQuestion": "ما الدور الأساسي لهذا التطبيق؟",
+        "descriptionQuestion": "من سيستخدمه، ولماذا؟",
+        "descriptionHelp": "من سيستخدمه (أنتم، فريقكم، زبائنكم) وما الإجراءات الأساسية: التسجيل، متابعة طلب، فتح مساحة شخصية…",
+        "descriptionPlaceholder": "مثال: يجب أن يتابع زبائننا ملفاتهم ويتواصلوا مع فريقنا دون الاتصال في كل مرة.",
+        "objectives": {
+          "create_product": "تقديم خدمة عبر الإنترنت لزبائني",
+          "automate_process": "تسهيل عمل فريقي يومياً",
+          "generate_leads": "استقطاب المستخدمين والحفاظ عليهم",
+          "other": "أخرى"
+        }
+      },
+      "blog": {
+        "introTitle": "لنتحدث عن موقع محتواك.",
+        "introSubtitle": "سنرى كيف تريد النشر، وما الذي يجب أن يجده القرّاء.",
+        "objectiveQuestion": "ماذا يجب أن يقدّم هذا الموقع أساساً؟",
+        "descriptionQuestion": "عن ماذا ستكتب؟",
+        "descriptionHelp": "المواضيع التي تريد نشرها، ووتيرة النشر، وهل يجب أن يعرّف الموقع أيضاً بنشاطك.",
+        "descriptionPlaceholder": "مثال: مقالات عن التغذية مرة أو مرتين في الشهر، مع صفحة للتعريف بالعيادة.",
+        "objectives": {
+          "present_activity": "مشاركة خبرتي",
+          "generate_leads": "استقطاب القرّاء وطلبات التواصل",
+          "other": "أخرى"
+        }
+      },
+      "portfolio": {
+        "introTitle": "لنتحدث عن معرض أعمالك.",
+        "introSubtitle": "سنفهم كيف تريد عرض عملك.",
+        "objectiveQuestion": "ماذا يجب أن يتيح هذا الموقع أساساً؟",
+        "descriptionQuestion": "أي أعمال تريد إظهارها؟",
+        "descriptionHelp": "صف مهنتك، ونوع المشاريع المعروضة، وما الذي يجب أن يفعله الزائر بعد ذلك: مراسلتك، طلب عرض سعر…",
+        "descriptionPlaceholder": "مثال: مهندس ديكور، نحو عشرة مشاريع للعرض، مع طريقة بسيطة للتواصل.",
+        "objectives": {
+          "present_activity": "إبراز إنجازاتي",
+          "generate_leads": "استقبال طلبات التعاون",
+          "other": "أخرى"
+        }
+      },
+      "landing": {
+        "introTitle": "لنتحدث عن صفحة العرض.",
+        "introSubtitle": "صفحة واضحة، مصمّمة للإقناع ودعوة الزائر إلى خطوة تالية.",
+        "objectiveQuestion": "ما غاية هذه الصفحة؟",
+        "descriptionQuestion": "أي عرض يجب أن تقدّمه هذه الصفحة؟",
+        "descriptionHelp": "صف العرض أو الحدث، والجمهور المقصود، والإجراء المطلوب: طلب عرض سعر، التسجيل، الشراء…",
+        "descriptionPlaceholder": "مثال: إطلاق دورة في سبتمبر، يجب أن تعرض الصفحة البرنامج وتجمع التسجيلات.",
+        "objectives": {
+          "generate_leads": "جمع التسجيلات أو الطلبات",
+          "sell_online": "تقديم عرض والدعوة للشراء",
+          "present_activity": "تقديم إطلاق أو حدث",
+          "other": "أخرى"
+        }
+      },
+      "sur-mesure": {
+        "introTitle": "لنتحدث عن مشروعك حسب الطلب.",
+        "introSubtitle": "لا إطار جاهز: ننطلق من احتياجك الحقيقي.",
+        "objectiveQuestion": "ماذا تريد أن تنجز؟",
+        "descriptionQuestion": "ما الاحتياج الذي يجب حلّه؟",
+        "descriptionHelp": "صف نشاطك، والمشكلة المراد حلّها، وما الذي يُعدّ نجاحاً بالنسبة لك. نتولّى الباقي.",
+        "descriptionPlaceholder": "مثال: ندير إيجارات ونريد موقعاً يعرض العقارات ويسمح بطلب زيارة.",
+        "objectives": {
+          "present_activity": "التعريف بنشاطي",
+          "generate_leads": "استقبال المزيد من الطلبات",
+          "sell_online": "البيع عبر الإنترنت",
+          "create_product": "تقديم خدمة عبر الإنترنت",
+          "automate_process": "توفير الوقت في العمل اليومي",
+          "modernize": "تحسين ما لدي حالياً",
+          "other": "أخرى"
+        }
+      }
+    },
     "summary": {
       "title": "مشروعك يبدأ بالتشكّل.",
       "subtitle": "راجع الملخص، ثم أرسل طلبك.",
+      "offer": "العرض",
       "type": "النوع",
       "objective": "الهدف",
       "budget": "الميزانية",

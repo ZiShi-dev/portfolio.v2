@@ -19,7 +19,6 @@ function valid(overrides: Record<string, unknown> = {}) {
     slug: "sites-professionnels",
     icon: "globe",
     status: "draft",
-    featured: false,
     sortOrder: 10,
     title: { fr: "Sites professionnels", en: "Professional sites", ar: "مواقع احترافية" },
     shortDescription: {
@@ -31,10 +30,8 @@ function valid(overrides: Record<string, unknown> = {}) {
     idealFor: { fr: "", en: "", ar: "" },
     includedFeatures: [],
     ctaLabel: { fr: "", en: "", ar: "" },
-    offerKind: "service",
-    showCtaBuy: false,
     showCtaStart: true,
-    pricingMode: "quote_only",
+    pricingMode: "contact",
     startingPriceCents: null,
     currency: "EUR",
     inquiryProjectType: null,
@@ -100,7 +97,7 @@ describe("services schema", () => {
   });
 
   it("parse patch non vide", () => {
-    const parsed = parseServicePatchBody({ featured: true });
+    const parsed = parseServicePatchBody({ sortOrder: 20 });
     assert.equal(parsed.ok, true);
   });
 
@@ -179,7 +176,6 @@ describe("services pricing", () => {
       labels: {
         startingAt: (price) => `À partir de ${price}`,
         fixed: (price) => price,
-        quoteOnly: "Sur devis",
         contact: "Parlons",
       },
     });
@@ -196,7 +192,6 @@ describe("services pricing", () => {
       labels: {
         startingAt: (price) => `À partir de ${price}`,
         fixed: (price) => price,
-        quoteOnly: "Sur devis",
         contact: "Parlons",
       },
     });
@@ -204,20 +199,19 @@ describe("services pricing", () => {
     assert.match(display.formattedAmount, /€/);
   });
 
-  it("resolve quote_only", () => {
+  it("resolve contact", () => {
     const display = resolveServicePriceDisplay({
-      pricingMode: "quote_only",
+      pricingMode: "contact",
       startingPriceCents: null,
       currency: "EUR",
       locale: "fr",
       labels: {
         startingAt: (price) => `À partir de ${price}`,
         fixed: (price) => price,
-        quoteOnly: "Sur devis",
         contact: "Parlons",
       },
     });
-    assert.equal(display.mode, "quote_only");
-    assert.equal(display.label, "Sur devis");
+    assert.equal(display.mode, "contact");
+    assert.equal(display.label, "Parlons");
   });
 });

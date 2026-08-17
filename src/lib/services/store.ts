@@ -3,13 +3,11 @@ import type { ProjectInquiryType } from "@/data/project-inquiry-options";
 import {
   type ServiceCurrency,
   type ServiceLocale,
-  type ServiceOfferKind,
   type ServicePatchInput,
   type ServicePricingMode,
   type ServiceStatus,
   type ServiceWriteInput,
   SERVICE_CURRENCIES,
-  SERVICE_OFFER_KINDS,
   SERVICE_PRICING_MODES,
   SERVICE_STATUSES,
 } from "@/lib/services/schema";
@@ -39,7 +37,6 @@ export type ServiceRow = {
   slug: string;
   icon: string;
   status: ServiceStatus;
-  featured: boolean;
   sort_order: number;
   title: ServiceI18n;
   short_description: ServiceI18n;
@@ -47,11 +44,7 @@ export type ServiceRow = {
   ideal_for: ServiceI18n;
   included_features: ServiceFeatureStored[];
   cta_label: ServiceI18n;
-  offer_kind: ServiceOfferKind;
-  show_cta_buy: boolean;
   show_cta_start: boolean;
-  cover_image: string | null;
-  linked_project_id: string | null;
   pricing_mode: ServicePricingMode;
   starting_price_cents: number | null;
   currency: ServiceCurrency;
@@ -68,7 +61,6 @@ export type LocalizedService = {
   slug: string;
   reference: string;
   icon: string;
-  featured: boolean;
   sortOrder: number;
   title: string;
   shortDescription: string;
@@ -76,11 +68,7 @@ export type LocalizedService = {
   idealFor: string;
   includedFeatures: string[];
   ctaLabel: string;
-  offerKind: ServiceOfferKind;
-  showCtaBuy: boolean;
   showCtaStart: boolean;
-  coverImage: string | null;
-  linkedProjectId: string | null;
   pricingMode: ServicePricingMode;
   startingPriceCents: number | null;
   currency: ServiceCurrency;
@@ -95,7 +83,7 @@ const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const SERVICE_SELECT =
-  "id, created_at, updated_at, reference, slug, icon, status, featured, sort_order, title, short_description, description, ideal_for, included_features, cta_label, offer_kind, show_cta_buy, show_cta_start, cover_image, linked_project_id, pricing_mode, starting_price_cents, currency, inquiry_project_type, seo_title, seo_description, published_at";
+  "id, created_at, updated_at, reference, slug, icon, status, sort_order, title, short_description, description, ideal_for, included_features, cta_label, show_cta_start, pricing_mode, starting_price_cents, currency, inquiry_project_type, seo_title, seo_description, published_at";
 
 function asI18n(value: unknown, fallback = ""): ServiceI18n {
   const obj = (value && typeof value === "object" ? value : {}) as Record<
@@ -138,17 +126,7 @@ function asPricingMode(value: unknown): ServicePricingMode {
   ) {
     return value as ServicePricingMode;
   }
-  return "quote_only";
-}
-
-function asOfferKind(value: unknown): ServiceOfferKind {
-  if (
-    typeof value === "string" &&
-    (SERVICE_OFFER_KINDS as readonly string[]).includes(value)
-  ) {
-    return value as ServiceOfferKind;
-  }
-  return "service";
+  return "contact";
 }
 
 function asCurrency(value: unknown): ServiceCurrency {
@@ -190,7 +168,6 @@ function normalizeRow(
     slug: String(raw.slug),
     icon: typeof raw.icon === "string" ? raw.icon : "sparkles",
     status: asStatus(raw.status),
-    featured: Boolean(raw.featured),
     sort_order: Number(raw.sort_order) || 0,
     title: asI18n(raw.title),
     short_description: asI18n(raw.short_description),
@@ -198,21 +175,10 @@ function normalizeRow(
     ideal_for: asI18n(raw.ideal_for),
     included_features: asFeatures(raw.included_features),
     cta_label: asI18n(raw.cta_label),
-    offer_kind: asOfferKind(raw.offer_kind),
-    show_cta_buy: Boolean(raw.show_cta_buy),
     show_cta_start:
       raw.show_cta_start === undefined || raw.show_cta_start === null
         ? true
         : Boolean(raw.show_cta_start),
-    cover_image:
-      typeof raw.cover_image === "string" && raw.cover_image.trim()
-        ? raw.cover_image.trim()
-        : null,
-    linked_project_id:
-      typeof raw.linked_project_id === "string" &&
-      UUID_RE.test(raw.linked_project_id)
-        ? raw.linked_project_id
-        : null,
     pricing_mode: asPricingMode(raw.pricing_mode),
     starting_price_cents:
       typeof cents === "number" && Number.isFinite(cents)
@@ -246,7 +212,6 @@ export function serviceRowToLocalized(
     slug: row.slug,
     reference: row.reference,
     icon: row.icon,
-    featured: row.featured,
     sortOrder: row.sort_order,
     title: pickLocale(row.title, locale),
     shortDescription: pickLocale(row.short_description, locale),
@@ -256,11 +221,7 @@ export function serviceRowToLocalized(
       .map((f) => pickLocale(f, locale))
       .filter(Boolean),
     ctaLabel: pickLocale(row.cta_label, locale),
-    offerKind: row.offer_kind,
-    showCtaBuy: false,
     showCtaStart: row.show_cta_start,
-    coverImage: null,
-    linkedProjectId: row.linked_project_id,
     pricingMode: row.pricing_mode,
     startingPriceCents: row.starting_price_cents,
     currency: row.currency,
@@ -415,7 +376,6 @@ function writeToDbPayload(input: ServiceWriteInput) {
     slug: input.slug,
     icon: input.icon,
     status: input.status,
-    featured: input.featured,
     sort_order: input.sortOrder,
     title: input.title,
     short_description: input.shortDescription,
@@ -423,11 +383,7 @@ function writeToDbPayload(input: ServiceWriteInput) {
     ideal_for: input.idealFor,
     included_features: input.includedFeatures,
     cta_label: input.ctaLabel,
-    offer_kind: input.offerKind,
-    show_cta_buy: input.showCtaBuy,
     show_cta_start: input.showCtaStart,
-    cover_image: input.coverImage ?? null,
-    linked_project_id: input.linkedProjectId ?? null,
     pricing_mode: input.pricingMode,
     starting_price_cents: startingCents,
     currency: input.currency,
@@ -456,7 +412,6 @@ function patchToDbPayload(
       // conserve published_at historique
     }
   }
-  if (input.featured !== undefined) payload.featured = input.featured;
   if (input.sortOrder !== undefined) payload.sort_order = input.sortOrder;
   if (input.title !== undefined) payload.title = input.title;
   if (input.shortDescription !== undefined) {
@@ -468,14 +423,8 @@ function patchToDbPayload(
     payload.included_features = input.includedFeatures;
   }
   if (input.ctaLabel !== undefined) payload.cta_label = input.ctaLabel;
-  if (input.offerKind !== undefined) payload.offer_kind = input.offerKind;
-  if (input.showCtaBuy !== undefined) payload.show_cta_buy = input.showCtaBuy;
   if (input.showCtaStart !== undefined) {
     payload.show_cta_start = input.showCtaStart;
-  }
-  if (input.coverImage !== undefined) payload.cover_image = input.coverImage;
-  if (input.linkedProjectId !== undefined) {
-    payload.linked_project_id = input.linkedProjectId;
   }
   if (input.pricingMode !== undefined) payload.pricing_mode = input.pricingMode;
   if (input.currency !== undefined) payload.currency = input.currency;
@@ -519,11 +468,16 @@ export async function listPublishedServiceRows(): Promise<ServiceRow[] | null> {
     return null;
   }
 
-  const rows = (data ?? []).map((row) =>
-    normalizeRow(row as Record<string, unknown>)
-  );
-  const caseMap = await loadCaseStudies(rows.map((r) => r.id));
-  return rows.map((r) => withCaseStudies(r, caseMap.get(r.id) ?? []));
+  try {
+    const rows = (data ?? []).map((row) =>
+      normalizeRow(row as Record<string, unknown>)
+    );
+    const caseMap = await loadCaseStudies(rows.map((r) => r.id));
+    return rows.map((r) => withCaseStudies(r, caseMap.get(r.id) ?? []));
+  } catch (err) {
+    console.error("[services] list published normalize", err);
+    return null;
+  }
 }
 
 export async function getPublishedServiceBySlug(
@@ -861,7 +815,6 @@ export async function duplicateService(
     slug: `${source.slug}-copy-${stamp}`.slice(0, 80),
     icon: source.icon,
     status: "draft",
-    featured: false,
     sortOrder: source.sort_order + 1,
     title: { ...source.title },
     shortDescription: { ...source.short_description },
@@ -869,11 +822,7 @@ export async function duplicateService(
     idealFor: { ...source.ideal_for },
     includedFeatures: source.included_features.map((f) => ({ ...f })),
     ctaLabel: { ...source.cta_label },
-    offerKind: "service",
-    showCtaBuy: false,
     showCtaStart: source.show_cta_start,
-    coverImage: null,
-    linkedProjectId: null,
     pricingMode: source.pricing_mode,
     startingPriceCents: source.starting_price_cents,
     currency: source.currency,

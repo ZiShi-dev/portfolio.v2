@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import { PageBackBar } from "@/components/page-back-link";
 import { Services } from "@/components/sections/services";
 import { brand } from "@/lib/brand";
 import { createPageMetadata, routes } from "@/lib/routes";
@@ -23,13 +24,15 @@ export async function generateMetadata({
   });
 }
 
-/** Catalogue public — عروضنا التجارية / Nos offres commerciales */
+/** Catalogue public — ما نقدّمه لكم / Ce que nous créons pour vous */
 export default async function OffresCatalogPage() {
   const locale = (await getLocale()) as Locale;
+  const tCommon = await getTranslations("common");
   const services = await getSiteServices(locale);
 
   return (
     <main id="main-content">
+      <PageBackBar href={routes.home} label={tCommon("backHome")} />
       <Services services={services} variant="page" />
     </main>
   );

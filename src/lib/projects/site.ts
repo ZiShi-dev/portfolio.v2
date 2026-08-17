@@ -16,6 +16,7 @@ async function categoryLabels(
   const t = await getTranslations({ locale, namespace: "projects" });
   return {
     personal: t("categories.personal"),
+    for_sale: t("categories.for_sale"),
     sold: t("categories.sold"),
   };
 }

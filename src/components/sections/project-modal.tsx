@@ -46,6 +46,9 @@ export type ProjectItem = {
   features?: string[];
   seoTitle?: string;
   seoDescription?: string;
+  listingPriceCents?: number | null;
+  listingPriceLabel?: string;
+  listingIntent?: string;
 };
 
 type ProjectModalProps = {

@@ -5,6 +5,7 @@ import { parseJsonBody } from "@/lib/security/parse-json-body";
 import {
   getAllowedFormOrigins,
   isAllowedFormOrigin,
+  requestMethodRequiresOrigin,
   verifyFormRequestOrigin,
 } from "@/lib/security/request-origin";
 import {
@@ -152,6 +153,15 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
       headers: { referer: "https://zishi.dev/contact" },
     });
     assert.equal(verifyFormRequestOrigin(request), true);
+  });
+
+  it("exige une origine pour toute methode qui modifie l'etat", () => {
+    for (const method of ["POST", "PUT", "PATCH", "DELETE"]) {
+      assert.equal(requestMethodRequiresOrigin(method), true, method);
+    }
+    for (const method of ["GET", "HEAD", "OPTIONS"]) {
+      assert.equal(requestMethodRequiresOrigin(method), false, method);
+    }
   });
 });
 

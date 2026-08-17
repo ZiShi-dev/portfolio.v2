@@ -13,6 +13,7 @@ import {
   type ProjectBusinessTypeId,
 } from "@/data/project-business-types";
 import { isSafeHttpUrl } from "@/lib/review-schema";
+import { homeProjectRank } from "@/lib/projects/home-order";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import type {
@@ -34,6 +35,7 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
   const [category, setCategory] = useState<CategoryFilter>("all");
   const [type, setType] = useState<TypeFilter>("all");
   const [linkKind, setLinkKind] = useState<LinkFilter>("all");
+  const [query, setQuery] = useState("");
   const categories = useProjectCategoryFilters();
 
   const availableTypes = useMemo(() => {
@@ -45,23 +47,30 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
   }, [projects]);
 
   const filtered = useMemo(() => {
-    return projects.filter((project) => {
-      if (category !== "all" && project.categoryKey !== category) return false;
-      if (
-        type !== "all" &&
-        !(project.businessTypeIds ?? []).includes(type)
-      ) {
-        return false;
-      }
-      if (linkKind === "site") {
-        return Boolean(project.link && isSafeHttpUrl(project.link));
-      }
-      if (linkKind === "app") {
-        return Boolean(project.appLink && isSafeHttpUrl(project.appLink));
-      }
-      return true;
-    });
-  }, [projects, category, type, linkKind]);
+    const needle = query.trim().toLowerCase();
+    return [...projects]
+      .sort((a, b) => homeProjectRank(a) - homeProjectRank(b))
+      .filter((project) => {
+        if (category !== "all" && project.categoryKey !== category) return false;
+        if (
+          type !== "all" &&
+          !(project.businessTypeIds ?? []).includes(type)
+        ) {
+          return false;
+        }
+        if (linkKind === "site") {
+          if (!(project.link && isSafeHttpUrl(project.link))) return false;
+        }
+        if (linkKind === "app") {
+          if (!(project.appLink && isSafeHttpUrl(project.appLink))) return false;
+        }
+        if (needle) {
+          const haystack = `${project.title} ${project.desc}`.toLowerCase();
+          if (!haystack.includes(needle)) return false;
+        }
+        return true;
+      });
+  }, [projects, category, type, linkKind, query]);
 
   const chipClass = (active: boolean) =>
     cn(
@@ -90,6 +99,16 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
 
         <Reveal delay={0.1}>
           <div className="mt-8 space-y-4 sm:mt-10 md:mt-12">
+            <label className="mx-auto block max-w-md">
+              <span className="sr-only">{t("filters.search")}</span>
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t("filters.searchPlaceholder")}
+                className="w-full rounded-lg border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none placeholder:text-foreground/40 focus-visible:ring-2 focus-visible:ring-primary/50"
+              />
+            </label>
             <div className="flex flex-wrap justify-center gap-2">
               {categories.map((cat) => (
                 <button

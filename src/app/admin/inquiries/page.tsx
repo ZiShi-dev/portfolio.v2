@@ -6,7 +6,10 @@ import { AdminProjectInquiriesPanel } from "@/components/admin/admin-project-inq
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
 import { getAdminLocale } from "@/lib/admin/i18n";
 import { requireAdminPageUser } from "@/lib/admin/require-admin-page";
-import { listProjectInquiriesForAdmin } from "@/lib/project-inquiry/store";
+import {
+  listProjectInquiriesForAdmin,
+  markNewProjectInquiriesSeen,
+} from "@/lib/project-inquiry/store";
 import { isSupabaseServiceConfigured } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +31,9 @@ export default async function AdminInquiriesPage() {
   await requireAdminPageUser();
 
   const configured = isSupabaseServiceConfigured();
+  if (configured) {
+    await markNewProjectInquiriesSeen();
+  }
   const listed = configured
     ? await listProjectInquiriesForAdmin({ status: "new", limit: 100 })
     : null;

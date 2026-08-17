@@ -71,6 +71,13 @@ import { cn } from "@/lib/utils";
 import { useSubmitGuard } from "@/hooks/use-submit-guard";
 
 type LocaleTab = keyof ServiceI18n;
+type StatusFilter = "all" | "published" | "draft" | "archived";
+const STATUS_FILTERS: StatusFilter[] = [
+  "all",
+  "published",
+  "draft",
+  "archived",
+];
 
 type CaseStudyOption = {
   id: string;
@@ -86,7 +93,6 @@ type EditorState = {
   slug: string;
   icon: string;
   status: ServiceStatus;
-  featured: boolean;
   sortOrder: number;
   title: ServiceI18n;
   shortDescription: ServiceI18n;
@@ -112,7 +118,6 @@ function emptyEditor(): EditorState {
     slug: "",
     icon: "sparkles",
     status: "draft",
-    featured: false,
     sortOrder: 0,
     title: emptyI18n(),
     shortDescription: emptyI18n(),
@@ -121,7 +126,7 @@ function emptyEditor(): EditorState {
     includedFeatures: [],
     ctaLabel: emptyI18n(),
     showCtaStart: true,
-    pricingMode: "quote_only",
+    pricingMode: "contact",
     startingPriceEuros: "",
     currency: "EUR",
     inquiryProjectType: "",
@@ -138,7 +143,6 @@ function rowToEditor(row: ServiceRow): EditorState {
     slug: row.slug,
     icon: row.icon,
     status: row.status,
-    featured: row.featured,
     sortOrder: row.sort_order,
     title: { ...row.title },
     shortDescription: { ...row.short_description },
@@ -181,7 +185,6 @@ function editorToPayload(editor: EditorState) {
     slug: editor.slug.trim().toLowerCase(),
     icon: editor.icon,
     status: editor.status,
-    featured: editor.featured,
     sortOrder: editor.sortOrder,
     title: editor.title,
     shortDescription: editor.shortDescription,
@@ -189,11 +192,7 @@ function editorToPayload(editor: EditorState) {
     idealFor: editor.idealFor,
     includedFeatures: editor.includedFeatures.filter((f) => f.fr.trim()),
     ctaLabel: editor.ctaLabel,
-    offerKind: "service" as const,
-    showCtaBuy: false,
     showCtaStart: editor.showCtaStart,
-    coverImage: null,
-    linkedProjectId: null,
     pricingMode: editor.pricingMode,
     startingPriceCents,
     currency: editor.currency,
@@ -229,6 +228,7 @@ export function AdminServicesPanel({
   const [listError, setListError] = useState<string | null>(null);
   const [projectRefInput, setProjectRefInput] = useState("");
   const [projectLinkError, setProjectLinkError] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
 
   const refresh = useCallback(async () => {
     try {
@@ -424,8 +424,8 @@ export function AdminServicesPanel({
     }
   };
 
-  const remove = async (id: string) => {
-    if (!trySubmit()) return;
+  const remove = async (id: string): Promise<boolean> => {
+    if (!trySubmit()) return false;
     setLoading(true);
     try {
       const res = await fetch(`/api/admin/services/${id}`, {
@@ -434,17 +434,25 @@ export function AdminServicesPanel({
       });
       if (!res.ok) {
         setListError(t("deleteError"));
-        return;
+        return false;
       }
+      setEditorOpen(false);
       await refresh();
+      return true;
     } finally {
       setLoading(false);
     }
   };
 
-  const moveOrder = async (index: number, dir: -1 | 1) => {
+  const visibleServices = useMemo(() => {
+    if (statusFilter === "all") return services;
+    return services.filter((row) => row.status === statusFilter);
+  }, [services, statusFilter]);
+
+  const moveOrder = async (id: string, dir: -1 | 1) => {
+    const index = services.findIndex((row) => row.id === id);
     const target = index + dir;
-    if (target < 0 || target >= services.length) return;
+    if (index < 0 || target < 0 || target >= services.length) return;
     const ordered = [...services];
     [ordered[index], ordered[target]] = [ordered[target], ordered[index]];
     setServices(ordered);
@@ -495,15 +503,33 @@ export function AdminServicesPanel({
         </Button>
       </div>
 
+      <div className="flex flex-wrap gap-2" role="group" aria-label={t("filtersLabel")}>
+        {STATUS_FILTERS.map((key) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setStatusFilter(key)}
+            className={cn(
+              "min-h-9 rounded-full border px-3 font-mono text-[10px] uppercase tracking-wider transition-colors",
+              statusFilter === key
+                ? "border-primary/50 bg-primary/10 text-primary"
+                : "border-border text-foreground/60 hover:border-primary/30"
+            )}
+          >
+            {t(`filters.${key}`)}
+          </button>
+        ))}
+      </div>
+
       {listError ? <FormError message={listError} /> : null}
 
-      {services.length === 0 ? (
+      {visibleServices.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-border bg-card/50 px-4 py-10 text-center text-sm text-foreground/55">
           {t("empty")}
         </p>
       ) : (
         <ul className="grid gap-3 sm:gap-4">
-          {services.map((row, index) => {
+          {visibleServices.map((row, index) => {
             const name = row.title.fr || row.title.en || row.slug;
             const pricingLabel =
               (row.pricing_mode === "starting_at" ||
@@ -517,68 +543,65 @@ export function AdminServicesPanel({
                 key={row.id}
                 className="rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/30 sm:p-5"
               >
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="min-w-0 flex-1 space-y-2">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
                         {row.reference}
                       </span>
                       <StatusBadge status={row.status} t={t} />
-                      {row.featured ? (
-                        <span className="rounded-full border border-border-gold/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-primary/80">
-                          {t("cols.featured")}
-                        </span>
-                      ) : null}
                     </div>
 
                     <h3 className="truncate font-display text-lg font-semibold text-foreground">
                       {name}
                     </h3>
-
-                    <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-foreground/60 sm:grid-cols-3">
-                      <div>
-                        <dt className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
-                          {t("cols.pricing")}
-                        </dt>
-                        <dd className="mt-0.5 text-foreground/75">{pricingLabel}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
-                          {t("cols.updated")}
-                        </dt>
-                        <dd className="mt-0.5 text-foreground/75">
-                          {new Date(row.updated_at).toLocaleDateString("fr-FR")}
-                        </dd>
-                      </div>
-                      <div className="col-span-2 sm:col-span-1">
-                        <dt className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
-                          {t("cols.order")}
-                        </dt>
-                        <dd className="mt-1 flex items-center gap-1">
-                          <button
-                            type="button"
-                            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border hover:border-primary/40 disabled:opacity-40"
-                            onClick={() => moveOrder(index, -1)}
-                            aria-label={t("moveUp")}
-                            disabled={loading || index === 0}
-                          >
-                            <ChevronUp className="h-4 w-4" />
-                          </button>
-                          <button
-                            type="button"
-                            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border hover:border-primary/40 disabled:opacity-40"
-                            onClick={() => moveOrder(index, 1)}
-                            aria-label={t("moveDown")}
-                            disabled={loading || index === services.length - 1}
-                          >
-                            <ChevronDown className="h-4 w-4" />
-                          </button>
-                        </dd>
-                      </div>
-                    </dl>
+                    <p className="font-mono text-[10px] tracking-wider text-muted-foreground">
+                      /offres/{row.slug}
+                    </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 lg:max-w-md lg:justify-end">
+                  <div className="flex shrink-0 items-center gap-1">
+                    <button
+                      type="button"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border hover:border-primary/40 disabled:opacity-40"
+                      onClick={() => moveOrder(row.id, -1)}
+                      aria-label={t("moveUp")}
+                      disabled={loading || index === 0}
+                    >
+                      <ChevronUp className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border hover:border-primary/40 disabled:opacity-40"
+                      onClick={() => moveOrder(row.id, 1)}
+                      aria-label={t("moveDown")}
+                      disabled={
+                        loading || index === visibleServices.length - 1
+                      }
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs text-foreground/60">
+                  <div>
+                    <dt className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
+                      {t("cols.pricing")}
+                    </dt>
+                    <dd className="mt-0.5 text-foreground/75">{pricingLabel}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
+                      {t("cols.updated")}
+                    </dt>
+                    <dd className="mt-0.5 text-foreground/75">
+                      {new Date(row.updated_at).toLocaleDateString("fr-FR")}
+                    </dd>
+                  </div>
+                </dl>
+
+                <div className="mt-4 flex flex-wrap gap-2">
                     <Button
                       type="button"
                       size="sm"
@@ -611,8 +634,20 @@ export function AdminServicesPanel({
                         variant="ghost"
                         className="min-h-10"
                         onClick={() => patchStatus(row.id, "draft")}
+                        disabled={loading}
                       >
                         {t("unpublish")}
+                      </Button>
+                    ) : row.status === "archived" ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        className="min-h-10"
+                        onClick={() => patchStatus(row.id, "draft")}
+                        disabled={loading}
+                      >
+                        {t("restore")}
                       </Button>
                     ) : (
                       <Button
@@ -621,6 +656,7 @@ export function AdminServicesPanel({
                         variant="ghost"
                         className="min-h-10"
                         onClick={() => patchStatus(row.id, "published")}
+                        disabled={loading}
                       >
                         {t("publish")}
                       </Button>
@@ -631,34 +667,39 @@ export function AdminServicesPanel({
                       variant="ghost"
                       className="min-h-10"
                       onClick={() => duplicate(row.id)}
+                      disabled={loading}
                     >
                       <Copy className="h-3.5 w-3.5" aria-hidden />
                       <span className="sm:inline">
                         {safeT(t, "duplicate", "Dupliquer")}
                       </span>
                     </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="ghost"
-                      className="min-h-10"
-                      onClick={() => patchStatus(row.id, "archived")}
-                    >
-                      <Archive className="h-3.5 w-3.5" aria-hidden />
-                      <span className="hidden sm:inline">
-                        {safeT(t, "archive", "Archiver")}
-                      </span>
-                    </Button>
+                    {row.status !== "archived" ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        className="min-h-10"
+                        onClick={() => patchStatus(row.id, "archived")}
+                        disabled={loading}
+                      >
+                        <Archive className="h-4 w-4" aria-hidden />
+                        <span className="hidden sm:inline">
+                          {safeT(t, "archive", "Archiver")}
+                        </span>
+                      </Button>
+                    ) : null}
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
                           type="button"
                           size="sm"
-                          variant="ghost"
-                          className="min-h-10"
+                          variant="outline"
+                          className="min-h-10 text-destructive hover:text-destructive"
+                          disabled={loading}
                         >
-                          <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                          <span className="sr-only">{t("deleteConfirm")}</span>
+                          <Trash2 className="h-3.5 w-3.5" aria-hidden />
+                          {t("deleteConfirm")}
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -676,7 +717,6 @@ export function AdminServicesPanel({
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
-                  </div>
                 </div>
               </li>
             );
@@ -685,15 +725,18 @@ export function AdminServicesPanel({
       )}
 
       <Dialog open={editorOpen} onOpenChange={setEditorOpen}>
-        <DialogContent className="max-h-[min(92dvh,900px)] w-[calc(100%-1.5rem)] max-w-3xl overflow-y-auto p-4 sm:p-6">
-          <DialogHeader>
+        <DialogContent
+          placement="sheet"
+          className="flex flex-col gap-0 overflow-hidden p-0 sm:p-0"
+        >
+          <DialogHeader className="shrink-0 border-b border-border px-5 py-4 sm:px-6">
             <DialogTitle>
               {editor.id ? t("editTitle") : t("createTitle")}
             </DialogTitle>
             <DialogDescription>{t("formHint")}</DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6 py-2">
+          <div className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
             <section className="space-y-3">
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.identity")}
@@ -709,7 +752,15 @@ export function AdminServicesPanel({
                     placeholder="VZ—WEB"
                   />
                 </FormField>
-                <FormField label={t("fields.slug")} id="svc-slug">
+                <FormField
+                  label={t("fields.slug")}
+                  id="svc-slug"
+                  hint={
+                    editor.slug
+                      ? `/offres/${editor.slug.trim().toLowerCase()}`
+                      : t("hints.slug")
+                  }
+                >
                   <Input
                     id="svc-slug"
                     value={editor.slug}
@@ -773,16 +824,6 @@ export function AdminServicesPanel({
                     }
                   />
                 </FormField>
-                <label className="flex items-center gap-2 text-sm self-end pb-2">
-                  <input
-                    type="checkbox"
-                    checked={editor.featured}
-                    onChange={(e) =>
-                      setEditor((p) => ({ ...p, featured: e.target.checked }))
-                    }
-                  />
-                  {t("fields.featured")}
-                </label>
               </div>
             </section>
 
@@ -1290,7 +1331,40 @@ export function AdminServicesPanel({
             {submitError ? <FormError message={submitError} /> : null}
           </div>
 
-          <DialogFooter className="flex-col gap-2 sm:flex-row">
+          <DialogFooter className="shrink-0 flex-col gap-2 border-t border-border px-5 py-4 sm:flex-row sm:flex-wrap sm:px-6">
+            {editor.id ? (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="text-destructive hover:text-destructive sm:me-auto"
+                    disabled={loading}
+                  >
+                    <Trash2 className="h-4 w-4" aria-hidden />
+                    {t("deleteConfirm")}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("deleteTitle")}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("deleteBody")}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        void remove(editor.id!);
+                      }}
+                    >
+                      {t("deleteConfirm")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            ) : null}
             <Button
               type="button"
               variant="outline"

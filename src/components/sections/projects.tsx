@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { ProjectMarquee } from "@/components/sections/project-marquee";
+import { ProjectHomeShowcase } from "@/components/sections/project-home-showcase";
 import type { LocalizedProjectItem } from "@/data/projects";
 
 type ProjectsProps = {
@@ -16,7 +16,7 @@ export function Projects({ projects }: ProjectsProps) {
     <section
       id="projets"
       aria-labelledby="projects-heading"
-      className="relative scroll-mt-28 overflow-x-clip bg-surface py-16 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 overflow-x-clip bg-background py-16 sm:py-24 lg:py-28"
     >
       <div className="px-4 sm:px-6">
         <SectionHeading
@@ -32,8 +32,7 @@ export function Projects({ projects }: ProjectsProps) {
         />
       </div>
 
-      {/* Hors Reveal : transform/overflow casse le calcul de largeur du marquee */}
-      <ProjectMarquee projects={projects} />
+      <ProjectHomeShowcase projects={projects} />
     </section>
   );
 }

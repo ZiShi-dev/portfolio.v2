@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { BrandName } from "@/components/brand-name";
 import { brand } from "@/lib/brand";
@@ -13,7 +12,13 @@ type BrandLogoProps = {
   subtitleClassName?: string;
 };
 
-function VorzixMark({ className }: { className?: string }) {
+function VorzixMark({
+  className,
+  priority = false,
+}: {
+  className?: string;
+  priority?: boolean;
+}) {
   return (
     <span
       className={cn(
@@ -23,11 +28,15 @@ function VorzixMark({ className }: { className?: string }) {
       aria-hidden
     >
       {/* img natif : évite le cache agressif de next/image sur les assets statiques */}
-      <Image
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={brand.profileImage}
         alt=""
         width={36}
         height={36}
+        decoding="async"
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "low"}
         className="h-full w-full object-cover"
       />
     </span>
@@ -44,7 +53,7 @@ export function BrandLogo({
 
   return (
     <div className={cn("notranslate flex min-w-0 items-center gap-2.5 sm:gap-3", className)}>
-      {showMark && <VorzixMark className="h-8 w-8 sm:h-9 sm:w-9" />}
+      {showMark && <VorzixMark priority className="h-8 w-8 sm:h-9 sm:w-9" />}
 
       <div className="min-w-0 leading-none">
         <BrandName variant="modern" className="truncate text-[13px] sm:text-sm" />

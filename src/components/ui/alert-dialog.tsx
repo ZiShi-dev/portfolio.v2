@@ -15,7 +15,7 @@ const AlertDialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-[1000] bg-black/55 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-[1000] bg-black/65 backdrop-blur-[3px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -27,17 +27,31 @@ AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 const AlertDialogContent = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <AlertDialogPortal>
     <AlertDialogOverlay />
-    <AlertDialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed left-1/2 top-1/2 z-[1001] grid w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 -translate-y-1/2 gap-4 rounded-2xl border border-border bg-background p-5 shadow-2xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:p-6",
-        className
-      )}
-      {...props}
-    />
+    <div className="pointer-events-none fixed inset-0 z-[1001] flex items-end justify-stretch sm:items-center sm:justify-center sm:p-4">
+      <AlertDialogPrimitive.Content
+        ref={ref}
+        className={cn(
+          "pointer-events-auto relative grid max-h-[min(92dvh,36rem)] w-full max-w-none gap-5 overflow-y-auto rounded-t-2xl rounded-b-none border border-border-strong border-x-0 border-b-0 bg-card/98 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_28px_90px_-24px_rgb(0_0_0/0.9)] outline-none duration-200",
+          "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4",
+          "sm:max-w-md sm:rounded-2xl sm:border sm:p-6 sm:pb-6 sm:data-[state=closed]:fade-out-0 sm:data-[state=open]:fade-in-0 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95",
+          className
+        )}
+        {...props}
+      >
+        <span
+          aria-hidden
+          className="absolute start-1/2 top-2 z-10 h-1 w-10 -translate-x-1/2 rounded-full bg-foreground/18 sm:hidden rtl:translate-x-1/2"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/70 to-transparent"
+        />
+        {children}
+      </AlertDialogPrimitive.Content>
+    </div>
   </AlertDialogPortal>
 ));
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
@@ -49,7 +63,7 @@ function AlertDialogHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 text-center sm:text-start",
+        "flex flex-col gap-2 text-start",
         className
       )}
       {...props}
@@ -64,7 +78,7 @@ function AlertDialogFooter({
   return (
     <div
       className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        "flex flex-col-reverse gap-2 border-t border-border/70 pt-4 sm:flex-row sm:justify-end",
         className
       )}
       {...props}
@@ -78,7 +92,7 @@ const AlertDialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={cn("text-lg font-semibold tracking-tight", className)}
+    className={cn("font-display text-xl font-semibold leading-tight tracking-tight", className)}
     {...props}
   />
 ));
@@ -90,7 +104,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-foreground/60", className)}
+    className={cn("text-sm leading-relaxed text-foreground/62", className)}
     {...props}
   />
 ));

@@ -56,7 +56,9 @@ type AdminAuditEvent =
   | "faq_updated"
   | "faq_archived"
   | "faq_duplicated"
-  | "faq_deleted";
+  | "faq_deleted"
+  | "push_subscribed"
+  | "push_unsubscribed";
 
 export function logAdminAuthEvent(
   event: AdminAuditEvent,

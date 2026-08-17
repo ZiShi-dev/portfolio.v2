@@ -7,6 +7,7 @@ import {
   checkProjectInquiryEmailDailyLimit,
   checkProjectInquiryIpDailyLimit,
 } from "@/lib/security/project-inquiry-daily-limit";
+import { notifyAdminsOfNewInquiry } from "@/lib/admin/push/notify";
 import { parseProjectInquiryPayload } from "@/lib/project-inquiry/schema";
 import {
   createProjectInquiry,
@@ -136,6 +137,10 @@ export async function POST(request: Request) {
   if (!created.ok) {
     logFormSecurityEvent(FORM_KIND, "persist_failed", ip);
     return serviceUnavailableResponse();
+  }
+
+  if (!created.duplicate) {
+    void notifyAdminsOfNewInquiry(created.inquiry).catch(() => undefined);
   }
 
   logFormSecurityEvent(

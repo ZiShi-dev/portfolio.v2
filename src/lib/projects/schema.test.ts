@@ -229,6 +229,58 @@ describe("parseProjectPatchBody", () => {
     if (parsed.ok) assert.equal(parsed.values.kind, "sold");
   });
 
+  it("accepte kind for_sale", () => {
+    const parsed = parseProjectPatchBody({ kind: "for_sale" });
+    assert.equal(parsed.ok, true);
+    if (parsed.ok) assert.equal(parsed.values.kind, "for_sale");
+  });
+
+  it("refuse un projet à vendre publié sans prix", () => {
+    const parsed = parseProjectWriteBody(
+      valid({
+        kind: "for_sale",
+        listingPriceCents: null,
+        listingIntent: { fr: "Céder le code", en: "", ar: "" },
+      })
+    );
+    assert.equal(parsed.ok, false);
+    if (!parsed.ok) assert.equal(parsed.error, "publish_requires_listing_price");
+  });
+
+  it("accepte un projet à vendre publié avec prix et intention", () => {
+    const parsed = parseProjectWriteBody(
+      valid({
+        kind: "for_sale",
+        listingPriceCents: 250000,
+        listingIntent: { fr: "Céder le code et accompagner.", en: "", ar: "" },
+      })
+    );
+    assert.equal(parsed.ok, true);
+  });
+
+  it("refuse un projet vendu publié sans description du travail", () => {
+    const parsed = parseProjectWriteBody(
+      valid({
+        kind: "sold",
+        listingPriceCents: 450000,
+        listingIntent: { fr: "", en: "", ar: "" },
+      })
+    );
+    assert.equal(parsed.ok, false);
+    if (!parsed.ok) assert.equal(parsed.error, "publish_requires_sold_work");
+  });
+
+  it("accepte un projet vendu publié avec prix et travail réalisé", () => {
+    const parsed = parseProjectWriteBody(
+      valid({
+        kind: "sold",
+        listingPriceCents: 450000,
+        listingIntent: { fr: "Site livré et accompagnement.", en: "", ar: "" },
+      })
+    );
+    assert.equal(parsed.ok, true);
+  });
+
   it("patch businessTypeIds : max + whitelist", () => {
     const tooMany = parseProjectPatchBody({
       businessTypeIds: PROJECT_BUSINESS_TYPE_IDS.slice(0, 5),

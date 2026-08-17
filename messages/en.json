@@ -83,80 +83,76 @@
     }
   },
   "services": {
-    "eyebrow": "Catalog · Offers",
-    "title": "Digital products crafted with",
-    "titleHighlight": "precision.",
-    "subtitle": "Every deliverable is mapped: clear, measurable, built to convert — sites, apps and platforms.",
+    "eyebrow": "Offers · Websites & apps",
+    "title": "We create",
+    "titleHighlight": "websites and applications.",
+    "subtitle": "A website or an app to present your work, sell, take bookings, publish or launch an offer — pick what matches your need.",
+    "homeSubtitle": "The most common needs. The full catalogue is one click away.",
     "discover": "Discover",
     "cta": "Talk about your needs",
     "page": {
-      "metaTitle": "Our commercial offers — {brand}",
-      "metaDescription": "{brand} commercial offers catalog: websites, e-commerce, apps, SaaS and custom solutions."
+      "metaTitle": "Websites and applications — {brand}",
+      "metaDescription": "{brand} offers: showcase, e-commerce, booking, web app, blog, portfolio, landing page and custom websites."
     },
     "items": {
-      "web": {
-        "title": "Website or web app",
-        "desc": "A clear, fast online presence built to present your offer and generate contact requests."
+      "vitrine": {
+        "title": "Showcase website",
+        "desc": "Present a company, an activity or a brand."
       },
-      "backend": {
-        "title": "Back-office & automation",
-        "desc": "Accounts, forms, data and business tools that work reliably — so your site actually works for you."
+      "ecommerce": {
+        "title": "E-commerce website",
+        "desc": "Sell products online: catalog, cart, orders and payment."
       },
-      "design": {
-        "title": "UX/UI design",
-        "desc": "An elegant, readable interface: visitors quickly understand who you are and what to do next."
+      "reservation": {
+        "title": "Booking website",
+        "desc": "Present your services with appointments or reservations."
       },
-      "mobile": {
-        "title": "Mobile-first experience",
-        "desc": "Impeccable on phone — where most of your clients discover you."
+      "plateforme": {
+        "title": "Platform / web app",
+        "desc": "A site with user accounts, a dashboard and advanced features."
       },
-      "seo": {
-        "title": "Foundational SEO",
-        "desc": "Structure, performance and tags ready for Google: better odds of being found on the right searches."
+      "blog": {
+        "title": "Blog / content site",
+        "desc": "Publish and organise content on a regular basis."
       },
-      "maintenance": {
-        "title": "Post-launch support",
-        "desc": "Fixes, improvements and advice after go-live — your site stays stable and ready to evolve."
+      "portfolio": {
+        "title": "Portfolio",
+        "desc": "Present a professional and their work."
+      },
+      "landing": {
+        "title": "Landing page",
+        "desc": "A page built around one offer or one clear goal."
+      },
+      "sur-mesure": {
+        "title": "Custom website",
+        "desc": "Built for a need that does not fit the standard offers."
       }
     },
     "empty": "Offers will be available soon.",
-    "idealFor": "Ideal for",
-    "included": "Typically included",
+    "idealFor": "Who it's for",
+    "included": "What you get",
     "learnMore": "Learn more",
     "ctaStart": "Start a project",
-    "ctaBuy": "Buy this offer",
     "backToServices": "Back to offers",
     "backToCatalog": "Back to offers",
     "detailAbout": "About this offer",
     "detailPricing": "Pricing",
-    "relatedProjects": "Related work",
-    "relatedProjectsSubtitle": "Open a card to view the project details.",
+    "relatedProjects": "A real example",
+    "relatedProjectsSubtitle": "A project already delivered — open it to see the details.",
     "viewCaseStudy": "View a case study",
-    "linkedProjectEyebrow": "Project for sale",
     "viewLinkedProject": "View project details",
-    "offerKind": {
-      "service": "Service",
-      "product": "For sale"
-    },
-    "filter": {
-      "label": "Filter offers",
-      "all": "All",
-      "product": "For sale",
-      "service": "Services",
-      "empty": "No offers in this filter."
-    },
     "pricing": {
       "startingAt": "From {price}",
       "fixed": "{price}",
-      "quoteOnly": "On quote",
       "contact": "Let's talk about your project",
-      "disclaimer": "The final price depends on scope, features and project needs.",
+      "disclaimer": "The price depends on what you actually need. We agree on it together before we start.",
       "fixedDisclaimer": "Price for the offer as presented. Options or custom work may be quoted separately."
     },
-    "catalogTitle": "Our commercial",
-    "catalogTitleHighlight": "offers.",
-    "catalogSubtitle": "Pick the solution that fits your need — each offer has a dedicated detail page.",
-    "viewAll": "View all offers"
+    "catalogTitle": "We create",
+    "catalogTitleHighlight": "websites and applications.",
+    "catalogSubtitle": "Eight clear offers. Pick the one that matches your activity.",
+    "viewAll": "View all offers",
+    "otherOffers": "Also in the catalogue"
   },
   "engagements": {
     "eyebrow": "Commitments · VORZIX",
@@ -212,13 +208,20 @@
     "openDetails": "View project details for {title}",
     "seeMore": "See more",
     "exploreAll": "Explore all projects",
+    "availableNow": "Available now",
+    "viewListing": "View listing",
+    "viewProject": "View project",
+    "otherWork": "Other work",
+    "listingIndex": "{current} / {total}",
     "seeSite": "Visit site",
     "seeApp": "View app",
     "filters": {
       "allTypes": "All types",
       "allLinks": "All links",
       "withSite": "With website",
-      "withApp": "With app"
+      "withApp": "With app",
+      "search": "Search a project",
+      "searchPlaceholder": "Search a project…"
     },
     "screens": "screens",
     "all": "All",
@@ -242,7 +245,8 @@
     },
     "categories": {
       "personal": "Personal project",
-      "sold": "Client / sold project"
+      "for_sale": "Project for sale",
+      "sold": "Sold project"
     },
     "businessTypes": {
       "showcase": "Showcase site",
@@ -448,6 +452,26 @@
     "layout": {
       "backToSite": "{name}"
     },
+    "notifications": {
+      "title": "Notifications",
+      "bellLabel": "Inquiry notifications",
+      "enable": "Enable on this device",
+      "enabling": "Enabling…",
+      "enabled": "Notifications enabled on this device",
+      "disable": "Disable this device",
+      "disabling": "Disabling…",
+      "notSupported": "This browser does not support push notifications.",
+      "denied": "Notifications are blocked in the browser settings.",
+      "notConfigured": "Push notifications are not configured yet (missing VAPID keys).",
+      "iphoneHint": "On iPhone or iPad: Share → Add to Home Screen, then open admin from the icon to enable notifications.",
+      "newInquiries": "{count, plural, one {# new inquiry} other {# new inquiries}}",
+      "noNew": "No new inquiries",
+      "unreadOnly": "Only inquiries you have not opened yet — not the full history.",
+      "openInquiries": "Open inquiries",
+      "markRead": "Mark as read",
+      "markingRead": "Marking…",
+      "error": "Could not enable notifications. Try again."
+    },
     "login": {
       "secureSpace": "Secure area",
       "title": "Admin sign-in",
@@ -567,6 +591,34 @@
       "backToDashboard": "Dashboard",
       "demoTitle": "Demo content",
       "demoBody": "Projects and reviews on the site are samples. Replace them with real work and client feedback before production.",
+      "overview": {
+        "title": "Site status at a glance",
+        "body": "The state of the site today, in plain language — what is live, and what still needs attention.",
+        "todoTitle": "Priority actions",
+        "total": "Total",
+        "todoNone": "Nothing waiting. Everything is up to date.",
+        "todoInquiries": "{count, plural, one {# request is waiting for a reply} other {# requests are waiting for a reply}}",
+        "todoReviews": "{count, plural, one {# client review to read} other {# client reviews to read}}",
+        "todoDrafts": "{count, plural, one {# offer still in draft} other {# offers still in draft}}",
+        "chartOffers": "Offers",
+        "chartOffersSummary": "{live} live on the site, {draft} still being prepared.",
+        "chartProjects": "Projects",
+        "chartProjectsSummary": "{live} published, {hidden} still private.",
+        "chartReviews": "Client reviews",
+        "chartReviewsSummary": "{live} visible, {pending} waiting to be read.",
+        "chartInquiries": "Requests",
+        "chartInquiriesSummary": "{fresh} new, {open} in discussion.",
+        "barLive": "Live",
+        "barDraft": "In draft",
+        "barArchived": "Archived",
+        "barHidden": "Private",
+        "barPending": "To read",
+        "barRemoved": "Removed",
+        "barNew": "New",
+        "barOpen": "In discussion",
+        "barDone": "Won",
+        "barClosed": "Not retained"
+      },
       "viewSite": "View site",
       "inquiriesTitle": "Project inquiries",
       "inquiriesBody": "Manage leads from the interactive journey.",
@@ -577,7 +629,7 @@
       "servicesNext": "Manage everything from /admin/services — no code changes.",
       "manageServices": "Manage offers",
       "servicesPageTitle": "Offers management",
-      "servicesPageSubtitle": "CMS · FR/EN/AR · pricing · case studies · publishing.",
+      "servicesPageSubtitle": "Create, edit or delete the site offers. Every text (FR / EN / AR) is editable.",
       "engagementsTitle": "VORZIX commitments",
       "engagementsBody": "Edit commitments shown on the site: titles, FR/EN/AR copy, order and publishing.",
       "engagementsNext": "Manage everything from /admin/engagements — no code changes.",
@@ -703,7 +755,10 @@
         "title": "Title",
         "description": "Details",
         "slug": "Slug (URL)",
-        "kind": "Type",
+        "kind": "Status",
+        "listingPrice": "Price",
+        "listingIntent": "What I want to do with it",
+        "soldWork": "What I did for them",
         "sortOrder": "Order",
         "link": "Site link",
         "appLink": "App link",
@@ -736,7 +791,13 @@
         "other": "Other"
       },
       "kindPersonal": "Personal project",
-      "kindSold": "Sold / client project",
+      "kindForSale": "Project for sale",
+      "kindSold": "Sold project",
+      "kindForSaleHint": "Set the asking price and what you want to do with this project.",
+      "kindSoldHint": "Set the sale price and what you did for the client.",
+      "listingPriceHint": "Amount in euros, no currency symbol.",
+      "listingIntentPlaceholder": "e.g. Hand over the code, onboard the buyer, deliver turnkey…",
+      "soldWorkPlaceholder": "e.g. Site delivered, onboarding, go-live support…",
       "upload": "Upload",
       "imagesEmpty": "Add images (required to publish).",
       "moveUp": "Move up",
@@ -758,6 +819,7 @@
       "confirmDeleteAction": "Yes, delete",
       "confirmDeleteCancel": "Cancel",
       "featured": "Featured",
+      "featuredHint": "The project appears first on the home page and listing, with a stronger frame.",
       "referenceHint": "Catalog reference (VZ—CASE …) is generated on create.",
       "hints": {
         "appLink": "Play Store, App Store, or app URL (optional)."
@@ -808,6 +870,11 @@
       "publish_requires_title": "French title is required to publish.",
       "publish_requires_description": "French description is required to publish.",
       "publish_requires_images": "At least one image is required to publish.",
+      "publish_requires_listing_price": "Set the asking price to publish a project for sale.",
+      "publish_requires_listing_intent": "Explain what you want to do with this project (FR) to publish.",
+      "publish_requires_sold_price": "Set the sale price to publish a sold project.",
+      "publish_requires_sold_work": "Describe what you did for the client (FR) to publish.",
+      "project_invalid_listing": "Invalid price or description.",
       "project_invalid_features": "Invalid features.",
       "project_invalid_technologies": "Invalid technologies.",
       "duplicate_reference": "This catalog reference already exists.",
@@ -988,7 +1055,7 @@
       "create": "Create offer",
       "createTitle": "New offer",
       "editTitle": "Edit offer",
-      "formHint": "Incomplete drafts allowed. Publishing requires FR title and short description.",
+      "formHint": "Every field is editable (FR / EN / AR). You can also archive or permanently delete an offer.",
       "edit": "Edit",
       "preview": "Preview",
       "publish": "Publish",
@@ -1003,6 +1070,14 @@
       "deleteTitle": "Delete this offer?",
       "deleteBody": "Permanent. Existing leads keep the frozen reference.",
       "deleteConfirm": "Delete",
+      "restore": "Restore",
+      "filtersLabel": "Filter offers",
+      "filters": {
+        "all": "All",
+        "published": "Published",
+        "draft": "Drafts",
+        "archived": "Archived"
+      },
       "moveUp": "Move up",
       "moveDown": "Move down",
       "addFeature": "Add item",
@@ -1025,7 +1100,6 @@
         "name": "Name",
         "status": "Status",
         "pricing": "Pricing",
-        "featured": "Featured",
         "order": "Order",
         "updated": "Updated",
         "actions": "Actions"
@@ -1038,19 +1112,11 @@
       "pricingMode": {
         "starting_at": "Starting at",
         "fixed": "Fixed price",
-        "quote_only": "On quote",
-        "contact": "Contact"
+        "contact": "No listed price"
       },
-      "offerKind": {
-        "service": "Service",
-        "product": "For sale"
-      },
-      "commerceHint": "Offer type powers the catalog filter. Checkboxes control which buttons appear on the site.",
-      "uploadCover": "Upload photo",
-      "removeCover": "Remove",
       "sections": {
         "identity": "Identity",
-        "commerce": "Type & buttons",
+        "commerce": "Button",
         "pricing": "Pricing",
         "features": "Included items",
         "caseStudies": "Linked case studies"
@@ -1060,17 +1126,12 @@
         "slug": "Slug",
         "icon": "Icon",
         "status": "Status",
-        "featured": "Featured",
         "sortOrder": "Sort order",
-        "offerKind": "Offer type",
-        "showCtaBuy": "“Buy” button",
         "showCtaStart": "“Start a project” button",
-        "coverImage": "Product photo",
-        "linkedProject": "Linked project (/projects) — also provides the photo",
         "pricingMode": "Pricing mode",
         "currency": "Currency",
         "startingPrice": "Starting price",
-        "fixedPrice": "Sale price",
+        "fixedPrice": "Listed price",
         "inquiryType": "Preselected type (flow)",
         "title": "Title",
         "shortDescription": "Short description",
@@ -1082,11 +1143,9 @@
         "projectBlurb": "Short description (offer page)"
       },
       "hints": {
-        "coverImage": "Disabled: the photo comes from the linked project.",
-        "linkedProject": "Link a published project: its images appear on the offer. Without a linked project, no image.",
-        "projectUrl": "Paste /projets/my-project, the full URL, or the slug."
+        "projectUrl": "Paste /projets/my-project, the full URL, or the slug.",
+        "slug": "Public address: /offres/your-slug"
       },
-      "linkedProjectNone": "No linked project",
       "caseStudiesHint": "Add several projects: their images and descriptions appear on /offres/[slug]. Clicking opens the project page.",
       "duplicate": "Duplicate",
       "archive": "Archive"
@@ -1107,7 +1166,13 @@
     "ctaSubtitle": "Tell us about your need — a clear reply within 48h.",
     "ctaPrimary": "Start a project",
     "ctaNext": "See next project",
-    "backToList": "All case studies"
+    "backToList": "All case studies",
+    "forSaleEyebrow": "Project for sale",
+    "soldEyebrow": "Sold project",
+    "soldPrice": "Sold {price}",
+    "listingIntent": "What I want to do with it",
+    "soldWork": "What I did for them",
+    "applicationType": "Application type"
   },
   "projectInquiry": {
     "brand": "VZ—PROJECT",
@@ -1118,7 +1183,7 @@
     },
     "intro": {
       "title": "Let's map the outlines of your project.",
-      "subtitle": "A few choices are enough for us to understand your need.",
+      "subtitle": "A few questions are enough to understand your need — no jargon.",
       "cta": "Start"
     },
     "progress": {
@@ -1144,40 +1209,40 @@
     "types": {
       "showcase": {
         "title": "Showcase website",
-        "description": "Present your activity with clarity."
+        "description": "Present your activity and make it easy to reach you."
       },
       "ecommerce": {
-        "title": "E-commerce",
-        "description": "Sell your products online."
+        "title": "Online shop",
+        "description": "Sell your products and take orders."
       },
       "web_app": {
-        "title": "Web application",
-        "description": "An interactive product in the browser."
+        "title": "Booking website",
+        "description": "Let clients book appointments with you."
       },
       "saas": {
-        "title": "SaaS / platform",
-        "description": "A scalable multi-user service."
+        "title": "App or platform",
+        "description": "An online space for your clients or your team."
       },
       "redesign": {
-        "title": "Redesign",
-        "description": "Modernize an existing product."
+        "title": "Refresh an existing site",
+        "description": "Bring what you already have up to date."
       },
       "automation": {
-        "title": "Automation / back-office",
-        "description": "Streamline an internal process."
+        "title": "Simplify daily work",
+        "description": "Fewer follow-ups by hand, more clarity."
       },
       "other": {
-        "title": "Other",
-        "description": "A specific need to clarify."
+        "title": "Tailored project",
+        "description": "A specific need we can shape together."
       }
     },
     "objectives": {
-      "present_activity": "Present my activity",
-      "generate_leads": "Generate leads",
+      "present_activity": "Make my activity known",
+      "generate_leads": "Receive more inquiries",
       "sell_online": "Sell online",
-      "create_product": "Create a digital product",
-      "automate_process": "Automate a process",
-      "modernize": "Modernize an existing product",
+      "create_product": "Offer an online service",
+      "automate_process": "Save time every day",
+      "modernize": "Improve what I already have",
       "other": "Other"
     },
     "budgets": {
@@ -1205,13 +1270,14 @@
       "targetLaunchPlaceholder": "Pick a date",
       "targetLaunchClear": "Clear date",
       "typeOther": "Describe what you want to create",
-      "typeOtherPlaceholder": "e.g. booking platform",
+      "typeOtherPlaceholder": "e.g. booking site for a practice",
       "objectiveOther": "Describe your goal",
       "objectiveOtherPlaceholder": "e.g. retain my customers",
       "customBudget": "Your budget",
       "customBudgetPlaceholder": "e.g. 750",
       "customBudgetHint": "Between €{min} and €{max}.",
-      "descriptionHelp": "Describe your activity, idea and important features. No technical jargon needed.",
+      "descriptionHelp": "Describe your activity, your clients, and what the site should help them do. No technical details needed.",
+      "descriptionPlaceholder": "e.g. we are a business in Algiers, we want a clear website to…",
       "name": "Name",
       "email": "Email",
       "phone": "Phone",
@@ -1225,9 +1291,133 @@
       "review": "Review summary",
       "exit": "Close"
     },
+    "offers": {
+      "generic": {
+        "introTitle": "Let’s talk about {offer}.",
+        "introSubtitle": "A few questions to understand your need — no jargon.",
+        "objectiveQuestion": "What would you like this project to achieve?",
+        "descriptionQuestion": "Tell us about your activity.",
+        "descriptionHelp": "Who you are, what you offer, and what visitors should find easily.",
+        "descriptionPlaceholder": "e.g. we want a site that presents our activity and makes contact easy."
+      },
+      "vitrine": {
+        "introTitle": "Let’s talk about your showcase website.",
+        "introSubtitle": "We’ll understand your activity and what visitors should remember.",
+        "objectiveQuestion": "What should your website mainly do?",
+        "descriptionQuestion": "Tell us about your activity.",
+        "descriptionHelp": "Who you are, what you offer, and what people should find easily: services, address, hours, a contact form…",
+        "descriptionPlaceholder": "e.g. a practice in Oran, we want a clear site to present our services and be easy to reach.",
+        "objectives": {
+          "present_activity": "Present my activity",
+          "generate_leads": "Receive contact requests",
+          "modernize": "Replace or improve my current site",
+          "other": "Other"
+        }
+      },
+      "ecommerce": {
+        "introTitle": "Let’s talk about your online shop.",
+        "introSubtitle": "We’ll frame what you sell and how clients will order.",
+        "objectiveQuestion": "What is your main goal?",
+        "descriptionQuestion": "What do you sell, and how?",
+        "descriptionHelp": "Describe your products, whether you already have a catalogue, and how you deliver or offer pickup.",
+        "descriptionPlaceholder": "e.g. gourmet grocery, about fifty products, delivery in Algiers and in-store pickup.",
+        "objectives": {
+          "sell_online": "Sell my products online",
+          "generate_leads": "Attract more clients",
+          "modernize": "Improve my current shop",
+          "other": "Other"
+        }
+      },
+      "reservation": {
+        "introTitle": "Let’s talk about your booking website.",
+        "introSubtitle": "We’ll see how clients book today, and what you expect from the site.",
+        "objectiveQuestion": "What should your site make easier?",
+        "descriptionQuestion": "How are appointments booked today?",
+        "descriptionHelp": "Describe your activity, the type of appointments (length, several people, deposit…) and what is difficult today.",
+        "descriptionPlaceholder": "e.g. hair salon, 4 people, clients mostly book on WhatsApp and it takes too much time.",
+        "objectives": {
+          "generate_leads": "Receive more bookings",
+          "present_activity": "Present my services and availability",
+          "automate_process": "Avoid back-and-forth by phone",
+          "other": "Other"
+        }
+      },
+      "plateforme": {
+        "introTitle": "Let’s talk about your application.",
+        "introSubtitle": "We’ll clarify who will use it and what it should simplify day to day.",
+        "objectiveQuestion": "What is the main role of this application?",
+        "descriptionQuestion": "Who will use it, and to do what?",
+        "descriptionHelp": "Who will use it (you, your team, your clients) and the essential actions: sign in, follow an order, open a personal space…",
+        "descriptionPlaceholder": "e.g. our clients should follow their files and message our team, without calling us every time.",
+        "objectives": {
+          "create_product": "Offer an online service to my clients",
+          "automate_process": "Make daily work easier for my team",
+          "generate_leads": "Attract and keep users",
+          "other": "Other"
+        }
+      },
+      "blog": {
+        "introTitle": "Let’s talk about your content site.",
+        "introSubtitle": "We’ll see how you want to publish, and what readers should find.",
+        "objectiveQuestion": "What should this site mainly bring?",
+        "descriptionQuestion": "What will you write about?",
+        "descriptionHelp": "The topics you want to publish, how often, and whether the site should also present your activity.",
+        "descriptionPlaceholder": "e.g. nutrition articles once or twice a month, plus a page to present the practice.",
+        "objectives": {
+          "present_activity": "Share my expertise",
+          "generate_leads": "Attract readers and inquiries",
+          "other": "Other"
+        }
+      },
+      "portfolio": {
+        "introTitle": "Let’s talk about your portfolio.",
+        "introSubtitle": "We’ll understand how you want to present your work.",
+        "objectiveQuestion": "What should this site mainly allow?",
+        "descriptionQuestion": "What work do you want to show?",
+        "descriptionHelp": "Your craft, the kind of projects to show, and what visitors should do next: write to you, request a quote…",
+        "descriptionPlaceholder": "e.g. interior architect, about ten projects to highlight, with a simple way to get in touch.",
+        "objectives": {
+          "present_activity": "Showcase my work",
+          "generate_leads": "Receive collaboration requests",
+          "other": "Other"
+        }
+      },
+      "landing": {
+        "introTitle": "Let’s talk about your presentation page.",
+        "introSubtitle": "A clear page, designed to convince and invite action.",
+        "objectiveQuestion": "What is the purpose of this page?",
+        "descriptionQuestion": "What offer should this page present?",
+        "descriptionHelp": "The offer or event, who it is for, and the action visitors should take: request a quote, sign up, buy…",
+        "descriptionPlaceholder": "e.g. a course launching in September; the page should present the programme and collect sign-ups.",
+        "objectives": {
+          "generate_leads": "Collect sign-ups or inquiries",
+          "sell_online": "Present an offer and invite a purchase",
+          "present_activity": "Present a launch or an event",
+          "other": "Other"
+        }
+      },
+      "sur-mesure": {
+        "introTitle": "Let’s talk about your tailored project.",
+        "introSubtitle": "No fixed frame: we start from your real need.",
+        "objectiveQuestion": "What would you like to achieve?",
+        "descriptionQuestion": "What need should we solve?",
+        "descriptionHelp": "Your activity, the problem to solve, and what success would look like. We’ll take care of the rest.",
+        "descriptionPlaceholder": "e.g. we manage rentals and want a site that presents the properties and lets people request a visit.",
+        "objectives": {
+          "present_activity": "Make my activity known",
+          "generate_leads": "Receive more inquiries",
+          "sell_online": "Sell online",
+          "create_product": "Offer an online service",
+          "automate_process": "Save time every day",
+          "modernize": "Improve what I already have",
+          "other": "Other"
+        }
+      }
+    },
     "summary": {
       "title": "Your project is taking shape.",
       "subtitle": "Review the summary, then send your request.",
+      "offer": "Offer",
       "type": "Type",
       "objective": "Goal",
       "budget": "Budget",

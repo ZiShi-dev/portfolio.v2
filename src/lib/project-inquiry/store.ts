@@ -14,7 +14,7 @@ const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const SELECT =
-  "id, created_at, updated_at, reference, status, project_type, project_type_other, objective, objective_other, budget_range, budget_custom_amount, timeline, target_launch_date, description, name, email, phone, whatsapp, company, current_website, locale, source, service_id, service_reference, admin_notes";
+  "id, created_at, updated_at, reference, status, project_type, project_type_other, objective, objective_other, budget_range, budget_custom_amount, timeline, target_launch_date, description, name, email, phone, whatsapp, company, current_website, locale, source, service_id, service_reference, admin_notes, admin_seen_at";
 
 export type ProjectInquiryRow = {
   id: string;
@@ -42,6 +42,7 @@ export type ProjectInquiryRow = {
   service_id: string | null;
   service_reference: string | null;
   admin_notes: string | null;
+  admin_seen_at: string | null;
 };
 
 function normalizeRow(raw: Record<string, unknown>): ProjectInquiryRow {
@@ -82,6 +83,8 @@ function normalizeRow(raw: Record<string, unknown>): ProjectInquiryRow {
     service_reference:
       typeof raw.service_reference === "string" ? raw.service_reference : null,
     admin_notes: typeof raw.admin_notes === "string" ? raw.admin_notes : null,
+    admin_seen_at:
+      typeof raw.admin_seen_at === "string" ? raw.admin_seen_at : null,
   };
 }
 
@@ -298,10 +301,66 @@ export async function countNewProjectInquiries(): Promise<number> {
   const { count, error } = await supabase
     .from("project_inquiries")
     .select("id", { count: "exact", head: true })
-    .eq("status", "new");
+    .eq("status", "new")
+    .is("admin_seen_at", null);
 
   if (error) return 0;
   return count ?? 0;
+}
+
+export type UnseenInquiryPreview = {
+  id: string;
+  reference: string;
+  name: string;
+  createdAt: string;
+};
+
+export async function listUnseenNewProjectInquiries(
+  limit = 8
+): Promise<UnseenInquiryPreview[]> {
+  if (!isSupabaseServiceConfigured()) return [];
+  const supabase = createSupabaseServiceClient();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from("project_inquiries")
+    .select("id, reference, name, created_at")
+    .eq("status", "new")
+    .is("admin_seen_at", null)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("[project-inquiry] list unseen", error.message);
+    return [];
+  }
+
+  return (data ?? []).map((row) => ({
+    id: String(row.id),
+    reference: String(row.reference ?? ""),
+    name: String(row.name ?? ""),
+    createdAt: String(row.created_at ?? ""),
+  }));
+}
+
+/** Marque les demandes « new » non lues comme vues (cloche), sans changer le statut. */
+export async function markNewProjectInquiriesSeen(): Promise<number> {
+  if (!isSupabaseServiceConfigured()) return 0;
+  const supabase = createSupabaseServiceClient();
+  if (!supabase) return 0;
+
+  const { data, error } = await supabase
+    .from("project_inquiries")
+    .update({ admin_seen_at: new Date().toISOString() })
+    .eq("status", "new")
+    .is("admin_seen_at", null)
+    .select("id");
+
+  if (error) {
+    console.error("[project-inquiry] mark seen", error.message);
+    return 0;
+  }
+  return data?.length ?? 0;
 }
 
 export type ProjectInquiryWindowStats = {

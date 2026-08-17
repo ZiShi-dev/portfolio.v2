@@ -77,6 +77,9 @@ describe("POST /api/project-inquiry — persistance et attribution", () => {
     mock.module("@/lib/security/audit-log", {
       namedExports: { logFormSecurityEvent: () => undefined },
     });
+    mock.module("@/lib/admin/push/notify", {
+      namedExports: { notifyAdminsOfNewInquiry: async () => undefined },
+    });
   });
 
   before(async () => {

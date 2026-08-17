@@ -152,6 +152,7 @@ describe("projects/store", () => {
     resultQueue.push({ data: [sampleRow], error: null });
     const items = await store.getPublishedProjects("fr", {
       personal: "Perso",
+      for_sale: "Vente",
       sold: "Vendu",
     });
     assert.equal(items.length, 1);
@@ -163,6 +164,35 @@ describe("projects/store", () => {
       (items[0]?.tags ?? []).some((tag) => tag === "Tableau de bord"),
       false
     );
+  });
+
+  it("getPublishedProjects place les projets mis en avant en premier", async () => {
+    const later = {
+      ...sampleRow,
+      id: "18d86636-9162-4aca-9fb8-b2f77ad90539",
+      slug: "later",
+      featured: false,
+      sort_order: 0,
+      created_at: "2026-08-01T00:00:00Z",
+      title: { fr: "Plus récent", en: "Newer", ar: "أحدث" },
+    };
+    const featured = {
+      ...sampleRow,
+      id: "28d86636-9162-4aca-9fb8-b2f77ad90539",
+      slug: "featured-shop",
+      featured: true,
+      sort_order: 40,
+      created_at: "2026-01-01T00:00:00Z",
+      title: { fr: "Boutique mise en avant", en: "Featured shop", ar: "متجر مميز" },
+    };
+    resultQueue.push({ data: [later, featured], error: null });
+    const items = await store.getPublishedProjects("fr", {
+      personal: "Perso",
+      for_sale: "Vente",
+      sold: "Vendu",
+    });
+    assert.equal(items[0]?.slug, "featured-shop");
+    assert.equal(items[1]?.slug, "later");
   });
 
   it("createProject écrit business_type_ids snake_case", async () => {

@@ -42,7 +42,7 @@ export function Testimonials({ reviews }: TestimonialsProps) {
     <section
       id="avis"
       aria-labelledby="reviews-heading"
-      className="relative scroll-mt-28 bg-surface-elevated px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
       <SectionHeading
         id="reviews-heading"

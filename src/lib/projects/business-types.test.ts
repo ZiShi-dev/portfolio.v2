@@ -49,4 +49,14 @@ describe("project-business-types catalogue", () => {
     assert.deepEqual(technologyLabels, ["Next.js"]);
     assert.deepEqual(businessTypeIds, ["ecommerce", "marketplace"]);
   });
+
+  it("partitionProjectTechAndTypes déduplique la stack technique", () => {
+    const { technologyLabels } = partitionProjectTechAndTypes([
+      "Next.js",
+      "TypeScript",
+      "Next.js",
+      "TypeScript",
+    ]);
+    assert.deepEqual(technologyLabels, ["Next.js", "TypeScript"]);
+  });
 });

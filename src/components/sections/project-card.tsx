@@ -9,11 +9,14 @@ import {
   type ProjectItem,
 } from "@/components/sections/project-modal";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
+import { ProjectStatusBadge } from "@/components/sections/project-status-badge";
 import { Link } from "@/i18n/navigation";
 import { routes } from "@/lib/routes";
+import { cn } from "@/lib/utils";
+import type { LocalizedProjectItem } from "@/data/projects";
 
 type ProjectCardProps = {
-  project: ProjectItem;
+  project: LocalizedProjectItem | ProjectItem;
   /** @deprecated Les cartes naviguent vers /projets/[slug]. Conservé pour compat. */
   onOpen?: (project: ProjectItem) => void;
   className?: string;
@@ -33,13 +36,23 @@ export function ProjectCard({
 
   const cardBody = (
     <>
-      <ProjectCardPreview
-        image={project.images[0].src}
-        title={project.title}
-        count={project.images.length}
-        priority={priority}
-        screensLabel={t("screens")}
-      />
+      <div className="relative">
+        <ProjectCardPreview
+          image={project.images[0].src}
+          title={project.title}
+          count={project.images.length}
+          priority={priority}
+          screensLabel={t("screens")}
+        />
+        {"categoryKey" in project ? (
+          <div className="absolute start-3 top-3 z-20">
+            <ProjectStatusBadge
+              categoryKey={project.categoryKey}
+              priceLabel={project.listingPriceLabel}
+            />
+          </div>
+        ) : null}
+      </div>
       <div className="relative p-4 sm:p-6">
         <span
           className="absolute end-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-step-accent/25 bg-background transition-colors group-hover:border-step-accent group-hover:bg-step-accent group-hover:text-primary-foreground sm:end-4 sm:top-4"
@@ -64,7 +77,6 @@ export function ProjectCard({
         </p>
         <ProjectTypeBadges
           businessTypeIds={project.businessTypeIds}
-          tags={project.technologies}
         />
         <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary/75">
           {t("viewCase")}
@@ -79,7 +91,12 @@ export function ProjectCard({
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
       className={
         className ??
-        "group h-full w-full overflow-hidden rounded-2xl border border-step-accent/20 bg-card/80 backdrop-blur-sm transition-colors hover:border-step-accent/45"
+        cn(
+          "group h-full w-full overflow-hidden rounded-2xl border bg-card/80 backdrop-blur-sm transition-colors hover:border-step-accent/45",
+          project.featured
+            ? "border-[rgba(212,175,122,0.38)] shadow-[0_0_20px_rgba(201,169,106,0.10)]"
+            : "border-step-accent/20"
+        )
       }
     >
       <Link

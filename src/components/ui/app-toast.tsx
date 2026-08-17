@@ -51,14 +51,14 @@ export function AppToastHost() {
         {toast ? (
           <motion.div
             key={toast.id}
-            role="alert"
-            aria-live="assertive"
+            role={toast.variant === "error" ? "alert" : "status"}
+            aria-live={toast.variant === "error" ? "assertive" : "polite"}
             initial={{ opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-2xl border px-4 py-3.5 shadow-xl backdrop-blur-md",
+              "pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-2xl border px-4 py-3.5 shadow-[0_24px_70px_-28px_rgb(0_0_0/0.9)] backdrop-blur-xl",
               toast.variant === "success"
                 ? "border-primary/35 bg-card/95 text-foreground"
                 : toast.variant === "info"
@@ -73,7 +73,7 @@ export function AppToastHost() {
                   ? "text-primary"
                   : toast.variant === "info"
                     ? "text-accent"
-                    : "text-red-600"
+                    : "text-red-400"
               )}
               aria-hidden
             />
@@ -83,7 +83,7 @@ export function AppToastHost() {
             <button
               type="button"
               onClick={() => clearAppToast()}
-              className="shrink-0 rounded-full p-1 text-foreground/45 transition-colors hover:bg-muted hover:text-foreground"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-foreground/45 outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/45"
               aria-label={tCommon("closeModal")}
             >
               <X className="h-4 w-4" aria-hidden />

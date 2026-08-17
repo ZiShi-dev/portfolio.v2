@@ -229,10 +229,11 @@ describe("OWASP A04 — Insecure Design (limites projets)", () => {
 });
 
 describe("OWASP A05 — Security Misconfiguration", () => {
-  it("kind whitelist only (personal|sold)", () => {
+  it("kind whitelist only (personal|for_sale|sold)", () => {
     assert.equal(parseProjectWriteBody(valid({ kind: "admin" })).ok, false);
     assert.equal(parseProjectWriteBody(valid({ kind: "client" })).ok, false);
     assert.equal(parseProjectWriteBody(valid({ kind: "sold" })).ok, true);
+    assert.equal(parseProjectWriteBody(valid({ kind: "for_sale" })).ok, true);
     assert.equal(parseProjectWriteBody(valid({ kind: "personal" })).ok, true);
   });
 

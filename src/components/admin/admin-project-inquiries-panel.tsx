@@ -364,7 +364,7 @@ export function AdminProjectInquiriesPanel({
               <div
                 className={cn(
                   "flex items-stretch gap-2 rounded-xl border border-border bg-background/50 transition-colors hover:border-primary/25",
-                  row.status === "new" && "border-s-2 border-s-primary"
+                  !row.admin_seen_at && row.status === "new" && "border-s-2 border-s-primary"
                 )}
               >
                 <button

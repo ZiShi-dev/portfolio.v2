@@ -3,6 +3,13 @@ const LOCAL_DEV_ORIGINS = [
   "http://127.0.0.1:3000",
 ] as const;
 
+const SAFE_REQUEST_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+
+/** Les methodes qui modifient l'etat doivent etre protegees contre le CSRF. */
+export function requestMethodRequiresOrigin(method: string): boolean {
+  return !SAFE_REQUEST_METHODS.has(method.toUpperCase());
+}
+
 function parseOrigin(value: string): string | null {
   try {
     return new URL(value).origin;

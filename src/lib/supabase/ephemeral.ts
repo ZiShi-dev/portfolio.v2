@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { getSupabaseConfig } from "@/lib/supabase/config";
+import { supabaseFetch } from "@/lib/supabase/fetch";
 
 /**
  * Client sans cookies — pour vérifier un mot de passe
@@ -12,6 +13,7 @@ export function createSupabaseEphemeralClient() {
   }
 
   return createClient(config.config.url, config.config.anonKey, {
+    global: { fetch: supabaseFetch },
     auth: {
       persistSession: false,
       autoRefreshToken: false,
