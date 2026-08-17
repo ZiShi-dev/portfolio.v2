@@ -129,10 +129,12 @@
     "backToCatalog": "Back to offers",
     "detailAbout": "About this offer",
     "detailPricing": "Pricing",
-    "relatedProjects": "Related work",
-    "viewCaseStudy": "View a case study",
-    "linkedProjectEyebrow": "Project for sale",
-    "viewLinkedProject": "View project details",
+    "relatedProjects": "More examples",
+    "viewCaseStudy": "View example",
+    "linkedProjectEyebrow": "Example",
+    "viewLinkedProject": "View example details",
+    "viewLiveProject": "View live example",
+    "exampleSubtitle": "A concrete preview of what this offer can deliver.",
     "offerKind": {
       "service": "Service",
       "product": "For sale"
@@ -572,11 +574,11 @@
       "manageInquiries": "View inquiries",
       "inquiriesNewBadge": "{count} new",
       "servicesTitle": "Commercial offers",
-      "servicesBody": "Create, publish and order offers shown on the site. Pricing, translations and linked case studies.",
+      "servicesBody": "Create, publish and order offers shown on the site. Pricing, translations and linked examples.",
       "servicesNext": "Manage everything from /admin/services — no code changes.",
       "manageServices": "Manage offers",
       "servicesPageTitle": "Offers management",
-      "servicesPageSubtitle": "CMS · FR/EN/AR · pricing · case studies · publishing.",
+      "servicesPageSubtitle": "CMS · FR/EN/AR · pricing · project examples · publishing.",
       "engagementsTitle": "VORZIX commitments",
       "engagementsBody": "Edit commitments shown on the site: titles, FR/EN/AR copy, order and publishing.",
       "engagementsNext": "Manage everything from /admin/engagements — no code changes.",
@@ -987,7 +989,7 @@
       "create": "Create offer",
       "createTitle": "New offer",
       "editTitle": "Edit offer",
-      "formHint": "Incomplete drafts allowed. Publishing requires FR title and short description.",
+      "formHint": "Catalog = service only (no project images). Detail page = Example area with images + links from the linked project. Publishing requires FR title and short description.",
       "edit": "Edit",
       "preview": "Preview",
       "publish": "Publish",
@@ -1008,7 +1010,13 @@
       "removeFeature": "Remove",
       "ctaPlaceholder": "Start a project",
       "inquiryNone": "No preselection",
-      "noCaseStudies": "No case studies available.",
+      "noCaseStudies": "No projects available to use as examples.",
+      "exampleStructureHint": "On the offer detail page, the “Example” area shows the project images and link. Home and catalog show the service only.",
+      "examplePreviewLabel": "Example preview",
+      "exampleNoImages": "This project has no images yet — add some in Projects.",
+      "exampleOpenCaseStudy": "Open project page",
+      "exampleOpenLive": "Open live site",
+      "exampleNoLiveLink": "No live URL on this project",
       "notConfiguredTitle": "Unavailable",
       "notConfiguredBody": "Add SUPABASE_SERVICE_ROLE_KEY and run npm run db:migrate (services table).",
       "cols": {
@@ -1044,7 +1052,7 @@
         "commerce": "Type & buttons",
         "pricing": "Pricing",
         "features": "Included items",
-        "caseStudies": "Linked case studies"
+        "caseStudies": "Example"
       },
       "fields": {
         "reference": "Reference",
@@ -1057,7 +1065,8 @@
         "showCtaBuy": "“Buy” button",
         "showCtaStart": "“Start a project” button",
         "coverImage": "Product photo",
-        "linkedProject": "Linked project (/projects) — also provides the photo",
+        "linkedProject": "Main example",
+        "otherExamples": "Other examples",
         "pricingMode": "Pricing mode",
         "currency": "Currency",
         "startingPrice": "Starting price",
@@ -1070,11 +1079,11 @@
         "ctaLabel": "Start CTA label"
       },
       "hints": {
-        "coverImage": "Disabled: the photo comes from the linked project.",
-        "linkedProject": "Link a published project: its images appear on the offer. Without a linked project, no image."
+        "coverImage": "Not used on the catalog. Images come from the example project, on the detail page only.",
+        "linkedProject": "Project images and link shown in the Example area (detail page only)."
       },
-      "linkedProjectNone": "No linked project",
-      "caseStudiesHint": "Secondary case studies shown under the main project.",
+      "linkedProjectNone": "No example",
+      "caseStudiesHint": "Secondary examples under the main example, on the detail page.",
       "duplicate": "Duplicate",
       "archive": "Archive"
     }

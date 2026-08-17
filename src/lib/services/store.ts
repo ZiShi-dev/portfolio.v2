@@ -231,8 +231,7 @@ export function pickLocale(
 
 export function serviceRowToLocalized(
   row: ServiceRow,
-  locale: Locale | string,
-  overrides?: { coverImage?: string | null }
+  locale: Locale | string
 ): LocalizedService {
   return {
     id: row.id,
@@ -252,11 +251,8 @@ export function serviceRowToLocalized(
     offerKind: row.offer_kind,
     showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
-    // Public : image uniquement via projet lié (override). Jamais la cover admin legacy.
-    coverImage:
-      overrides && "coverImage" in overrides
-        ? overrides.coverImage ?? null
-        : null,
+    // Public : jamais de cover service — images uniquement via projet exemple.
+    coverImage: null,
     linkedProjectId: row.linked_project_id,
     pricingMode: row.pricing_mode,
     startingPriceCents: row.starting_price_cents,
@@ -356,7 +352,8 @@ function writeToDbPayload(input: ServiceWriteInput) {
     offer_kind: input.offerKind,
     show_cta_buy: input.showCtaBuy,
     show_cta_start: input.showCtaStart,
-    cover_image: input.coverImage ?? null,
+    // Cover service désactivée : images via projet exemple uniquement.
+    cover_image: null,
     linked_project_id: input.linkedProjectId ?? null,
     pricing_mode: input.pricingMode,
     starting_price_cents: startingCents,
@@ -403,7 +400,8 @@ function patchToDbPayload(
   if (input.showCtaStart !== undefined) {
     payload.show_cta_start = input.showCtaStart;
   }
-  if (input.coverImage !== undefined) payload.cover_image = input.coverImage;
+  // Cover service désactivée — ignorer toute valeur entrante.
+  if (input.coverImage !== undefined) payload.cover_image = null;
   if (input.linkedProjectId !== undefined) {
     payload.linked_project_id = input.linkedProjectId;
   }

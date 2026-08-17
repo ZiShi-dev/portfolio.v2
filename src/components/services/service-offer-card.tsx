@@ -17,8 +17,8 @@ type ServiceOfferCardProps = {
 };
 
 /**
- * Carte catalogue compacte : description tronquée (3 lignes).
- * Produits « à vendre » : photo + prix mis en avant.
+ * Carte catalogue compacte : service uniquement (pas d’images projet).
+ * Prix mis en avant pour les produits « à vendre ».
  */
 export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
   const t = useTranslations("services");
@@ -42,53 +42,25 @@ export function ServiceOfferCard({ service }: ServiceOfferCardProps) {
   const detailHref = serviceDetailPath(service.slug);
   const showBuy = service.showCtaBuy;
   const showStart = service.showCtaStart;
-  const showCover = Boolean(service.coverImage);
 
   return (
     <GlowCard className="h-full overflow-hidden p-0">
       <article className="flex h-full flex-col">
-        {showCover ? (
-          <Link
-            href={detailHref}
-            className="relative block aspect-[16/10] overflow-hidden border-b border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={service.coverImage!}
-              alt=""
-              className="h-full w-full object-cover transition-transform duration-500 ease-out hover:scale-[1.03]"
-              loading="lazy"
-              decoding="async"
-            />
-            <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#070A12]/85 to-transparent px-4 pb-3 pt-10">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
-                {t(`offerKind.${service.offerKind}`)}
-              </span>
-            </span>
-          </Link>
-        ) : null}
-
-        <div className={cn("flex flex-1 flex-col p-5 sm:p-6", showCover && "pt-4")}>
+        <div className="flex flex-1 flex-col p-5 sm:p-6">
           <div className="flex items-center justify-between gap-3">
             <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
               {service.reference}
-              {!showCover ? (
-                <>
-                  <span className="mx-1.5 text-border-gold/60">·</span>
-                  <span className="text-muted-foreground">
-                    {t(`offerKind.${service.offerKind}`)}
-                  </span>
-                </>
-              ) : null}
+              <span className="mx-1.5 text-border-gold/60">·</span>
+              <span className="text-muted-foreground">
+                {t(`offerKind.${service.offerKind}`)}
+              </span>
             </span>
-            {!showCover ? (
-              <div
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-primary"
-                aria-hidden
-              >
-                <ServiceIcon name={service.icon} className="h-4 w-4" />
-              </div>
-            ) : null}
+            <div
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-primary"
+              aria-hidden
+            >
+              <ServiceIcon name={service.icon} className="h-4 w-4" />
+            </div>
           </div>
 
           <h3 className="mt-4 font-display text-lg font-semibold leading-snug text-foreground sm:text-xl">

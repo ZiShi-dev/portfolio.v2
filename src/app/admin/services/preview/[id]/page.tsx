@@ -55,15 +55,6 @@ export default async function AdminServicePreviewPage({ params }: PageProps) {
         Preview admin · statut <strong>{row.status}</strong> · non indexable
       </div>
 
-      {service.coverImage ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={service.coverImage}
-          alt=""
-          className="aspect-[16/9] w-full rounded-xl border border-border object-cover"
-        />
-      ) : null}
-
       <header className="flex items-start justify-between gap-4">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
@@ -74,11 +65,9 @@ export default async function AdminServicePreviewPage({ params }: PageProps) {
           </h1>
           <p className="mt-3 font-mono text-lg text-primary">{price.label}</p>
         </div>
-        {!service.coverImage ? (
-          <div className="flex h-12 w-12 items-center justify-center rounded-md border border-border text-primary">
-            <ServiceIcon name={service.icon} className="h-5 w-5" />
-          </div>
-        ) : null}
+        <div className="flex h-12 w-12 items-center justify-center rounded-md border border-border text-primary">
+          <ServiceIcon name={service.icon} className="h-5 w-5" />
+        </div>
       </header>
 
       <p className="text-muted-foreground">{service.shortDescription}</p>

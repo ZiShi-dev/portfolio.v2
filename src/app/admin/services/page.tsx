@@ -7,7 +7,7 @@ import { getAdminLocale } from "@/lib/admin/i18n";
 import { requireAdminPageUser } from "@/lib/admin/require-admin-page";
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
 import { listServicesForAdmin } from "@/lib/services/store";
-import { listProjectsForAdmin } from "@/lib/projects/store";
+import { listProjectsForAdmin, projectCoverUrl } from "@/lib/projects/store";
 
 export const dynamic = "force-dynamic";
 
@@ -34,13 +34,24 @@ export default async function AdminServicesPage() {
   const projectsListed = await listProjectsForAdmin();
   const caseStudyOptions =
     projectsListed.ok && projectsListed.configured
-      ? projectsListed.projects.map((p) => ({
-          id: p.id,
-          slug: p.slug,
-          reference: p.reference,
-          title: p.title.fr || p.title.en || p.slug,
-          published: p.published,
-        }))
+      ? projectsListed.projects.map((p) => {
+          const cover = projectCoverUrl(p) ?? null;
+          const gallery = p.images.map((img) => img.url).filter(Boolean);
+          const images = [
+            ...(cover ? [cover] : []),
+            ...gallery.filter((url) => url !== cover),
+          ].slice(0, 4);
+          return {
+            id: p.id,
+            slug: p.slug,
+            reference: p.reference,
+            title: p.title.fr || p.title.en || p.slug,
+            published: p.published,
+            coverImage: cover,
+            images,
+            link: p.link,
+          };
+        })
       : [];
 
   return (
