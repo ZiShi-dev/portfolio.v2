@@ -1082,10 +1082,10 @@
       },
       "hints": {
         "coverImage": "Non utilisé sur le catalogue. Les images viennent du projet exemple, uniquement en page détail.",
-        "linkedProject": "Projet publié dont les images et le lien s’affichent dans la zone Exemple de /offres/[slug]."
+        "linkedProject": "Images et lien du projet affichés dans la zone Exemple (page détail uniquement)."
       },
       "linkedProjectNone": "Aucun exemple",
-      "caseStudiesHint": "Exemples secondaires affichés sous l’exemple principal sur la page détail.",
+      "caseStudiesHint": "Exemples secondaires sous l’exemple principal, sur la page détail.",
       "duplicate": "Dupliquer",
       "archive": "Archiver"
     }

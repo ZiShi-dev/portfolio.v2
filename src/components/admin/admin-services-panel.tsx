@@ -640,7 +640,7 @@ export function AdminServicesPanel({
       )}
 
       <Dialog open={editorOpen} onOpenChange={setEditorOpen}>
-        <DialogContent className="max-h-[min(92dvh,900px)] w-[calc(100%-1.5rem)] max-w-3xl overflow-y-auto p-4 sm:p-6">
+        <DialogContent className="max-h-[min(92dvh,900px)] w-[calc(100%-1.5rem)] max-w-3xl overflow-x-hidden overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>
               {editor.id ? t("editTitle") : t("createTitle")}
@@ -648,8 +648,8 @@ export function AdminServicesPanel({
             <DialogDescription>{t("formHint")}</DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6 py-2">
-            <section className="space-y-3">
+          <div className="min-w-0 space-y-6 py-2">
+            <section className="min-w-0 space-y-3">
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.identity")}
               </h3>
@@ -1117,7 +1117,7 @@ export function AdminServicesPanel({
               ))}
             </section>
 
-            <section className="space-y-3">
+            <section className="min-w-0 space-y-3">
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.caseStudies")}
               </h3>

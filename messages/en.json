@@ -1080,10 +1080,10 @@
       },
       "hints": {
         "coverImage": "Not used on the catalog. Images come from the example project, on the detail page only.",
-        "linkedProject": "Published project whose images and link appear in the Example area on /offres/[slug]."
+        "linkedProject": "Project images and link shown in the Example area (detail page only)."
       },
       "linkedProjectNone": "No example",
-      "caseStudiesHint": "Secondary examples shown under the main example on the detail page.",
+      "caseStudiesHint": "Secondary examples under the main example, on the detail page.",
       "duplicate": "Duplicate",
       "archive": "Archive"
     }
