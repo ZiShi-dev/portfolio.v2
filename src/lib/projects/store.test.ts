@@ -86,7 +86,7 @@ const sampleRow = {
     en: "Desc EN long enough here.",
     ar: "وصف عربي كافٍ هنا فعلا.",
   },
-  kind: "personal",
+  kind: "personal" as const,
   business_type_ids: ["dashboard"],
   images: [
     {
