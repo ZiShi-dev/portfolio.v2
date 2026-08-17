@@ -131,8 +131,9 @@
     "detailPricing": "Tarification",
     "relatedProjects": "Réalisations associées",
     "viewCaseStudy": "Voir une réalisation",
-    "linkedProjectEyebrow": "Projet à vendre",
+    "linkedProjectEyebrow": "Projet associé",
     "viewLinkedProject": "Voir le détail du projet",
+    "viewLiveProject": "Voir le site du projet",
     "offerKind": {
       "service": "Service",
       "product": "À vendre"
@@ -1059,7 +1060,7 @@
         "showCtaBuy": "Bouton « Acheter »",
         "showCtaStart": "Bouton « Démarrer un projet »",
         "coverImage": "Photo du produit",
-        "linkedProject": "Projet lié (/projets) — fournit aussi la photo",
+        "linkedProject": "Projet lié (/projets)",
         "pricingMode": "Mode tarifaire",
         "currency": "Devise",
         "startingPrice": "Prix de départ",
@@ -1072,11 +1073,11 @@
         "ctaLabel": "Libellé CTA démarrer"
       },
       "hints": {
-        "coverImage": "Désactivé : la photo vient du projet lié.",
-        "linkedProject": "Associez un projet publié : ses images s’affichent sur l’offre. Sans projet lié, aucune image."
+        "coverImage": "Désactivé sur le catalogue : les images viennent du projet lié, uniquement en page détail.",
+        "linkedProject": "Associez un projet publié : liens + images du projet s’affichent sur la page détail de l’offre."
       },
       "linkedProjectNone": "Aucun projet lié",
-      "caseStudiesHint": "Réalisations secondaires affichées sous le projet principal.",
+      "caseStudiesHint": "Réalisations secondaires : liens + images sur la page détail de l’offre.",
       "duplicate": "Dupliquer",
       "archive": "Archiver"
     }

@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { ArrowLeft, ArrowUpRight, Check, MessageSquare, ShoppingBag } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Check,
+  ExternalLink,
+  MessageSquare,
+  ShoppingBag,
+} from "lucide-react";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { Button } from "@/components/ui/button";
 import { CelestialAtlas } from "@/components/ui/celestial-atlas";
@@ -17,15 +24,12 @@ import {
 import { ServiceIcon } from "@/lib/services/icons";
 import { resolveServicePriceDisplay } from "@/lib/services/pricing";
 import {
+  getServiceRelatedProjects,
   getSiteServiceBySlug,
   getSiteServices,
 } from "@/lib/services/site";
 import { getSiteFaqsForService } from "@/lib/faqs/site";
 import { FaqSection } from "@/components/sections/faq";
-import {
-  listPublishedProjectRows,
-  projectRowToLocalized,
-} from "@/lib/projects/store";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -56,7 +60,7 @@ export async function generateMetadata({
   });
 }
 
-/** Page détail d’une offre — « en savoir plus » */
+/** Page détail d’une offre — service uniquement ; projets = liens + images. */
 export default async function OffreDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const locale = (await getLocale()) as Locale;
@@ -77,35 +81,10 @@ export default async function OffreDetailPage({ params }: PageProps) {
     },
   });
 
-  const related: {
-    slug: string;
-    title: string;
-    reference?: string;
-    id: string;
-  }[] = [];
-  if (service.caseStudyIds.length > 0 || service.linkedProjectId) {
-    const published = await listPublishedProjectRows();
-    if (published) {
-      const byId = new Map(published.map((p) => [p.id, p]));
-      const pushRelated = (id: string) => {
-        if (related.some((r) => r.id === id)) return;
-        const row = byId.get(id);
-        if (!row) return;
-        const localized = projectRowToLocalized(row, locale, row.kind);
-        related.push({
-          id,
-          slug: localized.slug ?? row.slug,
-          title: localized.title,
-          reference: localized.reference,
-        });
-      };
-      if (service.linkedProjectId) pushRelated(service.linkedProjectId);
-      for (const id of service.caseStudyIds) pushRelated(id);
-    }
-  }
-
+  const related = await getServiceRelatedProjects(locale, service);
   const linkedProject =
     related.find((p) => p.id === service.linkedProjectId) ?? null;
+  const otherProjects = related.filter((p) => p.id !== linkedProject?.id);
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
   const faqs = await getSiteFaqsForService(locale, service.id);
 
@@ -125,18 +104,6 @@ export default async function OffreDetailPage({ params }: PageProps) {
           {t("backToCatalog")}
         </Link>
 
-        {service.coverImage ? (
-          <div className="mt-8 overflow-hidden rounded-xl border border-border-gold/30">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={service.coverImage}
-              alt=""
-              className="aspect-[16/9] w-full object-cover"
-              decoding="async"
-            />
-          </div>
-        ) : null}
-
         <header className="mt-8 flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -154,14 +121,12 @@ export default async function OffreDetailPage({ params }: PageProps) {
               {price.label}
             </p>
           </div>
-          {!service.coverImage ? (
-            <div
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border text-primary sm:h-14 sm:w-14"
-              aria-hidden
-            >
-              <ServiceIcon name={service.icon} className="h-5 w-5 sm:h-6 sm:w-6" />
-            </div>
-          ) : null}
+          <div
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border text-primary sm:h-14 sm:w-14"
+            aria-hidden
+          >
+            <ServiceIcon name={service.icon} className="h-5 w-5 sm:h-6 sm:w-6" />
+          </div>
         </header>
 
         <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -247,38 +212,160 @@ export default async function OffreDetailPage({ params }: PageProps) {
                 {linkedProject.reference}
               </p>
             ) : null}
-            <Button asChild size="lg" className="mt-5 min-h-12 w-full sm:w-auto">
-              <Link href={`${routes.projects}/${linkedProject.slug}`}>
-                {t("viewLinkedProject")}
-                <ArrowUpRight className="h-4 w-4" aria-hidden />
-              </Link>
-            </Button>
+
+            {linkedProject.images.length > 0 ? (
+              <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {linkedProject.images.map((src) =>
+                  linkedProject.externalUrl ? (
+                    <a
+                      key={src}
+                      href={linkedProject.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="overflow-hidden rounded-lg border border-border transition-colors hover:border-primary/40"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={src}
+                        alt=""
+                        className="aspect-[4/3] w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  ) : (
+                    <Link
+                      key={src}
+                      href={`${routes.projects}/${linkedProject.slug}`}
+                      className="overflow-hidden rounded-lg border border-border transition-colors hover:border-primary/40"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={src}
+                        alt=""
+                        className="aspect-[4/3] w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </Link>
+                  )
+                )}
+              </div>
+            ) : null}
+
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+              <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
+                <Link href={`${routes.projects}/${linkedProject.slug}`}>
+                  {t("viewLinkedProject")}
+                  <ArrowUpRight className="h-4 w-4" aria-hidden />
+                </Link>
+              </Button>
+              {linkedProject.externalUrl ? (
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="min-h-12 w-full sm:w-auto"
+                >
+                  <a
+                    href={linkedProject.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t("viewLiveProject")}
+                    <ExternalLink className="h-4 w-4" aria-hidden />
+                  </a>
+                </Button>
+              ) : null}
+            </div>
           </section>
         ) : null}
 
-        {related.filter((p) => p.id !== linkedProject?.id).length > 0 ? (
+        {otherProjects.length > 0 ? (
           <section className="mt-10">
             <h2 className="font-display text-xl font-semibold text-foreground">
               {t("relatedProjects")}
             </h2>
-            <ul className="mt-4 space-y-2">
-              {related
-                .filter((p) => p.id !== linkedProject?.id)
-                .map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`${routes.projects}/${p.slug}`}
-                    className="group flex min-h-12 items-center justify-between gap-3 rounded-lg border border-border bg-surface-elevated/30 px-4 py-3 transition-colors hover:border-primary/40"
-                  >
-                    <span className="text-sm text-foreground group-hover:text-primary">
+            <ul className="mt-4 space-y-4">
+              {otherProjects.map((p) => (
+                <li
+                  key={p.id}
+                  className="rounded-xl border border-border bg-surface-elevated/30 p-4"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <Link
+                      href={`${routes.projects}/${p.slug}`}
+                      className="font-display text-base font-semibold text-foreground transition-colors hover:text-primary"
+                    >
                       {p.title}
-                    </span>
+                    </Link>
                     {p.reference ? (
                       <span className="font-mono text-[10px] tracking-wider text-muted-foreground">
                         {p.reference}
                       </span>
                     ) : null}
-                  </Link>
+                  </div>
+
+                  {p.images.length > 0 ? (
+                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {p.images.map((src) =>
+                        p.externalUrl ? (
+                          <a
+                            key={src}
+                            href={p.externalUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="overflow-hidden rounded-md border border-border transition-colors hover:border-primary/40"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={src}
+                              alt=""
+                              className="aspect-[4/3] w-full object-cover"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </a>
+                        ) : (
+                          <Link
+                            key={src}
+                            href={`${routes.projects}/${p.slug}`}
+                            className="overflow-hidden rounded-md border border-border transition-colors hover:border-primary/40"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={src}
+                              alt=""
+                              className="aspect-[4/3] w-full object-cover"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </Link>
+                        )
+                      )}
+                    </div>
+                  ) : null}
+
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    <Link
+                      href={`${routes.projects}/${p.slug}`}
+                      className="inline-flex min-h-9 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80 transition-colors hover:text-primary"
+                    >
+                      {t("viewCaseStudy")}
+                      <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+                    </Link>
+                    {p.externalUrl ? (
+                      <a
+                        href={p.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-9 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-primary"
+                      >
+                        {t("viewLiveProject")}
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                      </a>
+                    ) : null}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -327,9 +414,9 @@ export default async function OffreDetailPage({ params }: PageProps) {
                 {t("viewLinkedProject")}
               </Link>
             </Button>
-          ) : related[0] ? (
+          ) : otherProjects[0] ? (
             <Button asChild variant="outline" size="lg" className="min-h-12">
-              <Link href={`${routes.projects}/${related[0].slug}`}>
+              <Link href={`${routes.projects}/${otherProjects[0].slug}`}>
                 {t("viewCaseStudy")}
               </Link>
             </Button>

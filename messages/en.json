@@ -131,8 +131,9 @@
     "detailPricing": "Pricing",
     "relatedProjects": "Related work",
     "viewCaseStudy": "View a case study",
-    "linkedProjectEyebrow": "Project for sale",
+    "linkedProjectEyebrow": "Related project",
     "viewLinkedProject": "View project details",
+    "viewLiveProject": "View live project",
     "offerKind": {
       "service": "Service",
       "product": "For sale"
@@ -1057,7 +1058,7 @@
         "showCtaBuy": "“Buy” button",
         "showCtaStart": "“Start a project” button",
         "coverImage": "Product photo",
-        "linkedProject": "Linked project (/projects) — also provides the photo",
+        "linkedProject": "Linked project (/projects)",
         "pricingMode": "Pricing mode",
         "currency": "Currency",
         "startingPrice": "Starting price",
@@ -1070,11 +1071,11 @@
         "ctaLabel": "Start CTA label"
       },
       "hints": {
-        "coverImage": "Disabled: the photo comes from the linked project.",
-        "linkedProject": "Link a published project: its images appear on the offer. Without a linked project, no image."
+        "coverImage": "Disabled on the catalog: images come from the linked project, on the detail page only.",
+        "linkedProject": "Link a published project: its links and images appear on the offer detail page."
       },
       "linkedProjectNone": "No linked project",
-      "caseStudiesHint": "Secondary case studies shown under the main project.",
+      "caseStudiesHint": "Secondary case studies: links + images on the offer detail page.",
       "duplicate": "Duplicate",
       "archive": "Archive"
     }

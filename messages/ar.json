@@ -131,8 +131,9 @@
     "detailPricing": "التسعير",
     "relatedProjects": "أعمال مرتبطة",
     "viewCaseStudy": "عرض إنجاز",
-    "linkedProjectEyebrow": "المشروع المعروض للبيع",
+    "linkedProjectEyebrow": "مشروع مرتبط",
     "viewLinkedProject": "عرض تفاصيل المشروع",
+    "viewLiveProject": "عرض موقع المشروع",
     "offerKind": {
       "service": "خدمة",
       "product": "للبيع"
@@ -1057,7 +1058,7 @@
         "showCtaBuy": "زر « اشترِ »",
         "showCtaStart": "زر « ابدأ مشروعاً »",
         "coverImage": "صورة المنتج",
-        "linkedProject": "المشروع المرتبط (/projets) — يوفّر الصورة أيضاً",
+        "linkedProject": "المشروع المرتبط (/projets)",
         "pricingMode": "نمط التسعير",
         "currency": "العملة",
         "startingPrice": "سعر البداية",
@@ -1070,11 +1071,11 @@
         "ctaLabel": "نص زر ابدأ"
       },
       "hints": {
-        "coverImage": "معطّل: الصورة تأتي من المشروع المرتبط.",
-        "linkedProject": "اربط مشروعاً منشوراً: تظهر صوره على العرض. بدون مشروع مرتبط لا توجد صورة."
+        "coverImage": "معطّل في الكتالوج: الصور تأتي من المشروع المرتبط في صفحة التفاصيل فقط.",
+        "linkedProject": "اربط مشروعاً منشوراً: تظهر روابطه وصوره في صفحة تفاصيل العرض."
       },
       "linkedProjectNone": "لا يوجد مشروع مرتبط",
-      "caseStudiesHint": "دراسات حالة ثانوية تظهر تحت المشروع الرئيسي.",
+      "caseStudiesHint": "دراسات حالة ثانوية: روابط وصور في صفحة تفاصيل العرض.",
       "duplicate": "تكرار",
       "archive": "أرشفة"
     }

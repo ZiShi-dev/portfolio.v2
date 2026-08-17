@@ -231,8 +231,7 @@ export function pickLocale(
 
 export function serviceRowToLocalized(
   row: ServiceRow,
-  locale: Locale | string,
-  overrides?: { coverImage?: string | null }
+  locale: Locale | string
 ): LocalizedService {
   return {
     id: row.id,
@@ -252,11 +251,9 @@ export function serviceRowToLocalized(
     offerKind: row.offer_kind,
     showCtaBuy: row.show_cta_buy,
     showCtaStart: row.show_cta_start,
-    // Public : image uniquement via projet lié (override). Jamais la cover admin legacy.
-    coverImage:
-      overrides && "coverImage" in overrides
-        ? overrides.coverImage ?? null
-        : null,
+    // Catalogue / home : pas d’image projet. Les images s’affichent
+    // uniquement sur la page détail via le projet lié.
+    coverImage: null,
     linkedProjectId: row.linked_project_id,
     pricingMode: row.pricing_mode,
     startingPriceCents: row.starting_price_cents,
