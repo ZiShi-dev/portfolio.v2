@@ -36,7 +36,7 @@ export function AnimatedNumber({
   className,
 }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: !animateOnChange, margin: "-40px" });
+  const inView = useInView(ref, { once: !animateOnChange, amount: 0.4 });
   const reduceMotion = useReducedMotion();
   const [display, setDisplay] = useState(0);
   const hasAnimatedRef = useRef(false);
