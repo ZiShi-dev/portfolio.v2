@@ -3,13 +3,7 @@
 import { useId, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import {
-  Check,
-  ChevronDown,
-  ExternalLink,
-  Mail,
-  MessageCircle,
-} from "lucide-react";
+import { Check, ChevronDown, ExternalLink, Mail, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
@@ -17,11 +11,11 @@ import { GlowCard } from "@/components/ui/glow-card";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
 import { ProjectStatusBadge } from "@/components/sections/project-status-badge";
 import { ReviewCard } from "@/components/sections/review-card";
-import { ContactOpenLink } from "@/components/contact-open-link";
 import { Link } from "@/i18n/navigation";
 import type { ReviewItem } from "@/data/reviews";
 import type { FooterSocialLink } from "@/lib/brand";
 import { isSafeHttpUrl } from "@/lib/review-schema";
+import { resolveSaleCtaButtons } from "@/lib/projects/sale-cta";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import type { LocalizedProjectItem } from "@/data/projects";
@@ -48,75 +42,52 @@ const FAQ_KEYS = [
   "demo",
 ] as const;
 
-function listingHref(project: LocalizedProjectItem) {
-  return {
-    listingSlug: project.slug ?? null,
-    projectType: project.businessTypeIds?.includes("ecommerce")
-      ? "ecommerce"
-      : undefined,
-    intent: "buy" as const,
-  };
-}
-
-function SalePrimaryCta({
+function SaleCtaButtons({
   project,
   contacts,
-  className,
 }: {
   project: LocalizedProjectItem;
   contacts: ProjectSaleContacts;
-  className?: string;
 }) {
   const t = useTranslations("projectSale");
-  const useContacts =
-    project.saleCtaMode === "contacts" &&
-    Boolean(contacts.email || contacts.socials.some((s) => s.href));
+  const buttons = resolveSaleCtaButtons({
+    channels: project.saleCtaChannels ?? [],
+    customLabel: project.saleCtaLabel,
+    email: contacts.email,
+    socials: contacts.socials,
+    emailLabel: t("ctaEmail"),
+  });
 
-  if (!useContacts) {
-    return (
-      <Button asChild size="lg" className={cn("min-h-12 w-full sm:w-auto", className)}>
-        <ContactOpenLink {...listingHref(project)}>
-          {t("ctaInterest", { title: project.title })}
-        </ContactOpenLink>
-      </Button>
-    );
-  }
-
-  return null;
-}
-
-function SaleContactChannels({
-  contacts,
-}: {
-  contacts: ProjectSaleContacts;
-}) {
-  const t = useTranslations("projectSale");
-  const socials = contacts.socials.filter((s) => s.href.length > 0);
+  if (buttons.length === 0) return null;
 
   return (
     <div className="flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-      {contacts.email ? (
-        <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
-          <a href={`mailto:${contacts.email}`}>
-            <Mail className="h-4 w-4" aria-hidden />
-            {t("ctaEmail")}
-          </a>
-        </Button>
-      ) : null}
-      {socials.map((s) => (
-        <Button
-          key={s.id}
-          asChild
-          size="lg"
-          variant={s.id === "whatsapp" || s.preferred ? "default" : "outline"}
-          className="min-h-12 w-full sm:w-auto"
-        >
-          <a href={s.href} target="_blank" rel="noopener noreferrer">
-            <MessageCircle className="h-4 w-4" aria-hidden />
-            {s.label}
-          </a>
-        </Button>
-      ))}
+      {buttons.map((button) => {
+        const external = button.id !== "email";
+        return (
+          <Button
+            key={button.id}
+            asChild
+            size="lg"
+            variant={button.primary ? "default" : "outline"}
+            className="min-h-12 w-full sm:w-auto"
+          >
+            <a
+              href={button.href}
+              {...(external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+            >
+              {button.id === "email" ? (
+                <Mail className="h-4 w-4" aria-hidden />
+              ) : (
+                <MessageCircle className="h-4 w-4" aria-hidden />
+              )}
+              {button.label}
+            </a>
+          </Button>
+        );
+      })}
     </div>
   );
 }
@@ -137,9 +108,6 @@ export function ProjectSaleDetail({
   const demoUrl =
     project.link && isSafeHttpUrl(project.link) ? project.link : null;
   const isEcommerce = businessTypeIds.includes("ecommerce");
-  const useContacts =
-    project.saleCtaMode === "contacts" &&
-    Boolean(contacts.email || contacts.socials.some((s) => s.href));
   const faqBaseId = useId();
   const [openFaq, setOpenFaq] = useState<string>(FAQ_KEYS[0]);
 
@@ -172,11 +140,7 @@ export function ProjectSaleDetail({
             </div>
           ) : null}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            {useContacts ? (
-              <SaleContactChannels contacts={contacts} />
-            ) : (
-              <SalePrimaryCta project={project} contacts={contacts} />
-            )}
+            <SaleCtaButtons project={project} contacts={contacts} />
             {demoUrl ? (
               <Button
                 asChild
@@ -513,11 +477,7 @@ export function ProjectSaleDetail({
               {t("finalSubtitle")}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3">
-              {useContacts ? (
-                <SaleContactChannels contacts={contacts} />
-              ) : (
-                <SalePrimaryCta project={project} contacts={contacts} />
-              )}
+              <SaleCtaButtons project={project} contacts={contacts} />
               <div className="flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
                 {demoUrl ? (
                   <Button

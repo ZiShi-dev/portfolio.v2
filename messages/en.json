@@ -776,11 +776,13 @@
         "seoTitle": "SEO title",
         "seoDescription": "SEO description",
         "coverImage": "Cover image",
-        "saleCtaMode": "Sales page CTA"
+        "saleCtaLabel": "Button text",
+        "saleCtaChannels": "Shown networks"
       },
-      "saleCtaModeHint": "Interest journey, or the contacts saved in Settings (email, WhatsApp, Discord…).",
-      "saleCtaInquiry": "“I’m interested” journey",
-      "saleCtaContacts": "Contacts (admin email / networks)",
+      "saleCtaLabelHint": "Label of the main button. If empty, the network name is shown.",
+      "saleCtaLabelPlaceholder": "I'm interested",
+      "saleCtaChannelsHint": "Email and networks from Settings. This button does not open the “Start a project” flow.",
+      "saleCtaChannelEmail": "Email",
       "businessTypesHint": "Up to {max} types.",
       "businessTypesMax": "Maximum {max} application types.",
       "businessTypes": {

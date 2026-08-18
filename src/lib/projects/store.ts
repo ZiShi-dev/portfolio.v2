@@ -11,8 +11,10 @@ import {
   type ProjectLocale,
   type ProjectPatchInput,
   type ProjectWriteInput,
+  type SaleCtaChannel,
   type SaleCtaMode,
 } from "@/lib/projects/schema";
+import { normalizeSaleCtaChannels } from "@/lib/projects/sale-cta";
 import { formatServicePrice } from "@/lib/services/pricing";
 import {
   createSupabaseServiceClient,
@@ -61,13 +63,15 @@ export type ProjectRow = {
   listing_price_cents: number | null;
   listing_intent: ProjectI18n;
   sale_cta_mode: SaleCtaMode;
+  sale_cta_label: ProjectI18n;
+  sale_cta_channels: SaleCtaChannel[];
 };
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const PROJECT_SELECT =
-  "id, created_at, updated_at, slug, reference, title, description, kind, business_type_ids, images, cover_image, link, app_link, sort_order, published, featured, published_at, technologies, features, client_need, objective, solution, result, seo_title, seo_description, listing_price_cents, listing_intent, sale_cta_mode";
+  "id, created_at, updated_at, slug, reference, title, description, kind, business_type_ids, images, cover_image, link, app_link, sort_order, published, featured, published_at, technologies, features, client_need, objective, solution, result, seo_title, seo_description, listing_price_cents, listing_intent, sale_cta_mode, sale_cta_label, sale_cta_channels";
 
 function asKind(value: unknown): ProjectKind {
   if (value === "sold" || value === "for_sale" || value === "personal") {
@@ -78,7 +82,7 @@ function asKind(value: unknown): ProjectKind {
 
 function asSaleCtaMode(value: unknown): SaleCtaMode {
   if (value === "contacts" || value === "inquiry") return value;
-  return "inquiry";
+  return "contacts";
 }
 
 function asCents(value: unknown): number | null {
@@ -168,6 +172,8 @@ function normalizeRow(raw: Record<string, unknown>): ProjectRow {
     listing_price_cents: asCents(raw.listing_price_cents),
     listing_intent: asI18n(raw.listing_intent),
     sale_cta_mode: asSaleCtaMode(raw.sale_cta_mode),
+    sale_cta_label: asI18n(raw.sale_cta_label),
+    sale_cta_channels: normalizeSaleCtaChannels(raw.sale_cta_channels),
   };
 }
 
@@ -262,7 +268,13 @@ export function projectRowToLocalized(
       row.kind === "for_sale" || row.kind === "sold"
         ? pickLocale(row.listing_intent, locale) || undefined
         : undefined,
-    saleCtaMode: row.kind === "for_sale" ? row.sale_cta_mode : undefined,
+    saleCtaMode: row.kind === "for_sale" ? "contacts" : undefined,
+    saleCtaLabel:
+      row.kind === "for_sale"
+        ? pickLocale(row.sale_cta_label, locale) || undefined
+        : undefined,
+    saleCtaChannels:
+      row.kind === "for_sale" ? row.sale_cta_channels : undefined,
   };
 }
 
@@ -438,10 +450,21 @@ function writeToDbPayload(
   if (values.saleCtaMode !== undefined) {
     payload.sale_cta_mode = values.saleCtaMode;
   }
+  if (values.saleCtaLabel !== undefined) {
+    payload.sale_cta_label = values.saleCtaLabel;
+  }
+  if (values.saleCtaChannels !== undefined) {
+    payload.sale_cta_channels = values.saleCtaChannels;
+  }
   if (values.kind === "personal") {
     payload.listing_price_cents = null;
     payload.listing_intent = { fr: "", en: "", ar: "" };
-    payload.sale_cta_mode = "inquiry";
+    payload.sale_cta_mode = "contacts";
+    payload.sale_cta_label = { fr: "", en: "", ar: "" };
+    payload.sale_cta_channels = [];
+  }
+  if (values.kind === "for_sale") {
+    payload.sale_cta_mode = "contacts";
   }
   if (values.businessTypeIds !== undefined) {
     payload.business_type_ids = values.businessTypeIds;

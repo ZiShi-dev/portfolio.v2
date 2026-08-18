@@ -235,6 +235,23 @@ describe("parseProjectPatchBody", () => {
     if (parsed.ok) assert.equal(parsed.values.saleCtaMode, "contacts");
   });
 
+  it("accepte saleCtaLabel et saleCtaChannels", () => {
+    const parsed = parseProjectPatchBody({
+      saleCtaLabel: { fr: "Je suis intéressé", en: "I'm interested", ar: "أنا مهتم" },
+      saleCtaChannels: ["whatsapp", "email"],
+    });
+    assert.equal(parsed.ok, true);
+    if (parsed.ok) {
+      assert.equal(parsed.values.saleCtaLabel?.fr, "Je suis intéressé");
+      assert.deepEqual(parsed.values.saleCtaChannels, ["whatsapp", "email"]);
+    }
+  });
+
+  it("refuse saleCtaChannels hors whitelist", () => {
+    const parsed = parseProjectPatchBody({ saleCtaChannels: ["telegram"] });
+    assert.equal(parsed.ok, false);
+  });
+
   it("refuse saleCtaMode hors whitelist", () => {
     const parsed = parseProjectPatchBody({ saleCtaMode: "whatsapp" });
     assert.equal(parsed.ok, false);
@@ -261,7 +278,7 @@ describe("parseProjectPatchBody", () => {
       })
     );
     assert.equal(parsed.ok, true);
-    if (parsed.ok) assert.equal(parsed.values.saleCtaMode, "inquiry");
+    if (parsed.ok) assert.equal(parsed.values.saleCtaMode, "contacts");
   });
 
   it("refuse un projet vendu publié sans description du travail", () => {

@@ -12,6 +12,8 @@ type ProjectsProps = {
 export function Projects({ projects }: ProjectsProps) {
   const t = useTranslations("projects");
 
+  if (projects.length === 0) return null;
+
   return (
     <section
       id="projets"

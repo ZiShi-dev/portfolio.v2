@@ -49,13 +49,15 @@ import { readAdminApiError } from "@/lib/admin/api-error";
 import { PROJECT_BUSINESS_TYPES } from "@/data/project-business-type-icons";
 import {
   PROJECT_LIMITS,
+  SALE_CTA_CHANNELS,
   parseProjectWriteBody,
   type ProjectKind,
-  type SaleCtaMode,
+  type SaleCtaChannel,
 } from "@/lib/projects/schema";
 import { resolveProjectSlug, slugifyProjectTitle } from "@/lib/projects/slug";
 import type { ProjectI18n, ProjectRow } from "@/lib/projects/store";
 import { centsToEurosInput, parseEurosToCents } from "@/lib/services/pricing";
+import { SITE_SOCIAL_LABELS } from "@/data/site-social";
 import { cn } from "@/lib/utils";
 import { useSubmitGuard } from "@/hooks/use-submit-guard";
 
@@ -70,7 +72,8 @@ type EditorState = {
   kind: ProjectKind;
   listingPriceEuros: string;
   listingIntent: ProjectI18n;
-  saleCtaMode: SaleCtaMode;
+  saleCtaLabel: ProjectI18n;
+  saleCtaChannels: SaleCtaChannel[];
   businessTypeIds: string[];
   images: { url: string; label?: Partial<ProjectI18n> }[];
   coverImage: string;
@@ -109,7 +112,8 @@ function emptyEditor(): EditorState {
     kind: "personal",
     listingPriceEuros: "",
     listingIntent: emptyI18n(),
-    saleCtaMode: "inquiry",
+    saleCtaLabel: emptyI18n(),
+    saleCtaChannels: [...SALE_CTA_CHANNELS],
     businessTypeIds: [],
     images: [],
     coverImage: "",
@@ -139,7 +143,8 @@ function rowToEditor(row: ProjectRow): EditorState {
     kind: row.kind,
     listingPriceEuros: centsToEurosInput(row.listing_price_cents),
     listingIntent: { ...row.listing_intent },
-    saleCtaMode: row.sale_cta_mode ?? "inquiry",
+    saleCtaLabel: { ...(row.sale_cta_label ?? emptyI18n()) },
+    saleCtaChannels: [...(row.sale_cta_channels ?? SALE_CTA_CHANNELS)],
     businessTypeIds: [...row.business_type_ids],
     images: row.images.map((img) => ({
       url: img.url,
@@ -375,7 +380,11 @@ export function AdminProjectsPanel({
         editor.kind === "for_sale" || editor.kind === "sold"
           ? fillOptional(editor.listingIntent)
           : emptyI18n(),
-      saleCtaMode: editor.kind === "for_sale" ? editor.saleCtaMode : "inquiry",
+      saleCtaMode: "contacts",
+      saleCtaLabel:
+        editor.kind === "for_sale" ? fillOptional(editor.saleCtaLabel) : emptyI18n(),
+      saleCtaChannels:
+        editor.kind === "for_sale" ? editor.saleCtaChannels : [],
       businessTypeIds: editor.businessTypeIds,
       images: editor.images.map((img) => ({
         url: img.url,
@@ -843,12 +852,18 @@ export function AdminProjectsPanel({
                   <FormField id="proj-kind" label={t("fields.kind")} required>
                     <Select
                       value={editor.kind}
-                      onValueChange={(value) =>
+                      onValueChange={(value) => {
+                        const kind = value as ProjectKind;
                         setEditor({
                           ...editor,
-                          kind: value as ProjectKind,
-                        })
-                      }
+                          kind,
+                          saleCtaChannels:
+                            kind === "for_sale" &&
+                            editor.saleCtaChannels.length === 0
+                              ? [...SALE_CTA_CHANNELS]
+                              : editor.saleCtaChannels,
+                        });
+                      }}
                     >
                       <SelectTrigger id="proj-kind" aria-label={t("fields.kind")}>
                         <SelectValue />
@@ -991,36 +1006,76 @@ export function AdminProjectsPanel({
                       />
                     </FormField>
                     {editor.kind === "for_sale" ? (
-                      <FormField
-                        id="proj-sale-cta"
-                        label={t("fields.saleCtaMode")}
-                        hint={t("saleCtaModeHint")}
-                      >
-                        <Select
-                          value={editor.saleCtaMode}
-                          onValueChange={(value) =>
-                            setEditor({
-                              ...editor,
-                              saleCtaMode: value as SaleCtaMode,
-                            })
-                          }
+                      <>
+                        <FormField
+                          id="proj-sale-cta-label"
+                          label={t("fields.saleCtaLabel")}
+                          hint={t("saleCtaLabelHint")}
                         >
-                          <SelectTrigger
-                            id="proj-sale-cta"
-                            aria-label={t("fields.saleCtaMode")}
-                          >
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="inquiry">
-                              {t("saleCtaInquiry")}
-                            </SelectItem>
-                            <SelectItem value="contacts">
-                              {t("saleCtaContacts")}
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormField>
+                          <Input
+                            id="proj-sale-cta-label"
+                            dir={localeTab === "ar" ? "rtl" : "ltr"}
+                            maxLength={PROJECT_LIMITS.saleCtaLabelMax}
+                            placeholder={t("saleCtaLabelPlaceholder")}
+                            value={editor.saleCtaLabel[localeTab]}
+                            onChange={(e) =>
+                              setEditor({
+                                ...editor,
+                                saleCtaLabel: {
+                                  ...editor.saleCtaLabel,
+                                  [localeTab]: e.target.value,
+                                },
+                              })
+                            }
+                          />
+                        </FormField>
+                        <fieldset className="space-y-2">
+                          <legend className="text-sm font-medium text-foreground/75">
+                            {t("fields.saleCtaChannels")}
+                          </legend>
+                          <p className="text-xs text-foreground/50">
+                            {t("saleCtaChannelsHint")}
+                          </p>
+                          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                            {SALE_CTA_CHANNELS.map((channel) => {
+                              const checked =
+                                editor.saleCtaChannels.includes(channel);
+                              const label =
+                                channel === "email"
+                                  ? t("saleCtaChannelEmail")
+                                  : SITE_SOCIAL_LABELS[channel];
+                              return (
+                                <label
+                                  key={channel}
+                                  className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-background/50 px-3 py-2 text-sm"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={checked}
+                                    onChange={() =>
+                                      setEditor({
+                                        ...editor,
+                                        saleCtaChannels: checked
+                                          ? editor.saleCtaChannels.filter(
+                                              (id) => id !== channel
+                                            )
+                                          : SALE_CTA_CHANNELS.filter(
+                                              (id) =>
+                                                id === channel ||
+                                                editor.saleCtaChannels.includes(
+                                                  id
+                                                )
+                                            ),
+                                      })
+                                    }
+                                  />
+                                  {label}
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </fieldset>
+                      </>
                     ) : null}
                   </div>
                 ) : null}

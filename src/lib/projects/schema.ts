@@ -29,15 +29,33 @@ export const PROJECT_LIMITS = {
   allowedMime: ["image/jpeg", "image/png", "image/webp", "image/gif"] as const,
   referenceMax: 32,
   listingIntentMax: 800,
+  saleCtaLabelMax: 80,
   listingPriceCentsMax: 99_999_999,
 } as const;
 
 export const PROJECT_KINDS = ["personal", "for_sale", "sold"] as const;
 export type ProjectKind = (typeof PROJECT_KINDS)[number];
 
-/** CTA de la page de vente : parcours d’intérêt ou coordonnées admin. */
+/** Conservé pour compatibilité API — la page de vente n’utilise plus le parcours projet. */
 export const SALE_CTA_MODES = ["inquiry", "contacts"] as const;
 export type SaleCtaMode = (typeof SALE_CTA_MODES)[number];
+
+/** Canaux de contact affichables sur une page de vente. */
+export const SALE_CTA_CHANNELS = [
+  "whatsapp",
+  "email",
+  "discord",
+  "instagram",
+  "tiktok",
+] as const;
+export type SaleCtaChannel = (typeof SALE_CTA_CHANNELS)[number];
+
+export function isSaleCtaChannel(value: unknown): value is SaleCtaChannel {
+  return (
+    typeof value === "string" &&
+    (SALE_CTA_CHANNELS as readonly string[]).includes(value)
+  );
+}
 
 export const LOCALES = ["fr", "en", "ar"] as const;
 export type ProjectLocale = (typeof LOCALES)[number];
@@ -57,6 +75,20 @@ const listingIntentI18nSchema = z.object({
   en: z.string().trim().max(PROJECT_LIMITS.listingIntentMax).default(""),
   ar: z.string().trim().max(PROJECT_LIMITS.listingIntentMax).default(""),
 });
+
+const saleCtaLabelI18nSchema = z.object({
+  fr: z.string().trim().max(PROJECT_LIMITS.saleCtaLabelMax).default(""),
+  en: z.string().trim().max(PROJECT_LIMITS.saleCtaLabelMax).default(""),
+  ar: z.string().trim().max(PROJECT_LIMITS.saleCtaLabelMax).default(""),
+});
+
+const saleCtaChannelsSchema = z
+  .array(z.enum(SALE_CTA_CHANNELS))
+  .max(SALE_CTA_CHANNELS.length)
+  .refine(
+    (ids) => new Set(ids).size === ids.length,
+    "duplicate_sale_cta_channel"
+  );
 
 export const projectI18nSchema = z.object({
   fr: localeString(PROJECT_LIMITS.titleMin, PROJECT_LIMITS.titleMax),
@@ -159,7 +191,9 @@ export const projectWriteSchema = z
       .optional()
       .transform((v) => (v === undefined ? null : v)),
     listingIntent: listingIntentI18nSchema.default({ fr: "", en: "", ar: "" }),
-    saleCtaMode: z.enum(SALE_CTA_MODES).default("inquiry"),
+    saleCtaMode: z.enum(SALE_CTA_MODES).default("contacts"),
+    saleCtaLabel: saleCtaLabelI18nSchema.default({ fr: "", en: "", ar: "" }),
+    saleCtaChannels: saleCtaChannelsSchema.default([]),
     businessTypeIds: z
       .array(z.string())
       .max(PROJECT_LIMITS.maxBusinessTypes)
@@ -292,6 +326,8 @@ export const projectPatchSchema = z
       .optional(),
     listingIntent: listingIntentI18nSchema.optional(),
     saleCtaMode: z.enum(SALE_CTA_MODES).optional(),
+    saleCtaLabel: saleCtaLabelI18nSchema.optional(),
+    saleCtaChannels: saleCtaChannelsSchema.optional(),
     businessTypeIds: projectWriteSchema.shape.businessTypeIds.optional(),
     images: projectWriteSchema.shape.images.optional(),
     link: projectWriteSchema.shape.link.optional(),
@@ -395,8 +431,11 @@ function mapProjectZodError(issues: z.core.$ZodIssue[]): string {
   if (path.startsWith("technologies")) return "project_invalid_technologies";
   if (
     path.startsWith("listingIntent") ||
+    path.startsWith("saleCtaLabel") ||
     path === "listingPriceCents" ||
-    path === "saleCtaMode"
+    path === "saleCtaMode" ||
+    path === "saleCtaChannels" ||
+    msg === "duplicate_sale_cta_channel"
   ) {
     return "project_invalid_listing";
   }

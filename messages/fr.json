@@ -778,11 +778,13 @@
         "seoTitle": "SEO title",
         "seoDescription": "SEO description",
         "coverImage": "Image de couverture",
-        "saleCtaMode": "CTA de la page de vente"
+        "saleCtaLabel": "Texte du bouton",
+        "saleCtaChannels": "Réseaux affichés"
       },
-      "saleCtaModeHint": "Parcours d’intérêt, ou les contacts renseignés dans Réglages (email, WhatsApp, Discord…).",
-      "saleCtaInquiry": "Parcours « Je suis intéressé »",
-      "saleCtaContacts": "Contacts (email / réseaux admin)",
+      "saleCtaLabelHint": "Libellé du bouton principal. S’il est vide, le nom du réseau est affiché.",
+      "saleCtaLabelPlaceholder": "Je suis intéressé",
+      "saleCtaChannelsHint": "Email et réseaux renseignés dans Réglages. Ce bouton n’ouvre pas le parcours « Démarrer un projet ».",
+      "saleCtaChannelEmail": "Email",
       "businessTypesHint": "Jusqu’à {max} types.",
       "businessTypesMax": "Maximum {max} types d’application.",
       "businessTypes": {

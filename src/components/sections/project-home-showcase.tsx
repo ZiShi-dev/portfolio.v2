@@ -26,13 +26,7 @@ export function ProjectHomeShowcase({ projects }: ProjectHomeShowcaseProps) {
     listings.length > 0 ? others : others.slice(1);
   const preview = rest.slice(0, HOME_SECTION_PREVIEW);
 
-  if (spotlightSlides.length === 0) {
-    return (
-      <p className="px-4 text-center text-sm text-foreground/55 sm:px-6">
-        {t("empty")}
-      </p>
-    );
-  }
+  if (spotlightSlides.length === 0) return null;
 
   return (
     <div className="mx-auto mt-10 max-w-6xl px-4 sm:mt-14 sm:px-6">

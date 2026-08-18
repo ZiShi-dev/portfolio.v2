@@ -776,11 +776,13 @@
         "seoTitle": "عنوان SEO",
         "seoDescription": "وصف SEO",
         "coverImage": "صورة الغلاف",
-        "saleCtaMode": "زر الصفحة البيعية"
+        "saleCtaLabel": "نص الزر",
+        "saleCtaChannels": "الشبكات المعروضة"
       },
-      "saleCtaModeHint": "مسار الاهتمام، أو جهات الاتصال المحفوظة في الإعدادات (البريد، واتساب، ديسكورد…).",
-      "saleCtaInquiry": "مسار «أنا مهتم»",
-      "saleCtaContacts": "جهات الاتصال (بريد / شبكات الأدمن)",
+      "saleCtaLabelHint": "نص الزر الرئيسي. إذا تُرك فارغاً يُعرض اسم الشبكة.",
+      "saleCtaLabelPlaceholder": "أنا مهتم",
+      "saleCtaChannelsHint": "البريد والشبكات من الإعدادات. هذا الزر لا يفتح مسار «بدء مشروع».",
+      "saleCtaChannelEmail": "البريد",
       "businessTypesHint": "حتى {max} أنواع.",
       "businessTypesMax": "الحد الأقصى {max} أنواع تطبيقات.",
       "businessTypes": {

@@ -50,6 +50,10 @@ export type ProjectItem = {
   listingPriceLabel?: string;
   listingIntent?: string;
   saleCtaMode?: "inquiry" | "contacts";
+  saleCtaLabel?: string;
+  saleCtaChannels?: Array<
+    "email" | "whatsapp" | "discord" | "instagram" | "tiktok"
+  >;
 };
 
 type ProjectModalProps = {
