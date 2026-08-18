@@ -408,6 +408,14 @@
     "language": "Langue",
     "whatsappFloat": "Écrire sur WhatsApp"
   },
+  "floatingContact": {
+    "open": "Ouvrir les moyens de contact",
+    "close": "Fermer les moyens de contact",
+    "menuLabel": "Moyens de contact",
+    "networkLabel": "Contacter VORZIX sur {network}",
+    "email": "Email",
+    "emailLabel": "Envoyer un email à VORZIX"
+  },
   "language": {
     "fr": "Français",
     "en": "English",

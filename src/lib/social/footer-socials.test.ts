@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { buildFooterSocials } from "@/lib/brand";
+import { getConfiguredSocialLinks } from "@/lib/social/public-links";
 
 describe("buildFooterSocials", () => {
   it("marque le premier réseau renseigné comme preferred", () => {
@@ -68,5 +69,35 @@ describe("buildFooterSocials", () => {
     assert.equal(links.length, 4);
     assert.ok(links.every((l) => l.href === ""));
     assert.ok(links.every((l) => l.preferred === undefined));
+  });
+});
+
+describe("getConfiguredSocialLinks", () => {
+  it("masque les réseaux vides sans modifier l'ordre de priorité", () => {
+    const links = buildFooterSocials(
+      {
+        discord: "https://discord.gg/x",
+        whatsapp: "",
+        instagram: "https://www.instagram.com/x",
+        tiktok: "",
+      },
+      ["instagram", "whatsapp", "discord", "tiktok"]
+    );
+
+    assert.deepEqual(
+      getConfiguredSocialLinks(links).map((link) => link.id),
+      ["instagram", "discord"]
+    );
+  });
+
+  it("retourne une liste vide quand aucun réseau n'est configuré", () => {
+    const links = buildFooterSocials({
+      discord: "",
+      whatsapp: "",
+      instagram: "",
+      tiktok: "",
+    });
+
+    assert.deepEqual(getConfiguredSocialLinks(links), []);
   });
 });

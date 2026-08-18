@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ComponentType } from "react";
+import { useId, useState, type ComponentType } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Check, ChevronDown, ExternalLink } from "lucide-react";
@@ -254,42 +254,6 @@ export function ProjectSaleDetail({
   const primaryContact = contactButtons[0] ?? null;
   const primaryLabel =
     project.saleCtaLabel?.trim() || primaryContact?.label || "";
-  const heroCtaRef = useRef<HTMLDivElement>(null);
-  const contactRef = useRef<HTMLElement>(null);
-  const [showStickyCta, setShowStickyCta] = useState(false);
-
-  useEffect(() => {
-    if (!primaryContact) return;
-    const hero = heroCtaRef.current;
-    const contact = contactRef.current;
-    if (!hero || !contact) return;
-
-    let heroGone = false;
-    let contactInView = false;
-    const update = () => setShowStickyCta(heroGone && !contactInView);
-
-    const ioHero = new IntersectionObserver(
-      ([entry]) => {
-        heroGone = !entry.isIntersecting;
-        update();
-      },
-      { threshold: 0 }
-    );
-    const ioContact = new IntersectionObserver(
-      ([entry]) => {
-        contactInView = entry.isIntersecting;
-        update();
-      },
-      { threshold: 0.12 }
-    );
-    ioHero.observe(hero);
-    ioContact.observe(contact);
-    return () => {
-      ioHero.disconnect();
-      ioContact.disconnect();
-    };
-  }, [primaryContact]);
-
   return (
     <article className="relative overflow-hidden bg-background px-4 pb-28 pt-28 sm:px-6 sm:pb-28 sm:pt-32">
       <div className="pointer-events-none absolute inset-0 celestial-vault opacity-40" aria-hidden />
@@ -318,10 +282,7 @@ export function ProjectSaleDetail({
               <ProjectTypeBadges businessTypeIds={businessTypeIds} className="mt-0" />
             </div>
           ) : null}
-          <div
-            ref={heroCtaRef}
-            className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
-          >
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             {primaryContact ? (
               <SalePrimaryCta button={primaryContact} label={primaryLabel} />
             ) : null}
@@ -644,7 +605,6 @@ export function ProjectSaleDetail({
 
         <Reveal delay={0.08}>
           <section
-            ref={contactRef}
             id="sale-contact"
             className="mt-10 scroll-mt-28 rounded-xl border border-border-gold bg-surface-elevated/90 p-6 text-center sm:p-10"
           >
@@ -679,21 +639,6 @@ export function ProjectSaleDetail({
           </section>
         </Reveal>
       </div>
-
-      {primaryContact && showStickyCta ? (
-        <div
-          className={cn(
-            "fixed inset-x-0 bottom-0 z-40 border-t border-border-gold bg-background/95 pe-[4.75rem] backdrop-blur-md lg:hidden",
-            "pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 ps-4"
-          )}
-        >
-          <SalePrimaryCta
-            button={primaryContact}
-            label={primaryLabel}
-            className="w-full"
-          />
-        </div>
-      ) : null}
     </article>
   );
 }

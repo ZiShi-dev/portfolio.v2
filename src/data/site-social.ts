@@ -11,7 +11,7 @@ export type SiteSocialLinks = Record<SiteSocialId, string>;
 
 /**
  * Ordre de priorité des moyens de contact (réglable dans /admin/settings).
- * L’email n’en fait pas partie : il reste réservé au footer.
+ * L’email n’en fait pas partie : il est géré séparément des réseaux sociaux.
  */
 export const DEFAULT_CONTACT_PRIORITY = [
   "whatsapp",

@@ -12,9 +12,13 @@ import { FooterContactButton } from "@/components/footer-contact-button";
 import { FooterContactLink } from "@/components/footer-contact-link";
 import { FooterLeaveReviewLink } from "@/components/footer-leave-review-link";
 import { Link } from "@/i18n/navigation";
-import { brand, getFooterSocials, type FooterSocialId } from "@/lib/brand";
-import { getPublicContactEmail } from "@/lib/social/store";
+import {
+  brand,
+  type FooterSocialId,
+  type FooterSocialLink,
+} from "@/lib/brand";
 import { homeSectionUrl, routes } from "@/lib/routes";
+import { getConfiguredSocialLinks } from "@/lib/social/public-links";
 import { cn } from "@/lib/utils";
 
 const socialIcons: Record<
@@ -41,15 +45,17 @@ function FooterColumnTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-export async function Footer() {
+type FooterProps = {
+  contactEmail: string;
+  socials: FooterSocialLink[];
+};
+
+export async function Footer({ contactEmail, socials }: FooterProps) {
   const t = await getTranslations("footer");
   const tNav = await getTranslations("nav");
   const tMeta = await getTranslations("meta");
-  const socials = await getFooterSocials();
-  const contactEmail = await getPublicContactEmail();
-  const preferredSocial = socials.find(
-    (s) => s.preferred && s.href.length > 0
-  );
+  const configuredSocials = getConfiguredSocialLinks(socials);
+  const preferredSocial = configuredSocials.find((s) => s.preferred);
   const year = new Date().getFullYear();
 
   const navLinks = [
@@ -112,13 +118,11 @@ export async function Footer() {
                 {contactEmail}
               </ContactOpenLink>
 
-              {socials.some((s) => s.href.length > 0) ? (
+              {configuredSocials.length > 0 ? (
                 <div>
                   <p className="mb-3 text-xs text-foreground/45">{t("networks")}</p>
                   <div className="flex flex-wrap gap-2">
-                    {socials
-                      .filter((s) => s.href.length > 0)
-                      .map((s) => {
+                    {configuredSocials.map((s) => {
                         const Icon = socialIcons[s.id];
                         return (
                           <a
@@ -138,7 +142,7 @@ export async function Footer() {
                             <Icon className="h-[18px] w-[18px]" />
                           </a>
                         );
-                      })}
+                    })}
                   </div>
                 </div>
               ) : null}

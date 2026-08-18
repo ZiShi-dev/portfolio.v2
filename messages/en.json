@@ -406,6 +406,14 @@
     "language": "Language",
     "whatsappFloat": "Message on WhatsApp"
   },
+  "floatingContact": {
+    "open": "Open contact options",
+    "close": "Close contact options",
+    "menuLabel": "Contact options",
+    "networkLabel": "Contact VORZIX on {network}",
+    "email": "Email",
+    "emailLabel": "Email VORZIX"
+  },
   "language": {
     "fr": "Français",
     "en": "English",

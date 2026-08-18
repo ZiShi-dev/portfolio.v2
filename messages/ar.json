@@ -406,6 +406,14 @@
     "language": "اللغة",
     "whatsappFloat": "راسلنا على واتساب"
   },
+  "floatingContact": {
+    "open": "فتح وسائل التواصل",
+    "close": "إغلاق وسائل التواصل",
+    "menuLabel": "وسائل التواصل",
+    "networkLabel": "تواصل مع VORZIX عبر {network}",
+    "email": "البريد الإلكتروني",
+    "emailLabel": "إرسال بريد إلكتروني إلى VORZIX"
+  },
   "language": {
     "fr": "Français",
     "en": "English",
