@@ -106,7 +106,8 @@ type PageMetaInput = {
   path: RoutePath | string;
   index?: boolean;
   locale?: Locale;
-  image?: { src: string; alt: string };
+  /** `null` laisse une convention opengraph-image/twitter-image plus spécifique prendre la main. */
+  image?: { src: string; alt: string } | null;
 };
 
 export function createPageMetadata({
@@ -118,7 +119,7 @@ export function createPageMetadata({
   image = { src: brand.heroBanner, alt: brand.heroBannerAlt },
 }: PageMetaInput) {
   const url = localizedAbsoluteUrl(path, locale);
-  const imageUrl = absoluteUrl(image.src);
+  const imageUrl = image ? absoluteUrl(image.src) : null;
 
   return {
     // Les titres de pages incluent déjà la marque : empêcher le template racine
@@ -136,18 +137,15 @@ export function createPageMetadata({
       type: "website" as const,
       locale: ogLocales[locale],
       siteName: brand.name,
-      images: [
-        {
-          url: imageUrl,
-          alt: image.alt,
-        },
-      ],
+      ...(imageUrl && image
+        ? { images: [{ url: imageUrl, alt: image.alt }] }
+        : {}),
     },
     twitter: {
       card: "summary_large_image" as const,
       title,
       description,
-      images: [imageUrl],
+      ...(imageUrl ? { images: [imageUrl] } : {}),
     },
     robots: index
       ? {

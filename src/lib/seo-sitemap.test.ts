@@ -87,7 +87,10 @@ describe("SEO — sitemap & robots", () => {
       image: { src: "https://cdn.example.com/work.jpg", alt: "Work" },
     });
     assert.equal(meta.openGraph?.locale, "en_US");
-    assert.equal(meta.openGraph?.images[0]?.url, "https://cdn.example.com/work.jpg");
+    assert.equal(
+      meta.openGraph?.images?.[0]?.url,
+      "https://cdn.example.com/work.jpg"
+    );
     assert.equal(meta.alternates?.canonical, localizedAbsoluteUrl(routes.projects, "en"));
     assert.equal(
       meta.alternates?.languages?.["x-default"],
@@ -99,6 +102,17 @@ describe("SEO — sitemap & robots", () => {
     assert.equal(localizedPath(routes.projects, "fr"), "/projets");
     assert.equal(localizedPath(routes.projects, "en"), "/en/projets");
     assert.equal(localizedPath(routes.home, "ar"), "/ar");
+  });
+
+  it("permet à une image Open Graph de route de prendre la priorité", () => {
+    const meta = createPageMetadata({
+      title: "Project",
+      description: "Case study",
+      path: `${routes.projects}/project`,
+      image: null,
+    });
+    assert.equal("images" in meta.openGraph, false);
+    assert.equal("images" in meta.twitter, false);
   });
 
   it("leave-review est noindex via metadata helper", () => {

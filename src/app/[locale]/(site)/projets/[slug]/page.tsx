@@ -58,9 +58,9 @@ export async function generateMetadata({
     description,
     path: `${routes.projects}/${project.slug ?? slug}`,
     locale,
-    ...(project.images[0]
-      ? { image: { src: project.images[0].src, alt: project.title } }
-      : {}),
+    // La convention locale génère une carte PNG à partir de la couverture,
+    // y compris lorsque l'image source est un SVG.
+    image: null,
   });
 }
 
