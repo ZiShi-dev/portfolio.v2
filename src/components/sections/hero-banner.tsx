@@ -40,8 +40,8 @@ function HeroImage({
     <img
       src={brand.heroBanner}
       alt={alt}
-      width={3072}
-      height={1728}
+      width={1024}
+      height={576}
       decoding="async"
       fetchPriority={priority ? "high" : "auto"}
       draggable={false}

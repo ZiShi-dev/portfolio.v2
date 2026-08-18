@@ -334,7 +334,7 @@ Interdit dans la charte : bouncing agressif, particules partout, rotations perma
 
 * **Logo** : monogramme stylisé (fusion V/X), **ivoire + laiton** sur fond nuit opaque, fichier `public/images/logo-vorzix.png`.
 * Affiché dans navbar et footer dans une petite tuile carrée arrondie.
-* **Bannière hero** : `public/images/hero-banner.jpg` — composition atlas avec marque VORZIX au centre.
+* **Bannière hero** : `public/images/hero-banner-atlas.jpg` — composition atlas céleste.
 * Favicons dérivés du même monogramme.
 
 Le logo n’est **pas** répété en énorme dans le H1 : le branding hero repose surtout sur la bannière + le nom en nav.

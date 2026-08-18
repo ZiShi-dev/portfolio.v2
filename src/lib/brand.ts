@@ -10,15 +10,12 @@ export const brand = {
   owner: "VORZIX",
   titleSuffix: "Solutions digitales",
   tagline: "Sites, apps & produits digitaux",
-  profileImage: "/images/logo-vorzix.png",
+  profileImage: "/images/logo-vorzix.png?v=x",
   profileImageAlt: "Logo VORZIX",
-  /** Atlas Céleste HD (3072×1728) — nom versionné pour éviter le cache flou. */
-  heroBanner: "/images/hero-banner-atlas.jpg",
+  /** Atlas Céleste — bannière hero. */
+  heroBanner: "/images/hero-banner-atlas.jpg?v=horizon",
   heroBannerAlt:
-    "VORZIX — atlas céleste au lever de soleil : sites web, applications et solutions digitales",
-  heroBannerDark: "/images/hero-banner-atlas-dark.jpg",
-  heroBannerDarkAlt:
-    "VORZIX — atlas céleste, horizon doré et précision digitale",
+    "VORZIX — atlas céleste, horizon doré et carte du ciel",
   email: "contact@zishi.dev", // fallback display — sourcé BDD via getPublicContactEmail()
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zishi.dev",
   description:
