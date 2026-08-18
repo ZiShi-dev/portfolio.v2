@@ -44,16 +44,10 @@ type ProjectSaleDetailProps = {
 };
 
 const PROCESS_STEPS = ["interest", "customize", "launch", "sell"] as const;
-const FAQ_KEYS = [
-  "ready",
-  "customize",
-  "included",
-  "delay",
-  "catalog",
-  "hosting",
-  "after",
-  "demo",
-] as const;
+/** Seules les questions dont la réponse n’est pas déjà ailleurs sur la page. */
+const FAQ_KEYS = ["ready", "included", "catalog", "after"] as const;
+/** Aperçus visibles avant dépliement de la galerie. */
+const GALLERY_PREVIEW_COUNT = 4;
 
 function listingIntentParagraphs(text: string): string[] {
   return text
@@ -71,6 +65,57 @@ const CHANNEL_ICONS: Record<
   instagram: SiInstagram,
   tiktok: SiTiktok,
 };
+
+/**
+ * Périmètre détaillé (conditions, délais, ce qui reste à la charge du client) :
+ * replié par défaut pour ne pas allonger la page, mais toujours dans le DOM.
+ */
+function ScopeDisclosure({
+  label,
+  paragraphs,
+}: {
+  label: string;
+  paragraphs: string[];
+}) {
+  const panelId = useId();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="mt-4 overflow-hidden rounded-xl border border-border-gold/40 bg-surface-elevated/50">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen((current) => !current)}
+        className="flex min-h-12 w-full items-center justify-between gap-4 px-4 py-3 text-start text-sm font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:px-5"
+      >
+        {label}
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 shrink-0 text-primary transition-transform",
+            open && "rotate-180"
+          )}
+          aria-hidden
+        />
+      </button>
+      <ul
+        id={panelId}
+        hidden={!open}
+        className="space-y-2.5 px-4 pb-4 sm:px-5"
+      >
+        {paragraphs.map((paragraph) => (
+          <li
+            key={paragraph}
+            className="flex gap-3 text-sm leading-relaxed text-muted-foreground"
+          >
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+            <span>{paragraph}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 function SaleContactPanel({
   project,
@@ -200,6 +245,8 @@ export function ProjectSaleDetail({
   const isEcommerce = businessTypeIds.includes("ecommerce");
   const faqBaseId = useId();
   const [openFaq, setOpenFaq] = useState<string>(FAQ_KEYS[0]);
+  const [showAllImages, setShowAllImages] = useState(false);
+  const hiddenImages = Math.max(0, gallery.length - GALLERY_PREVIEW_COUNT);
   const contactButtons = resolveSaleCtaButtons({
     channels: project.saleCtaChannels ?? [],
     socials: contacts.socials,
@@ -373,95 +420,33 @@ export function ProjectSaleDetail({
           </Reveal>
         ) : null}
 
-        {features.length > 0 || intentParagraphs.length > 0 ? (
-          <Reveal delay={0.05}>
-            <section className="mt-12 sm:mt-16" aria-labelledby="sale-included-heading">
-              <h2
-                id="sale-included-heading"
-                className="font-display text-2xl font-semibold text-foreground sm:text-3xl"
-              >
-                {t("includedTitle", {
-                  price: project.listingPriceLabel ?? "",
-                })}
-              </h2>
-              {features.length > 0 ? (
-                <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="flex gap-3 rounded-xl border border-border bg-surface-elevated/80 px-4 py-3 text-sm leading-relaxed text-foreground/80"
-                    >
-                      <Check
-                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                        aria-hidden
-                      />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-              {intentParagraphs.length > 0 ? (
-                <ul className="mt-6 space-y-3">
-                  {intentParagraphs.map((paragraph) => (
-                    <li
-                      key={paragraph}
-                      className="flex gap-3 rounded-xl border border-border-gold/40 bg-surface-elevated/50 px-4 py-3.5 text-sm leading-relaxed text-foreground/80 sm:text-base"
-                    >
-                      <Check
-                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                        aria-hidden
-                      />
-                      <span>{paragraph}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </section>
-          </Reveal>
-        ) : null}
-
         <Reveal delay={0.05}>
-          <section className="mt-12 sm:mt-16" aria-labelledby="sale-process-heading">
+          <section className="mt-12 sm:mt-14" aria-labelledby="sale-included-heading">
             <h2
-              id="sale-process-heading"
+              id="sale-included-heading"
               className="font-display text-2xl font-semibold text-foreground sm:text-3xl"
             >
-              {t("processTitle")}
+              {t("includedTitle", {
+                price: project.listingPriceLabel ?? "",
+              })}
             </h2>
-            <ol className="relative mt-8 space-y-8">
-              <span
-                className="absolute bottom-3 start-[1.125rem] top-3 w-px bg-primary/25"
-                aria-hidden
-              />
-              {PROCESS_STEPS.map((key, index) => (
-                <li key={key} className="relative ps-12">
-                  <span
-                    className="absolute start-0 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-primary/50 bg-surface-elevated font-mono text-sm text-foreground"
-                    aria-hidden
+            {features.length > 0 ? (
+              <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
+                {features.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex gap-3 rounded-xl border border-border bg-surface-elevated/80 px-4 py-3 text-sm leading-relaxed text-foreground/80"
                   >
-                    {index + 1}
-                  </span>
-                  <h3 className="font-display text-xl font-semibold text-foreground">
-                    {t(`process.${key}.title`)}
-                  </h3>
-                  <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted-foreground sm:text-base">
-                    {t(`process.${key}.desc`)}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </section>
-        </Reveal>
-
-        <Reveal delay={0.05}>
-          <section className="mt-12 sm:mt-16" aria-labelledby="sale-costs-heading">
-            <h2
-              id="sale-costs-heading"
-              className="font-display text-2xl font-semibold text-foreground sm:text-3xl"
-            >
-              {t("costsTitle")}
-            </h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                    <Check
+                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                      aria-hidden
+                    />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <GlowCard>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
                   {t("costsIncludedLabel")}
@@ -482,12 +467,47 @@ export function ProjectSaleDetail({
                 </p>
               </GlowCard>
             </div>
+            {intentParagraphs.length > 0 ? (
+              <ScopeDisclosure
+                label={t("scopeDetails")}
+                paragraphs={intentParagraphs}
+              />
+            ) : null}
+          </section>
+        </Reveal>
+
+        <Reveal delay={0.05}>
+          <section className="mt-12 sm:mt-14" aria-labelledby="sale-process-heading">
+            <h2
+              id="sale-process-heading"
+              className="font-display text-2xl font-semibold text-foreground sm:text-3xl"
+            >
+              {t("processTitle")}
+            </h2>
+            <ol className="mt-6 grid gap-5 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-7">
+              {PROCESS_STEPS.map((key, index) => (
+                <li key={key} className="relative ps-12">
+                  <span
+                    className="absolute start-0 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-primary/50 bg-surface-elevated font-mono text-sm text-foreground"
+                    aria-hidden
+                  >
+                    {index + 1}
+                  </span>
+                  <h3 className="font-display text-lg font-semibold text-foreground sm:text-xl">
+                    {t(`process.${key}.title`)}
+                  </h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                    {t(`process.${key}.desc`)}
+                  </p>
+                </li>
+              ))}
+            </ol>
           </section>
         </Reveal>
 
         {gallery.length > 0 ? (
           <Reveal delay={0.05}>
-            <section className="mt-12 sm:mt-16" aria-labelledby="sale-gallery-heading">
+            <section className="mt-12 sm:mt-14" aria-labelledby="sale-gallery-heading">
               <h2
                 id="sale-gallery-heading"
                 className="font-display text-2xl font-semibold text-foreground sm:text-3xl"
@@ -498,9 +518,10 @@ export function ProjectSaleDetail({
                 {t("proofSubtitle")}
               </p>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {gallery.map((img) => (
+                {gallery.map((img, index) => (
                   <figure
                     key={img.src}
+                    hidden={!showAllImages && index >= GALLERY_PREVIEW_COUNT}
                     className="overflow-hidden rounded-xl border border-border bg-surface-elevated"
                   >
                     <ProjectLiveImageLink href={demoUrl} label={t("ctaDemo")}>
@@ -522,6 +543,24 @@ export function ProjectSaleDetail({
                   </figure>
                 ))}
               </div>
+              {hiddenImages > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setShowAllImages((open) => !open)}
+                  className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 text-sm text-foreground/80 outline-none transition-colors hover:border-primary/40 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/40"
+                >
+                  {showAllImages
+                    ? t("galleryLess")
+                    : t("galleryMore", { count: hiddenImages })}
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 shrink-0 text-primary transition-transform",
+                      showAllImages && "rotate-180"
+                    )}
+                    aria-hidden
+                  />
+                </button>
+              ) : null}
             </section>
           </Reveal>
         ) : null}

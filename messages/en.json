@@ -1201,6 +1201,9 @@
     "whatYouGet": "What you get",
     "insteadOfZero": "Rather than building from scratch",
     "includedTitle": "What's included — {price}",
+    "scopeDetails": "Full scope details",
+    "galleryMore": "See {count} more previews",
+    "galleryLess": "Show fewer previews",
     "processTitle": "How it works",
     "process": {
       "interest": {
@@ -1220,7 +1223,6 @@
         "desc": "The shop is ready to take its first orders."
       }
     },
-    "costsTitle": "Price and responsibilities",
     "costsIncludedLabel": "Solution price",
     "costsIncluded": "This amount covers the already-built shop, the stated personalization, and the support described on this page — nothing else is added by default.",
     "costsThirdLabel": "Third-party services",
@@ -1233,33 +1235,17 @@
         "q": "Is this shop already built?",
         "a": "Yes. It is an existing solution offered for purchase, then personalized — not a project built from scratch."
       },
-      "customize": {
-        "q": "Can the design be customized?",
-        "a": "Yes, within the offer: name, colours, style, and the pages agreed before work starts. Extra pages or features require a separate quote."
-      },
       "included": {
         "q": "What does the price include?",
         "a": "The features listed on this page, the full source code, the agreed personalization, help going live, and one month of simple visual adjustments after delivery — not new pages or new features."
-      },
-      "delay": {
-        "q": "How long before the shop goes live?",
-        "a": "Once the scope is confirmed, customisation and launch take 7 to 14 days, depending on the content and requested changes."
       },
       "catalog": {
         "q": "Who enters the products?",
         "a": "Entering the catalogue (pages, photos, prices) is your responsibility. The shop is delivered ready to receive your products."
       },
-      "hosting": {
-        "q": "Are hosting and the domain included?",
-        "a": "No. Required third-party services (domain, hosting, email…) remain your responsibility. We can help you set them up."
-      },
       "after": {
         "q": "What happens after I get in touch?",
         "a": "You receive a clear reply within 48 hours. After confirmation, customisation and launch take 7 to 14 days."
-      },
-      "demo": {
-        "q": "Can I see the shop before buying?",
-        "a": "Yes, when a demo is published: the “View the demo” button opens the live site."
       }
     },
     "finalTitle": "Interested in {title}?",

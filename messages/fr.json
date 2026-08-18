@@ -1203,6 +1203,9 @@
     "whatYouGet": "Ce que vous obtenez",
     "insteadOfZero": "Plutôt que de tout construire depuis zéro",
     "includedTitle": "Ce qui est inclus — {price}",
+    "scopeDetails": "Le périmètre en détail",
+    "galleryMore": "Voir {count} aperçus de plus",
+    "galleryLess": "Réduire les aperçus",
     "processTitle": "Comment ça marche",
     "process": {
       "interest": {
@@ -1222,7 +1225,6 @@
         "desc": "La boutique est prête à accueillir ses premières commandes."
       }
     },
-    "costsTitle": "Prix et responsabilités",
     "costsIncludedLabel": "Prix de la solution",
     "costsIncluded": "Ce montant couvre la boutique déjà développée, la personnalisation indiquée et l’accompagnement décrit sur cette page — rien d’autre n’est ajouté d’office.",
     "costsThirdLabel": "Services tiers",
@@ -1235,33 +1237,17 @@
         "q": "Cette boutique est-elle déjà développée ?",
         "a": "Oui. C’est une solution existante, proposée à l’achat, puis personnalisée — pas un projet à construire depuis zéro."
       },
-      "customize": {
-        "q": "Peut-on personnaliser le design ?",
-        "a": "Oui, dans le cadre de l’offre : nom, couleurs, style, et les pages convenues avant le début du travail. Tout ajout de page ou de fonction fait l’objet d’un devis."
-      },
       "included": {
         "q": "Qu’est-ce qui est inclus dans le prix ?",
         "a": "Les fonctionnalités listées sur cette page, le code source complet, la personnalisation convenue, l’aide à la mise en ligne, et un mois d’ajustements visuels simples après livraison — sans nouvelles pages ni nouvelles fonctions."
-      },
-      "delay": {
-        "q": "Combien de temps avant la mise en ligne ?",
-        "a": "Une fois le périmètre confirmé, la personnalisation et la mise en ligne prennent 7 à 14 jours, selon le contenu et les ajustements demandés."
       },
       "catalog": {
         "q": "Qui saisit les produits ?",
         "a": "La saisie du catalogue (fiches, photos, prix) est à votre charge. La boutique est livrée prête à recevoir vos produits."
       },
-      "hosting": {
-        "q": "L’hébergement et le domaine sont-ils inclus ?",
-        "a": "Non. Les services tiers nécessaires (domaine, hébergement, messagerie…) restent à votre charge. Nous pouvons vous aider à les mettre en place."
-      },
       "after": {
         "q": "Que se passe-t-il après ma demande ?",
         "a": "Vous recevez une réponse claire sous 48 h. Après confirmation, la personnalisation et la mise en ligne se font en 7 à 14 jours."
-      },
-      "demo": {
-        "q": "Puis-je voir la boutique avant de l’acheter ?",
-        "a": "Oui, lorsque une démo est publiée : le bouton « Voir la démo » ouvre le site en ligne."
       }
     },
     "finalTitle": "Intéressé par {title} ?",
