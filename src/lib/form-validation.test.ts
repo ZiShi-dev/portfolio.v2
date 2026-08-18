@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  buildGmailComposeUrl,
   buildSafeMailtoUrl,
   isHoneypotTriggered,
   isValidEmail,
@@ -73,5 +74,14 @@ describe("OWASP A03 — form-validation (injection / XSS entrée)", () => {
       "y".repeat(2000)
     );
     assert.equal(tooLong, null);
+  });
+
+  it("buildGmailComposeUrl préremplit le destinataire", () => {
+    const url = buildGmailComposeUrl("  Hello@Zishi.DEV  ");
+    assert.equal(
+      url,
+      "https://mail.google.com/mail/?view=cm&fs=1&to=hello%40zishi.dev"
+    );
+    assert.equal(buildGmailComposeUrl("pas-un-email"), null);
   });
 });

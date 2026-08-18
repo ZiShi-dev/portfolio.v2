@@ -52,3 +52,23 @@ export function buildSafeMailtoUrl(
   const url = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   return url.length <= MAILTO_MAX_URL_LENGTH ? url : null;
 }
+
+/** Ouvre Gmail (rédaction) avec le destinataire déjà rempli. */
+export function buildGmailComposeUrl(
+  email: string,
+  opts?: { subject?: string; body?: string }
+): string | null {
+  if (!isValidEmail(email)) return null;
+  const params = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: normalizeEmail(email),
+  });
+  if (opts?.subject) {
+    params.set("su", sanitizeForMailtoHeader(opts.subject, 200));
+  }
+  if (opts?.body) {
+    params.set("body", sanitizeText(opts.body, 2000));
+  }
+  return `https://mail.google.com/mail/?${params.toString()}`;
+}

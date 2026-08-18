@@ -63,7 +63,7 @@ function SaleCtaButtons({
   return (
     <div className="flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
       {buttons.map((button) => {
-        const external = button.id !== "email";
+        const external = button.href.startsWith("http");
         return (
           <Button
             key={button.id}

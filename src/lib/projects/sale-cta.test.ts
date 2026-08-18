@@ -57,7 +57,10 @@ describe("sale-cta", () => {
     });
     assert.equal(buttons.length, 1);
     assert.equal(buttons[0]?.id, "email");
-    assert.equal(buttons[0]?.href, "mailto:hello@zishi.dev");
+    assert.equal(
+      buttons[0]?.href,
+      "https://mail.google.com/mail/?view=cm&fs=1&to=hello%40zishi.dev"
+    );
     assert.equal(buttons[0]?.label, "Contact");
   });
 });

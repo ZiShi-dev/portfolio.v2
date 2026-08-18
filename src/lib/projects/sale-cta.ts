@@ -1,9 +1,6 @@
 import type { FooterSocialLink } from "@/lib/brand";
-import {
-  SALE_CTA_CHANNELS,
-  isSaleCtaChannel,
-  type SaleCtaChannel,
-} from "@/lib/projects/schema";
+import { SALE_CTA_CHANNELS, isSaleCtaChannel, type SaleCtaChannel } from "@/lib/projects/schema";
+import { buildGmailComposeUrl } from "@/lib/form-validation";
 
 export type SaleCtaButton = {
   id: SaleCtaChannel;
@@ -29,7 +26,7 @@ function hrefForChannel(
   contacts: { email: string; socials: FooterSocialLink[] }
 ): string {
   if (id === "email") {
-    return contacts.email ? `mailto:${contacts.email}` : "";
+    return contacts.email ? (buildGmailComposeUrl(contacts.email) ?? "") : "";
   }
   return contacts.socials.find((social) => social.id === id)?.href ?? "";
 }

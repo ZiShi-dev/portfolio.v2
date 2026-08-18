@@ -22,7 +22,7 @@ import {
   createContactFormSchema,
   type ContactFormValues,
 } from "@/lib/contact-form-schema";
-import { isHoneypotTriggered } from "@/lib/form-validation";
+import { buildGmailComposeUrl, isHoneypotTriggered } from "@/lib/form-validation";
 import { CONTACT_MODAL_TITLE_ID } from "@/lib/modal-a11y-ids";
 import {
   translateValidationError,
@@ -32,6 +32,25 @@ import {
 import { showAppToast } from "@/lib/app-toast";
 
 const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
+function GmailContactLink({ email }: { email: string }) {
+  const href = buildGmailComposeUrl(email);
+  const className =
+    "break-all font-medium text-primary underline-offset-2 transition-colors hover:text-primary-hover hover:underline sm:break-normal";
+  if (!href) {
+    return <span className={className}>{email}</span>;
+  }
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+    >
+      {email}
+    </a>
+  );
+}
 
 type ContactFormProps = {
   contactEmail: string;
@@ -267,9 +286,7 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
 
       <p className="mt-6 text-center text-xs text-foreground/50 sm:text-sm">
         {t("orEmail")}{" "}
-        <span className="break-all font-medium text-primary sm:break-normal">
-          {contactEmail}
-        </span>
+        <GmailContactLink email={contactEmail} />
       </p>
     </>
   );
@@ -315,9 +332,7 @@ export function Contact({ contactEmail }: ContactProps) {
 
           <p className="mt-6 text-xs text-foreground/50 sm:text-sm">
             {t("orEmail")}{" "}
-            <span className="break-all font-medium text-primary sm:break-normal">
-              {contactEmail}
-            </span>
+            <GmailContactLink email={contactEmail} />
           </p>
           <p className="mt-3 text-xs leading-relaxed text-foreground/40">
             {t("privacy")}
