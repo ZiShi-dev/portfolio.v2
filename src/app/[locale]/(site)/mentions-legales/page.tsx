@@ -5,6 +5,7 @@ import { PageBackBar } from "@/components/page-back-link";
 import { brand } from "@/lib/brand";
 import { createPageMetadata, routes } from "@/lib/routes";
 import { getPublicContactEmail } from "@/lib/social/store";
+import type { Locale } from "@/i18n/routing";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -20,6 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: t("metaTitle"),
     description: t("metaDescription", { brand: brand.name }),
     path: routes.legal,
+    locale: locale as Locale,
   });
 }
 

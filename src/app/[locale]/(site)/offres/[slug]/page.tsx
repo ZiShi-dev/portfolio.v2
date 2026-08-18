@@ -10,7 +10,9 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { brand } from "@/lib/brand";
 import {
+  absoluteUrl,
   createPageMetadata,
+  localizedAbsoluteUrl,
   routes,
   serviceDetailPath,
 } from "@/lib/routes";
@@ -24,6 +26,8 @@ import {
 import { getSiteFaqsForService } from "@/lib/faqs/site";
 import { FaqSection } from "@/components/sections/faq";
 import { ServiceLinkedProjectCard } from "@/components/services/service-linked-project-card";
+import { JsonLd } from "@/components/json-ld";
+import { headers } from "next/headers";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -51,6 +55,7 @@ export async function generateMetadata({
     title,
     description,
     path: serviceDetailPath(service.slug),
+    locale: locale as Locale,
   });
 }
 
@@ -77,12 +82,60 @@ export default async function OffreDetailPage({ params }: PageProps) {
   const linkedProjects = await getLinkedProjectsForService(service, locale);
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
   const faqs = await getSiteFaqsForService(locale, service.id);
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const serviceUrl = localizedAbsoluteUrl(
+    serviceDetailPath(service.slug),
+    locale
+  );
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: t("eyebrow"),
+            item: localizedAbsoluteUrl(routes.services, locale),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: service.title,
+            item: serviceUrl,
+          },
+        ],
+      },
+      {
+        "@type": "Service",
+        "@id": `${serviceUrl}#service`,
+        name: service.title,
+        description: service.description || service.shortDescription,
+        url: serviceUrl,
+        serviceType: service.title,
+        inLanguage: locale,
+        provider: { "@id": `${absoluteUrl(routes.home)}#organization` },
+        ...(service.startingPriceCents != null
+          ? {
+              offers: {
+                "@type": "Offer",
+                priceCurrency: service.currency,
+                price: (service.startingPriceCents / 100).toFixed(2),
+                url: serviceUrl,
+              },
+            }
+          : {}),
+      },
+    ],
+  };
 
   return (
     <main
       id="main-content"
       className="relative min-h-dvh overflow-hidden bg-background"
     >
+      <JsonLd data={serviceJsonLd} nonce={nonce} />
       <CelestialAtlas intensity="subtle" />
 
       <div className="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">

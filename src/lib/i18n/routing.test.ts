@@ -2,10 +2,9 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { routing } from "@/i18n/routing";
 
-describe("routing i18n — localePrefix never", () => {
-  it("n'affiche jamais /fr /en /ar dans les URLs", () => {
-    // next-intl résout localePrefix en mode interne
-    assert.equal(routing.localePrefix, "never");
+describe("routing i18n — URLs localisées", () => {
+  it("garde le français à la racine et préfixe les autres langues", () => {
+    assert.equal(routing.localePrefix, "as-needed");
   });
 
   it("locales autorisées fr, en, ar", () => {

@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { redirectLegacyLocalePrefix } from "@/lib/i18n/legacy-locale-redirect";
 import { NEXT_LOCALE_COOKIE } from "@/lib/locale-cookie";
 
-describe("redirectLegacyLocalePrefix — URLs sans /fr /en /ar", () => {
+describe("redirectLegacyLocalePrefix — français canonique sans /fr", () => {
   it("ignore les chemins sans préfixe locale", () => {
     const res = redirectLegacyLocalePrefix(
       new Request("http://localhost:3000/projets")
@@ -11,24 +11,16 @@ describe("redirectLegacyLocalePrefix — URLs sans /fr /en /ar", () => {
     assert.equal(res, null);
   });
 
-  it("redirige /ar vers / avec cookie ar", () => {
+  it("conserve /ar comme URL indexable", () => {
     const res = redirectLegacyLocalePrefix(new Request("http://localhost:3000/ar"));
-    assert.ok(res);
-    assert.equal(res!.status, 307);
-    assert.match(res!.headers.get("location") ?? "", /\/$/);
-    const cookie = res!.headers.get("set-cookie") ?? "";
-    assert.match(cookie, new RegExp(`${NEXT_LOCALE_COOKIE}=ar`));
+    assert.equal(res, null);
   });
 
-  it("redirige /en/projets vers /projets avec cookie en", () => {
+  it("conserve /en/projets comme URL indexable", () => {
     const res = redirectLegacyLocalePrefix(
       new Request("http://localhost:3000/en/projets?x=1")
     );
-    assert.ok(res);
-    const location = res!.headers.get("location") ?? "";
-    assert.match(location, /\/projets\?x=1$/);
-    const cookie = res!.headers.get("set-cookie") ?? "";
-    assert.match(cookie, new RegExp(`${NEXT_LOCALE_COOKIE}=en`));
+    assert.equal(res, null);
   });
 
   it("redirige /fr/contact vers /contact", () => {
@@ -36,7 +28,10 @@ describe("redirectLegacyLocalePrefix — URLs sans /fr /en /ar", () => {
       new Request("http://localhost:3000/fr/contact")
     );
     assert.ok(res);
+    assert.equal(res!.status, 308);
     assert.match(res!.headers.get("location") ?? "", /\/contact$/);
+    const cookie = res!.headers.get("set-cookie") ?? "";
+    assert.match(cookie, new RegExp(`${NEXT_LOCALE_COOKIE}=fr`));
   });
 
   it("ne confond pas admin avec une locale", () => {

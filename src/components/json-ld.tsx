@@ -2,6 +2,27 @@ import { absoluteUrl, routes } from "@/lib/routes";
 import { brand } from "@/lib/brand";
 import { getSiteSettings } from "@/lib/social/store";
 
+type JsonLdValue = Record<string, unknown> | Record<string, unknown>[];
+
+/** Sérialisation sûre recommandée par Next.js pour les données structurées. */
+export function JsonLd({
+  data,
+  nonce,
+}: {
+  data: JsonLdValue;
+  nonce?: string;
+}) {
+  return (
+    <script
+      type="application/ld+json"
+      nonce={nonce}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
+      }}
+    />
+  );
+}
+
 export async function OrganizationJsonLd({ nonce }: { nonce?: string }) {
   const settings = await getSiteSettings();
   const homeUrl = absoluteUrl(routes.home);
@@ -49,15 +70,7 @@ export async function OrganizationJsonLd({ nonce }: { nonce?: string }) {
     "@graph": [organization, website, professionalService],
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      nonce={nonce}
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
-      }}
-    />
-  );
+  return <JsonLd data={schema} nonce={nonce} />;
 }
 
 /** @deprecated Utiliser OrganizationJsonLd */

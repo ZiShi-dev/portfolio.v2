@@ -107,12 +107,12 @@ export type AdminMfaEnrollment = {
 /** Nom affiché dans l’app TOTP (Google Authenticator, etc.). */
 function totpIssuerFromSiteUrl(): string {
   const raw =
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://www.zishi.dev";
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://vorzix.com";
   try {
     const host = new URL(raw).hostname.replace(/^www\./, "");
-    return host || "zishi.dev";
+    return host || "vorzix.com";
   } catch {
-    return "zishi.dev";
+    return "vorzix.com";
   }
 }
 

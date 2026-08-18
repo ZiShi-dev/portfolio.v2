@@ -2,7 +2,11 @@
   "meta": {
     "title": "Solutions digitales",
     "description": "VORZIX conçoit des sites web, applications et plateformes digitales sur-mesure — design premium, technique fiable et accompagnement par une équipe dédiée.",
-    "jobTitle": "Agence technologique"
+    "jobTitle": "Agence technologique",
+    "reviewsTitle": "Avis clients — {brand}",
+    "reviewsDescription": "Découvrez les témoignages et avis clients de {brand} : sites web, e-commerce et applications sur-mesure.",
+    "contactTitle": "Contact — {brand}",
+    "contactDescription": "Contactez {brand} pour votre projet web, e-commerce ou application. Réponse sous 48h."
   },
   "nav": {
     "services": "Offres",

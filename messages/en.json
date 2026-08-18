@@ -2,7 +2,11 @@
   "meta": {
     "title": "Digital solutions",
     "description": "VORZIX designs custom websites, applications and digital platforms — premium design, reliable engineering and dedicated team support.",
-    "jobTitle": "Technology agency"
+    "jobTitle": "Technology agency",
+    "reviewsTitle": "Client reviews — {brand}",
+    "reviewsDescription": "Read client reviews and testimonials about {brand}'s custom websites, e-commerce platforms and applications.",
+    "contactTitle": "Contact — {brand}",
+    "contactDescription": "Contact {brand} about your website, e-commerce platform or application. We reply within 48 hours."
   },
   "nav": {
     "services": "Offers",

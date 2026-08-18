@@ -205,21 +205,45 @@ const HOME_SECTION_REDIRECTS: Record<string, string> = {
   "/a-propos": "/#a-propos",
 };
 
+function publicLocalePath(pathname: string) {
+  const segments = pathname.split("/");
+  const maybeLocale = segments[1];
+  if (!routing.locales.includes(maybeLocale as (typeof routing.locales)[number])) {
+    return { pathname, prefix: "" };
+  }
+
+  const rest = `/${segments.slice(2).join("/")}`;
+  return {
+    pathname: rest === "/" ? "/" : rest.replace(/\/$/, ""),
+    prefix: maybeLocale === routing.defaultLocale ? "" : `/${maybeLocale}`,
+  };
+}
+
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const localized = publicLocalePath(path);
 
   // Ancien chemin /services → catalogue /offres (+ détail)
-  if (path === "/services") {
-    return NextResponse.redirect(new URL("/offres", request.url), 308);
+  if (localized.pathname === "/services") {
+    return NextResponse.redirect(
+      new URL(`${localized.prefix}/offres`, request.url),
+      308
+    );
   }
-  if (path.startsWith("/services/")) {
-    const slug = path.slice("/services/".length);
-    return NextResponse.redirect(new URL(`/offres/${slug}`, request.url), 308);
+  if (localized.pathname.startsWith("/services/")) {
+    const slug = localized.pathname.slice("/services/".length);
+    return NextResponse.redirect(
+      new URL(`${localized.prefix}/offres/${slug}`, request.url),
+      308
+    );
   }
 
-  const homeSection = HOME_SECTION_REDIRECTS[path];
+  const homeSection = HOME_SECTION_REDIRECTS[localized.pathname];
   if (homeSection) {
-    return NextResponse.redirect(new URL(homeSection, request.url), 308);
+    return NextResponse.redirect(
+      new URL(`${localized.prefix}${homeSection}`, request.url),
+      308
+    );
   }
 
   if (

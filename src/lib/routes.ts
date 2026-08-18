@@ -1,4 +1,5 @@
 import { brand } from "@/lib/brand";
+import { ogLocales, type Locale } from "@/i18n/routing";
 
 /** Chemins canoniques du site — URLs SEO en français, sans slash final. */
 export const routes = {
@@ -29,8 +30,30 @@ export const homeAnchors = {
 export type RoutePath = (typeof routes)[keyof typeof routes];
 
 export function absoluteUrl(path: RoutePath | string) {
+  if (/^https?:\/\//i.test(path)) return path;
   const normalized = path.startsWith("/") ? path : `/${path}`;
   return `${brand.siteUrl.replace(/\/$/, "")}${normalized}`;
+}
+
+/** Chemin public stable d’une page dans une langue donnée. */
+export function localizedPath(path: RoutePath | string, locale: Locale) {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  if (locale === "fr") return normalized;
+  return normalized === "/" ? `/${locale}` : `/${locale}${normalized}`;
+}
+
+export function localizedAbsoluteUrl(path: RoutePath | string, locale: Locale) {
+  return absoluteUrl(localizedPath(path, locale));
+}
+
+/** Ensemble réciproque hreflang, avec le français comme x-default. */
+export function localizedAlternates(path: RoutePath | string) {
+  return {
+    fr: localizedAbsoluteUrl(path, "fr"),
+    en: localizedAbsoluteUrl(path, "en"),
+    ar: localizedAbsoluteUrl(path, "ar"),
+    "x-default": localizedAbsoluteUrl(path, "fr"),
+  };
 }
 
 export function homeSectionUrl(section: keyof typeof homeAnchors) {
@@ -82,6 +105,8 @@ type PageMetaInput = {
   description: string;
   path: RoutePath | string;
   index?: boolean;
+  locale?: Locale;
+  image?: { src: string; alt: string };
 };
 
 export function createPageMetadata({
@@ -89,24 +114,32 @@ export function createPageMetadata({
   description,
   path,
   index = true,
+  locale = "fr",
+  image = { src: brand.heroBanner, alt: brand.heroBannerAlt },
 }: PageMetaInput) {
-  const url = absoluteUrl(path);
+  const url = localizedAbsoluteUrl(path, locale);
+  const imageUrl = absoluteUrl(image.src);
 
   return {
-    title,
+    // Les titres de pages incluent déjà la marque : empêcher le template racine
+    // de produire « … VORZIX · VORZIX ».
+    title: { absolute: title },
     description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: localizedAlternates(path),
+    },
     openGraph: {
       title,
       description,
       url,
       type: "website" as const,
-      locale: "fr_FR",
+      locale: ogLocales[locale],
       siteName: brand.name,
       images: [
         {
-          url: absoluteUrl(brand.heroBanner),
-          alt: brand.heroBannerAlt,
+          url: imageUrl,
+          alt: image.alt,
         },
       ],
     },
@@ -114,8 +147,20 @@ export function createPageMetadata({
       card: "summary_large_image" as const,
       title,
       description,
-      images: [absoluteUrl(brand.heroBanner)],
+      images: [imageUrl],
     },
-    ...(index ? {} : { robots: { index: false, follow: false } }),
+    robots: index
+      ? {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            "max-image-preview": "large" as const,
+            "max-snippet": -1,
+            "max-video-preview": -1,
+          },
+        }
+      : { index: false, follow: false },
   };
 }

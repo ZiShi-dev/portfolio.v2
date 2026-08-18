@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: t("page.metaTitle", { brand: brand.name }),
     description: t("page.metaDescription", { brand: brand.name }),
     path: routes.projects,
+    locale: locale as Locale,
   });
 }
 

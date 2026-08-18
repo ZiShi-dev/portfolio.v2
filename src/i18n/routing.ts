@@ -6,8 +6,8 @@ export type Locale = (typeof locales)[number];
 export const routing = defineRouting({
   locales: [...locales],
   defaultLocale: "fr",
-  // Langue via cookie NEXT_LOCALE — jamais /fr, /en, /ar dans l’URL
-  localePrefix: "never",
+  // Français sur `/`, traductions indexables sur `/en` et `/ar`.
+  localePrefix: "as-needed",
 });
 
 export const localeLabels: Record<Locale, string> = {

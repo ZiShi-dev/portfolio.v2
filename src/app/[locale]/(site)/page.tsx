@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { HomeSection } from "@/components/sections/home";
 import { Services } from "@/components/sections/services";
 import { brand } from "@/lib/brand";
@@ -32,11 +32,18 @@ const FaqSection = dynamic(
   () => import("@/components/sections/faq").then((m) => m.FaqSection)
 );
 
-export const metadata: Metadata = createPageMetadata({
-  title: `${brand.name} — ${brand.titleSuffix}`,
-  description: brand.description,
-  path: routes.home,
-});
+type PageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "meta" });
+  return createPageMetadata({
+    title: `${brand.name} — ${t("title")}`,
+    description: t("description"),
+    path: routes.home,
+    locale: locale as Locale,
+  });
+}
 
 export default async function Home() {
   const locale = (await getLocale()) as Locale;

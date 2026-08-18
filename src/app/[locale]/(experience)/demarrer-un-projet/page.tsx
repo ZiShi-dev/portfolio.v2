@@ -35,6 +35,7 @@ export async function generateMetadata({
     title: t("meta.title", { brand: brand.name }),
     description: t("meta.description", { brand: brand.name }),
     path: routes.startProject,
+    locale: locale as Locale,
   });
 }
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { CaseStudyDetail } from "@/components/sections/case-study-detail";
 import { ProjectSaleDetail } from "@/components/sections/project-sale-detail";
 import { brand, getFooterSocials } from "@/lib/brand";
@@ -10,8 +10,15 @@ import {
 } from "@/lib/projects/site";
 import { listPublishedProjectSlugs } from "@/lib/projects/store";
 import { getPublishedReviewsForProject } from "@/lib/reviews/store";
-import { absoluteUrl, routes } from "@/lib/routes";
+import {
+  absoluteUrl,
+  createPageMetadata,
+  localizedAbsoluteUrl,
+  routes,
+} from "@/lib/routes";
 import type { Locale } from "@/i18n/routing";
+import { JsonLd } from "@/components/json-ld";
+import { headers } from "next/headers";
 
 type PageProps = {
   params: Promise<{ slug: string; locale: string }>;
@@ -40,30 +47,21 @@ export async function generateMetadata({
   const locale = (await getLocale()) as Locale;
   const project = await getSiteProjectBySlug(locale, slug);
   if (!project) {
-    return { title: brand.name };
+    return { title: brand.name, robots: { index: false, follow: false } };
   }
 
   const title = project.seoTitle || `${project.title} — ${brand.name}`;
   const description =
     project.seoDescription || project.desc || brand.description;
-  const path = `${routes.projects}/${project.slug ?? slug}`;
-  const url = absoluteUrl(path);
-
-  return {
+  return createPageMetadata({
     title,
     description,
-    alternates: { canonical: url },
-    openGraph: {
-      title,
-      description,
-      url,
-      type: "website",
-      siteName: brand.name,
-      images: project.images[0]
-        ? [{ url: project.images[0].src, alt: project.title }]
-        : undefined,
-    },
-  };
+    path: `${routes.projects}/${project.slug ?? slug}`,
+    locale,
+    ...(project.images[0]
+      ? { image: { src: project.images[0].src, alt: project.title } }
+      : {}),
+  });
 }
 
 export default async function CaseStudyPage({ params }: PageProps) {
@@ -81,37 +79,77 @@ export default async function CaseStudyPage({ params }: PageProps) {
     next && next.id !== project.id ? next.slug ?? next.id : null;
 
   const reviews = await getPublishedReviewsForProject(project.id);
+  const t = await getTranslations("projects");
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const projectUrl = localizedAbsoluteUrl(
+    `${routes.projects}/${project.slug ?? slug}`,
+    locale
+  );
+  const projectEntity =
+    project.categoryKey === "for_sale" && project.listingPriceCents != null
+      ? {
+          "@type": "Product",
+          "@id": `${projectUrl}#product`,
+          name: project.title,
+          description: project.seoDescription || project.desc,
+          url: projectUrl,
+          inLanguage: locale,
+          ...(project.images.length > 0
+            ? { image: project.images.map((image) => absoluteUrl(image.src)) }
+            : {}),
+          ...(project.listingPriceCents != null
+            ? {
+                offers: {
+                  "@type": "Offer",
+                  priceCurrency: "EUR",
+                  price: (project.listingPriceCents / 100).toFixed(2),
+                  url: projectUrl,
+                  availability: "https://schema.org/InStock",
+                },
+              }
+            : {}),
+        }
+      : {
+          "@type": "CreativeWork",
+          "@id": `${projectUrl}#project`,
+          name: project.title,
+          description: project.seoDescription || project.desc,
+          url: projectUrl,
+          inLanguage: locale,
+          creator: { "@id": `${absoluteUrl(routes.home)}#organization` },
+          ...(project.images.length > 0
+            ? { image: project.images.map((image) => absoluteUrl(image.src)) }
+            : {}),
+        };
+  const projectJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: t("eyebrow"),
+            item: localizedAbsoluteUrl(routes.projects, locale),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: project.title,
+            item: projectUrl,
+          },
+        ],
+      },
+      projectEntity,
+    ],
+  };
 
   if (project.categoryKey === "for_sale") {
     const socials = await getFooterSocials();
-    const offerLd =
-      project.listingPriceCents != null
-        ? {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            name: project.title,
-            description: project.seoDescription || project.desc,
-            url: absoluteUrl(`${routes.projects}/${project.slug ?? slug}`),
-            ...(project.images[0]
-              ? { image: project.images[0].src }
-              : {}),
-            offers: {
-              "@type": "Offer",
-              priceCurrency: "EUR",
-              price: (project.listingPriceCents / 100).toFixed(2),
-              url: absoluteUrl(`${routes.projects}/${project.slug ?? slug}`),
-            },
-          }
-        : null;
-
     return (
       <>
-        {offerLd ? (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(offerLd) }}
-          />
-        ) : null}
+        <JsonLd data={projectJsonLd} nonce={nonce} />
         <ProjectSaleDetail
           project={project}
           nextSlug={nextSlug}
@@ -123,10 +161,13 @@ export default async function CaseStudyPage({ params }: PageProps) {
   }
 
   return (
-    <CaseStudyDetail
-      project={project}
-      nextSlug={nextSlug}
-      reviews={reviews}
-    />
+    <>
+      <JsonLd data={projectJsonLd} nonce={nonce} />
+      <CaseStudyDetail
+        project={project}
+        nextSlug={nextSlug}
+        reviews={reviews}
+      />
+    </>
   );
 }

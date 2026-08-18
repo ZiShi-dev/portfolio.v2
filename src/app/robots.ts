@@ -6,8 +6,15 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/laisser-un-avis", "/admin", "/admin/"],
+      disallow: [
+        "/laisser-un-avis",
+        "/en/laisser-un-avis",
+        "/ar/laisser-un-avis",
+        "/admin",
+        "/admin/",
+      ],
     },
     sitemap: `${absoluteUrl("/").replace(/\/$/, "")}/sitemap.xml`,
+    host: absoluteUrl("/").replace(/\/$/, ""),
   };
 }
