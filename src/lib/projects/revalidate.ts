@@ -3,8 +3,9 @@ import { revalidatePath } from "next/cache";
 /** Invalide les surfaces publiques liées aux Case Studies. */
 export function revalidateProjectSurfaces(slug?: string | null) {
   revalidatePath("/", "layout");
-  revalidatePath("/projets");
+  revalidatePath("/projets", "layout");
+  revalidatePath("/offres", "layout");
   if (slug) {
-    revalidatePath(`/projets/${slug}`);
+    revalidatePath(`/projets/${slug}`, "page");
   }
 }

@@ -46,10 +46,10 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
-    // Conservations Client Cache : retour navigateur (admin ↔ site) plus fluide
+    // Cache client court : les mises à jour CMS (images projets) doivent être visibles vite.
     staleTimes: {
-      dynamic: 30,
-      static: 180,
+      dynamic: 0,
+      static: 30,
     },
   },
   async headers() {

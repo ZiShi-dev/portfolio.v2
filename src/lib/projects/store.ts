@@ -179,9 +179,16 @@ function pickLocale(
   return i18n[key] || i18n.fr || i18n.en || i18n.ar || "";
 }
 
+/**
+ * Couverture publique = 1ʳᵉ image de galerie.
+ * Ignore un `cover_image` orphelin (URL absente de la galerie après remplacement).
+ */
 export function projectCoverUrl(row: ProjectRow): string | undefined {
-  if (row.cover_image) return row.cover_image;
-  return row.images[0]?.url;
+  const galleryUrls = row.images.map((img) => img.url).filter(Boolean);
+  if (row.cover_image && galleryUrls.includes(row.cover_image)) {
+    return row.cover_image;
+  }
+  return galleryUrls[0];
 }
 
 function comparePublishedRows(a: ProjectRow, b: ProjectRow): number {
@@ -195,7 +202,6 @@ export function projectRowToLocalized(
   locale: Locale,
   categoryLabel: string
 ): LocalizedProjectItem {
-  const cover = projectCoverUrl(row);
   const gallery = row.images.map((img) => ({
     src: img.url,
     label: img.label
@@ -210,11 +216,17 @@ export function projectRowToLocalized(
       : undefined,
   }));
 
-  // Si cover dédiée absente de la galerie, la placer en tête pour la carte.
-  const images =
-    cover && !gallery.some((g) => g.src === cover)
-      ? [{ src: cover }, ...gallery]
-      : gallery;
+  const coverUrl = projectCoverUrl(row);
+  let images = gallery;
+  if (coverUrl) {
+    const coverIndex = gallery.findIndex((img) => img.src === coverUrl);
+    if (coverIndex > 0) {
+      images = [
+        gallery[coverIndex]!,
+        ...gallery.filter((_, index) => index !== coverIndex),
+      ];
+    }
+  }
 
   return {
     id: row.id,
@@ -439,6 +451,10 @@ function writeToDbPayload(
       url: img.url,
       ...(img.label ? { label: img.label } : {}),
     }));
+    // Garde cover_image alignée sur la galerie (évite une couverture orpheline).
+    if (values.coverImage === undefined) {
+      payload.cover_image = values.images[0]?.url ?? null;
+    }
   }
   if (values.link !== undefined) payload.link = values.link;
   if (values.appLink !== undefined) payload.app_link = values.appLink;
@@ -453,7 +469,16 @@ function writeToDbPayload(
     }
   }
   if (values.featured !== undefined) payload.featured = values.featured;
-  if (values.coverImage !== undefined) payload.cover_image = values.coverImage;
+  if (values.coverImage !== undefined) {
+    const cover = values.coverImage;
+    if (values.images !== undefined) {
+      const urls = values.images.map((img) => img.url);
+      payload.cover_image =
+        cover && urls.includes(cover) ? cover : (urls[0] ?? null);
+    } else {
+      payload.cover_image = cover;
+    }
+  }
   if (values.technologies !== undefined) {
     payload.technologies = values.technologies;
   }
