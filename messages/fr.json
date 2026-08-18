@@ -1126,6 +1126,7 @@
         "identity": "Identité",
         "commerce": "Bouton",
         "pricing": "Prix",
+        "texts": "Textes",
         "features": "Éléments inclus",
         "caseStudies": "Projets associés"
       },
@@ -1189,6 +1190,9 @@
     "ctaInterest": "Je suis intéressé par {title}",
     "ctaDemo": "Voir la démo",
     "ctaEmail": "Écrire par email",
+    "contactWays": "Nous joindre",
+    "contactWaysHint": "Choisissez le moyen qui vous convient.",
+    "otherWays": "Autres moyens de contact",
     "valueTitle": "Ce que vous achetez",
     "forWhom": "Pour qui",
     "whatYouGet": "Ce que vous obtenez",
@@ -1202,7 +1206,7 @@
       },
       "customize": {
         "title": "Nous personnalisons la boutique",
-        "desc": "Nom, couleurs, style et contenus prévus dans l’offre sont adaptés à votre marque."
+        "desc": "Dans un délai de 7 à 14 jours : nom, couleurs, style et contenus convenus avant le travail sont adaptés à votre marque."
       },
       "launch": {
         "title": "Mise en ligne",
@@ -1228,11 +1232,19 @@
       },
       "customize": {
         "q": "Peut-on personnaliser le design ?",
-        "a": "Oui, dans le cadre de l’offre : identité visuelle (nom, couleurs, style) et contenus prévus. Les ajouts de pages ou de fonctions font l’objet d’un devis."
+        "a": "Oui, dans le cadre de l’offre : nom, couleurs, style, et les pages convenues avant le début du travail. Tout ajout de page ou de fonction fait l’objet d’un devis."
       },
       "included": {
         "q": "Qu’est-ce qui est inclus dans le prix ?",
-        "a": "Les fonctionnalités listées sur cette page, la personnalisation indiquée, l’aide à la mise en ligne, et un mois d’ajustements visuels simples après livraison — sans nouvelles pages ni nouvelles fonctions."
+        "a": "Les fonctionnalités listées sur cette page, le code source complet, la personnalisation convenue, l’aide à la mise en ligne, et un mois d’ajustements visuels simples après livraison — sans nouvelles pages ni nouvelles fonctions."
+      },
+      "delay": {
+        "q": "Combien de temps avant la mise en ligne ?",
+        "a": "Une fois le périmètre confirmé, la personnalisation et la mise en ligne prennent 7 à 14 jours, selon le contenu et les ajustements demandés."
+      },
+      "catalog": {
+        "q": "Qui saisit les produits ?",
+        "a": "La saisie du catalogue (fiches, photos, prix) est à votre charge. La boutique est livrée prête à recevoir vos produits."
       },
       "hosting": {
         "q": "L’hébergement et le domaine sont-ils inclus ?",
@@ -1240,7 +1252,7 @@
       },
       "after": {
         "q": "Que se passe-t-il après ma demande ?",
-        "a": "Vous recevez une réponse claire sous 48 h pour confirmer le périmètre et les prochaines étapes."
+        "a": "Vous recevez une réponse claire sous 48 h. Après confirmation, la personnalisation et la mise en ligne se font en 7 à 14 jours."
       },
       "demo": {
         "q": "Puis-je voir la boutique avant de l’acheter ?",

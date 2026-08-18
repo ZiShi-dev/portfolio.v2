@@ -8,6 +8,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
 import { ProjectStatusBadge } from "@/components/sections/project-status-badge";
+import { ProjectLiveImageLink } from "@/components/sections/project-live-image-link";
 import { ReviewCard } from "@/components/sections/review-card";
 import { Link } from "@/i18n/navigation";
 import type { ReviewItem } from "@/data/reviews";
@@ -30,6 +31,8 @@ export function CaseStudyDetail({
   const tReviews = useTranslations("reviews");
   const cover = project.images[0]?.src;
   const gallery = project.images.slice(1);
+  const liveUrl =
+    project.link && isSafeHttpUrl(project.link) ? project.link : null;
   const features = project.features ?? [];
   const businessTypeIds = Array.from(
     new Set(project.businessTypeIds ?? [])
@@ -66,16 +69,18 @@ export function CaseStudyDetail({
         {cover ? (
           <Reveal delay={0.08}>
             <figure className="relative mt-10 overflow-hidden rounded-xl border border-border-gold bg-surface-elevated sm:mt-12">
-              <Image
-                src={cover}
-                alt={project.title}
-                width={1200}
-                height={720}
-                priority
-                className="h-auto w-full object-cover"
-                sizes="(max-width: 896px) 100vw, 896px"
-              />
-              <div className="absolute start-3 top-3 sm:start-4 sm:top-4">
+              <ProjectLiveImageLink href={liveUrl} label={t("visitSite")}>
+                <Image
+                  src={cover}
+                  alt={project.title}
+                  width={1200}
+                  height={720}
+                  priority
+                  className="h-auto w-full object-cover"
+                  sizes="(max-width: 896px) 100vw, 896px"
+                />
+              </ProjectLiveImageLink>
+              <div className="pointer-events-none absolute start-3 top-3 sm:start-4 sm:top-4">
                 <ProjectStatusBadge
                   categoryKey={project.categoryKey}
                   priceLabel={project.listingPriceLabel}
@@ -136,15 +141,17 @@ export function CaseStudyDetail({
                     key={img.src}
                     className="overflow-hidden rounded-xl border border-border bg-surface-elevated"
                   >
-                    <Image
-                      src={img.src}
-                      alt={img.label || project.title}
-                      width={800}
-                      height={500}
-                      loading="lazy"
-                      className="h-auto w-full object-cover"
-                      sizes="(max-width: 640px) 100vw, 448px"
-                    />
+                    <ProjectLiveImageLink href={liveUrl} label={t("visitSite")}>
+                      <Image
+                        src={img.src}
+                        alt={img.label || project.title}
+                        width={800}
+                        height={500}
+                        loading="lazy"
+                        className="h-auto w-full object-cover"
+                        sizes="(max-width: 640px) 100vw, 448px"
+                      />
+                    </ProjectLiveImageLink>
                     {img.label ? (
                       <figcaption className="border-t border-border px-3 py-2 font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
                         {img.label}

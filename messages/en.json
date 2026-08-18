@@ -1124,6 +1124,7 @@
         "identity": "Identity",
         "commerce": "Button",
         "pricing": "Pricing",
+        "texts": "Copy",
         "features": "Included items",
         "caseStudies": "Linked case studies"
       },
@@ -1187,6 +1188,9 @@
     "ctaInterest": "I'm interested in {title}",
     "ctaDemo": "View the demo",
     "ctaEmail": "Email us",
+    "contactWays": "Get in touch",
+    "contactWaysHint": "Pick the way that suits you.",
+    "otherWays": "Other ways to reach us",
     "valueTitle": "What you are buying",
     "forWhom": "Who it's for",
     "whatYouGet": "What you get",
@@ -1200,7 +1204,7 @@
       },
       "customize": {
         "title": "We personalize the shop",
-        "desc": "Name, colors, style and the content included in the offer are adapted to your brand."
+        "desc": "Within 7 to 14 days: name, colours, style and the content agreed before work starts are adapted to your brand."
       },
       "launch": {
         "title": "Go live",
@@ -1226,11 +1230,19 @@
       },
       "customize": {
         "q": "Can the design be customized?",
-        "a": "Yes, within the offer: visual identity (name, colors, style) and planned content. Extra pages or features require a separate quote."
+        "a": "Yes, within the offer: name, colours, style, and the pages agreed before work starts. Extra pages or features require a separate quote."
       },
       "included": {
         "q": "What does the price include?",
-        "a": "The features listed on this page, the stated personalization, help going live, and one month of simple visual adjustments after delivery — not new pages or new features."
+        "a": "The features listed on this page, the full source code, the agreed personalization, help going live, and one month of simple visual adjustments after delivery — not new pages or new features."
+      },
+      "delay": {
+        "q": "How long before the shop goes live?",
+        "a": "Once the scope is confirmed, customisation and launch take 7 to 14 days, depending on the content and requested changes."
+      },
+      "catalog": {
+        "q": "Who enters the products?",
+        "a": "Entering the catalogue (pages, photos, prices) is your responsibility. The shop is delivered ready to receive your products."
       },
       "hosting": {
         "q": "Are hosting and the domain included?",
@@ -1238,7 +1250,7 @@
       },
       "after": {
         "q": "What happens after I get in touch?",
-        "a": "You receive a clear reply within 48 hours to confirm scope and next steps."
+        "a": "You receive a clear reply within 48 hours. After confirmation, customisation and launch take 7 to 14 days."
       },
       "demo": {
         "q": "Can I see the shop before buying?",

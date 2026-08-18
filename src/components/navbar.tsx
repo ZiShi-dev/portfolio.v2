@@ -133,7 +133,7 @@ export function Navbar() {
       <div className="relative mx-auto w-full max-w-5xl">
         <div
           className={cn(
-            "flex h-12 w-full items-center gap-2 rounded-full border px-2 transition-colors duration-300 sm:h-14 sm:gap-3 sm:px-3",
+            "relative z-50 flex h-12 w-full items-center gap-2 rounded-full border px-2 transition-colors duration-300 sm:h-14 sm:gap-3 sm:px-3",
             scrolled
               ? "border-border bg-surface/95 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.55)] backdrop-blur-xl"
               : "border-border bg-surface/80 backdrop-blur-md"
@@ -236,13 +236,22 @@ export function Navbar() {
                 transition={{ duration: 0.18 }}
                 className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-xl border border-border-gold bg-surface-elevated/95 shadow-[0_16px_40px_-20px_rgba(0,0,0,0.7)] backdrop-blur-xl sm:max-w-[22rem]"
               >
-                <div className="flex items-center justify-between border-b border-border px-4 py-3">
+                <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5 ps-4">
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary/80">
                     VZ—NAV
                   </p>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    {t("menu")}
-                  </p>
+                  <button
+                    type="button"
+                    className={cn(
+                      "inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background/60 text-foreground outline-none transition-colors",
+                      "hover:border-primary/40 hover:text-primary",
+                      "focus-visible:ring-2 focus-visible:ring-primary/45"
+                    )}
+                    aria-label={t("closeMenu")}
+                    onClick={() => setOpen(false)}
+                  >
+                    <X className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+                  </button>
                 </div>
 
                 <nav aria-label={t("menu")}>

@@ -1,21 +1,37 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState, type ComponentType } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Check, ChevronDown, ExternalLink, Mail, MessageCircle } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  ExternalLink,
+  Mail,
+} from "lucide-react";
+import {
+  SiDiscord,
+  SiInstagram,
+  SiTiktok,
+  SiWhatsapp,
+} from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
 import { GlowCard } from "@/components/ui/glow-card";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
 import { ProjectStatusBadge } from "@/components/sections/project-status-badge";
+import { ProjectLiveImageLink } from "@/components/sections/project-live-image-link";
 import { ReviewCard } from "@/components/sections/review-card";
 import { Link } from "@/i18n/navigation";
 import type { ReviewItem } from "@/data/reviews";
 import type { FooterSocialLink } from "@/lib/brand";
 import { isSafeHttpUrl } from "@/lib/review-schema";
-import { resolveSaleCtaButtons } from "@/lib/projects/sale-cta";
+import {
+  resolveSaleCtaButtons,
+  type SaleCtaButton,
+} from "@/lib/projects/sale-cta";
+import type { SaleCtaChannel } from "@/lib/projects/schema";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import type { LocalizedProjectItem } from "@/data/projects";
@@ -37,22 +53,45 @@ const FAQ_KEYS = [
   "ready",
   "customize",
   "included",
+  "delay",
+  "catalog",
   "hosting",
   "after",
   "demo",
 ] as const;
 
-function SaleCtaButtons({
+function listingIntentParagraphs(text: string): string[] {
+  return text
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+const CHANNEL_ICONS: Record<
+  SaleCtaChannel,
+  ComponentType<{ className?: string }>
+> = {
+  email: Mail,
+  whatsapp: SiWhatsapp,
+  discord: SiDiscord,
+  instagram: SiInstagram,
+  tiktok: SiTiktok,
+};
+
+function SaleContactPanel({
   project,
   contacts,
+  compact = false,
+  plain = false,
 }: {
   project: LocalizedProjectItem;
   contacts: ProjectSaleContacts;
+  compact?: boolean;
+  plain?: boolean;
 }) {
   const t = useTranslations("projectSale");
   const buttons = resolveSaleCtaButtons({
     channels: project.saleCtaChannels ?? [],
-    customLabel: project.saleCtaLabel,
     email: contacts.email,
     socials: contacts.socials,
     emailLabel: t("ctaEmail"),
@@ -60,35 +99,93 @@ function SaleCtaButtons({
 
   if (buttons.length === 0) return null;
 
+  const heading = project.saleCtaLabel?.trim() || t("contactWays");
+
   return (
-    <div className="flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-      {buttons.map((button) => {
-        const external = button.href.startsWith("http");
-        return (
-          <Button
-            key={button.id}
-            asChild
-            size="lg"
-            variant={button.primary ? "default" : "outline"}
-            className="min-h-12 w-full sm:w-auto"
-          >
-            <a
-              href={button.href}
-              {...(external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              {button.id === "email" ? (
-                <Mail className="h-4 w-4" aria-hidden />
-              ) : (
-                <MessageCircle className="h-4 w-4" aria-hidden />
-              )}
-              {button.label}
-            </a>
-          </Button>
-        );
-      })}
+    <div
+      className={cn(
+        "w-full text-start",
+        !plain &&
+          "rounded-xl border border-border-gold bg-surface-elevated/80",
+        !plain && (compact ? "p-4 sm:p-5" : "p-5 sm:p-6")
+      )}
+    >
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/80">
+        VZ—CONTACT
+      </p>
+      <p className="mt-2 font-display text-lg font-semibold text-foreground sm:text-xl">
+        {heading}
+      </p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {t("contactWaysHint")}
+      </p>
+      <ul
+        className={cn(
+          "mt-4 grid gap-2.5",
+          buttons.length === 1 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"
+        )}
+      >
+        {buttons.map((button) => {
+          const Icon = CHANNEL_ICONS[button.id];
+          const external = button.href.startsWith("http");
+          return (
+            <li key={button.id}>
+              <a
+                href={button.href}
+                {...(external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                className={cn(
+                  "group flex min-h-12 items-center gap-3 rounded-lg border px-3 py-2.5 text-sm outline-none transition-colors",
+                  "focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated",
+                  button.primary
+                    ? "border-primary/40 bg-primary/10 text-foreground hover:border-primary/60 hover:bg-primary/14"
+                    : "border-border bg-background/40 text-foreground/90 hover:border-primary/40 hover:bg-surface-high hover:text-primary"
+                )}
+              >
+                <span
+                  className={cn(
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-md border",
+                    button.primary
+                      ? "border-primary/30 bg-background/50 text-primary"
+                      : "border-border bg-background/60 text-muted-foreground group-hover:border-primary/30 group-hover:text-primary"
+                  )}
+                >
+                  <Icon className="h-4 w-4" aria-hidden />
+                </span>
+                <span className="min-w-0 flex-1 truncate font-medium">
+                  {button.label}
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
     </div>
+  );
+}
+
+function SalePrimaryCta({
+  button,
+  label,
+  className,
+}: {
+  button: SaleCtaButton;
+  label: string;
+  className?: string;
+}) {
+  const Icon = CHANNEL_ICONS[button.id];
+  const external = button.href.startsWith("http");
+  return (
+    <Button asChild size="lg" className={cn("min-h-12 w-full sm:w-auto", className)}>
+      <a
+        href={button.href}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
+        <Icon className="h-4 w-4" aria-hidden />
+        {label}
+      </a>
+    </Button>
   );
 }
 
@@ -104,15 +201,60 @@ export function ProjectSaleDetail({
   const cover = project.images[0]?.src;
   const gallery = project.images.slice(1);
   const features = project.features ?? [];
+  const intentParagraphs = listingIntentParagraphs(project.listingIntent ?? "");
   const businessTypeIds = Array.from(new Set(project.businessTypeIds ?? []));
   const demoUrl =
     project.link && isSafeHttpUrl(project.link) ? project.link : null;
   const isEcommerce = businessTypeIds.includes("ecommerce");
   const faqBaseId = useId();
   const [openFaq, setOpenFaq] = useState<string>(FAQ_KEYS[0]);
+  const contactButtons = resolveSaleCtaButtons({
+    channels: project.saleCtaChannels ?? [],
+    email: contacts.email,
+    socials: contacts.socials,
+    emailLabel: t("ctaEmail"),
+  });
+  const primaryContact = contactButtons[0] ?? null;
+  const primaryLabel =
+    project.saleCtaLabel?.trim() || primaryContact?.label || "";
+  const heroCtaRef = useRef<HTMLDivElement>(null);
+  const contactRef = useRef<HTMLElement>(null);
+  const [showStickyCta, setShowStickyCta] = useState(false);
+
+  useEffect(() => {
+    if (!primaryContact) return;
+    const hero = heroCtaRef.current;
+    const contact = contactRef.current;
+    if (!hero || !contact) return;
+
+    let heroGone = false;
+    let contactInView = false;
+    const update = () => setShowStickyCta(heroGone && !contactInView);
+
+    const ioHero = new IntersectionObserver(
+      ([entry]) => {
+        heroGone = !entry.isIntersecting;
+        update();
+      },
+      { threshold: 0 }
+    );
+    const ioContact = new IntersectionObserver(
+      ([entry]) => {
+        contactInView = entry.isIntersecting;
+        update();
+      },
+      { threshold: 0.12 }
+    );
+    ioHero.observe(hero);
+    ioContact.observe(contact);
+    return () => {
+      ioHero.disconnect();
+      ioContact.disconnect();
+    };
+  }, [primaryContact]);
 
   return (
-    <article className="relative overflow-hidden bg-background px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-32">
+    <article className="relative overflow-hidden bg-background px-4 pb-28 pt-28 sm:px-6 sm:pb-28 sm:pt-32">
       <div className="pointer-events-none absolute inset-0 celestial-vault opacity-40" aria-hidden />
 
       <div className="relative z-10 mx-auto max-w-4xl">
@@ -139,8 +281,13 @@ export function ProjectSaleDetail({
               <ProjectTypeBadges businessTypeIds={businessTypeIds} className="mt-0" />
             </div>
           ) : null}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <SaleCtaButtons project={project} contacts={contacts} />
+          <div
+            ref={heroCtaRef}
+            className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
+          >
+            {primaryContact ? (
+              <SalePrimaryCta button={primaryContact} label={primaryLabel} />
+            ) : null}
             {demoUrl ? (
               <Button
                 asChild
@@ -155,21 +302,33 @@ export function ProjectSaleDetail({
               </Button>
             ) : null}
           </div>
+          {contactButtons.length > 1 ? (
+            <p className="mt-3">
+              <a
+                href="#sale-contact"
+                className="text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
+                {t("otherWays")}
+              </a>
+            </p>
+          ) : null}
         </Reveal>
 
         {cover ? (
           <Reveal delay={0.08}>
-            <figure className="relative mt-10 overflow-hidden rounded-xl border border-border-gold bg-surface-elevated sm:mt-12">
-              <Image
-                src={cover}
-                alt={project.title}
-                width={1200}
-                height={720}
-                priority
-                className="h-auto w-full object-cover"
-                sizes="(max-width: 896px) 100vw, 896px"
-              />
-              <div className="absolute start-3 top-3 sm:start-4 sm:top-4">
+            <figure className="relative mt-8 overflow-hidden rounded-xl border border-border-gold bg-surface-elevated sm:mt-10">
+              <ProjectLiveImageLink href={demoUrl} label={t("ctaDemo")}>
+                <Image
+                  src={cover}
+                  alt={project.title}
+                  width={1200}
+                  height={720}
+                  priority
+                  className="h-auto w-full object-cover"
+                  sizes="(max-width: 896px) 100vw, 896px"
+                />
+              </ProjectLiveImageLink>
+              <div className="pointer-events-none absolute start-3 top-3 sm:start-4 sm:top-4">
                 <ProjectStatusBadge
                   categoryKey={project.categoryKey}
                   priceLabel={project.listingPriceLabel}
@@ -224,7 +383,7 @@ export function ProjectSaleDetail({
           </Reveal>
         ) : null}
 
-        {features.length > 0 || project.listingIntent ? (
+        {features.length > 0 || intentParagraphs.length > 0 ? (
           <Reveal delay={0.05}>
             <section className="mt-12 sm:mt-16" aria-labelledby="sale-included-heading">
               <h2
@@ -251,10 +410,21 @@ export function ProjectSaleDetail({
                   ))}
                 </ul>
               ) : null}
-              {project.listingIntent ? (
-                <p className="mt-6 whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  {project.listingIntent}
-                </p>
+              {intentParagraphs.length > 0 ? (
+                <ul className="mt-6 space-y-3">
+                  {intentParagraphs.map((paragraph) => (
+                    <li
+                      key={paragraph}
+                      className="flex gap-3 rounded-xl border border-border-gold/40 bg-surface-elevated/50 px-4 py-3.5 text-sm leading-relaxed text-foreground/80 sm:text-base"
+                    >
+                      <Check
+                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                        aria-hidden
+                      />
+                      <span>{paragraph}</span>
+                    </li>
+                  ))}
+                </ul>
               ) : null}
             </section>
           </Reveal>
@@ -343,15 +513,17 @@ export function ProjectSaleDetail({
                     key={img.src}
                     className="overflow-hidden rounded-xl border border-border bg-surface-elevated"
                   >
-                    <Image
-                      src={img.src}
-                      alt={img.label || project.title}
-                      width={800}
-                      height={500}
-                      loading="lazy"
-                      className="h-auto w-full object-cover"
-                      sizes="(max-width: 640px) 100vw, 448px"
-                    />
+                    <ProjectLiveImageLink href={demoUrl} label={t("ctaDemo")}>
+                      <Image
+                        src={img.src}
+                        alt={img.label || project.title}
+                        width={800}
+                        height={500}
+                        loading="lazy"
+                        className="h-auto w-full object-cover"
+                        sizes="(max-width: 640px) 100vw, 448px"
+                      />
+                    </ProjectLiveImageLink>
                     {img.label ? (
                       <figcaption className="border-t border-border px-3 py-2 font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
                         {img.label}
@@ -360,34 +532,7 @@ export function ProjectSaleDetail({
                   </figure>
                 ))}
               </div>
-              {demoUrl ? (
-                <p className="mt-6">
-                  <a
-                    href={demoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-11 items-center gap-2 text-sm text-primary transition-colors hover:text-primary-hover"
-                  >
-                    {tCase("visitSite")}
-                    <ExternalLink className="h-4 w-4" aria-hidden />
-                  </a>
-                </p>
-              ) : null}
             </section>
-          </Reveal>
-        ) : demoUrl ? (
-          <Reveal delay={0.05}>
-            <p className="mt-10">
-              <a
-                href={demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center gap-2 text-sm text-primary transition-colors hover:text-primary-hover"
-              >
-                {tCase("visitSite")}
-                <ExternalLink className="h-4 w-4" aria-hidden />
-              </a>
-            </p>
           </Reveal>
         ) : null}
 
@@ -469,55 +614,57 @@ export function ProjectSaleDetail({
         <CelestialDivider className="mt-14 sm:mt-16" />
 
         <Reveal delay={0.08}>
-          <section className="mt-10 rounded-xl border border-border-gold bg-surface-elevated/90 p-6 text-center sm:p-10">
+          <section
+            ref={contactRef}
+            id="sale-contact"
+            className="mt-10 scroll-mt-28 rounded-xl border border-border-gold bg-surface-elevated/90 p-6 text-center sm:p-10"
+          >
             <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
               {t("finalTitle", { title: project.title })}
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-sm text-muted-foreground sm:text-base">
               {t("finalSubtitle")}
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3">
-              <SaleCtaButtons project={project} contacts={contacts} />
-              <div className="flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
-                {demoUrl ? (
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="outline"
-                    className="min-h-12 w-full sm:w-auto"
-                  >
-                    <a href={demoUrl} target="_blank" rel="noopener noreferrer">
-                      {t("ctaDemo")}
-                      <ExternalLink className="h-4 w-4" aria-hidden />
-                    </a>
-                  </Button>
-                ) : null}
-                {nextSlug ? (
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="outline"
-                    className="min-h-12 w-full sm:w-auto"
-                  >
-                    <Link href={`${routes.projects}/${nextSlug}`}>
-                      {tCase("ctaNext")}
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="outline"
-                    className="min-h-12 w-full sm:w-auto"
-                  >
-                    <Link href={routes.projects}>{tCase("backToList")}</Link>
-                  </Button>
-                )}
-              </div>
+            <div className="mt-8">
+              <SaleContactPanel project={project} contacts={contacts} plain />
             </div>
+            {nextSlug ? (
+              <p className="mt-8">
+                <Link
+                  href={`${routes.projects}/${nextSlug}`}
+                  className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {tCase("ctaNext")}
+                </Link>
+              </p>
+            ) : (
+              <p className="mt-8">
+                <Link
+                  href={routes.projects}
+                  className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {tCase("backToList")}
+                </Link>
+              </p>
+            )}
           </section>
         </Reveal>
       </div>
+
+      {primaryContact && showStickyCta ? (
+        <div
+          className={cn(
+            "fixed inset-x-0 bottom-0 z-40 border-t border-border-gold bg-background/95 pe-[4.75rem] backdrop-blur-md lg:hidden",
+            "pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 ps-4"
+          )}
+        >
+          <SalePrimaryCta
+            button={primaryContact}
+            label={primaryLabel}
+            className="w-full"
+          />
+        </div>
+      ) : null}
     </article>
   );
 }

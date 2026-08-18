@@ -43,14 +43,12 @@ function defaultLabelForChannel(
 /** Boutons de contact de la page de vente — jamais le parcours /demarrer-un-projet. */
 export function resolveSaleCtaButtons(opts: {
   channels: SaleCtaChannel[];
-  customLabel?: string;
   email: string;
   socials: FooterSocialLink[];
   emailLabel: string;
 }): SaleCtaButton[] {
   const wanted = opts.channels;
   if (wanted.length === 0) return [];
-  const custom = opts.customLabel?.trim() ?? "";
   const buttons: SaleCtaButton[] = [];
 
   for (const id of SALE_CTA_CHANNELS) {
@@ -67,7 +65,6 @@ export function resolveSaleCtaButtons(opts: {
 
   if (buttons[0]) {
     buttons[0].primary = true;
-    if (custom) buttons[0].label = custom;
   }
 
   return buttons;

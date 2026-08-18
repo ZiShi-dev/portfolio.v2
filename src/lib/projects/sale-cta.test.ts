@@ -20,10 +20,9 @@ describe("sale-cta", () => {
     ]);
   });
 
-  it("applique le libellé custom au premier canal disponible", () => {
+  it("affiche tous les canaux cochés avec leur nom", () => {
     const buttons = resolveSaleCtaButtons({
       channels: ["whatsapp", "discord"],
-      customLabel: "Je suis intéressé par Quotishop",
       email: "hello@zishi.dev",
       socials,
       emailLabel: "Email",
@@ -31,7 +30,7 @@ describe("sale-cta", () => {
     assert.equal(buttons.length, 2);
     assert.equal(buttons[0]?.id, "whatsapp");
     assert.equal(buttons[0]?.primary, true);
-    assert.equal(buttons[0]?.label, "Je suis intéressé par Quotishop");
+    assert.equal(buttons[0]?.label, "WhatsApp");
     assert.equal(buttons[1]?.label, "Discord");
     assert.equal(buttons[1]?.primary, false);
   });
@@ -39,7 +38,6 @@ describe("sale-cta", () => {
   it("n’affiche rien si aucun canal n’est choisi", () => {
     const buttons = resolveSaleCtaButtons({
       channels: [],
-      customLabel: "Contact",
       email: "hello@zishi.dev",
       socials,
       emailLabel: "Email",
@@ -50,7 +48,6 @@ describe("sale-cta", () => {
   it("ignore les canaux sans URL", () => {
     const buttons = resolveSaleCtaButtons({
       channels: ["instagram", "email"],
-      customLabel: "Contact",
       email: "hello@zishi.dev",
       socials,
       emailLabel: "Email",
@@ -61,6 +58,6 @@ describe("sale-cta", () => {
       buttons[0]?.href,
       "https://mail.google.com/mail/?view=cm&fs=1&to=hello%40zishi.dev"
     );
-    assert.equal(buttons[0]?.label, "Contact");
+    assert.equal(buttons[0]?.label, "Email");
   });
 });

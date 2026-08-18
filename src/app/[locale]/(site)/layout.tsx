@@ -4,6 +4,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { ScrollRestoration } from "@/components/scroll-restoration";
+import { HashSectionScroll } from "@/components/hash-section-scroll";
 import { SkipToContent } from "@/components/skip-to-content";
 import { CelestialPageSplash } from "@/components/celestial-page-loader";
 import { FloatingWhatsApp } from "@/components/floating-whatsapp";
@@ -35,6 +36,7 @@ export default async function SiteLayout({ children, params }: SiteLayoutProps) 
       <CelestialPageSplash />
       <SkipToContent />
       <ScrollRestoration />
+      <HashSectionScroll />
       <NavigationProgress />
       <Navbar key={locale} />
       <main id="main-content" className="min-h-dvh flex-1 overflow-x-clip bg-background">

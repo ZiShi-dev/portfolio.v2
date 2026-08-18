@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   Archive,
@@ -78,6 +78,15 @@ const STATUS_FILTERS: StatusFilter[] = [
   "draft",
   "archived",
 ];
+
+const FORM_SECTIONS = [
+  { id: "svc-sec-identity", key: "identity" },
+  { id: "svc-sec-commerce", key: "commerce" },
+  { id: "svc-sec-pricing", key: "pricing" },
+  { id: "svc-sec-texts", key: "texts" },
+  { id: "svc-sec-features", key: "features" },
+  { id: "svc-sec-caseStudies", key: "caseStudies" },
+] as const;
 
 type CaseStudyOption = {
   id: string;
@@ -229,6 +238,24 @@ export function AdminServicesPanel({
   const [projectRefInput, setProjectRefInput] = useState("");
   const [projectLinkError, setProjectLinkError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const formScrollRef = useRef<HTMLDivElement>(null);
+
+  const jumpToSection = (id: string) => {
+    const root = formScrollRef.current;
+    const target = root?.querySelector<HTMLElement>(`#${id}`);
+    if (!root || !target) return;
+    const offset =
+      target.getBoundingClientRect().top -
+      root.getBoundingClientRect().top +
+      root.scrollTop -
+      8;
+    root.scrollTo({
+      top: Math.max(0, offset),
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+    });
+  };
 
   const refresh = useCallback(async () => {
     try {
@@ -736,8 +763,30 @@ export function AdminServicesPanel({
             <DialogDescription>{t("formHint")}</DialogDescription>
           </DialogHeader>
 
-          <div className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
-            <section className="space-y-3">
+          <nav
+            aria-label={t("formHint")}
+            className="scrollbar-overlay shrink-0 overflow-x-auto border-b border-border px-3 py-2 sm:px-5"
+          >
+            <ul className="flex min-w-max gap-1.5">
+              {FORM_SECTIONS.map((section) => (
+                <li key={section.id}>
+                  <button
+                    type="button"
+                    onClick={() => jumpToSection(section.id)}
+                    className="rounded-full border border-border bg-background/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
+                  >
+                    {t(`sections.${section.key}`)}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div
+            ref={formScrollRef}
+            className="scrollbar-overlay min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6"
+          >
+            <section id="svc-sec-identity" className="space-y-3 scroll-mt-2">
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.identity")}
               </h3>
@@ -827,7 +876,7 @@ export function AdminServicesPanel({
               </div>
             </section>
 
-            <section className="space-y-3">
+            <section id="svc-sec-commerce" className="space-y-3 scroll-mt-2">
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.commerce")}
               </h3>
@@ -846,7 +895,7 @@ export function AdminServicesPanel({
               </label>
             </section>
 
-            <section className="space-y-3">
+            <section id="svc-sec-pricing" className="space-y-3 scroll-mt-2">
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.pricing")}
               </h3>
@@ -948,7 +997,10 @@ export function AdminServicesPanel({
               </div>
             </section>
 
-            <section className="space-y-3">
+            <section id="svc-sec-texts" className="space-y-3 scroll-mt-2">
+              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+                {t("sections.texts")}
+              </h3>
               <div className="flex gap-2 border-b border-border pb-2">
                 {(["fr", "en", "ar"] as const).map((loc) => (
                   <button
@@ -1063,7 +1115,7 @@ export function AdminServicesPanel({
               </div>
             </section>
 
-            <section className="space-y-3">
+            <section id="svc-sec-features" className="space-y-3 scroll-mt-2">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                   {t("sections.features")}
@@ -1152,7 +1204,7 @@ export function AdminServicesPanel({
               ))}
             </section>
 
-            <section className="space-y-3">
+            <section id="svc-sec-caseStudies" className="space-y-3 scroll-mt-2">
               <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
                 {t("sections.caseStudies")}
               </h3>
