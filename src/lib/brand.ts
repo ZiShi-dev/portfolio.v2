@@ -1,9 +1,11 @@
 import {
+  DEFAULT_CONTACT_PRIORITY,
   SITE_SOCIAL_LABELS,
+  normalizeContactPriority,
   type SiteSocialId,
   type SiteSocialLinks,
 } from "@/data/site-social";
-import { getSiteSocialLinks } from "@/lib/social/store";
+import { getSiteSettings } from "@/lib/social/store";
 
 export const brand = {
   name: "VORZIX",
@@ -20,7 +22,6 @@ export const brand = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.zishi.dev",
   description:
     "VORZIX conçoit des sites web, applications et plateformes digitales sur-mesure — design premium, technique fiable et accompagnement par une équipe dédiée.",
-  preferredContactText: "Contact préféré · Discord",
 } as const;
 
 export type { SiteSocialId as FooterSocialId, SiteSocialLinks };
@@ -32,36 +33,28 @@ export type FooterSocialLink = {
   preferred?: boolean;
 };
 
+/**
+ * Liens réseaux triés selon la priorité de contact réglée en admin.
+ * Le premier réseau réellement renseigné devient le contact préféré.
+ */
 export function buildFooterSocials(
-  social: SiteSocialLinks
+  social: SiteSocialLinks,
+  priority: readonly SiteSocialId[] = DEFAULT_CONTACT_PRIORITY
 ): FooterSocialLink[] {
-  return [
-    {
-      id: "discord",
-      label: SITE_SOCIAL_LABELS.discord,
-      href: social.discord,
-      preferred: true,
-    },
-    {
-      id: "whatsapp",
-      label: SITE_SOCIAL_LABELS.whatsapp,
-      href: social.whatsapp,
-    },
-    {
-      id: "instagram",
-      label: SITE_SOCIAL_LABELS.instagram,
-      href: social.instagram,
-    },
-    {
-      id: "tiktok",
-      label: SITE_SOCIAL_LABELS.tiktok,
-      href: social.tiktok,
-    },
-  ];
+  const links = normalizeContactPriority(priority).map((id) => ({
+    id,
+    label: SITE_SOCIAL_LABELS[id],
+    href: String(social[id] ?? "").trim(),
+  }));
+
+  const first = links.find((link) => link.href.length > 0);
+  return links.map((link) =>
+    link === first ? { ...link, preferred: true } : link
+  );
 }
 
 /** Liens footer : sourcés depuis Supabase (admin /settings), sinon vides. */
 export async function getFooterSocials(): Promise<FooterSocialLink[]> {
-  const social = await getSiteSocialLinks();
-  return buildFooterSocials(social);
+  const settings = await getSiteSettings();
+  return buildFooterSocials(settings, settings.contactPriority);
 }

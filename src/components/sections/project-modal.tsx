@@ -51,9 +51,7 @@ export type ProjectItem = {
   listingIntent?: string;
   saleCtaMode?: "inquiry" | "contacts";
   saleCtaLabel?: string;
-  saleCtaChannels?: Array<
-    "email" | "whatsapp" | "discord" | "instagram" | "tiktok"
-  >;
+  saleCtaChannels?: Array<"whatsapp" | "discord" | "instagram" | "tiktok">;
 };
 
 type ProjectModalProps = {

@@ -10,7 +10,6 @@ import {
 } from "@/lib/projects/site";
 import { listPublishedProjectSlugs } from "@/lib/projects/store";
 import { getPublishedReviewsForProject } from "@/lib/reviews/store";
-import { getPublicContactEmail } from "@/lib/social/store";
 import { absoluteUrl, routes } from "@/lib/routes";
 import type { Locale } from "@/i18n/routing";
 
@@ -84,10 +83,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
   const reviews = await getPublishedReviewsForProject(project.id);
 
   if (project.categoryKey === "for_sale") {
-    const [contactEmail, socials] = await Promise.all([
-      getPublicContactEmail(),
-      getFooterSocials(),
-    ]);
+    const socials = await getFooterSocials();
     const offerLd =
       project.listingPriceCents != null
         ? {
@@ -120,10 +116,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           project={project}
           nextSlug={nextSlug}
           reviews={reviews}
-          contacts={{
-            email: contactEmail,
-            socials,
-          }}
+          contacts={{ socials }}
         />
       </>
     );

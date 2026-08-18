@@ -238,17 +238,22 @@ describe("parseProjectPatchBody", () => {
   it("accepte saleCtaLabel et saleCtaChannels", () => {
     const parsed = parseProjectPatchBody({
       saleCtaLabel: { fr: "Je suis intéressé", en: "I'm interested", ar: "أنا مهتم" },
-      saleCtaChannels: ["whatsapp", "email"],
+      saleCtaChannels: ["whatsapp", "discord"],
     });
     assert.equal(parsed.ok, true);
     if (parsed.ok) {
       assert.equal(parsed.values.saleCtaLabel?.fr, "Je suis intéressé");
-      assert.deepEqual(parsed.values.saleCtaChannels, ["whatsapp", "email"]);
+      assert.deepEqual(parsed.values.saleCtaChannels, ["whatsapp", "discord"]);
     }
   });
 
   it("refuse saleCtaChannels hors whitelist", () => {
     const parsed = parseProjectPatchBody({ saleCtaChannels: ["telegram"] });
+    assert.equal(parsed.ok, false);
+  });
+
+  it("refuse l’email comme canal de fiche à vendre (footer uniquement)", () => {
+    const parsed = parseProjectPatchBody({ saleCtaChannels: ["email"] });
     assert.equal(parsed.ok, false);
   });
 

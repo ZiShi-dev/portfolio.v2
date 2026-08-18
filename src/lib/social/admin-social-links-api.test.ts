@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { after, before, describe, it, mock } from "node:test";
 import { ADMIN_ERROR_CODES } from "@/lib/admin/error-codes";
-import { DEFAULT_SITE_SETTINGS } from "@/data/site-social";
+import {
+  DEFAULT_CONTACT_PRIORITY,
+  DEFAULT_SITE_SETTINGS,
+} from "@/data/site-social";
 
 type GuardMode = "ok" | "unauthorized" | "forbidden_origin" | "mfa";
 
@@ -244,8 +247,46 @@ describe("API admin social-links (settings)", () => {
       })
     );
     assert.equal(res.status, 200);
-    assert.deepEqual(lastUpsert, writeBody);
+    assert.deepEqual(lastUpsert, {
+      ...writeBody,
+      contactPriority: [...DEFAULT_CONTACT_PRIORITY],
+    });
     assert.ok(auditEvents.includes("social_links_updated"));
+  });
+
+  it("PATCH enregistre la priorité de contact", async () => {
+    reset();
+    const res = await route.PATCH(
+      new Request("http://localhost/api/admin/social-links", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...writeBody,
+          contactPriority: ["discord", "instagram"],
+        }),
+      })
+    );
+    assert.equal(res.status, 200);
+    assert.deepEqual(
+      (lastUpsert as { contactPriority?: string[] }).contactPriority,
+      ["discord", "instagram", "whatsapp", "tiktok"]
+    );
+  });
+
+  it("PATCH 400 si la priorité contient un canal inconnu", async () => {
+    reset();
+    const res = await route.PATCH(
+      new Request("http://localhost/api/admin/social-links", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...writeBody,
+          contactPriority: ["email"],
+        }),
+      })
+    );
+    assert.equal(res.status, 400);
+    assert.equal(lastUpsert, null);
   });
 
   it("PATCH 503 sans service role", async () => {

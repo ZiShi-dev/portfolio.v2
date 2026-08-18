@@ -54,6 +54,7 @@ import {
   type ProjectKind,
   type SaleCtaChannel,
 } from "@/lib/projects/schema";
+import { normalizeSaleCtaChannels } from "@/lib/projects/sale-cta";
 import { resolveProjectSlug, slugifyProjectTitle } from "@/lib/projects/slug";
 import type { ProjectI18n, ProjectRow } from "@/lib/projects/store";
 import { centsToEurosInput, parseEurosToCents } from "@/lib/services/pricing";
@@ -144,7 +145,9 @@ function rowToEditor(row: ProjectRow): EditorState {
     listingPriceEuros: centsToEurosInput(row.listing_price_cents),
     listingIntent: { ...row.listing_intent },
     saleCtaLabel: { ...(row.sale_cta_label ?? emptyI18n()) },
-    saleCtaChannels: [...(row.sale_cta_channels ?? SALE_CTA_CHANNELS)],
+    saleCtaChannels: row.sale_cta_channels
+      ? normalizeSaleCtaChannels(row.sale_cta_channels)
+      : [...SALE_CTA_CHANNELS],
     businessTypeIds: [...row.business_type_ids],
     images: row.images.map((img) => ({
       url: img.url,
@@ -1040,10 +1043,7 @@ export function AdminProjectsPanel({
                             {SALE_CTA_CHANNELS.map((channel) => {
                               const checked =
                                 editor.saleCtaChannels.includes(channel);
-                              const label =
-                                channel === "email"
-                                  ? t("saleCtaChannelEmail")
-                                  : SITE_SOCIAL_LABELS[channel];
+                              const label = SITE_SOCIAL_LABELS[channel];
                               return (
                                 <label
                                   key={channel}

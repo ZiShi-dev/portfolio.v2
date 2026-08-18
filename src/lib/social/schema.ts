@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   DEFAULT_SITE_SETTINGS,
   SITE_SOCIAL_IDS,
+  normalizeContactPriority,
   type SiteSettings,
   type SiteSocialLinks,
 } from "@/data/site-social";
@@ -65,6 +66,10 @@ export const siteSocialUpdateSchema = z.object({
   whatsapp: optionalSocialUrl("whatsapp"),
   instagram: optionalSocialUrl("instagram"),
   tiktok: optionalSocialUrl("tiktok"),
+  contactPriority: z
+    .array(z.enum(SITE_SOCIAL_IDS))
+    .max(SITE_SOCIAL_IDS.length)
+    .optional(),
 });
 
 export type SiteSocialUpdateInput = z.infer<typeof siteSocialUpdateSchema>;
@@ -81,13 +86,18 @@ export function parseSiteSocialUpdateBody(
     if (msg.startsWith("invalid_")) return { ok: false, error: msg };
     return { ok: false, error: "invalid_request" };
   }
-  return { ok: true, values: parsed.data };
+  return {
+    ok: true,
+    values: {
+      ...parsed.data,
+      contactPriority: normalizeContactPriority(parsed.data.contactPriority),
+    },
+  };
 }
 
 export function emptySiteSettings(): SiteSettings {
-  return { ...DEFAULT_SITE_SETTINGS };
-}
-
-export function isSiteSocialId(value: string): value is keyof SiteSocialLinks {
-  return (SITE_SOCIAL_IDS as readonly string[]).includes(value);
+  return {
+    ...DEFAULT_SITE_SETTINGS,
+    contactPriority: [...DEFAULT_SITE_SETTINGS.contactPriority],
+  };
 }

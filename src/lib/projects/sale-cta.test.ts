@@ -4,28 +4,28 @@ import {
   normalizeSaleCtaChannels,
   resolveSaleCtaButtons,
 } from "@/lib/projects/sale-cta";
+import { buildFooterSocials } from "@/lib/brand";
 
-const socials = [
-  { id: "discord" as const, label: "Discord", href: "https://discord.gg/x", preferred: true },
-  { id: "whatsapp" as const, label: "WhatsApp", href: "https://wa.me/33" },
-  { id: "instagram" as const, label: "Instagram", href: "" },
-  { id: "tiktok" as const, label: "TikTok", href: "" },
-];
+/** Réseaux triés par la priorité par défaut : WhatsApp d’abord. */
+const socials = buildFooterSocials({
+  discord: "https://discord.gg/x",
+  whatsapp: "https://wa.me/33",
+  instagram: "",
+  tiktok: "",
+});
 
 describe("sale-cta", () => {
-  it("normalise et déduplique les canaux", () => {
-    assert.deepEqual(normalizeSaleCtaChannels(["whatsapp", "email", "whatsapp", "nope"]), [
-      "whatsapp",
-      "email",
-    ]);
+  it("normalise, déduplique et ignore l’email", () => {
+    assert.deepEqual(
+      normalizeSaleCtaChannels(["whatsapp", "email", "whatsapp", "nope", "discord"]),
+      ["whatsapp", "discord"]
+    );
   });
 
-  it("affiche tous les canaux cochés avec leur nom", () => {
+  it("affiche les canaux cochés dans l’ordre de priorité", () => {
     const buttons = resolveSaleCtaButtons({
-      channels: ["whatsapp", "discord"],
-      email: "hello@zishi.dev",
+      channels: ["discord", "whatsapp"],
       socials,
-      emailLabel: "Email",
     });
     assert.equal(buttons.length, 2);
     assert.equal(buttons[0]?.id, "whatsapp");
@@ -35,29 +35,45 @@ describe("sale-cta", () => {
     assert.equal(buttons[1]?.primary, false);
   });
 
-  it("n’affiche rien si aucun canal n’est choisi", () => {
+  it("suit la priorité réglée en admin pour le CTA principal", () => {
+    const discordFirst = buildFooterSocials(
+      {
+        discord: "https://discord.gg/x",
+        whatsapp: "https://wa.me/33",
+        instagram: "",
+        tiktok: "",
+      },
+      ["discord", "whatsapp", "instagram", "tiktok"]
+    );
     const buttons = resolveSaleCtaButtons({
-      channels: [],
-      email: "hello@zishi.dev",
-      socials,
-      emailLabel: "Email",
+      channels: ["whatsapp", "discord"],
+      socials: discordFirst,
     });
+    assert.equal(buttons[0]?.id, "discord");
+    assert.equal(buttons[0]?.primary, true);
+  });
+
+  it("n’affiche rien si aucun canal n’est choisi", () => {
+    const buttons = resolveSaleCtaButtons({ channels: [], socials });
     assert.equal(buttons.length, 0);
   });
 
-  it("ignore les canaux sans URL", () => {
+  it("ignore les réseaux sans URL", () => {
     const buttons = resolveSaleCtaButtons({
-      channels: ["instagram", "email"],
-      email: "hello@zishi.dev",
+      channels: ["instagram", "discord"],
       socials,
-      emailLabel: "Email",
     });
     assert.equal(buttons.length, 1);
-    assert.equal(buttons[0]?.id, "email");
-    assert.equal(
-      buttons[0]?.href,
-      "https://mail.google.com/mail/?view=cm&fs=1&to=hello%40zishi.dev"
-    );
-    assert.equal(buttons[0]?.label, "Email");
+    assert.equal(buttons[0]?.id, "discord");
+    assert.equal(buttons[0]?.href, "https://discord.gg/x");
+  });
+
+  it("jamais de lien mailto / Gmail sur une fiche à vendre", () => {
+    const buttons = resolveSaleCtaButtons({
+      channels: ["whatsapp", "discord"],
+      socials,
+    });
+    assert.ok(buttons.every((b) => b.href.startsWith("https://")));
+    assert.ok(buttons.every((b) => !b.href.includes("mail")));
   });
 });

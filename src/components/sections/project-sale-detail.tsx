@@ -3,12 +3,7 @@
 import { useEffect, useId, useRef, useState, type ComponentType } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import {
-  Check,
-  ChevronDown,
-  ExternalLink,
-  Mail,
-} from "lucide-react";
+import { Check, ChevronDown, ExternalLink } from "lucide-react";
 import {
   SiDiscord,
   SiInstagram,
@@ -37,7 +32,7 @@ import { cn } from "@/lib/utils";
 import type { LocalizedProjectItem } from "@/data/projects";
 
 export type ProjectSaleContacts = {
-  email: string;
+  /** Réseaux déjà triés par la priorité de contact réglée en admin. */
   socials: FooterSocialLink[];
 };
 
@@ -71,7 +66,6 @@ const CHANNEL_ICONS: Record<
   SaleCtaChannel,
   ComponentType<{ className?: string }>
 > = {
-  email: Mail,
   whatsapp: SiWhatsapp,
   discord: SiDiscord,
   instagram: SiInstagram,
@@ -92,9 +86,7 @@ function SaleContactPanel({
   const t = useTranslations("projectSale");
   const buttons = resolveSaleCtaButtons({
     channels: project.saleCtaChannels ?? [],
-    email: contacts.email,
     socials: contacts.socials,
-    emailLabel: t("ctaEmail"),
   });
 
   if (buttons.length === 0) return null;
@@ -210,9 +202,7 @@ export function ProjectSaleDetail({
   const [openFaq, setOpenFaq] = useState<string>(FAQ_KEYS[0]);
   const contactButtons = resolveSaleCtaButtons({
     channels: project.saleCtaChannels ?? [],
-    email: contacts.email,
     socials: contacts.socials,
-    emailLabel: t("ctaEmail"),
   });
   const primaryContact = contactButtons[0] ?? null;
   const primaryLabel =

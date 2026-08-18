@@ -47,6 +47,9 @@ export async function Footer() {
   const tMeta = await getTranslations("meta");
   const socials = await getFooterSocials();
   const contactEmail = await getPublicContactEmail();
+  const preferredSocial = socials.find(
+    (s) => s.preferred && s.href.length > 0
+  );
   const year = new Date().getFullYear();
 
   const navLinks = [
@@ -94,8 +97,10 @@ export async function Footer() {
           <div className="lg:col-span-4">
             <FooterColumnTitle>{t("contact")}</FooterColumnTitle>
             <div className="mt-4 space-y-4">
-              {socials.find((s) => s.id === "discord")?.href ? (
-                <p className="text-sm text-foreground/60">{t("preferredContact")}</p>
+              {preferredSocial ? (
+                <p className="text-sm text-foreground/60">
+                  {t("preferredContact", { network: preferredSocial.label })}
+                </p>
               ) : null}
               <ContactOpenLink
                 className={cn(

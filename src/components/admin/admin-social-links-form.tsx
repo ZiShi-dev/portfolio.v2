@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { Mail, Save, Share2 } from "lucide-react";
+import { ChevronDown, ChevronUp, ListOrdered, Mail, Save, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/ui/form-error";
 import { FormField } from "@/components/ui/form-field";
@@ -13,7 +13,10 @@ import { readAdminApiError } from "@/lib/admin/api-error";
 import {
   DEFAULT_SITE_SETTINGS,
   SITE_SOCIAL_IDS,
+  SITE_SOCIAL_LABELS,
+  normalizeContactPriority,
   type SiteSettings,
+  type SiteSocialId,
 } from "@/data/site-social";
 import {
   siteSocialUpdateSchema,
@@ -47,6 +50,14 @@ export function AdminSocialLinksForm({
   const [submitError, setSubmitError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(initialSettings === undefined);
+  /** Réglages tels qu’enregistrés : sert de base à la priorité et aux réseaux vides. */
+  const [saved, setSaved] = useState<SiteSettings>(
+    initialSettings ?? DEFAULT_SITE_SETTINGS
+  );
+  const [priority, setPriority] = useState<SiteSocialId[]>(() =>
+    normalizeContactPriority(initialSettings?.contactPriority)
+  );
+  const [priorityDirty, setPriorityDirty] = useState(false);
   const { loading: saving, setLoading: setSaving, trySubmit } = useSubmitGuard();
 
   const {
@@ -59,6 +70,28 @@ export function AdminSocialLinksForm({
     defaultValues: initialSettings ?? DEFAULT_SITE_SETTINGS,
     mode: "onBlur",
   });
+
+  const applySettings = useCallback(
+    (settings: SiteSettings) => {
+      setSaved(settings);
+      setPriority(normalizeContactPriority(settings.contactPriority));
+      setPriorityDirty(false);
+      reset(settings);
+    },
+    [reset]
+  );
+
+  const movePriority = (id: SiteSocialId, direction: -1 | 1) => {
+    setPriority((current) => {
+      const from = current.indexOf(id);
+      const to = from + direction;
+      if (from < 0 || to < 0 || to >= current.length) return current;
+      const next = [...current];
+      [next[from], next[to]] = [next[to], next[from]];
+      return next;
+    });
+    setPriorityDirty(true);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -80,14 +113,14 @@ export function AdminSocialLinksForm({
       setConfigured(body?.configured !== false);
       const settings = body?.settings ?? body?.links;
       if (settings) {
-        reset(settings);
+        applySettings(settings);
       }
     } catch {
       setLoadError(tErrors("generic"));
     } finally {
       setLoading(false);
     }
-  }, [reset, tErrors]);
+  }, [applySettings, tErrors]);
 
   useEffect(() => {
     if (initialSettings !== undefined) return;
@@ -115,7 +148,7 @@ export function AdminSocialLinksForm({
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, contactPriority: priority }),
       });
       const body = (await res.json().catch(() => null)) as LoadResponse | null;
       if (!res.ok) {
@@ -128,7 +161,7 @@ export function AdminSocialLinksForm({
       }
       const settings = body?.settings ?? body?.links;
       if (settings) {
-        reset(settings);
+        applySettings(settings);
       }
       setSuccessMessage(t("saved"));
     } catch {
@@ -259,6 +292,71 @@ export function AdminSocialLinksForm({
         ))}
       </div>
 
+      <fieldset className="space-y-3 rounded-xl border border-border bg-background/40 p-4 sm:p-5">
+        <legend className="flex items-center gap-2 px-1 text-sm font-semibold">
+          <ListOrdered className="h-4 w-4 text-primary" aria-hidden />
+          {t("priorityTitle")}
+        </legend>
+        <p className="text-sm text-foreground/60">{t("priorityHint")}</p>
+        <ol className="space-y-2">
+          {priority.map((id, index) => {
+            const filled = saved[id].trim() !== "";
+            return (
+              <li
+                key={id}
+                className="flex items-center gap-3 rounded-lg border border-border bg-card px-3 py-2"
+              >
+                <span className="w-5 shrink-0 text-center text-sm font-medium tabular-nums text-foreground/45">
+                  {index + 1}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="text-sm font-medium">
+                    {SITE_SOCIAL_LABELS[id]}
+                  </span>
+                  {index === 0 && filled ? (
+                    <span className="ms-2 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[11px] text-primary">
+                      {t("priorityMain")}
+                    </span>
+                  ) : null}
+                  {filled ? null : (
+                    <span className="ms-2 text-[11px] text-foreground/45">
+                      {t("priorityMissing")}
+                    </span>
+                  )}
+                </span>
+                <span className="flex shrink-0 gap-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    aria-label={t("priorityMoveUp", {
+                      network: SITE_SOCIAL_LABELS[id],
+                    })}
+                    disabled={index === 0}
+                    onClick={() => movePriority(id, -1)}
+                  >
+                    <ChevronUp className="h-4 w-4" aria-hidden />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    aria-label={t("priorityMoveDown", {
+                      network: SITE_SOCIAL_LABELS[id],
+                    })}
+                    disabled={index === priority.length - 1}
+                    onClick={() => movePriority(id, 1)}
+                  >
+                    <ChevronDown className="h-4 w-4" aria-hidden />
+                  </Button>
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+        <p className="text-xs text-foreground/45">{t("priorityEmailNote")}</p>
+      </fieldset>
+
       {submitError ? <FormError message={submitError} /> : null}
       {successMessage ? (
         <p className="text-sm font-medium text-primary" role="status">
@@ -266,7 +364,11 @@ export function AdminSocialLinksForm({
         </p>
       ) : null}
 
-      <Button type="submit" loading={saving} disabled={!isDirty}>
+      <Button
+        type="submit"
+        loading={saving}
+        disabled={!isDirty && !priorityDirty}
+      >
         {saving ? (
           t("saving")
         ) : (

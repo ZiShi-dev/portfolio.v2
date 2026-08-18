@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { isProjectBusinessTypeId } from "@/data/project-business-types";
+import { SITE_SOCIAL_IDS, type SiteSocialId } from "@/data/site-social";
 import { isSafeHttpUrl } from "@/lib/review-schema";
 
 export const PROJECT_IMAGE_BUCKET = "portfolio-projects";
@@ -40,15 +41,13 @@ export type ProjectKind = (typeof PROJECT_KINDS)[number];
 export const SALE_CTA_MODES = ["inquiry", "contacts"] as const;
 export type SaleCtaMode = (typeof SALE_CTA_MODES)[number];
 
-/** Canaux de contact affichables sur une page de vente. */
-export const SALE_CTA_CHANNELS = [
-  "whatsapp",
-  "email",
-  "discord",
-  "instagram",
-  "tiktok",
-] as const;
-export type SaleCtaChannel = (typeof SALE_CTA_CHANNELS)[number];
+/**
+ * Réseaux affichables sur une page de vente. L’email en est exclu :
+ * il reste réservé au footer. L’ordre d’affichage vient de la priorité
+ * de contact réglée dans /admin/settings.
+ */
+export const SALE_CTA_CHANNELS = SITE_SOCIAL_IDS;
+export type SaleCtaChannel = SiteSocialId;
 
 export function isSaleCtaChannel(value: unknown): value is SaleCtaChannel {
   return (
