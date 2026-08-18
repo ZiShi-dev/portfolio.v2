@@ -19,6 +19,7 @@ type ContactOpenLinkProps = {
   projectType?: string | null;
   /** Achat d’offre à prix vs démarrage sur-mesure. */
   intent?: StartProjectIntent | null;
+  listingSlug?: string | null;
 };
 
 /** CTA « démarrer / acheter / contact projet » → parcours interactif. */
@@ -32,14 +33,21 @@ export function ContactOpenLink({
   serviceReference,
   projectType,
   intent,
+  listingSlug,
 }: ContactOpenLinkProps) {
   const resolved =
     href ??
-    (serviceSlug || serviceId || serviceReference || projectType || intent
+    (serviceSlug ||
+    serviceId ||
+    serviceReference ||
+    projectType ||
+    intent ||
+    listingSlug
       ? startProjectUrl({
           serviceSlug,
           projectType,
           intent,
+          listingSlug,
         })
       : routes.startProject);
 

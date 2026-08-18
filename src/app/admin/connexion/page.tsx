@@ -44,7 +44,7 @@ async function AuthStepIndicator({
   const secondLabel = step === "enroll" ? t("stepEnroll") : t("stepMfa");
 
   return (
-    <ol className="mx-auto mb-8 flex max-w-sm items-center justify-center gap-2 text-xs">
+    <ol className="mb-8 flex w-full max-w-sm items-center justify-center gap-2 text-xs">
       <li
         className={
           secondActive
@@ -54,7 +54,7 @@ async function AuthStepIndicator({
       >
         {t("stepCredentials")}
       </li>
-      <li aria-hidden className="text-foreground/30">
+      <li aria-hidden className="text-foreground/30 rtl:rotate-180">
         →
       </li>
       <li
@@ -106,7 +106,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
   if (initialNeedsEnrollment) uiStep = "enroll";
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-4">
+    <div className="flex w-full max-w-md flex-col py-4">
       <div className="mb-6 text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-step-accent/30 bg-background/60 px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-step-accent">
           <Shield className="h-3.5 w-3.5" aria-hidden />

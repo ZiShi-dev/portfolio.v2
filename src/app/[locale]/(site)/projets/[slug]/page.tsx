@@ -2,19 +2,23 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { CaseStudyDetail } from "@/components/sections/case-study-detail";
-import { brand } from "@/lib/brand";
+import { ProjectSaleDetail } from "@/components/sections/project-sale-detail";
+import { brand, getFooterSocials } from "@/lib/brand";
 import {
   getSiteProjectBySlug,
   getSiteProjects,
 } from "@/lib/projects/site";
 import { listPublishedProjectSlugs } from "@/lib/projects/store";
 import { getPublishedReviewsForProject } from "@/lib/reviews/store";
+import { getPublicContactEmail } from "@/lib/social/store";
 import { absoluteUrl, routes } from "@/lib/routes";
 import type { Locale } from "@/i18n/routing";
 
 type PageProps = {
   params: Promise<{ slug: string; locale: string }>;
 };
+
+export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   const fromDb = await listPublishedProjectSlugs();
@@ -78,6 +82,52 @@ export default async function CaseStudyPage({ params }: PageProps) {
     next && next.id !== project.id ? next.slug ?? next.id : null;
 
   const reviews = await getPublishedReviewsForProject(project.id);
+
+  if (project.categoryKey === "for_sale") {
+    const [contactEmail, socials] = await Promise.all([
+      getPublicContactEmail(),
+      getFooterSocials(),
+    ]);
+    const offerLd =
+      project.listingPriceCents != null
+        ? {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: project.title,
+            description: project.seoDescription || project.desc,
+            url: absoluteUrl(`${routes.projects}/${project.slug ?? slug}`),
+            ...(project.images[0]
+              ? { image: project.images[0].src }
+              : {}),
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "EUR",
+              price: (project.listingPriceCents / 100).toFixed(2),
+              url: absoluteUrl(`${routes.projects}/${project.slug ?? slug}`),
+            },
+          }
+        : null;
+
+    return (
+      <>
+        {offerLd ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(offerLd) }}
+          />
+        ) : null}
+        <ProjectSaleDetail
+          project={project}
+          nextSlug={nextSlug}
+          reviews={reviews}
+          contacts={{
+            email: contactEmail,
+            socials,
+          }}
+        />
+      </>
+    );
+  }
 
   return (
     <CaseStudyDetail

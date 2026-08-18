@@ -35,6 +35,10 @@ export const PROJECT_LIMITS = {
 export const PROJECT_KINDS = ["personal", "for_sale", "sold"] as const;
 export type ProjectKind = (typeof PROJECT_KINDS)[number];
 
+/** CTA de la page de vente : parcours d’intérêt ou coordonnées admin. */
+export const SALE_CTA_MODES = ["inquiry", "contacts"] as const;
+export type SaleCtaMode = (typeof SALE_CTA_MODES)[number];
+
 export const LOCALES = ["fr", "en", "ar"] as const;
 export type ProjectLocale = (typeof LOCALES)[number];
 
@@ -155,6 +159,7 @@ export const projectWriteSchema = z
       .optional()
       .transform((v) => (v === undefined ? null : v)),
     listingIntent: listingIntentI18nSchema.default({ fr: "", en: "", ar: "" }),
+    saleCtaMode: z.enum(SALE_CTA_MODES).default("inquiry"),
     businessTypeIds: z
       .array(z.string())
       .max(PROJECT_LIMITS.maxBusinessTypes)
@@ -286,6 +291,7 @@ export const projectPatchSchema = z
       .nullable()
       .optional(),
     listingIntent: listingIntentI18nSchema.optional(),
+    saleCtaMode: z.enum(SALE_CTA_MODES).optional(),
     businessTypeIds: projectWriteSchema.shape.businessTypeIds.optional(),
     images: projectWriteSchema.shape.images.optional(),
     link: projectWriteSchema.shape.link.optional(),
@@ -387,7 +393,11 @@ function mapProjectZodError(issues: z.core.$ZodIssue[]): string {
   }
   if (path.startsWith("features")) return "project_invalid_features";
   if (path.startsWith("technologies")) return "project_invalid_technologies";
-  if (path.startsWith("listingIntent") || path === "listingPriceCents") {
+  if (
+    path.startsWith("listingIntent") ||
+    path === "listingPriceCents" ||
+    path === "saleCtaMode"
+  ) {
     return "project_invalid_listing";
   }
   if (path === "businessTypeIds") return "project_invalid_business_types";

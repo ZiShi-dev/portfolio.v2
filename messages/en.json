@@ -775,8 +775,12 @@
         "technologies": "Technologies",
         "seoTitle": "SEO title",
         "seoDescription": "SEO description",
-        "coverImage": "Cover image"
+        "coverImage": "Cover image",
+        "saleCtaMode": "Sales page CTA"
       },
+      "saleCtaModeHint": "Interest journey, or the contacts saved in Settings (email, WhatsApp, Discord…).",
+      "saleCtaInquiry": "“I’m interested” journey",
+      "saleCtaContacts": "Contacts (admin email / networks)",
       "businessTypesHint": "Up to {max} types.",
       "businessTypesMax": "Maximum {max} application types.",
       "businessTypes": {
@@ -1174,6 +1178,74 @@
     "soldWork": "What I did for them",
     "applicationType": "Application type"
   },
+  "projectSale": {
+    "eyebrow": "Available solution",
+    "heroKicker": "Ready to customize",
+    "heroKickerShop": "E-commerce shop ready to customize",
+    "ctaInterest": "I'm interested in {title}",
+    "ctaDemo": "View the demo",
+    "ctaEmail": "Email us",
+    "valueTitle": "What you are buying",
+    "forWhom": "Who it's for",
+    "whatYouGet": "What you get",
+    "insteadOfZero": "Rather than building from scratch",
+    "includedTitle": "What's included — {price}",
+    "processTitle": "How it works",
+    "process": {
+      "interest": {
+        "title": "You choose this solution",
+        "desc": "You express interest. We confirm together what the listed price covers."
+      },
+      "customize": {
+        "title": "We personalize the shop",
+        "desc": "Name, colors, style and the content included in the offer are adapted to your brand."
+      },
+      "launch": {
+        "title": "Go live",
+        "desc": "We help you prepare the deployment. Third-party services (domain, hosting…) remain yours to cover."
+      },
+      "sell": {
+        "title": "You start selling",
+        "desc": "The shop is ready to take its first orders."
+      }
+    },
+    "costsTitle": "Price and responsibilities",
+    "costsIncludedLabel": "Solution price",
+    "costsIncluded": "This amount covers the already-built shop, the stated personalization, and the support described on this page — nothing else is added by default.",
+    "costsThirdLabel": "Third-party services",
+    "costsThird": "Domain name, hosting, database, email and other external services are not included. An online payment gateway can be added separately, on request. Cash on delivery is available in the shop flow.",
+    "proofTitle": "The shop in pictures",
+    "proofSubtitle": "Previews of the product as it exists today.",
+    "faqTitle": "Questions",
+    "faq": {
+      "ready": {
+        "q": "Is this shop already built?",
+        "a": "Yes. It is an existing solution offered for purchase, then personalized — not a project built from scratch."
+      },
+      "customize": {
+        "q": "Can the design be customized?",
+        "a": "Yes, within the offer: visual identity (name, colors, style) and planned content. Extra pages or features require a separate quote."
+      },
+      "included": {
+        "q": "What does the price include?",
+        "a": "The features listed on this page, the stated personalization, help going live, and one month of simple visual adjustments after delivery — not new pages or new features."
+      },
+      "hosting": {
+        "q": "Are hosting and the domain included?",
+        "a": "No. Required third-party services (domain, hosting, email…) remain your responsibility. We can help you set them up."
+      },
+      "after": {
+        "q": "What happens after I get in touch?",
+        "a": "You receive a clear reply within 48 hours to confirm scope and next steps."
+      },
+      "demo": {
+        "q": "Can I see the shop before buying?",
+        "a": "Yes, when a demo is published: the “View the demo” button opens the live site."
+      }
+    },
+    "finalTitle": "Interested in {title}?",
+    "finalSubtitle": "Just tell us this solution is a fit. Clear reply within 48 hours."
+  },
   "projectInquiry": {
     "brand": "VZ—PROJECT",
     "privacyNotice": "Your information is used only to process your request. Read our <legal>privacy policy</legal>.",
@@ -1185,6 +1257,11 @@
       "title": "Let's map the outlines of your project.",
       "subtitle": "A few questions are enough to understand your need — no jargon.",
       "cta": "Start"
+    },
+    "listingPrefill": "I am interested in {title}.",
+    "listing": {
+      "introTitle": "Interest in {title}",
+      "introSubtitle": "A few details are enough. We will know you came from this solution’s page."
     },
     "progress": {
       "overview": "Project journey",

@@ -87,6 +87,7 @@ export const PROJECT_INQUIRY_SOURCES = [
   "start-project-page",
   "service",
   "service-buy",
+  "listing",
 ] as const;
 
 export type ProjectInquirySource =

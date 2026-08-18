@@ -777,8 +777,12 @@
         "technologies": "Technologies",
         "seoTitle": "SEO title",
         "seoDescription": "SEO description",
-        "coverImage": "Image de couverture"
+        "coverImage": "Image de couverture",
+        "saleCtaMode": "CTA de la page de vente"
       },
+      "saleCtaModeHint": "Parcours d’intérêt, ou les contacts renseignés dans Réglages (email, WhatsApp, Discord…).",
+      "saleCtaInquiry": "Parcours « Je suis intéressé »",
+      "saleCtaContacts": "Contacts (email / réseaux admin)",
       "businessTypesHint": "Jusqu’à {max} types.",
       "businessTypesMax": "Maximum {max} types d’application.",
       "businessTypes": {
@@ -1176,6 +1180,74 @@
     "soldWork": "Ce que j’ai fait",
     "applicationType": "Type d’application"
   },
+  "projectSale": {
+    "eyebrow": "Solution disponible",
+    "heroKicker": "Prête à personnaliser",
+    "heroKickerShop": "Boutique e-commerce prête à personnaliser",
+    "ctaInterest": "Je suis intéressé par {title}",
+    "ctaDemo": "Voir la démo",
+    "ctaEmail": "Écrire par email",
+    "valueTitle": "Ce que vous achetez",
+    "forWhom": "Pour qui",
+    "whatYouGet": "Ce que vous obtenez",
+    "insteadOfZero": "Plutôt que de tout construire depuis zéro",
+    "includedTitle": "Ce qui est inclus — {price}",
+    "processTitle": "Comment ça marche",
+    "process": {
+      "interest": {
+        "title": "Vous choisissez cette solution",
+        "desc": "Vous manifestez votre intérêt. Nous confirmons ensemble ce qui est compris dans le prix affiché."
+      },
+      "customize": {
+        "title": "Nous personnalisons la boutique",
+        "desc": "Nom, couleurs, style et contenus prévus dans l’offre sont adaptés à votre marque."
+      },
+      "launch": {
+        "title": "Mise en ligne",
+        "desc": "Nous vous aidons à préparer le déploiement. Les services tiers (domaine, hébergement…) restent à votre charge."
+      },
+      "sell": {
+        "title": "Vous commencez à vendre",
+        "desc": "La boutique est prête à accueillir ses premières commandes."
+      }
+    },
+    "costsTitle": "Prix et responsabilités",
+    "costsIncludedLabel": "Prix de la solution",
+    "costsIncluded": "Ce montant couvre la boutique déjà développée, la personnalisation indiquée et l’accompagnement décrit sur cette page — rien d’autre n’est ajouté d’office.",
+    "costsThirdLabel": "Services tiers",
+    "costsThird": "Nom de domaine, hébergement, base de données, e-mails et autres services externes ne sont pas compris. Une passerelle de paiement peut être ajoutée séparément, à la demande. Le paiement à la livraison, lui, fait partie du parcours boutique.",
+    "proofTitle": "La boutique en images",
+    "proofSubtitle": "Aperçus du produit tel qu’il existe aujourd’hui.",
+    "faqTitle": "Questions fréquentes",
+    "faq": {
+      "ready": {
+        "q": "Cette boutique est-elle déjà développée ?",
+        "a": "Oui. C’est une solution existante, proposée à l’achat, puis personnalisée — pas un projet à construire depuis zéro."
+      },
+      "customize": {
+        "q": "Peut-on personnaliser le design ?",
+        "a": "Oui, dans le cadre de l’offre : identité visuelle (nom, couleurs, style) et contenus prévus. Les ajouts de pages ou de fonctions font l’objet d’un devis."
+      },
+      "included": {
+        "q": "Qu’est-ce qui est inclus dans le prix ?",
+        "a": "Les fonctionnalités listées sur cette page, la personnalisation indiquée, l’aide à la mise en ligne, et un mois d’ajustements visuels simples après livraison — sans nouvelles pages ni nouvelles fonctions."
+      },
+      "hosting": {
+        "q": "L’hébergement et le domaine sont-ils inclus ?",
+        "a": "Non. Les services tiers nécessaires (domaine, hébergement, messagerie…) restent à votre charge. Nous pouvons vous aider à les mettre en place."
+      },
+      "after": {
+        "q": "Que se passe-t-il après ma demande ?",
+        "a": "Vous recevez une réponse claire sous 48 h pour confirmer le périmètre et les prochaines étapes."
+      },
+      "demo": {
+        "q": "Puis-je voir la boutique avant de l’acheter ?",
+        "a": "Oui, lorsque une démo est publiée : le bouton « Voir la démo » ouvre le site en ligne."
+      }
+    },
+    "finalTitle": "Intéressé par {title} ?",
+    "finalSubtitle": "Dites-nous simplement que cette solution vous convient. Réponse claire sous 48 h."
+  },
   "projectInquiry": {
     "brand": "VZ—PROJECT",
     "privacyNotice": "Vos informations servent uniquement à traiter votre demande. Consultez notre <legal>politique de confidentialité</legal>.",
@@ -1187,6 +1259,11 @@
       "title": "Traçons les contours de votre projet.",
       "subtitle": "Quelques questions suffisent pour comprendre votre besoin — sans jargon.",
       "cta": "Commencer"
+    },
+    "listingPrefill": "Je suis intéressé par {title}.",
+    "listing": {
+      "introTitle": "Intérêt pour {title}",
+      "introSubtitle": "Quelques précisions suffisent. Nous saurons que vous venez de la page de cette solution."
     },
     "progress": {
       "overview": "Parcours projet",

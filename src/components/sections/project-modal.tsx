@@ -49,6 +49,7 @@ export type ProjectItem = {
   listingPriceCents?: number | null;
   listingPriceLabel?: string;
   listingIntent?: string;
+  saleCtaMode?: "inquiry" | "contacts";
 };
 
 type ProjectModalProps = {

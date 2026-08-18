@@ -51,6 +51,7 @@ import {
   PROJECT_LIMITS,
   parseProjectWriteBody,
   type ProjectKind,
+  type SaleCtaMode,
 } from "@/lib/projects/schema";
 import { resolveProjectSlug, slugifyProjectTitle } from "@/lib/projects/slug";
 import type { ProjectI18n, ProjectRow } from "@/lib/projects/store";
@@ -69,6 +70,7 @@ type EditorState = {
   kind: ProjectKind;
   listingPriceEuros: string;
   listingIntent: ProjectI18n;
+  saleCtaMode: SaleCtaMode;
   businessTypeIds: string[];
   images: { url: string; label?: Partial<ProjectI18n> }[];
   coverImage: string;
@@ -107,6 +109,7 @@ function emptyEditor(): EditorState {
     kind: "personal",
     listingPriceEuros: "",
     listingIntent: emptyI18n(),
+    saleCtaMode: "inquiry",
     businessTypeIds: [],
     images: [],
     coverImage: "",
@@ -136,6 +139,7 @@ function rowToEditor(row: ProjectRow): EditorState {
     kind: row.kind,
     listingPriceEuros: centsToEurosInput(row.listing_price_cents),
     listingIntent: { ...row.listing_intent },
+    saleCtaMode: row.sale_cta_mode ?? "inquiry",
     businessTypeIds: [...row.business_type_ids],
     images: row.images.map((img) => ({
       url: img.url,
@@ -371,6 +375,7 @@ export function AdminProjectsPanel({
         editor.kind === "for_sale" || editor.kind === "sold"
           ? fillOptional(editor.listingIntent)
           : emptyI18n(),
+      saleCtaMode: editor.kind === "for_sale" ? editor.saleCtaMode : "inquiry",
       businessTypeIds: editor.businessTypeIds,
       images: editor.images.map((img) => ({
         url: img.url,
@@ -979,6 +984,38 @@ export function AdminProjectsPanel({
                         className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-step-accent/50"
                       />
                     </FormField>
+                    {editor.kind === "for_sale" ? (
+                      <FormField
+                        id="proj-sale-cta"
+                        label={t("fields.saleCtaMode")}
+                        hint={t("saleCtaModeHint")}
+                      >
+                        <Select
+                          value={editor.saleCtaMode}
+                          onValueChange={(value) =>
+                            setEditor({
+                              ...editor,
+                              saleCtaMode: value as SaleCtaMode,
+                            })
+                          }
+                        >
+                          <SelectTrigger
+                            id="proj-sale-cta"
+                            aria-label={t("fields.saleCtaMode")}
+                          >
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="inquiry">
+                              {t("saleCtaInquiry")}
+                            </SelectItem>
+                            <SelectItem value="contacts">
+                              {t("saleCtaContacts")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+                    ) : null}
                   </div>
                 ) : null}
 

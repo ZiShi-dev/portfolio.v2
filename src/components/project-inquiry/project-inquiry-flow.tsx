@@ -272,6 +272,8 @@ export function ProjectInquiryFlow({
   serviceReference,
   serviceSlug,
   serviceTitle,
+  listingSlug,
+  listingTitle,
 }: {
   source?: ProjectInquirySource;
   fullscreen?: boolean;
@@ -281,6 +283,8 @@ export function ProjectInquiryFlow({
   serviceReference?: string | null;
   serviceSlug?: string | null;
   serviceTitle?: string | null;
+  listingSlug?: string | null;
+  listingTitle?: string | null;
 }) {
   const t = useTranslations("projectInquiry");
   const tVal = useTranslations("validation");
@@ -288,15 +292,18 @@ export function ProjectInquiryFlow({
   const reduceMotion = useReducedMotion();
   const { loading, setLoading, trySubmit } = useSubmitGuard();
 
-  const offerProfile = useMemo(
-    () =>
-      resolveOfferInquiryProfile(
-        serviceSlug,
-        initialProjectType ?? null
-      ),
-    [serviceSlug, initialProjectType]
+  const offerProfile = useMemo(() => {
+    if (listingSlug) {
+      return resolveOfferInquiryProfile(
+        initialProjectType === "ecommerce" ? "ecommerce" : "sur-mesure",
+        initialProjectType ?? "other"
+      );
+    }
+    return resolveOfferInquiryProfile(serviceSlug, initialProjectType ?? null);
+  }, [listingSlug, serviceSlug, initialProjectType]);
+  const lockType = Boolean(
+    (serviceSlug && offerProfile) || (listingSlug && offerProfile)
   );
-  const lockType = Boolean(serviceSlug && offerProfile);
   const questionSteps = questionStepsFor(lockType);
   const firstQuestionStep = questionSteps[0] ?? "type";
   const offerCopySlug = offerProfile?.slug ?? null;
@@ -310,11 +317,20 @@ export function ProjectInquiryFlow({
     ) {
       base.projectType = initialProjectType;
     }
-    return applyOfferLock(
+    const locked = applyOfferLock(
       base,
-      resolveOfferInquiryProfile(serviceSlug, initialProjectType ?? null),
-      serviceTitle
+      listingSlug
+        ? resolveOfferInquiryProfile(
+            initialProjectType === "ecommerce" ? "ecommerce" : "sur-mesure",
+            initialProjectType ?? "other"
+          )
+        : resolveOfferInquiryProfile(serviceSlug, initialProjectType ?? null),
+      listingTitle ?? serviceTitle
     );
+    if (listingTitle && !locked.description.trim()) {
+      locked.description = t("listingPrefill", { title: listingTitle });
+    }
+    return locked;
   });
   const [transitioning, setTransitioning] = useState(false);
   const [honeypot, setHoneypot] = useState("");
@@ -378,8 +394,18 @@ export function ProjectInquiryFlow({
           }
           restoredAnswers = applyOfferLock(
             merged,
-            resolveOfferInquiryProfile(serviceSlug, initialProjectType ?? null),
-            serviceTitle
+            listingSlug
+              ? resolveOfferInquiryProfile(
+                  initialProjectType === "ecommerce"
+                    ? "ecommerce"
+                    : "sur-mesure",
+                  initialProjectType ?? "other"
+                )
+              : resolveOfferInquiryProfile(
+                  serviceSlug,
+                  initialProjectType ?? null
+                ),
+            listingTitle ?? serviceTitle
           );
         }
       }
@@ -633,8 +659,9 @@ export function ProjectInquiryFlow({
   function renderQuestionBody() {
     switch (step) {
       case "intro": {
-        const introTitle =
-          lockType && offerCopySlug
+        const introTitle = listingTitle
+          ? t("listing.introTitle", { title: listingTitle })
+          : lockType && offerCopySlug
             ? t.has(`offers.${offerCopySlug}.introTitle`)
               ? t(`offers.${offerCopySlug}.introTitle`, {
                   offer: serviceTitle ?? "",
@@ -643,8 +670,9 @@ export function ProjectInquiryFlow({
                   offer: serviceTitle ?? "",
                 })
             : t("intro.title");
-        const introSubtitle =
-          lockType && offerCopySlug
+        const introSubtitle = listingTitle
+          ? t("listing.introSubtitle")
+          : lockType && offerCopySlug
             ? t.has(`offers.${offerCopySlug}.introSubtitle`)
               ? t(`offers.${offerCopySlug}.introSubtitle`)
               : t("offers.generic.introSubtitle")

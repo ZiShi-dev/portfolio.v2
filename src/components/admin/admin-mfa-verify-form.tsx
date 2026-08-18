@@ -146,14 +146,14 @@ export function AdminMfaVerifyForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="space-y-5"
+      className="flex w-full flex-col items-center space-y-5"
       noValidate
       aria-label="Vérification TOTP admin"
     >
       <input type="hidden" {...register("factorId")} />
       <input type="hidden" {...register("challengeId")} />
 
-      <div className="rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-foreground/70">
+      <div className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-center text-sm text-foreground/70">
         <p className="font-medium text-foreground">Étape 2 — Authentification TOTP</p>
         <p className="mt-1">
           Ouvrez votre application d&apos;authentification (Google Authenticator, Authy,
@@ -168,6 +168,7 @@ export function AdminMfaVerifyForm({
         label="Code à 6 chiffres"
         required
         error={errors.code?.message}
+        className="w-full text-center"
       >
         <Input
           id="admin-mfa-code"
@@ -177,6 +178,7 @@ export function AdminMfaVerifyForm({
           pattern="[0-9]*"
           maxLength={6}
           placeholder="000000"
+          dir="ltr"
           className="text-center text-lg tracking-[0.35em]"
           disabled={loading}
           aria-invalid={Boolean(errors.code)}
@@ -209,7 +211,10 @@ export function AdminMfaVerifyForm({
         onClick={onCancel}
         className="w-full text-center text-xs text-foreground/45 transition-colors hover:text-foreground/70"
       >
-        ← Retour à la connexion
+        <span aria-hidden className="inline-block rtl:rotate-180">
+          ←
+        </span>{" "}
+        Retour à la connexion
       </button>
     </form>
   );

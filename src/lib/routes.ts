@@ -63,9 +63,12 @@ export function startProjectUrl(opts?: {
   serviceSlug?: string | null;
   projectType?: string | null;
   intent?: StartProjectIntent | null;
+  /** Slug d’un projet à vendre (page listing). */
+  listingSlug?: string | null;
 }): string {
   const params = new URLSearchParams();
   if (opts?.serviceSlug) params.set("service", opts.serviceSlug);
+  if (opts?.listingSlug) params.set("listing", opts.listingSlug);
   if (opts?.projectType) params.set("type", opts.projectType);
   if (opts?.intent === "buy" || opts?.intent === "start") {
     params.set("intent", opts.intent);

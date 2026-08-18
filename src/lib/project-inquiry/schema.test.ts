@@ -214,6 +214,14 @@ describe("project-inquiry schema", () => {
     }
   });
 
+  it("accepte la source listing", () => {
+    const parsed = parseProjectInquiryPayload({
+      ...valid,
+      source: "listing",
+    });
+    assert.equal(parsed.ok, true);
+  });
+
   it("rejette une source arbitraire", () => {
     const parsed = parseProjectInquiryPayload({
       ...valid,

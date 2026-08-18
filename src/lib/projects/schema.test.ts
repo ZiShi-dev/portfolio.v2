@@ -229,10 +229,15 @@ describe("parseProjectPatchBody", () => {
     if (parsed.ok) assert.equal(parsed.values.kind, "sold");
   });
 
-  it("accepte kind for_sale", () => {
-    const parsed = parseProjectPatchBody({ kind: "for_sale" });
+  it("accepte saleCtaMode contacts", () => {
+    const parsed = parseProjectPatchBody({ saleCtaMode: "contacts" });
     assert.equal(parsed.ok, true);
-    if (parsed.ok) assert.equal(parsed.values.kind, "for_sale");
+    if (parsed.ok) assert.equal(parsed.values.saleCtaMode, "contacts");
+  });
+
+  it("refuse saleCtaMode hors whitelist", () => {
+    const parsed = parseProjectPatchBody({ saleCtaMode: "whatsapp" });
+    assert.equal(parsed.ok, false);
   });
 
   it("refuse un projet à vendre publié sans prix", () => {
@@ -256,6 +261,7 @@ describe("parseProjectPatchBody", () => {
       })
     );
     assert.equal(parsed.ok, true);
+    if (parsed.ok) assert.equal(parsed.values.saleCtaMode, "inquiry");
   });
 
   it("refuse un projet vendu publié sans description du travail", () => {

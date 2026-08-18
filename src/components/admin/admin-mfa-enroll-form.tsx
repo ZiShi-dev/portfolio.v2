@@ -155,8 +155,8 @@ export function AdminMfaEnrollForm({
 
   if (booting) {
     return (
-      <div className="space-y-3 text-center text-sm text-foreground/60">
-        <div className="mx-auto h-40 w-40 animate-pulse rounded-xl bg-muted/50" />
+      <div className="flex flex-col items-center space-y-3 text-center text-sm text-foreground/60">
+        <div className="h-40 w-40 animate-pulse rounded-xl bg-muted/50" />
         <p>Génération du QR TOTP…</p>
       </div>
     );
@@ -164,14 +164,17 @@ export function AdminMfaEnrollForm({
 
   if (loadError || !enrollment) {
     return (
-      <div className="space-y-4">
+      <div className="flex w-full flex-col items-center space-y-4 text-center">
         <FormError message={loadError || "Enrôlement indisponible."} />
         <button
           type="button"
           onClick={onCancel}
           className="w-full text-center text-xs text-foreground/45 transition-colors hover:text-foreground/70"
         >
-          ← Retour à la connexion
+          <span aria-hidden className="inline-block rtl:rotate-180">
+            ←
+          </span>{" "}
+          Retour à la connexion
         </button>
       </div>
     );
@@ -179,9 +182,9 @@ export function AdminMfaEnrollForm({
 
   if (!scanned) {
     return (
-      <div className="space-y-5" aria-label="Scan QR TOTP admin">
-        <div className="rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-foreground/70">
-          <p className="flex items-center gap-2 font-medium text-foreground">
+      <div className="flex w-full flex-col items-center space-y-5" aria-label="Scan QR TOTP admin">
+        <div className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-center text-sm text-foreground/70">
+          <p className="inline-flex items-center justify-center gap-2 font-medium text-foreground">
             <QrCode className="h-4 w-4 text-step-accent" aria-hidden />
             Étape 1 — Scanner le QR
           </p>
@@ -209,7 +212,10 @@ export function AdminMfaEnrollForm({
           onClick={onCancel}
           className="w-full text-center text-xs text-foreground/45 transition-colors hover:text-foreground/70"
         >
-          ← Annuler et se déconnecter
+          <span aria-hidden className="inline-block rtl:rotate-180">
+            ←
+          </span>{" "}
+          Annuler et se déconnecter
         </button>
       </div>
     );
@@ -218,12 +224,12 @@ export function AdminMfaEnrollForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="space-y-5"
+      className="flex w-full flex-col items-center space-y-5"
       noValidate
       aria-label="Confirmation code TOTP admin"
     >
-      <div className="rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-foreground/70">
-        <p className="flex items-center gap-2 font-medium text-foreground">
+      <div className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-center text-sm text-foreground/70">
+        <p className="inline-flex items-center justify-center gap-2 font-medium text-foreground">
           <ShieldCheck className="h-4 w-4 text-step-accent" aria-hidden />
           Étape 2 — Entrer le code
         </p>
@@ -240,6 +246,7 @@ export function AdminMfaEnrollForm({
         label="Code à 6 chiffres"
         required
         error={errors.code?.message}
+        className="w-full text-center"
       >
         <Input
           id="admin-enroll-code"
@@ -248,6 +255,7 @@ export function AdminMfaEnrollForm({
           autoComplete="one-time-code"
           maxLength={6}
           placeholder="000000"
+          dir="ltr"
           className="text-center text-lg tracking-[0.35em]"
           disabled={loading}
           aria-invalid={Boolean(errors.code)}
@@ -283,7 +291,10 @@ export function AdminMfaEnrollForm({
         }}
         className="w-full text-center text-xs text-foreground/45 transition-colors hover:text-foreground/70"
       >
-        ← Revoir le QR code
+        <span aria-hidden className="inline-block rtl:rotate-180">
+          ←
+        </span>{" "}
+        Revoir le QR code
       </button>
     </form>
   );

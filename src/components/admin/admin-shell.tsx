@@ -142,7 +142,10 @@ export function AdminShell({ children }: AdminShellProps) {
             </div>
           </div>
         </header>
-        <main id="admin-main" className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-5xl px-4 py-8 sm:px-6">
+        <main
+          id="admin-main"
+          className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-5xl flex-col items-center justify-center px-4 py-8 sm:px-6"
+        >
           {children}
         </main>
       </div>

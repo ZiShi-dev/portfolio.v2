@@ -11,6 +11,7 @@ import {
   type ProjectLocale,
   type ProjectPatchInput,
   type ProjectWriteInput,
+  type SaleCtaMode,
 } from "@/lib/projects/schema";
 import { formatServicePrice } from "@/lib/services/pricing";
 import {
@@ -59,19 +60,25 @@ export type ProjectRow = {
   seo_description: ProjectI18n;
   listing_price_cents: number | null;
   listing_intent: ProjectI18n;
+  sale_cta_mode: SaleCtaMode;
 };
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const PROJECT_SELECT =
-  "id, created_at, updated_at, slug, reference, title, description, kind, business_type_ids, images, cover_image, link, app_link, sort_order, published, featured, published_at, technologies, features, client_need, objective, solution, result, seo_title, seo_description, listing_price_cents, listing_intent";
+  "id, created_at, updated_at, slug, reference, title, description, kind, business_type_ids, images, cover_image, link, app_link, sort_order, published, featured, published_at, technologies, features, client_need, objective, solution, result, seo_title, seo_description, listing_price_cents, listing_intent, sale_cta_mode";
 
 function asKind(value: unknown): ProjectKind {
   if (value === "sold" || value === "for_sale" || value === "personal") {
     return value;
   }
   return "personal";
+}
+
+function asSaleCtaMode(value: unknown): SaleCtaMode {
+  if (value === "contacts" || value === "inquiry") return value;
+  return "inquiry";
 }
 
 function asCents(value: unknown): number | null {
@@ -160,6 +167,7 @@ function normalizeRow(raw: Record<string, unknown>): ProjectRow {
     seo_description: asI18n(raw.seo_description),
     listing_price_cents: asCents(raw.listing_price_cents),
     listing_intent: asI18n(raw.listing_intent),
+    sale_cta_mode: asSaleCtaMode(raw.sale_cta_mode),
   };
 }
 
@@ -242,6 +250,7 @@ export function projectRowToLocalized(
       row.kind === "for_sale" || row.kind === "sold"
         ? pickLocale(row.listing_intent, locale) || undefined
         : undefined,
+    saleCtaMode: row.kind === "for_sale" ? row.sale_cta_mode : undefined,
   };
 }
 
@@ -414,9 +423,13 @@ function writeToDbPayload(
   if (values.listingIntent !== undefined) {
     payload.listing_intent = values.listingIntent;
   }
+  if (values.saleCtaMode !== undefined) {
+    payload.sale_cta_mode = values.saleCtaMode;
+  }
   if (values.kind === "personal") {
     payload.listing_price_cents = null;
     payload.listing_intent = { fr: "", en: "", ar: "" };
+    payload.sale_cta_mode = "inquiry";
   }
   if (values.businessTypeIds !== undefined) {
     payload.business_type_ids = values.businessTypeIds;

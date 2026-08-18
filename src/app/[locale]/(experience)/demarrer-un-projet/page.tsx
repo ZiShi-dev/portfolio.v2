@@ -10,6 +10,7 @@ import {
 import { brand } from "@/lib/brand";
 import type { Locale } from "@/i18n/routing";
 import { createPageMetadata, routes } from "@/lib/routes";
+import { getSiteProjectBySlug } from "@/lib/projects/site";
 import { getSiteServiceBySlug } from "@/lib/services/site";
 
 type PageProps = {
@@ -44,6 +45,7 @@ export default async function StartProjectPage({
   const { locale } = await params;
   const sp = await searchParams;
   const serviceSlug = firstParam(sp.service);
+  const listingSlugParam = firstParam(sp.listing);
   const typeParam = firstParam(sp.type);
   const intentParam = firstParam(sp.intent);
 
@@ -52,6 +54,8 @@ export default async function StartProjectPage({
   let serviceReference: string | null = null;
   let resolvedServiceSlug: string | null = null;
   let serviceTitle: string | null = null;
+  let listingSlug: string | null = null;
+  let listingTitle: string | null = null;
   let source: ProjectInquirySource = "start-project-page";
 
   if (
@@ -59,6 +63,21 @@ export default async function StartProjectPage({
     (PROJECT_INQUIRY_TYPES as readonly string[]).includes(typeParam)
   ) {
     initialProjectType = typeParam as ProjectInquiryType;
+  }
+
+  if (listingSlugParam) {
+    const listing = await getSiteProjectBySlug(
+      locale as Locale,
+      listingSlugParam
+    );
+    if (listing?.categoryKey === "for_sale") {
+      listingSlug = listing.slug ?? listingSlugParam;
+      listingTitle = listing.title;
+      source = "listing";
+      initialProjectType = listing.businessTypeIds?.includes("ecommerce")
+        ? "ecommerce"
+        : "other";
+    }
   }
 
   if (serviceSlug) {
@@ -91,6 +110,8 @@ export default async function StartProjectPage({
         serviceReference={serviceReference}
         serviceSlug={resolvedServiceSlug}
         serviceTitle={serviceTitle}
+        listingSlug={listingSlug}
+        listingTitle={listingTitle}
       />
     </main>
   );
