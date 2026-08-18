@@ -109,6 +109,7 @@ const sampleRow = {
   seo_description: { fr: "", en: "", ar: "" },
   listing_price_cents: null as number | null,
   listing_intent: { fr: "", en: "", ar: "" },
+  sale_cta_mode: "inquiry" as const,
   published_at: "2026-07-16T00:00:00Z",
 };
 
