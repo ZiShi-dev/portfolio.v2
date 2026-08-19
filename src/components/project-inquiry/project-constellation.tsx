@@ -96,14 +96,15 @@ export function ProjectConstellation({
 
   return (
     <div
-      className={cn("w-full", className)}
+      className={cn("w-full min-w-0 px-1 sm:px-0", className)}
       role="img"
       aria-label={ariaLabel}
     >
       <svg
-        viewBox="0 0 320 120"
+        viewBox="0 14 320 92"
+        preserveAspectRatio="xMidYMid meet"
         className={cn(
-          "h-auto w-full max-w-lg",
+          "mx-auto block h-auto w-full max-w-lg",
           rtl && "-scale-x-100"
         )}
         fill="none"
@@ -127,6 +128,7 @@ export function ProjectConstellation({
               }
               strokeWidth={active ? 1.25 : 1}
               strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
               style={
                 active && !reduceMotion
                   ? {
@@ -143,7 +145,7 @@ export function ProjectConstellation({
         {nodes.map((node, i) => {
           const state = states[i] ?? "future";
           const r =
-            state === "completed" ? 4.5 : state === "current" ? 5 : 3.25;
+            state === "completed" ? 5.25 : state === "current" ? 6 : 4;
           const fill =
             state === "completed"
               ? "#C9A96A"
@@ -163,7 +165,7 @@ export function ProjectConstellation({
                 <circle
                   cx={node.x}
                   cy={node.y}
-                  r={r + 6}
+                  r={r + 7}
                   fill="rgba(201,169,106,0.08)"
                 />
               ) : null}
@@ -174,6 +176,7 @@ export function ProjectConstellation({
                 fill={fill}
                 stroke={stroke}
                 strokeWidth={1.25}
+                vectorEffect="non-scaling-stroke"
                 style={
                   reduceMotion
                     ? undefined

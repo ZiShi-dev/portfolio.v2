@@ -3,6 +3,22 @@ import { describe, it } from "node:test";
 import { readAdminApiError } from "@/lib/admin/api-error";
 import { parseAdminLoginBody } from "@/lib/admin/login-schema";
 import { getSafeAdminNextPath } from "@/lib/admin/safe-next";
+import { classifyTurnstileClientError } from "@/lib/turnstile-client-error";
+
+describe("classifyTurnstileClientError", () => {
+  it("identifie les erreurs de clé, domaine et widget désactivé", () => {
+    for (const code of ["110100", "110110", "110200", "400020", "400070"]) {
+      assert.equal(classifyTurnstileClientError(code), "configuration");
+    }
+  });
+
+  it("distingue le chargement réseau des échecs de challenge", () => {
+    assert.equal(classifyTurnstileClientError("200500"), "network");
+    assert.equal(classifyTurnstileClientError("script_load_error"), "network");
+    assert.equal(classifyTurnstileClientError("300030"), "challenge");
+    assert.equal(classifyTurnstileClientError("timeout"), "challenge");
+  });
+});
 
 describe("parseAdminLoginBody — login admin", () => {
   it("accepte un login valide et normalise l'email", () => {

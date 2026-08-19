@@ -22,6 +22,7 @@ import { getSafeAdminNextPath } from "@/lib/admin/safe-next";
 import { getSubmitCooldownMessage, useSubmitGuard } from "@/hooks/use-submit-guard";
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
 import { startNavigationProgress } from "@/lib/navigation-progress";
+import { classifyTurnstileClientError } from "@/lib/turnstile-client-error";
 import {
   adminLoginDefaultValues,
   adminLoginSchema,
@@ -49,9 +50,11 @@ export function AdminLoginForm({
   const [submitError, setSubmitError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileError, setTurnstileError] = useState("");
   const [turnstileVersion, setTurnstileVersion] = useState(0);
   const resetTurnstile = useCallback(() => {
     setTurnstileToken("");
+    setTurnstileError("");
     setTurnstileVersion((value) => value + 1);
   }, []);
   const [mfaChallenge, setMfaChallenge] = useState<AdminMfaChallengeState | null>(
@@ -82,6 +85,28 @@ export function AdminLoginForm({
 
   const resolveRedirect = (apiRedirect?: string) =>
     safeNext ?? apiRedirect ?? ADMIN_ROUTES.home;
+
+  const handleTurnstileToken = useCallback((token: string) => {
+    setTurnstileToken(token);
+    setTurnstileError("");
+  }, []);
+
+  const handleTurnstileError = useCallback(
+    (errorCode: string) => {
+      setTurnstileToken("");
+      const kind = classifyTurnstileClientError(errorCode);
+      if (kind === "configuration") {
+        setTurnstileError(tErrors("turnstile_config", { code: errorCode }));
+        return;
+      }
+      if (kind === "network") {
+        setTurnstileError(tErrors("turnstile_network", { code: errorCode }));
+        return;
+      }
+      setTurnstileError(tErrors("turnstile_failed"));
+    },
+    [tErrors]
+  );
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");
@@ -265,13 +290,17 @@ export function AdminLoginForm({
       <HoneypotField {...register("_honeypot")} />
 
       {turnstileEnabled && (
-        <TurnstileWidget
-          key={turnstileVersion}
-          action="admin_login"
-          onToken={setTurnstileToken}
-          onExpire={() => setTurnstileToken("")}
-          language={locale}
-        />
+        <div className="space-y-2">
+          <TurnstileWidget
+            key={turnstileVersion}
+            action="admin_login"
+            onToken={handleTurnstileToken}
+            onExpire={() => setTurnstileToken("")}
+            onError={handleTurnstileError}
+            language={locale}
+          />
+          {turnstileError ? <FormError message={turnstileError} /> : null}
+        </div>
       )}
 
       <Button type="submit" className="w-full" loading={loading}>

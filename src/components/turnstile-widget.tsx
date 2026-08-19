@@ -20,7 +20,12 @@ declare global {
           sitekey: string;
           callback: (token: string) => void;
           "expired-callback"?: () => void;
-          "error-callback"?: () => void;
+          "error-callback"?: (errorCode: string) => void;
+          "timeout-callback"?: () => void;
+          retry?: "auto" | "never";
+          "retry-interval"?: number;
+          "refresh-expired"?: "auto" | "manual" | "never";
+          "refresh-timeout"?: "auto" | "manual" | "never";
           theme?: "light" | "dark" | "auto";
           size?: "normal" | "compact" | "flexible";
           appearance?: "always" | "execute" | "interaction-only";
@@ -41,6 +46,7 @@ export type TurnstileWidgetHandle = {
 type TurnstileWidgetProps = {
   onToken: (token: string) => void;
   onExpire: () => void;
+  onError?: (errorCode: string) => void;
   className?: string;
   /** Défaut `flexible` : bandeau pleine largeur (évite le carré `compact`). */
   size?: "normal" | "compact" | "flexible";
@@ -59,6 +65,7 @@ export const TurnstileWidget = forwardRef<
   {
     onToken,
     onExpire,
+    onError,
     className,
     size = "flexible",
     appearance = "always",
@@ -73,10 +80,12 @@ export const TurnstileWidget = forwardRef<
   const widgetIdRef = useRef<string | null>(null);
   const onTokenRef = useRef(onToken);
   const onExpireRef = useRef(onExpire);
+  const onErrorRef = useRef(onError);
   const [scriptReady, setScriptReady] = useState(false);
 
   onTokenRef.current = onToken;
   onExpireRef.current = onExpire;
+  onErrorRef.current = onError;
 
   const reset = useCallback(() => {
     onExpireRef.current();
@@ -107,7 +116,18 @@ export const TurnstileWidget = forwardRef<
       sitekey: siteKey,
       callback: (token) => onTokenRef.current(token),
       "expired-callback": () => onExpireRef.current(),
-      "error-callback": () => onExpireRef.current(),
+      "error-callback": (errorCode) => {
+        onExpireRef.current();
+        onErrorRef.current?.(String(errorCode));
+      },
+      "timeout-callback": () => {
+        onExpireRef.current();
+        onErrorRef.current?.("timeout");
+      },
+      retry: "auto",
+      "retry-interval": 3000,
+      "refresh-expired": "auto",
+      "refresh-timeout": "auto",
       theme,
       size,
       appearance,
@@ -129,8 +149,9 @@ export const TurnstileWidget = forwardRef<
     <>
       <Script
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        strategy="lazyOnload"
-        onLoad={() => setScriptReady(true)}
+        strategy="afterInteractive"
+        onReady={() => setScriptReady(true)}
+        onError={() => onErrorRef.current?.("script_load_error")}
       />
       <div
         ref={containerRef}

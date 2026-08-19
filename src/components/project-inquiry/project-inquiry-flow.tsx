@@ -304,7 +304,7 @@ export function ProjectInquiryFlow({
   const lockType = Boolean(
     (serviceSlug && offerProfile) || (listingSlug && offerProfile)
   );
-  const questionSteps = questionStepsFor(lockType);
+  const questionSteps = useMemo(() => questionStepsFor(lockType), [lockType]);
   const firstQuestionStep = questionSteps[0] ?? "type";
   const offerCopySlug = offerProfile?.slug ?? null;
 
@@ -1610,20 +1610,21 @@ export function ProjectInquiryFlow({
         <div
           className={cn(
             "min-w-0",
-            fullscreen && (step === "summary" ? "space-y-5" : "space-y-8")
+            fullscreen &&
+              (step === "summary" ? "space-y-5" : "space-y-5 sm:space-y-8")
           )}
         >
-        {step !== "intro" && step !== "summary" && step !== "success" ? (
-          <ProjectConstellation
-            completedCount={completed}
-            currentIndex={currentIndex}
-            projectType={answers.projectType}
-            nodeCount={questionSteps.length}
-            ariaLabel={stepLabel}
-            rtl={locale === "ar"}
-            className="mx-auto flex justify-center"
-          />
-        ) : null}
+          {step !== "intro" && step !== "summary" && step !== "success" ? (
+            <ProjectConstellation
+              completedCount={completed}
+              currentIndex={currentIndex}
+              projectType={answers.projectType}
+              nodeCount={questionSteps.length}
+              ariaLabel={stepLabel}
+              rtl={locale === "ar"}
+              className="mx-auto flex justify-center"
+            />
+          ) : null}
 
         {step === "summary" ? (
           <div
