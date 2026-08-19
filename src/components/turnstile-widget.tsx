@@ -20,8 +20,8 @@ declare global {
           sitekey: string;
           callback: (token: string) => void;
           "expired-callback"?: () => void;
-          "error-callback"?: (errorCode: string) => void;
-          "timeout-callback"?: () => void;
+          "error-callback"?: (errorCode: string) => boolean;
+          "timeout-callback"?: () => boolean;
           retry?: "auto" | "never";
           "retry-interval"?: number;
           "refresh-expired"?: "auto" | "manual" | "never";
@@ -82,6 +82,7 @@ export const TurnstileWidget = forwardRef<
   const onExpireRef = useRef(onExpire);
   const onErrorRef = useRef(onError);
   const [scriptReady, setScriptReady] = useState(false);
+  const [containerWidth, setContainerWidth] = useState<number | null>(null);
 
   onTokenRef.current = onToken;
   onExpireRef.current = onExpire;
@@ -103,6 +104,23 @@ export const TurnstileWidget = forwardRef<
   }, []);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updateWidth = () => setContainerWidth(container.clientWidth);
+    updateWidth();
+
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  const resolvedSize =
+    size === "flexible" && containerWidth !== null && containerWidth < 300
+      ? "compact"
+      : size;
+
+  useEffect(() => {
     if (!siteKey || !scriptReady || !containerRef.current || !window.turnstile) {
       return;
     }
@@ -119,17 +137,19 @@ export const TurnstileWidget = forwardRef<
       "error-callback": (errorCode) => {
         onExpireRef.current();
         onErrorRef.current?.(String(errorCode));
+        return true;
       },
       "timeout-callback": () => {
         onExpireRef.current();
         onErrorRef.current?.("timeout");
+        return true;
       },
       retry: "auto",
-      "retry-interval": 3000,
+      "retry-interval": 8000,
       "refresh-expired": "auto",
       "refresh-timeout": "auto",
       theme,
-      size,
+      size: resolvedSize,
       appearance,
       language,
       action,
@@ -141,7 +161,15 @@ export const TurnstileWidget = forwardRef<
         widgetIdRef.current = null;
       }
     };
-  }, [siteKey, scriptReady, size, appearance, language, theme, action]);
+  }, [
+    siteKey,
+    scriptReady,
+    resolvedSize,
+    appearance,
+    language,
+    theme,
+    action,
+  ]);
 
   if (!siteKey) return null;
 
@@ -158,7 +186,7 @@ export const TurnstileWidget = forwardRef<
         className={cn(
           "flex w-full max-w-full justify-center",
           // Hauteur native Turnstile : normal/flexible 65px, compact 140px
-          size === "compact" ? "min-h-[140px]" : "min-h-[65px]",
+          resolvedSize === "compact" ? "min-h-[140px]" : "min-h-[65px]",
           className
         )}
       />
