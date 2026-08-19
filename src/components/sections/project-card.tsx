@@ -53,7 +53,7 @@ export function ProjectCard({
           </div>
         ) : null}
       </div>
-      <div className="relative p-4 sm:p-6">
+      <div className="relative flex flex-1 flex-col p-4 sm:p-6">
         <span
           className="absolute end-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-step-accent/25 bg-background transition-colors group-hover:border-step-accent group-hover:bg-step-accent group-hover:text-primary-foreground sm:end-4 sm:top-4"
           aria-hidden
@@ -72,13 +72,15 @@ export function ProjectCard({
         <h3 className="mt-2 pe-12 font-display-serif text-lg font-semibold leading-snug sm:text-xl">
           {project.title}
         </h3>
-        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-foreground/60">
+        <p className="mt-2 line-clamp-2 text-sm leading-6 text-foreground/60 sm:line-clamp-3 sm:leading-relaxed">
           {project.desc}
         </p>
         <ProjectTypeBadges
           businessTypeIds={project.businessTypeIds}
+          variant={swipeFriendly ? "line" : "pills"}
+          className={swipeFriendly ? "mt-3 rtl:font-sans rtl:tracking-normal" : undefined}
         />
-        <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary/75">
+        <p className="mt-auto pt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary/75 rtl:font-sans rtl:tracking-normal">
           {t("viewCase")}
         </p>
       </div>
@@ -92,7 +94,7 @@ export function ProjectCard({
       className={
         className ??
         cn(
-          "group h-full w-full overflow-hidden rounded-2xl border bg-card/80 backdrop-blur-sm transition-colors hover:border-step-accent/45",
+          "group flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-card/80 backdrop-blur-sm transition-colors hover:border-step-accent/45",
           project.featured
             ? "border-[rgba(212,175,122,0.38)] shadow-[0_0_20px_rgba(201,169,106,0.10)]"
             : "border-step-accent/20"
@@ -102,14 +104,14 @@ export function ProjectCard({
       <Link
         href={href}
         aria-label={openLabel}
-        className="block w-full text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="flex w-full flex-1 flex-col text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         {cardBody}
       </Link>
 
       {((project.link && isSafeHttpUrl(project.link)) ||
         (project.appLink && isSafeHttpUrl(project.appLink))) && (
-        <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-border px-4 py-3 sm:px-6">
+        <div className="flex min-h-12 flex-wrap items-center gap-x-4 gap-y-1 border-t border-border px-4 py-2 sm:px-6 sm:py-3">
           {project.link && isSafeHttpUrl(project.link) && (
             <a
               href={project.link}

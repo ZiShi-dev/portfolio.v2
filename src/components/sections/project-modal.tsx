@@ -310,14 +310,14 @@ export function ProjectCardPreview({
   screensLabel?: string;
 }) {
   return (
-    <div className="relative h-44 overflow-hidden bg-muted perspective-[800px] sm:h-52 md:h-56">
+    <div className="relative h-40 overflow-hidden bg-muted perspective-[800px] sm:h-52 md:h-56">
       {count && count > 1 && (
-        <span className="absolute right-6 top-6 z-10 rounded-full border border-border bg-background/90 px-2.5 py-1 text-xs font-medium text-foreground/60">
+        <span className="absolute end-3 top-3 z-10 rounded-full border border-border bg-background/90 px-2.5 py-1 text-[11px] font-medium text-foreground/60 backdrop-blur-sm sm:end-6 sm:top-6 sm:text-xs">
           +<AnimatedNumber value={count} duration={800} /> {screensLabel}
         </span>
       )}
       <motion.div
-        className="absolute inset-4 rounded-lg border border-border bg-card shadow-md"
+        className="absolute inset-3 rounded-lg border border-border bg-card shadow-md sm:inset-4"
         whileHover={{
           rotateX: 8,
           rotateY: -8,

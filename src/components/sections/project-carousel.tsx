@@ -84,7 +84,7 @@ export function ProjectCarousel({
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className="min-w-0 shrink-0 grow-0 basis-[88%] ps-4 sm:basis-[78%] sm:ps-6"
+              className="min-w-0 shrink-0 grow-0 basis-[92%] ps-4 sm:basis-[78%] sm:ps-6"
             >
               <ProjectCard
                 project={project}
@@ -97,12 +97,12 @@ export function ProjectCarousel({
       </div>
 
       {projects.length > 1 && (
-        <div className="mt-6 flex items-center justify-center gap-3 px-4 sm:px-6">
+        <div className="mx-auto mt-5 flex w-fit max-w-full items-center justify-center gap-3 rounded-full border border-border-gold bg-surface-elevated/70 px-2 py-1.5 shadow-[0_12px_30px_-22px_rgba(0,0,0,0.9)] backdrop-blur-sm sm:mt-6 sm:px-3">
           <button
             type="button"
             onClick={scrollPrev}
             disabled={!canScrollPrev}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background text-foreground transition-opacity disabled:opacity-30"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background/80 text-foreground transition-colors hover:border-primary/45 hover:text-primary disabled:opacity-30"
             aria-label={t("prevProject")}
           >
             <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
@@ -119,8 +119,8 @@ export function ProjectCarousel({
                 className={cn(
                   "h-2 rounded-full transition-all",
                   index === selectedIndex
-                    ? "w-6 bg-foreground"
-                    : "w-2 bg-foreground/25 hover:bg-foreground/40"
+                    ? "w-6 bg-primary"
+                    : "w-2 bg-foreground/20 hover:bg-foreground/40"
                 )}
               />
             ))}
@@ -130,7 +130,7 @@ export function ProjectCarousel({
             type="button"
             onClick={scrollNext}
             disabled={!canScrollNext}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background text-foreground transition-opacity disabled:opacity-30"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background/80 text-foreground transition-colors hover:border-primary/45 hover:text-primary disabled:opacity-30"
             aria-label={t("nextProject")}
           >
             <ChevronRight className="h-4 w-4 rtl:rotate-180" />

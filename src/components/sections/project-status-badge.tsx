@@ -22,7 +22,7 @@ export function ProjectStatusBadge({
   return (
     <span
       className={cn(
-        "inline-flex max-w-full items-center gap-1.5 rounded-md border border-[rgba(212,175,122,0.22)] bg-[#070A12]/85 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-[#F4F1E8] backdrop-blur-sm",
+        "inline-flex max-w-full items-center gap-1.5 rounded-md border border-[rgba(212,175,122,0.22)] bg-[#070A12]/85 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-[#F4F1E8] backdrop-blur-sm rtl:font-sans rtl:tracking-normal",
         className
       )}
     >

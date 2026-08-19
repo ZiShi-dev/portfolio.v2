@@ -265,7 +265,7 @@ html[lang="ar"] .font-brand,
 html[dir="rtl"] .font-display,
 html[dir="rtl"] .font-display-serif,
 html[dir="rtl"] .font-brand {
-  font-family: var(--font-arabic-display), var(--font-arabic-body), serif;
+  font-family: var(--font-amiri), var(--font-arabic-body), serif;
 }
 
 img,

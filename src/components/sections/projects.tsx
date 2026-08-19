@@ -25,10 +25,10 @@ export function Projects({ projects }: ProjectsProps) {
           id="projects-heading"
           eyebrow={t("eyebrow")}
           title={
-            <>
-              {t("title")}{" "}
+            <span className="inline-flex flex-wrap items-baseline justify-center gap-x-2 gap-y-0.5">
+              <span>{t("title")}</span>
               <span className="text-primary">{t("titleHighlight")}</span>
-            </>
+            </span>
           }
           subtitle={t("subtitle")}
         />

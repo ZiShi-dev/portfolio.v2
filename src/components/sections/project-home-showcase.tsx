@@ -29,12 +29,12 @@ export function ProjectHomeShowcase({ projects }: ProjectHomeShowcaseProps) {
   if (spotlightSlides.length === 0) return null;
 
   return (
-    <div className="mx-auto mt-10 max-w-6xl px-4 sm:mt-14 sm:px-6">
+    <div className="mx-auto mt-8 max-w-6xl px-4 sm:mt-14 sm:px-6">
       <SpotlightCarousel projects={spotlightSlides} />
 
       {preview.length > 0 ? (
-        <div className="mt-10 sm:mt-12">
-          <p className="mb-5 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-primary/75">
+        <div className="mt-9 sm:mt-12">
+          <p className="mb-4 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-primary/75 rtl:font-sans rtl:tracking-normal sm:mb-5">
             {t("otherWork")}
           </p>
           {preview.length === 1 ? (
@@ -47,8 +47,13 @@ export function ProjectHomeShowcase({ projects }: ProjectHomeShowcaseProps) {
         </div>
       ) : null}
 
-      <div className="mt-10 flex justify-center">
-        <Button asChild size="lg" variant="outline" className="min-h-12 px-6">
+      <div className="mt-9 flex justify-center sm:mt-10">
+        <Button
+          asChild
+          size="lg"
+          variant="outline"
+          className="min-h-12 w-full px-6 sm:w-auto"
+        >
           <Link href={routes.projects} onClick={markHomeForScrollRestore}>
             {t("exploreAll")}
             <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
