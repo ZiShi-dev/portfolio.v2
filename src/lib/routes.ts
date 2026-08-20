@@ -136,6 +136,9 @@ export function createPageMetadata({
       url,
       type: "website" as const,
       locale: ogLocales[locale],
+      alternateLocale: (Object.keys(ogLocales) as Locale[])
+        .filter((code) => code !== locale)
+        .map((code) => ogLocales[code]),
       siteName: brand.name,
       ...(imageUrl && image
         ? { images: [{ url: imageUrl, alt: image.alt }] }

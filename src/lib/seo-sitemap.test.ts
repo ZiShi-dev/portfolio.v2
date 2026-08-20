@@ -8,6 +8,15 @@ import {
   localizedPath,
   routes,
 } from "@/lib/routes";
+import {
+  parseSitemapDate,
+  uniqueAbsoluteHttpUrls,
+} from "@/lib/seo/sitemap-utils";
+import {
+  trailingSlashRedirectLocation,
+  wwwToApexRedirectLocation,
+} from "@/lib/seo/url-normalization";
+import { buildListingJsonLd } from "@/lib/seo/listing-jsonld";
 
 describe("SEO — sitemap & robots", () => {
   it("sitemap inclut l’accueil, le catalogue offres et les pages indexables (sans /a-propos)", async () => {
@@ -16,6 +25,7 @@ describe("SEO — sitemap & robots", () => {
     assert.ok(urls.some((u) => /\/projets$/.test(u)));
     assert.ok(urls.some((u) => /\/avis$/.test(u)));
     assert.ok(urls.some((u) => /\/offres$/.test(u)));
+    assert.ok(urls.some((u) => /\/contact$/.test(u)));
     assert.equal(
       urls.some((u) => u.includes("/a-propos")),
       false
@@ -46,6 +56,17 @@ describe("SEO — sitemap & robots", () => {
       undefined,
       "une page statique ne doit pas annoncer une fausse date de mise à jour"
     );
+
+    for (const entry of entries) {
+      if (entry.lastModified) {
+        const time = new Date(entry.lastModified).getTime();
+        assert.equal(
+          Number.isNaN(time),
+          false,
+          `lastModified invalide pour ${entry.url}`
+        );
+      }
+    }
   });
 
   it("robots bloque admin et laisser-un-avis", () => {
@@ -56,6 +77,7 @@ describe("SEO — sitemap & robots", () => {
     const list = Array.isArray(disallow) ? disallow : [disallow];
     assert.ok(list.some((d) => String(d).includes("admin")));
     assert.ok(list.some((d) => String(d).includes("laisser-un-avis")));
+    assert.ok(list.some((d) => String(d).includes("/api/")));
     assert.ok(String(r.sitemap).endsWith("/sitemap.xml"));
     assert.ok(String(r.host).startsWith("https://"));
   });
@@ -74,6 +96,7 @@ describe("SEO — sitemap & robots", () => {
     assert.equal(meta.openGraph?.url?.toString().includes("/projets"), true);
     assert.deepEqual(meta.title, { absolute: "Test" });
     assert.equal(meta.openGraph?.locale, "fr_FR");
+    assert.deepEqual(meta.openGraph?.alternateLocale, ["en_US", "ar_SA"]);
     assert.equal(meta.robots?.index, true);
     assert.equal(meta.robots?.googleBot?.["max-image-preview"], "large");
   });
@@ -123,5 +146,87 @@ describe("SEO — sitemap & robots", () => {
       index: false,
     });
     assert.deepEqual(meta.robots, { index: false, follow: false });
+  });
+});
+
+describe("SEO — helpers sitemap / URLs", () => {
+  it("parseSitemapDate ignore les dates invalides", () => {
+    assert.equal(parseSitemapDate(undefined), undefined);
+    assert.equal(parseSitemapDate(""), undefined);
+    assert.equal(parseSitemapDate("null"), undefined);
+    assert.equal(parseSitemapDate("not-a-date"), undefined);
+    const ok = parseSitemapDate("2026-08-18T10:00:00.000Z");
+    assert.ok(ok instanceof Date);
+    assert.equal(ok?.toISOString(), "2026-08-18T10:00:00.000Z");
+  });
+
+  it("uniqueAbsoluteHttpUrls déduplique et ignore les schémas dangereux", () => {
+    const urls = uniqueAbsoluteHttpUrls(
+      [
+        "/images/a.jpg",
+        "/images/a.jpg",
+        "https://cdn.example.com/b.jpg",
+        "javascript:alert(1)",
+        "",
+        null,
+      ],
+      (path) => `https://vorzix.com${path}`
+    );
+    assert.deepEqual(urls, [
+      "https://vorzix.com/images/a.jpg",
+      "https://cdn.example.com/b.jpg",
+    ]);
+  });
+
+  it("redirige www vers l’apex canonique en https", () => {
+    assert.equal(
+      wwwToApexRedirectLocation(
+        "http://www.vorzix.com/en/projets",
+        "www.vorzix.com",
+        "https://vorzix.com"
+      ),
+      "https://vorzix.com/en/projets"
+    );
+    assert.equal(
+      wwwToApexRedirectLocation(
+        "https://vorzix.com/",
+        "vorzix.com",
+        "https://vorzix.com"
+      ),
+      null
+    );
+  });
+
+  it("retire le slash final hors racine", () => {
+    assert.equal(
+      trailingSlashRedirectLocation("https://vorzix.com/offres/"),
+      "https://vorzix.com/offres"
+    );
+    assert.equal(trailingSlashRedirectLocation("https://vorzix.com/"), null);
+  });
+
+  it("buildListingJsonLd ajoute ItemList seulement s’il y a des items", () => {
+    const empty = buildListingJsonLd({
+      name: "Offres",
+      url: "https://vorzix.com/offres",
+      items: [],
+    });
+    assert.equal(Array.isArray(empty["@graph"]), true);
+    assert.equal(
+      (empty["@graph"] as Record<string, unknown>[]).some(
+        (node) => node["@type"] === "ItemList"
+      ),
+      false
+    );
+
+    const filled = buildListingJsonLd({
+      name: "Offres",
+      url: "https://vorzix.com/offres",
+      items: [{ name: "Vitrine", url: "https://vorzix.com/offres/vitrine" }],
+    });
+    const list = (filled["@graph"] as Record<string, unknown>[]).find(
+      (node) => node["@type"] === "ItemList"
+    );
+    assert.equal(list?.numberOfItems, 1);
   });
 });

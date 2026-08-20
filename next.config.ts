@@ -68,11 +68,19 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/api/admin/:path*",
+        source: "/api/:path*",
         headers: [
           { key: "Cache-Control", value: "no-store, max-age=0" },
           { key: "X-Robots-Tag", value: "noindex, nofollow" },
         ],
+      },
+      {
+        source: "/laisser-un-avis",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:locale/laisser-un-avis",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
       {
         source: "/admin-push-sw.js",

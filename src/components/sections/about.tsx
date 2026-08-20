@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { aboutStatsToDisplay } from "@/data/about-stats";
+import { aboutStatsToDisplay, visibleAboutStats } from "@/data/about-stats";
 import { getAboutStats } from "@/lib/about/store";
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { Reveal } from "@/components/ui/reveal";
@@ -7,7 +7,7 @@ import { ProcessStepper } from "@/components/ui/process-stepper";
 
 export async function About() {
   const t = await getTranslations("about");
-  const stats = aboutStatsToDisplay(await getAboutStats());
+  const stats = visibleAboutStats(aboutStatsToDisplay(await getAboutStats()));
 
   return (
     <section
@@ -49,6 +49,7 @@ export async function About() {
           </div>
         </Reveal>
 
+        {stats.length > 0 ? (
         <Reveal delay={0.2}>
           <div className="mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-3 sm:mt-16 sm:gap-4 lg:mt-20">
             {stats.map((s) => (
@@ -70,6 +71,7 @@ export async function About() {
             ))}
           </div>
         </Reveal>
+        ) : null}
       </div>
     </section>
   );

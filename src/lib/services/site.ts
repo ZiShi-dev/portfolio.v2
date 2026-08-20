@@ -99,3 +99,22 @@ export async function getLinkedProjectsForService(
   }
   return result;
 }
+
+/** Offres publiées liées à un projet (lien inverse des études de cas). */
+export async function getLinkedServicesForProject(
+  projectId: string,
+  locale: Locale
+): Promise<Array<{ slug: string; title: string }>> {
+  if (!projectId) return [];
+  try {
+    const services = await getSiteServices(locale);
+    return services
+      .filter((service) =>
+        service.caseStudies.some((item) => item.projectId === projectId)
+      )
+      .map((service) => ({ slug: service.slug, title: service.title }));
+  } catch (err) {
+    console.error("[services] getLinkedServicesForProject", err);
+    return [];
+  }
+}

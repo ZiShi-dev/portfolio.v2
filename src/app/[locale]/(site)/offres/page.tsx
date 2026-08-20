@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import { headers } from "next/headers";
 import { PageBackBar } from "@/components/page-back-link";
 import { Services } from "@/components/sections/services";
+import { JsonLd } from "@/components/json-ld";
 import { brand } from "@/lib/brand";
-import { createPageMetadata, routes } from "@/lib/routes";
+import {
+  createPageMetadata,
+  localizedAbsoluteUrl,
+  routes,
+  serviceDetailPath,
+} from "@/lib/routes";
 import { getSiteServices } from "@/lib/services/site";
+import { buildListingJsonLd } from "@/lib/seo/listing-jsonld";
 import type { Locale } from "@/i18n/routing";
 
 type PageProps = {
@@ -29,12 +37,26 @@ export async function generateMetadata({
 export default async function OffresCatalogPage() {
   const locale = (await getLocale()) as Locale;
   const tCommon = await getTranslations("common");
+  const t = await getTranslations("services");
   const services = await getSiteServices(locale);
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const listingUrl = localizedAbsoluteUrl(routes.services, locale);
 
   return (
-    <main id="main-content">
+    <>
+      <JsonLd
+        nonce={nonce}
+        data={buildListingJsonLd({
+          name: t("catalogTitle"),
+          url: listingUrl,
+          items: services.map((service) => ({
+            name: service.title,
+            url: localizedAbsoluteUrl(serviceDetailPath(service.slug), locale),
+          })),
+        })}
+      />
       <PageBackBar href={routes.home} label={tCommon("backHome")} />
       <Services services={services} variant="page" />
-    </main>
+    </>
   );
 }

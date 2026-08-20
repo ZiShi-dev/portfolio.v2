@@ -15,17 +15,24 @@ import type { ReviewItem } from "@/data/reviews";
 import { isSafeHttpUrl } from "@/lib/review-schema";
 import { routes } from "@/lib/routes";
 import type { LocalizedProjectItem } from "@/data/projects";
+import {
+  ProjectTechnologies,
+  RelatedServiceLinks,
+  type RelatedServiceLink,
+} from "@/components/sections/project-related-extras";
 
 type CaseStudyDetailProps = {
   project: LocalizedProjectItem;
   nextSlug?: string | null;
   reviews?: ReviewItem[];
+  relatedServices?: RelatedServiceLink[];
 };
 
 export function CaseStudyDetail({
   project,
   nextSlug,
   reviews = [],
+  relatedServices = [],
 }: CaseStudyDetailProps) {
   const t = useTranslations("caseStudy");
   const tReviews = useTranslations("reviews");
@@ -34,6 +41,7 @@ export function CaseStudyDetail({
   const liveUrl =
     project.link && isSafeHttpUrl(project.link) ? project.link : null;
   const features = project.features ?? [];
+  const technologies = project.technologies ?? [];
   const businessTypeIds = Array.from(
     new Set(project.businessTypeIds ?? [])
   );
@@ -64,6 +72,10 @@ export function CaseStudyDetail({
               />
             </div>
           ) : null}
+          <ProjectTechnologies
+            items={technologies}
+            title={t("technologies")}
+          />
         </Reveal>
 
         {cover ? (
@@ -224,6 +236,11 @@ export function CaseStudyDetail({
         ) : null}
 
         <CelestialDivider className="mt-14 sm:mt-16" />
+
+        <RelatedServiceLinks
+          services={relatedServices}
+          title={t("relatedOffers")}
+        />
 
         <Reveal delay={0.08}>
           <section className="mt-10 rounded-xl border border-border-gold bg-surface-elevated/90 p-6 text-center sm:p-10">
