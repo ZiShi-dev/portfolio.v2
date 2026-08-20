@@ -109,6 +109,10 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
   beforeEach(() => {
     process.env = { ...envSnapshot, NODE_ENV: "production" };
     delete process.env.FORM_ALLOWED_ORIGINS;
+    delete process.env.VERCEL;
+    delete process.env.VERCEL_URL;
+    delete process.env.VERCEL_BRANCH_URL;
+    delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
   });
 
   afterEach(() => {
@@ -127,11 +131,49 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
     assert.ok(isAllowedFormOrigin("https://www.zishi.dev", allowed));
   });
 
+  it("autorise l'URL de déploiement Vercel", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://www.zishi.dev";
+    process.env.VERCEL_URL = "portfolio-v2-phi-hazel.vercel.app";
+    const allowed = getAllowedFormOrigins();
+    assert.ok(
+      isAllowedFormOrigin("https://portfolio-v2-phi-hazel.vercel.app", allowed)
+    );
+  });
+
   it("rejette une origine malveillante en production", () => {
     process.env.NEXT_PUBLIC_SITE_URL = "https://zishi.dev";
     const request = new Request("https://zishi.dev/api/contact", {
       method: "POST",
       headers: { origin: "https://evil.example" },
+    });
+    assert.equal(verifyFormRequestOrigin(request), false);
+  });
+
+  it("accepte une origine same-site même si SITE_URL diffère", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://www.zishi.dev";
+    const request = new Request(
+      "https://portfolio-v2-phi-hazel.vercel.app/api/admin/login",
+      {
+        method: "POST",
+        headers: {
+          origin: "https://portfolio-v2-phi-hazel.vercel.app",
+          host: "portfolio-v2-phi-hazel.vercel.app",
+        },
+      }
+    );
+    assert.equal(verifyFormRequestOrigin(request), true);
+  });
+
+  it("ignore un X-Forwarded-Host spoofé hors Vercel", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://www.zishi.dev";
+    const request = new Request("https://www.zishi.dev/api/admin/login", {
+      method: "POST",
+      headers: {
+        origin: "https://evil.example",
+        host: "www.zishi.dev",
+        "x-forwarded-host": "evil.example",
+        "x-forwarded-proto": "https",
+      },
     });
     assert.equal(verifyFormRequestOrigin(request), false);
   });
