@@ -1261,7 +1261,7 @@
       },
       "launch": {
         "title": "Mise en ligne",
-        "desc": "Nous vous aidons à préparer le déploiement. Les services tiers (domaine, hébergement…) restent à votre charge."
+        "desc": "Nous prenons en charge la configuration et la mise en ligne complète de votre boutique — c’est inclus dans le prix du projet. Nous vous aidons aussi à choisir l’hébergement et les services adaptés à votre trafic, puis nous les configurons et les connectons à votre site. Les coûts des services externes (nom de domaine, hébergement, forfaits payants…) restent à votre charge ; les comptes et abonnements restent les vôtres."
       },
       "sell": {
         "title": "Vous commencez à vendre",
@@ -1269,9 +1269,9 @@
       }
     },
     "costsIncludedLabel": "Prix de la solution",
-    "costsIncluded": "Ce montant couvre la boutique déjà développée, la personnalisation indiquée et l’accompagnement décrit sur cette page — rien d’autre n’est ajouté d’office.",
+    "costsIncluded": "Ce montant couvre la boutique déjà développée, la personnalisation indiquée, la mise en ligne technique complète et l’accompagnement décrit sur cette page — rien d’autre n’est ajouté d’office.",
     "costsThirdLabel": "Services tiers",
-    "costsThird": "Nom de domaine, hébergement, base de données, e-mails et autres services externes ne sont pas compris. Une passerelle de paiement peut être ajoutée séparément, à la demande. Le paiement à la livraison, lui, fait partie du parcours boutique.",
+    "costsThird": "La mise en ligne technique (analyse, recommandation, configuration et déploiement) est incluse dans le prix. En revanche, les services externes — nom de domaine, hébergement, base de données payante, stockage, e-mails — restent à votre charge ; les comptes et abonnements restent les vôtres. Une passerelle de paiement en ligne peut être ajoutée séparément, à la demande. Le paiement à la livraison fait partie du parcours boutique.",
     "proofTitle": "La boutique en images",
     "proofSubtitle": "Aperçus du produit tel qu’il existe aujourd’hui.",
     "faqTitle": "Questions fréquentes",
@@ -1282,7 +1282,7 @@
       },
       "included": {
         "q": "Qu’est-ce qui est inclus dans le prix ?",
-        "a": "Les fonctionnalités listées sur cette page, le code source complet, la personnalisation convenue, l’aide à la mise en ligne, et un mois d’ajustements visuels simples après livraison — sans nouvelles pages ni nouvelles fonctions."
+        "a": "Les fonctionnalités listées sur cette page, le code source complet, la personnalisation convenue, la mise en ligne technique complète (hébergement, base de données, domaine, déploiement et vérification), et un mois d’ajustements visuels simples après livraison — sans nouvelles pages ni nouvelles fonctions. Les services externes (domaine, hébergement payant…) restent à votre charge."
       },
       "catalog": {
         "q": "Qui saisit les produits ?",

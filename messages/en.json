@@ -1259,7 +1259,7 @@
       },
       "launch": {
         "title": "Go live",
-        "desc": "We help you prepare the deployment. Third-party services (domain, hosting…) remain yours to cover."
+        "desc": "We handle your shop’s full setup and deployment — included in the project price. We also help you choose hosting and services suited to your shop’s needs, then configure and connect them to your site. External service costs (domain name, hosting, paid plans…) remain the client’s responsibility; accounts and subscriptions stay in their name."
       },
       "sell": {
         "title": "You start selling",
@@ -1267,9 +1267,9 @@
       }
     },
     "costsIncludedLabel": "Solution price",
-    "costsIncluded": "This amount covers the already-built shop, the stated personalization, and the support described on this page — nothing else is added by default.",
+    "costsIncluded": "This amount covers the already-built shop, the stated personalization, full technical go-live, and the support described on this page — nothing else is added by default.",
     "costsThirdLabel": "Third-party services",
-    "costsThird": "Domain name, hosting, database, email and other external services are not included. An online payment gateway can be added separately, on request. Cash on delivery is available in the shop flow.",
+    "costsThird": "Full technical go-live (needs review, recommendation, configuration and deployment) is included in the price. External services — domain name, hosting, paid database plans, storage, email — remain the client’s responsibility; accounts and subscriptions stay theirs. An online payment gateway can be added separately, on request. Cash on delivery is available in the shop flow.",
     "proofTitle": "The shop in pictures",
     "proofSubtitle": "Previews of the product as it exists today.",
     "faqTitle": "Questions",
@@ -1280,7 +1280,7 @@
       },
       "included": {
         "q": "What does the price include?",
-        "a": "The features listed on this page, the full source code, the agreed personalization, help going live, and one month of simple visual adjustments after delivery — not new pages or new features."
+        "a": "The features listed on this page, the full source code, the agreed personalization, full technical go-live (hosting, database, domain, deployment and verification), and one month of simple visual adjustments after delivery — not new pages or new features. External services (domain, paid hosting…) remain the client’s responsibility."
       },
       "catalog": {
         "q": "Who enters the products?",
