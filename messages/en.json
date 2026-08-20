@@ -1258,8 +1258,8 @@
         "desc": "Within 7 to 14 days: name, colours, style and the content agreed before work starts are adapted to your brand."
       },
       "launch": {
-        "title": "Go live",
-        "desc": "We handle your shop’s full setup and deployment — included in the project price. We also help you choose hosting and services suited to your shop’s needs, then configure and connect them to your site. External service costs (domain name, hosting, paid plans…) remain the client’s responsibility; accounts and subscriptions stay in their name."
+        "title": "Launch",
+        "desc": "We take care of preparing and fully deploying your store, with no additional setup fee. We assess your needs, recommend suitable hosting solutions and services, then handle their configuration and integration with Quotishop."
       },
       "sell": {
         "title": "You start selling",
@@ -1267,9 +1267,9 @@
       }
     },
     "costsIncludedLabel": "Solution price",
-    "costsIncluded": "This amount covers the already-built shop, the stated personalization, full technical go-live, and the support described on this page — nothing else is added by default.",
-    "costsThirdLabel": "Third-party services",
-    "costsThird": "Full technical go-live (needs review, recommendation, configuration and deployment) is included in the price. External services — domain name, hosting, paid database plans, storage, email — remain the client’s responsibility; accounts and subscriptions stay theirs. An online payment gateway can be added separately, on request. Cash on delivery is available in the shop flow.",
+    "costsIncluded": "The €600 includes Quotishop, the complete source code of your copy, the planned customisation, technical configuration, production preparation, infrastructure choice support and initial deployment — not recurring bills from external providers.",
+    "costsThirdLabel": "External services",
+    "costsThird": "Technical configuration and deployment are included in the project price. Any external service costs — such as the domain name, hosting, database, storage, email services or other third-party services — remain the client's responsibility. We can recommend solutions suited to your store and configure them for you, while the accounts and subscriptions remain in your name so that you retain control of your infrastructure.",
     "proofTitle": "The shop in pictures",
     "proofSubtitle": "Previews of the product as it exists today.",
     "faqTitle": "Questions",
@@ -1280,7 +1280,7 @@
       },
       "included": {
         "q": "What does the price include?",
-        "a": "The features listed on this page, the full source code, the agreed personalization, full technical go-live (hosting, database, domain, deployment and verification), and one month of simple visual adjustments after delivery — not new pages or new features. External services (domain, paid hosting…) remain the client’s responsibility."
+        "a": "Quotishop, the complete source code of your copy, the agreed customisation, technical configuration, production preparation, infrastructure choice support, initial deployment and connection of the domain and required services, plus one month of simple visual adjustments — not new pages or new features. Recurring bills from external providers remain the client's responsibility."
       },
       "catalog": {
         "q": "Who enters the products?",
