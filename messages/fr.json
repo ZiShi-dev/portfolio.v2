@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Solutions digitales",
-    "description": "VORZIX conçoit des sites web, applications et plateformes digitales sur-mesure — design premium, technique fiable et accompagnement par une équipe dédiée.",
+    "title": "Création de sites, apps et e-commerce",
+    "description": "VORZIX conçoit des sites web, applications, boutiques e-commerce et solutions digitales sur-mesure — design premium, technique fiable et accompagnement par une équipe dédiée.",
     "jobTitle": "Agence technologique",
     "reviewsTitle": "Avis clients — {brand}",
     "reviewsDescription": "Découvrez les témoignages et avis clients de {brand} : sites web, e-commerce et applications sur-mesure.",
@@ -42,7 +42,7 @@
     "eyebrow": "Agence technologique",
     "title": "Sites, apps et plateformes",
     "titleHighlight": "mesurés au dixième.",
-    "subtitle": "VORZIX conçoit des produits numériques haut de gamme — sites web, applications et plateformes — avec la précision d’un atlas céleste.",
+    "subtitle": "VORZIX conçoit des produits numériques haut de gamme — sites web, applications, e-commerce et plateformes — avec la précision d’un atlas céleste.",
     "tagline": "Sites & apps qui convertissent",
     "bio": "Nous concevons des sites web, applications et produits digitaux sur-mesure — design premium, technique fiable, livraison accompagnée. Une équipe dédiée du brief au lancement."
   },
@@ -1229,7 +1229,8 @@
     "soldPrice": "Vendu {price}",
     "listingIntent": "Ce que je veux en faire",
     "soldWork": "Ce que j’ai fait",
-    "applicationType": "Type d’application"
+    "applicationType": "Type d’application",
+    "relatedOffers": "Offres liées"
   },
   "projectSale": {
     "eyebrow": "Solution disponible",

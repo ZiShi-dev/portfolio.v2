@@ -8,12 +8,14 @@ export function SectionHeading({
   subtitle,
   className,
   id,
+  as: HeadingTag = "h2",
 }: {
   eyebrow: string;
   title: React.ReactNode;
   subtitle?: ReactNode;
   className?: string;
   id?: string;
+  as?: "h1" | "h2";
 }) {
   return (
     <div className={cn("mx-auto max-w-3xl text-center", className)}>
@@ -23,12 +25,12 @@ export function SectionHeading({
         </span>
       </Reveal>
       <Reveal delay={0.05}>
-        <h2
+        <HeadingTag
           id={id}
           className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground rtl:tracking-normal sm:mt-5 sm:text-4xl md:text-5xl"
         >
           {title}
-        </h2>
+        </HeadingTag>
       </Reveal>
       {subtitle && (
         <Reveal delay={0.1}>

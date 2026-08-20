@@ -30,6 +30,11 @@ import type { SaleCtaChannel } from "@/lib/projects/schema";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import type { LocalizedProjectItem } from "@/data/projects";
+import {
+  ProjectTechnologies,
+  RelatedServiceLinks,
+  type RelatedServiceLink,
+} from "@/components/sections/project-related-extras";
 
 export type ProjectSaleContacts = {
   /** Réseaux déjà triés par la priorité de contact réglée en admin. */
@@ -40,6 +45,7 @@ type ProjectSaleDetailProps = {
   project: LocalizedProjectItem;
   nextSlug?: string | null;
   reviews?: ReviewItem[];
+  relatedServices?: RelatedServiceLink[];
   contacts: ProjectSaleContacts;
 };
 
@@ -134,7 +140,7 @@ function SaleContactPanel({
     socials: contacts.socials,
   });
 
-  if (buttons.length === 0) return null;
+  if (project.categoryKey === "personal" || buttons.length === 0) return null;
 
   const heading = project.saleCtaLabel?.trim() || t("contactWays");
 
@@ -230,6 +236,7 @@ export function ProjectSaleDetail({
   project,
   nextSlug,
   reviews = [],
+  relatedServices = [],
   contacts,
 }: ProjectSaleDetailProps) {
   const t = useTranslations("projectSale");
@@ -238,6 +245,7 @@ export function ProjectSaleDetail({
   const cover = project.images[0]?.src;
   const gallery = project.images.slice(1);
   const features = project.features ?? [];
+  const technologies = project.technologies ?? [];
   const intentParagraphs = listingIntentParagraphs(project.listingIntent ?? "");
   const businessTypeIds = Array.from(new Set(project.businessTypeIds ?? []));
   const demoUrl =
@@ -254,6 +262,7 @@ export function ProjectSaleDetail({
   const primaryContact = contactButtons[0] ?? null;
   const primaryLabel =
     project.saleCtaLabel?.trim() || primaryContact?.label || "";
+  const showSaleContact = project.categoryKey !== "personal";
   return (
     <article className="relative overflow-hidden bg-background px-4 pb-28 pt-28 sm:px-6 sm:pb-28 sm:pt-32">
       <div className="pointer-events-none absolute inset-0 celestial-vault opacity-40" aria-hidden />
@@ -282,8 +291,12 @@ export function ProjectSaleDetail({
               <ProjectTypeBadges businessTypeIds={businessTypeIds} className="mt-0" />
             </div>
           ) : null}
+          <ProjectTechnologies
+            items={technologies}
+            title={tCase("technologies")}
+          />
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            {primaryContact ? (
+            {showSaleContact && primaryContact ? (
               <SalePrimaryCta button={primaryContact} label={primaryLabel} />
             ) : null}
             {demoUrl ? (
@@ -300,7 +313,7 @@ export function ProjectSaleDetail({
               </Button>
             ) : null}
           </div>
-          {contactButtons.length > 1 ? (
+          {showSaleContact && contactButtons.length > 1 ? (
             <p className="mt-3">
               <a
                 href="#sale-contact"
@@ -603,6 +616,12 @@ export function ProjectSaleDetail({
 
         <CelestialDivider className="mt-14 sm:mt-16" />
 
+        <RelatedServiceLinks
+          services={relatedServices}
+          title={tCase("relatedOffers")}
+        />
+
+        {showSaleContact ? (
         <Reveal delay={0.08}>
           <section
             id="sale-contact"
@@ -638,6 +657,29 @@ export function ProjectSaleDetail({
             )}
           </section>
         </Reveal>
+        ) : nextSlug ? (
+          <Reveal delay={0.08}>
+            <p className="mt-10 text-center">
+              <Link
+                href={`${routes.projects}/${nextSlug}`}
+                className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
+              >
+                {tCase("ctaNext")}
+              </Link>
+            </p>
+          </Reveal>
+        ) : (
+          <Reveal delay={0.08}>
+            <p className="mt-8 text-center">
+              <Link
+                href={routes.projects}
+                className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
+              >
+                {tCase("backToList")}
+              </Link>
+            </p>
+          </Reveal>
+        )}
       </div>
     </article>
   );

@@ -7,6 +7,7 @@ import {
 import {
   aboutStatsToDisplay,
   DEFAULT_ABOUT_STATS,
+  visibleAboutStats,
 } from "@/data/about-stats";
 
 function valid(overrides: Record<string, unknown> = {}) {
@@ -169,5 +170,30 @@ describe("aboutStatsToDisplay", () => {
   it("conserve l'ordre et les 4 ids publics", () => {
     const ids = aboutStatsToDisplay(DEFAULT_ABOUT_STATS).map((s) => s.id);
     assert.deepEqual(ids, ["years", "clients", "projects", "response"]);
+  });
+
+  it("visibleAboutStats masque les zéros", () => {
+    const hidden = visibleAboutStats(
+      aboutStatsToDisplay({
+        years: 0,
+        clients: 0,
+        projects: 0,
+        responseHours: 0,
+      })
+    );
+    assert.deepEqual(hidden, []);
+
+    const mixed = visibleAboutStats(
+      aboutStatsToDisplay({
+        years: 0,
+        clients: 1,
+        projects: 0,
+        responseHours: 48,
+      })
+    );
+    assert.deepEqual(
+      mixed.map((s) => s.id),
+      ["clients", "response"]
+    );
   });
 });

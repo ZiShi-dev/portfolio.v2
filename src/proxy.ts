@@ -15,6 +15,10 @@ import { ADMIN_ERROR_CODES, ADMIN_ERROR_MESSAGES } from "@/lib/admin/error-codes
 import { handleAdminSession } from "@/lib/supabase/proxy-session";
 import { routing } from "@/i18n/routing";
 import { redirectLegacyLocalePrefix } from "@/lib/i18n/legacy-locale-redirect";
+import {
+  trailingSlashRedirectLocation,
+  wwwToApexRedirectLocation,
+} from "@/lib/seo/url-normalization";
 
 const handleI18nRouting = createIntlMiddleware(routing);
 const CSP_HEADER = "Content-Security-Policy";
@@ -220,6 +224,19 @@ function publicLocalePath(pathname: string) {
 }
 
 export async function proxy(request: NextRequest) {
+  const wwwLocation = wwwToApexRedirectLocation(
+    request.nextUrl.href,
+    request.headers.get("host")
+  );
+  if (wwwLocation) {
+    return NextResponse.redirect(wwwLocation, 308);
+  }
+
+  const slashLocation = trailingSlashRedirectLocation(request.nextUrl.href);
+  if (slashLocation) {
+    return NextResponse.redirect(slashLocation, 308);
+  }
+
   const path = request.nextUrl.pathname;
   const localized = publicLocalePath(path);
 

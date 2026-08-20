@@ -40,6 +40,13 @@ export function aboutStatsToDisplay(values: AboutStatsValues): AboutStatDisplay[
   ];
 }
 
+/** Ne pas afficher des zéros inventés ou non renseignés. */
+export function visibleAboutStats(
+  stats: AboutStatDisplay[]
+): AboutStatDisplay[] {
+  return stats.filter((stat) => Number.isFinite(stat.value) && stat.value > 0);
+}
+
 /** @deprecated Préférer getAboutStats() + aboutStatsToDisplay() */
 export const aboutStats = aboutStatsToDisplay(DEFAULT_ABOUT_STATS);
 

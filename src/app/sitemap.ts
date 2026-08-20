@@ -13,8 +13,13 @@ import {
 import { listPublishedServiceSlugs } from "@/lib/services/store";
 import { projectCatalog } from "@/data/projects";
 import { locales } from "@/i18n/routing";
+import { isSupabaseServiceConfigured } from "@/lib/supabase/service";
+import {
+  parseSitemapDate,
+  uniqueAbsoluteHttpUrls,
+} from "@/lib/seo/sitemap-utils";
 
-/** Pages indexables — pas d’admin, pas de laisser-un-avis, pas de redirects vides. */
+/** Pages indexables — pas d’admin, pas de laisser-un-avis, pas d’API. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages: Array<{
     path: string;
@@ -32,10 +37,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: routes.legal, changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  const [projectRows, services] = await Promise.all([
-    listPublishedProjectRows(),
-    listPublishedServiceSlugs(),
-  ]);
+  let projectRows: Awaited<ReturnType<typeof listPublishedProjectRows>> = null;
+  let services: { slug: string; updated_at: string }[] = [];
+
+  try {
+    [projectRows, services] = await Promise.all([
+      listPublishedProjectRows(),
+      listPublishedServiceSlugs(),
+    ]);
+  } catch (err) {
+    console.error("[sitemap] fetch failed", err);
+  }
+
   const projectEntries =
     projectRows && projectRows.length > 0
       ? projectRows.map((project) => ({
@@ -44,29 +57,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           images: [
             projectCoverUrl(project),
             ...project.images.map((image) => image.url),
-          ].filter((url): url is string => Boolean(url)),
+          ],
         }))
-      : projectCatalog.map((project) => ({
-          slug: project.id,
-          updated_at: null,
-          images: project.images.map((image) => image.src),
-        }));
+      : isSupabaseServiceConfigured()
+        ? []
+        : projectCatalog.map((project) => ({
+            slug: project.id,
+            updated_at: null as string | null,
+            images: project.images.map((image) => image.src),
+          }));
+
   for (const cs of projectEntries) {
+    if (!cs.slug) continue;
+    const lastModified = parseSitemapDate(cs.updated_at);
+    const images = uniqueAbsoluteHttpUrls(cs.images, absoluteUrl);
     pages.push({
       path: `${routes.projects}/${cs.slug}`,
       changeFrequency: "monthly",
       priority: 0.75,
-      ...(cs.updated_at ? { lastModified: new Date(cs.updated_at) } : {}),
-      images: [...new Set(cs.images.map((image) => absoluteUrl(image)))],
+      ...(lastModified ? { lastModified } : {}),
+      ...(images.length > 0 ? { images } : {}),
     });
   }
 
   for (const svc of services) {
+    if (!svc.slug) continue;
+    const lastModified = parseSitemapDate(svc.updated_at);
     pages.push({
       path: serviceDetailPath(svc.slug),
       changeFrequency: "monthly",
       priority: 0.7,
-      lastModified: new Date(svc.updated_at),
+      ...(lastModified ? { lastModified } : {}),
     });
   }
 

@@ -21,6 +21,7 @@ type ReviewsPageProps = {
 
 export function ReviewsPage({ reviews }: ReviewsPageProps) {
   const t = useTranslations("reviews");
+  const tCommon = useTranslations("common");
   const [page, setPage] = useState(1);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const { items, totalPages, total, page: currentPage } = paginateReviews(
@@ -30,10 +31,11 @@ export function ReviewsPage({ reviews }: ReviewsPageProps) {
 
   return (
     <section className="relative overflow-x-clip bg-background pb-20 sm:pb-24 lg:pb-28">
-      <PageBackBar href={routes.home} label="Retour à l'accueil" />
+      <PageBackBar href={routes.home} label={tCommon("backHome")} />
 
       <div className={pageShellClass}>
         <SectionHeading
+          as="h1"
           className="mt-8"
           eyebrow={t("eyebrow")}
           title={

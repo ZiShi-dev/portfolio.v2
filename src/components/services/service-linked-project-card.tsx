@@ -30,7 +30,7 @@ export function ServiceLinkedProjectCard({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={project.image}
-              alt=""
+              alt={project.title}
               className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
               loading="lazy"
               decoding="async"

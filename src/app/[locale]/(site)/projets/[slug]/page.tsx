@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { CaseStudyDetail } from "@/components/sections/case-study-detail";
 import { ProjectSaleDetail } from "@/components/sections/project-sale-detail";
 import { brand, getFooterSocials } from "@/lib/brand";
@@ -19,6 +19,7 @@ import {
 import type { Locale } from "@/i18n/routing";
 import { JsonLd } from "@/components/json-ld";
 import { headers } from "next/headers";
+import { getLinkedServicesForProject } from "@/lib/services/site";
 
 type PageProps = {
   params: Promise<{ slug: string; locale: string }>;
@@ -43,9 +44,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const locale = (await getLocale()) as Locale;
-  const project = await getSiteProjectBySlug(locale, slug);
+  const { slug, locale } = await params;
+  const project = await getSiteProjectBySlug(locale as Locale, slug);
   if (!project) {
     return { title: brand.name, robots: { index: false, follow: false } };
   }
@@ -57,7 +57,7 @@ export async function generateMetadata({
     title,
     description,
     path: `${routes.projects}/${project.slug ?? slug}`,
-    locale,
+    locale: locale as Locale,
     // La convention locale génère une carte PNG à partir de la couverture,
     // y compris lorsque l'image source est un SVG.
     image: null,
@@ -65,8 +65,8 @@ export async function generateMetadata({
 }
 
 export default async function CaseStudyPage({ params }: PageProps) {
-  const { slug } = await params;
-  const locale = (await getLocale()) as Locale;
+  const { slug, locale: localeParam } = await params;
+  const locale = localeParam as Locale;
   const project = await getSiteProjectBySlug(locale, slug);
   if (!project) notFound();
 
@@ -79,6 +79,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
     next && next.id !== project.id ? next.slug ?? next.id : null;
 
   const reviews = await getPublishedReviewsForProject(project.id);
+  const relatedServices = await getLinkedServicesForProject(project.id, locale);
   const t = await getTranslations("projects");
   const nonce = (await headers()).get("x-nonce") ?? undefined;
   const projectUrl = localizedAbsoluteUrl(
@@ -154,6 +155,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           project={project}
           nextSlug={nextSlug}
           reviews={reviews}
+          relatedServices={relatedServices}
           contacts={{ socials }}
         />
       </>
@@ -167,6 +169,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
         project={project}
         nextSlug={nextSlug}
         reviews={reviews}
+        relatedServices={relatedServices}
       />
     </>
   );

@@ -12,6 +12,7 @@ export default function robots(): MetadataRoute.Robots {
         "/ar/laisser-un-avis",
         "/admin",
         "/admin/",
+        "/api/",
       ],
     },
     sitemap: `${absoluteUrl("/").replace(/\/$/, "")}/sitemap.xml`,

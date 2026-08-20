@@ -86,6 +86,7 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
 
       <div className={pageShellClass}>
         <SectionHeading
+          as="h1"
           className="mt-8"
           eyebrow={t("page.eyebrow")}
           title={

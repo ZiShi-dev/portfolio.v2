@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getLocale, getTranslations } from "next-intl/server";
+import { headers } from "next/headers";
+import { JsonLd } from "@/components/json-ld";
 import { brand } from "@/lib/brand";
-import { createPageMetadata, routes } from "@/lib/routes";
+import {
+  createPageMetadata,
+  localizedAbsoluteUrl,
+  routes,
+} from "@/lib/routes";
 import { getSiteProjects } from "@/lib/projects/site";
+import { buildListingJsonLd } from "@/lib/seo/listing-jsonld";
 import type { Locale } from "@/i18n/routing";
 
 const ProjectsPage = dynamic(
@@ -28,6 +35,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProjetsRoute() {
   const locale = (await getLocale()) as Locale;
+  const t = await getTranslations("projects");
   const projects = await getSiteProjects(locale);
-  return <ProjectsPage projects={projects} />;
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const listingUrl = localizedAbsoluteUrl(routes.projects, locale);
+
+  return (
+    <>
+      <JsonLd
+        nonce={nonce}
+        data={buildListingJsonLd({
+          name: t("page.title"),
+          url: listingUrl,
+          items: projects.map((project) => ({
+            name: project.title,
+            url: localizedAbsoluteUrl(
+              `${routes.projects}/${project.slug ?? project.id}`,
+              locale
+            ),
+          })),
+        })}
+      />
+      <ProjectsPage projects={projects} />
+    </>
+  );
 }

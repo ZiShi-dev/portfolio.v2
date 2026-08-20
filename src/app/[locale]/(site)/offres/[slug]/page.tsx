@@ -131,8 +131,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
   };
 
   return (
-    <main
-      id="main-content"
+    <div
       className="relative min-h-dvh overflow-hidden bg-background"
     >
       <JsonLd data={serviceJsonLd} nonce={nonce} />
@@ -284,6 +283,6 @@ export default async function OffreDetailPage({ params }: PageProps) {
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

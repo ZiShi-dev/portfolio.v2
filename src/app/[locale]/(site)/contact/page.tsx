@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ContactPageTrigger } from "@/components/contact-page-trigger";
 import { Contact } from "@/components/sections/contact";
 import { PageBackBar } from "@/components/page-back-link";
 import { brand } from "@/lib/brand";
@@ -27,7 +26,6 @@ export default async function ContactPage() {
 
   return (
     <>
-      <ContactPageTrigger />
       <PageBackBar href={routes.home} label={t("backHome")} />
       <Contact contactEmail={contactEmail} />
     </>

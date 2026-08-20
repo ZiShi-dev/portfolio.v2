@@ -312,13 +312,13 @@ export function Contact({ contactEmail }: ContactProps) {
           <span className="inline-flex items-center gap-2 rounded-full border border-border-gold bg-background/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
             <Mail className="h-3.5 w-3.5" aria-hidden /> {t("eyebrow")}
           </span>
-          <h2
+          <h1
             id="contact-heading"
             className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
           >
             {t("title")}{" "}
             <span className="text-primary">{t("titleHighlight")}</span>
-          </h2>
+          </h1>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
             {t("subtitle")}
           </p>

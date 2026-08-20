@@ -15,17 +15,24 @@ import type { ReviewItem } from "@/data/reviews";
 import { isSafeHttpUrl } from "@/lib/review-schema";
 import { routes } from "@/lib/routes";
 import type { LocalizedProjectItem } from "@/data/projects";
+import {
+  ProjectTechnologies,
+  RelatedServiceLinks,
+  type RelatedServiceLink,
+} from "@/components/sections/project-related-extras";
 
 type CaseStudyDetailProps = {
   project: LocalizedProjectItem;
   nextSlug?: string | null;
   reviews?: ReviewItem[];
+  relatedServices?: RelatedServiceLink[];
 };
 
 export function CaseStudyDetail({
   project,
   nextSlug,
   reviews = [],
+  relatedServices = [],
 }: CaseStudyDetailProps) {
   const t = useTranslations("caseStudy");
   const tReviews = useTranslations("reviews");
@@ -34,6 +41,7 @@ export function CaseStudyDetail({
   const liveUrl =
     project.link && isSafeHttpUrl(project.link) ? project.link : null;
   const features = project.features ?? [];
+  const technologies = project.technologies ?? [];
   const businessTypeIds = Array.from(
     new Set(project.businessTypeIds ?? [])
   );
@@ -64,6 +72,10 @@ export function CaseStudyDetail({
               />
             </div>
           ) : null}
+          <ProjectTechnologies
+            items={technologies}
+            title={t("technologies")}
+          />
         </Reveal>
 
         {cover ? (
@@ -225,6 +237,12 @@ export function CaseStudyDetail({
 
         <CelestialDivider className="mt-14 sm:mt-16" />
 
+        <RelatedServiceLinks
+          services={relatedServices}
+          title={t("relatedOffers")}
+        />
+
+        {project.categoryKey !== "personal" ? (
         <Reveal delay={0.08}>
           <section className="mt-10 rounded-xl border border-border-gold bg-surface-elevated/90 p-6 text-center sm:p-10">
             <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
@@ -262,6 +280,32 @@ export function CaseStudyDetail({
             </div>
           </section>
         </Reveal>
+        ) : (
+          nextSlug ? (
+            <Reveal delay={0.08}>
+              <p className="mt-10 text-center">
+                <Link
+                  href={`${routes.projects}/${nextSlug}`}
+                  className="inline-flex min-h-11 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {t("ctaNext")}
+                  <ArrowRight className="h-4 w-4" aria-hidden />
+                </Link>
+              </p>
+            </Reveal>
+          ) : (
+            <Reveal delay={0.08}>
+              <p className="mt-10 text-center">
+                <Link
+                  href={routes.projects}
+                  className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {t("backToList")}
+                </Link>
+              </p>
+            </Reveal>
+          )
+        )}
       </div>
     </article>
   );
