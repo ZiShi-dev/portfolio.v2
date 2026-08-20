@@ -268,13 +268,6 @@ export function ProjectSaleDetail({
   });
   const primaryContact = contactButtons[0] ?? null;
   const primaryLabel = primaryContact?.label || "";
-  const listingSlug = project.slug ?? project.id;
-  const purchaseLabel = t("ctaOrder");
-  const purchaseHref = startProjectUrl({
-    listingSlug,
-    projectType: "ecommerce",
-    intent: "buy",
-  });
   const similarProjectLabel =
     project.saleCtaLabel?.trim() || t("ctaSimilarProject");
   const similarProjectHref = startProjectUrl({
@@ -301,13 +294,6 @@ export function ProjectSaleDetail({
             <p className="mt-5 font-mono text-3xl tracking-wide text-primary sm:text-4xl">
               {project.listingPriceLabel}
             </p>
-          ) : null}
-          {showSaleContact ? (
-            <div className="mt-5">
-              <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
-                <Link href={purchaseHref}>{purchaseLabel}</Link>
-              </Button>
-            </div>
           ) : null}
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {project.desc}
