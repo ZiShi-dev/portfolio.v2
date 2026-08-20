@@ -268,8 +268,7 @@ export function ProjectSaleDetail({
   });
   const primaryContact = contactButtons[0] ?? null;
   const primaryLabel = primaryContact?.label || "";
-  const similarProjectLabel =
-    project.saleCtaLabel?.trim() || t("ctaSimilarProject");
+  const similarProjectLabel = t("ctaSimilarProject");
   const similarProjectHref = startProjectUrl({
     projectType: "ecommerce",
     intent: "start",
