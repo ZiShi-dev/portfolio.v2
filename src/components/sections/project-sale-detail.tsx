@@ -27,7 +27,7 @@ import {
   type SaleCtaButton,
 } from "@/lib/projects/sale-cta";
 import type { SaleCtaChannel } from "@/lib/projects/schema";
-import { routes } from "@/lib/routes";
+import { routes, startProjectUrl } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import type { LocalizedProjectItem } from "@/data/projects";
 import {
@@ -212,15 +212,22 @@ function SalePrimaryCta({
   button,
   label,
   className,
+  variant = "default",
 }: {
   button: SaleCtaButton;
   label: string;
   className?: string;
+  variant?: "default" | "outline";
 }) {
   const Icon = CHANNEL_ICONS[button.id];
   const external = button.href.startsWith("http");
   return (
-    <Button asChild size="lg" className={cn("min-h-12 w-full sm:w-auto", className)}>
+    <Button
+      asChild
+      size="lg"
+      variant={variant}
+      className={cn("min-h-12 w-full sm:w-auto", className)}
+    >
       <a
         href={button.href}
         {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -262,6 +269,13 @@ export function ProjectSaleDetail({
   const primaryContact = contactButtons[0] ?? null;
   const primaryLabel =
     project.saleCtaLabel?.trim() || primaryContact?.label || "";
+  const listingSlug = project.slug ?? project.id;
+  const orderLabel = project.saleCtaLabel?.trim() || t("ctaOrder");
+  const inquiryHref = startProjectUrl({
+    listingSlug,
+    projectType: "ecommerce",
+    intent: "buy",
+  });
   const showSaleContact = project.categoryKey !== "personal";
   return (
     <article className="relative overflow-hidden bg-background px-4 pb-28 pt-28 sm:px-6 sm:pb-28 sm:pt-32">
@@ -283,6 +297,13 @@ export function ProjectSaleDetail({
               {project.listingPriceLabel}
             </p>
           ) : null}
+          {showSaleContact ? (
+            <div className="mt-5">
+              <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
+                <Link href={inquiryHref}>{orderLabel}</Link>
+              </Button>
+            </div>
+          ) : null}
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {project.desc}
           </p>
@@ -296,9 +317,6 @@ export function ProjectSaleDetail({
             title={tCase("technologies")}
           />
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            {showSaleContact && primaryContact ? (
-              <SalePrimaryCta button={primaryContact} label={primaryLabel} />
-            ) : null}
             {demoUrl ? (
               <Button
                 asChild
@@ -311,6 +329,14 @@ export function ProjectSaleDetail({
                   <ExternalLink className="h-4 w-4" aria-hidden />
                 </a>
               </Button>
+            ) : null}
+            {showSaleContact && primaryContact ? (
+              <SalePrimaryCta
+                button={primaryContact}
+                label={primaryLabel}
+                className="sm:w-auto"
+                variant="outline"
+              />
             ) : null}
           </div>
           {showSaleContact && contactButtons.length > 1 ? (
@@ -449,6 +475,24 @@ export function ProjectSaleDetail({
             ) : null}
           </section>
         </Reveal>
+
+        {project.objective ? (
+          <Reveal delay={0.05}>
+            <section className="mt-12 sm:mt-14" aria-labelledby="sale-start-heading">
+              <h2
+                id="sale-start-heading"
+                className="font-display text-2xl font-semibold text-foreground sm:text-3xl"
+              >
+                {t("gettingStartedTitle")}
+              </h2>
+              <GlowCard className="mt-6">
+                <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  {project.objective}
+                </p>
+              </GlowCard>
+            </section>
+          </Reveal>
+        ) : null}
 
         <Reveal delay={0.05}>
           <section className="mt-12 sm:mt-14" aria-labelledby="sale-process-heading">
@@ -635,6 +679,11 @@ export function ProjectSaleDetail({
             </p>
             <div className="mt-8">
               <SaleContactPanel project={project} contacts={contacts} plain />
+              <p className="mt-6">
+                <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
+                  <Link href={inquiryHref}>{orderLabel}</Link>
+                </Button>
+              </p>
             </div>
             {nextSlug ? (
               <p className="mt-8">

@@ -1235,6 +1235,7 @@
     "heroKicker": "Ready to customize",
     "heroKickerShop": "E-commerce shop ready to customize",
     "ctaInterest": "I'm interested in {title}",
+    "ctaOrder": "I want this shop",
     "ctaDemo": "View the demo",
     "contactWays": "Get in touch",
     "contactWaysHint": "Pick the way that suits you.",
@@ -1248,6 +1249,7 @@
     "galleryMore": "See {count} more previews",
     "galleryLess": "Show fewer previews",
     "processTitle": "How it works",
+    "gettingStartedTitle": "To get started",
     "process": {
       "interest": {
         "title": "You choose this solution",

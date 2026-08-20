@@ -1235,6 +1235,7 @@
     "heroKicker": "جاهز للتخصيص",
     "heroKickerShop": "متجر إلكتروني جاهز للتخصيص",
     "ctaInterest": "أنا مهتم بـ {title}",
+    "ctaOrder": "أريد هذا المتجر",
     "ctaDemo": "عرض التجربة",
     "contactWays": "تواصلوا معنا",
     "contactWaysHint": "اختاروا الوسيلة التي تناسبكم.",
@@ -1248,6 +1249,7 @@
     "galleryMore": "عرض {count} معاينات أخرى",
     "galleryLess": "تقليل المعاينات",
     "processTitle": "كيف يتم الأمر",
+    "gettingStartedTitle": "للبدء",
     "process": {
       "interest": {
         "title": "تختارون هذا الحل",

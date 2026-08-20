@@ -1237,6 +1237,7 @@
     "heroKicker": "Prête à personnaliser",
     "heroKickerShop": "Boutique e-commerce prête à personnaliser",
     "ctaInterest": "Je suis intéressé par {title}",
+    "ctaOrder": "Je veux ce magasin",
     "ctaDemo": "Voir la démo",
     "contactWays": "Nous joindre",
     "contactWaysHint": "Choisissez le moyen qui vous convient.",
@@ -1250,6 +1251,7 @@
     "galleryMore": "Voir {count} aperçus de plus",
     "galleryLess": "Réduire les aperçus",
     "processTitle": "Comment ça marche",
+    "gettingStartedTitle": "Pour démarrer",
     "process": {
       "interest": {
         "title": "Vous choisissez cette solution",
