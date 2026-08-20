@@ -1260,8 +1260,8 @@
         "desc": "Dans un délai de 7 à 14 jours : nom, couleurs, style et contenus convenus avant le travail sont adaptés à votre marque."
       },
       "launch": {
-        "title": "Mise en ligne",
-        "desc": "Nous prenons en charge la configuration et la mise en ligne complète de votre boutique — c’est inclus dans le prix du projet. Nous vous aidons aussi à choisir l’hébergement et les services adaptés à votre trafic, puis nous les configurons et les connectons à votre site. Les coûts des services externes (nom de domaine, hébergement, forfaits payants…) restent à votre charge ; les comptes et abonnements restent les vôtres."
+        "title": "Lancement",
+        "desc": "Nous prenons en charge la préparation et le déploiement complet de votre boutique, sans coût supplémentaire de mise en place. Nous évaluons vos besoins, vous recommandons des solutions d’hébergement et des services adaptés, puis nous nous occupons de leur configuration et de leur connexion à Quotishop."
       },
       "sell": {
         "title": "Vous commencez à vendre",
@@ -1269,9 +1269,9 @@
       }
     },
     "costsIncludedLabel": "Prix de la solution",
-    "costsIncluded": "Ce montant couvre la boutique déjà développée, la personnalisation indiquée, la mise en ligne technique complète et l’accompagnement décrit sur cette page — rien d’autre n’est ajouté d’office.",
-    "costsThirdLabel": "Services tiers",
-    "costsThird": "La mise en ligne technique (analyse, recommandation, configuration et déploiement) est incluse dans le prix. En revanche, les services externes — nom de domaine, hébergement, base de données payante, stockage, e-mails — restent à votre charge ; les comptes et abonnements restent les vôtres. Une passerelle de paiement en ligne peut être ajoutée séparément, à la demande. Le paiement à la livraison fait partie du parcours boutique.",
+    "costsIncluded": "Les 600 € comprennent Quotishop, le code source complet de votre copie, la personnalisation prévue, la configuration technique, la préparation à la production, l’aide au choix de l’infrastructure et le déploiement initial — pas les factures récurrentes des fournisseurs externes.",
+    "costsThirdLabel": "Services externes",
+    "costsThird": "La configuration technique et le déploiement sont inclus dans le prix du projet. Les éventuels coûts des services externes — nom de domaine, hébergement, base de données, stockage, e-mails ou autres services tiers — restent à la charge du client. Nous pouvons vous recommander les solutions adaptées à votre boutique et effectuer leur configuration. Les comptes et abonnements restent à votre nom afin que vous gardiez le contrôle de votre infrastructure.",
     "proofTitle": "La boutique en images",
     "proofSubtitle": "Aperçus du produit tel qu’il existe aujourd’hui.",
     "faqTitle": "Questions fréquentes",
@@ -1282,7 +1282,7 @@
       },
       "included": {
         "q": "Qu’est-ce qui est inclus dans le prix ?",
-        "a": "Les fonctionnalités listées sur cette page, le code source complet, la personnalisation convenue, la mise en ligne technique complète (hébergement, base de données, domaine, déploiement et vérification), et un mois d’ajustements visuels simples après livraison — sans nouvelles pages ni nouvelles fonctions. Les services externes (domaine, hébergement payant…) restent à votre charge."
+        "a": "Quotishop, le code source complet de votre copie, la personnalisation convenue, la configuration technique, la préparation à la production, l’aide au choix de l’infrastructure, le déploiement initial et la connexion du domaine et des services nécessaires, plus un mois d’ajustements visuels simples — sans nouvelles pages ni nouvelles fonctions. Les abonnements des fournisseurs externes restent à votre charge."
       },
       "catalog": {
         "q": "Qui saisit les produits ?",
