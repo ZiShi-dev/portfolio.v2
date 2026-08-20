@@ -142,7 +142,7 @@ function SaleContactPanel({
 
   if (project.categoryKey === "personal" || buttons.length === 0) return null;
 
-  const heading = project.saleCtaLabel?.trim() || t("contactWays");
+  const heading = t("contactWays");
 
   return (
     <div
@@ -267,14 +267,19 @@ export function ProjectSaleDetail({
     socials: contacts.socials,
   });
   const primaryContact = contactButtons[0] ?? null;
-  const primaryLabel =
-    project.saleCtaLabel?.trim() || primaryContact?.label || "";
+  const primaryLabel = primaryContact?.label || "";
   const listingSlug = project.slug ?? project.id;
-  const orderLabel = project.saleCtaLabel?.trim() || t("ctaOrder");
-  const inquiryHref = startProjectUrl({
+  const purchaseLabel = t("ctaOrder");
+  const purchaseHref = startProjectUrl({
     listingSlug,
     projectType: "ecommerce",
     intent: "buy",
+  });
+  const similarProjectLabel =
+    project.saleCtaLabel?.trim() || t("ctaSimilarProject");
+  const similarProjectHref = startProjectUrl({
+    projectType: "ecommerce",
+    intent: "start",
   });
   const showSaleContact = project.categoryKey !== "personal";
   return (
@@ -300,7 +305,7 @@ export function ProjectSaleDetail({
           {showSaleContact ? (
             <div className="mt-5">
               <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
-                <Link href={inquiryHref}>{orderLabel}</Link>
+                <Link href={purchaseHref}>{purchaseLabel}</Link>
               </Button>
             </div>
           ) : null}
@@ -681,7 +686,7 @@ export function ProjectSaleDetail({
               <SaleContactPanel project={project} contacts={contacts} plain />
               <p className="mt-6">
                 <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
-                  <Link href={inquiryHref}>{orderLabel}</Link>
+                  <Link href={similarProjectHref}>{similarProjectLabel}</Link>
                 </Button>
               </p>
             </div>
