@@ -140,7 +140,7 @@ function SaleContactPanel({
     socials: contacts.socials,
   });
 
-  if (buttons.length === 0) return null;
+  if (project.categoryKey === "personal" || buttons.length === 0) return null;
 
   const heading = project.saleCtaLabel?.trim() || t("contactWays");
 
@@ -262,6 +262,7 @@ export function ProjectSaleDetail({
   const primaryContact = contactButtons[0] ?? null;
   const primaryLabel =
     project.saleCtaLabel?.trim() || primaryContact?.label || "";
+  const showSaleContact = project.categoryKey !== "personal";
   return (
     <article className="relative overflow-hidden bg-background px-4 pb-28 pt-28 sm:px-6 sm:pb-28 sm:pt-32">
       <div className="pointer-events-none absolute inset-0 celestial-vault opacity-40" aria-hidden />
@@ -295,7 +296,7 @@ export function ProjectSaleDetail({
             title={tCase("technologies")}
           />
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            {primaryContact ? (
+            {showSaleContact && primaryContact ? (
               <SalePrimaryCta button={primaryContact} label={primaryLabel} />
             ) : null}
             {demoUrl ? (
@@ -312,7 +313,7 @@ export function ProjectSaleDetail({
               </Button>
             ) : null}
           </div>
-          {contactButtons.length > 1 ? (
+          {showSaleContact && contactButtons.length > 1 ? (
             <p className="mt-3">
               <a
                 href="#sale-contact"
@@ -620,6 +621,7 @@ export function ProjectSaleDetail({
           title={tCase("relatedOffers")}
         />
 
+        {showSaleContact ? (
         <Reveal delay={0.08}>
           <section
             id="sale-contact"
@@ -655,6 +657,29 @@ export function ProjectSaleDetail({
             )}
           </section>
         </Reveal>
+        ) : nextSlug ? (
+          <Reveal delay={0.08}>
+            <p className="mt-10 text-center">
+              <Link
+                href={`${routes.projects}/${nextSlug}`}
+                className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
+              >
+                {tCase("ctaNext")}
+              </Link>
+            </p>
+          </Reveal>
+        ) : (
+          <Reveal delay={0.08}>
+            <p className="mt-8 text-center">
+              <Link
+                href={routes.projects}
+                className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
+              >
+                {tCase("backToList")}
+              </Link>
+            </p>
+          </Reveal>
+        )}
       </div>
     </article>
   );
