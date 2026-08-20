@@ -1269,7 +1269,7 @@
       }
     },
     "costsIncludedLabel": "Prix de la solution",
-    "costsIncluded": "Les 600 € comprennent Quotishop, le code source complet de votre copie, la personnalisation prévue, la configuration technique, la préparation à la production, l’aide au choix de l’infrastructure, le déploiement initial et la connexion du domaine et des services nécessaires — pas les factures récurrentes des fournisseurs externes.",
+    "costsIncluded": "Les 600 € comprennent Quotishop, le code source complet de votre copie, la personnalisation prévue, la configuration technique, la préparation à la production, l’aide au choix de l’infrastructure, le déploiement initial, la connexion du domaine et des services nécessaires, ainsi que l’ajout et la configuration d’un moyen de paiement — pas les factures récurrentes des fournisseurs externes.",
     "costsThirdLabel": "Services externes",
     "costsThird": "La configuration technique et le déploiement sont inclus dans le prix du projet. Les éventuels coûts des services externes — nom de domaine, hébergement, base de données, stockage, e-mails ou autres services tiers — restent à la charge du client. Nous pouvons vous recommander les solutions adaptées à votre boutique et effectuer leur configuration. Les comptes et abonnements restent à votre nom afin que vous gardiez le contrôle de votre infrastructure.",
     "proofTitle": "La boutique en images",
@@ -1282,7 +1282,7 @@
       },
       "included": {
         "q": "Qu’est-ce qui est inclus dans le prix ?",
-        "a": "Quotishop, le code source complet de votre copie, la personnalisation convenue, la configuration technique, la préparation à la production, l’aide au choix de l’infrastructure, le déploiement initial et la connexion du domaine et des services nécessaires, plus un mois d’ajustements visuels simples — sans nouvelles pages ni nouvelles fonctions. Les abonnements des fournisseurs externes restent à votre charge."
+        "a": "Quotishop, le code source complet de votre copie, la personnalisation convenue, la configuration technique, la préparation à la production, l’aide au choix de l’infrastructure, le déploiement initial, la connexion du domaine et des services nécessaires, l’ajout et la configuration d’un moyen de paiement, plus un mois d’ajustements visuels simples — sans nouvelles pages ni nouvelles fonctions. Les abonnements des fournisseurs externes et les frais du prestataire de paiement restent à votre charge."
       },
       "catalog": {
         "q": "Qui saisit les produits ?",

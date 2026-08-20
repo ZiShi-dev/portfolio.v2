@@ -1267,7 +1267,7 @@
       }
     },
     "costsIncludedLabel": "Solution price",
-    "costsIncluded": "The €600 includes Quotishop, the complete source code of your copy, the planned customisation, technical configuration, production preparation, infrastructure choice support, initial deployment and connection of the domain and required services — not recurring bills from external providers.",
+    "costsIncluded": "The €600 includes Quotishop, the complete source code of your copy, the planned customisation, technical configuration, production preparation, infrastructure choice support, initial deployment, connection of the domain and required services, and payment method setup — not recurring bills from external providers.",
     "costsThirdLabel": "External services",
     "costsThird": "Technical configuration and deployment are included in the project price. Any external service costs — such as the domain name, hosting, database, storage, email services or other third-party services — remain the client's responsibility. We can recommend solutions suited to your store and configure them for you, while the accounts and subscriptions remain in your name so that you retain control of your infrastructure.",
     "proofTitle": "The shop in pictures",
@@ -1280,7 +1280,7 @@
       },
       "included": {
         "q": "What does the price include?",
-        "a": "Quotishop, the complete source code of your copy, the agreed customisation, technical configuration, production preparation, infrastructure choice support, initial deployment and connection of the domain and required services, plus one month of simple visual adjustments — not new pages or new features. Recurring bills from external providers remain the client's responsibility."
+        "a": "Quotishop, the complete source code of your copy, the agreed customisation, technical configuration, production preparation, infrastructure choice support, initial deployment, connection of the domain and required services, payment method setup, plus one month of simple visual adjustments — not new pages or new features. Recurring bills from external providers and payment provider fees remain the client's responsibility."
       },
       "catalog": {
         "q": "Who enters the products?",
