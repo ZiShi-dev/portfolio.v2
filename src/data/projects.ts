@@ -13,6 +13,13 @@ export type ProjectCatalogItem = {
 /** Fallback local si la BDD n’a aucun projet publié — uniquement des projets réels. */
 export const projectCatalog: ProjectCatalogItem[] = [
   {
+    id: "quotishop",
+    categoryKey: "for_sale",
+    businessTypeIds: ["ecommerce"],
+    images: [],
+    link: "https://quotishop-five.vercel.app/",
+  },
+  {
     id: "savoraille",
     categoryKey: "personal",
     businessTypeIds: ["showcase", "booking"],

@@ -263,6 +263,10 @@
       "other": "Other"
     },
     "items": {
+      "quotishop": {
+        "title": "Quotishop",
+        "desc": "A ready online shop, in three languages, with your name and colors — without building from scratch."
+      },
       "savoraille": {
         "title": "Savoraille — Restaurant",
         "desc": "A live restaurant site: table booking, an interactive seasonal menu, takeaway and delivery."
