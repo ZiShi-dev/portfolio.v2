@@ -16,12 +16,7 @@ export const projectCatalog: ProjectCatalogItem[] = [
     id: "savoraille",
     categoryKey: "personal",
     businessTypeIds: ["showcase", "booking"],
-    images: [
-      { src: "/projects/savoraille.jpg", labelKey: "home" },
-      { src: "/projects/savoraille-carte.jpg", labelKey: "menu" },
-      { src: "/projects/savoraille-reservation.jpg", labelKey: "booking" },
-      { src: "/projects/savoraille-histoire.jpg", labelKey: "story" },
-    ],
+    images: [],
     link: "https://savoraille.vorzix.com/fr",
   },
   {

@@ -37,25 +37,9 @@ SELECT
   ),
   'personal',
   ARRAY['showcase', 'booking'],
-  jsonb_build_array(
-    jsonb_build_object(
-      'url', '/projects/savoraille.jpg',
-      'label', jsonb_build_object('fr', $$Accueil$$, 'en', $$Home$$, 'ar', $$الرئيسية$$)
-    ),
-    jsonb_build_object(
-      'url', '/projects/savoraille-carte.jpg',
-      'label', jsonb_build_object('fr', $$La carte$$, 'en', $$The menu$$, 'ar', $$القائمة$$)
-    ),
-    jsonb_build_object(
-      'url', '/projects/savoraille-reservation.jpg',
-      'label', jsonb_build_object('fr', $$Réservation$$, 'en', $$Booking$$, 'ar', $$الحجز$$)
-    ),
-    jsonb_build_object(
-      'url', '/projects/savoraille-histoire.jpg',
-      'label', jsonb_build_object('fr', $$Notre histoire$$, 'en', $$Our story$$, 'ar', $$قصتنا$$)
-    )
-  ),
-  '/projects/savoraille.jpg',
+  -- Visuels laissés vides : à déposer ensuite via /admin/projects.
+  '[]'::jsonb,
+  NULL,
   'https://savoraille.vorzix.com/fr',
   15, true, true, COALESCE(existing.published_at, now()),
   ARRAY[]::text[],
@@ -123,8 +107,13 @@ ON CONFLICT (slug) DO UPDATE SET
   description = EXCLUDED.description,
   kind = 'personal',
   business_type_ids = EXCLUDED.business_type_ids,
-  images = EXCLUDED.images,
-  cover_image = EXCLUDED.cover_image,
+  -- Ne pas écraser des photos déjà ajoutées dans l’admin.
+  images = CASE
+    WHEN jsonb_array_length(COALESCE(public.projects.images, '[]'::jsonb)) > 0
+      THEN public.projects.images
+    ELSE EXCLUDED.images
+  END,
+  cover_image = COALESCE(public.projects.cover_image, EXCLUDED.cover_image),
   link = EXCLUDED.link,
   sort_order = EXCLUDED.sort_order,
   published = true,

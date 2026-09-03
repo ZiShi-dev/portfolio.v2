@@ -268,13 +268,7 @@
     "items": {
       "savoraille": {
         "title": "Savoraille — Restaurant",
-        "desc": "Site restaurant déjà en ligne : réservation de table, carte de saison interactive, commande à emporter et livraison.",
-        "images": {
-          "home": "Accueil",
-          "menu": "La carte",
-          "booking": "Réservation",
-          "story": "Notre histoire"
-        }
+        "desc": "Site restaurant déjà en ligne : réservation de table, carte de saison interactive, commande à emporter et livraison."
       },
       "nova": {
         "title": "Nova — Dashboard",

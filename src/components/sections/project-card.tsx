@@ -38,7 +38,7 @@ export function ProjectCard({
     <>
       <div className="relative">
         <ProjectCardPreview
-          image={project.images[0].src}
+          image={project.images[0]?.src}
           title={project.title}
           count={project.images.length}
           priority={priority}

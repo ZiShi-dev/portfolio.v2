@@ -303,7 +303,7 @@ export function ProjectCardPreview({
   priority = false,
   screensLabel = "screens",
 }: {
-  image: string;
+  image?: string;
   title: string;
   count?: number;
   priority?: boolean;
@@ -331,15 +331,17 @@ export function ProjectCardPreview({
           <span className="h-1.5 w-1.5 rounded-full bg-border" />
           <span className="h-1.5 w-1.5 rounded-full bg-border" />
         </div>
-        <div className="relative aspect-[16/10] w-full">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            priority={priority}
-            className="object-cover object-top"
-            sizes="(max-width: 768px) 100vw, 500px"
-          />
+        <div className="relative aspect-[16/10] w-full bg-[#0A0E1A]">
+          {image ? (
+            <Image
+              src={image}
+              alt={title}
+              fill
+              priority={priority}
+              className="object-cover object-top"
+              sizes="(max-width: 768px) 100vw, 500px"
+            />
+          ) : null}
         </div>
       </motion.div>
     </div>
