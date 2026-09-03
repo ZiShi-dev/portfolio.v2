@@ -4,6 +4,7 @@
  */
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
+import { getSafeAdminNextPath } from "@/lib/admin/safe-next";
 import { isBlockedSsrfHost, isSafeHttpUrl } from "@/lib/review-schema";
 import { verifyFormRequestOrigin } from "@/lib/security/request-origin";
 import { parseJsonBody } from "@/lib/security/parse-json-body";
@@ -89,6 +90,16 @@ describe("Adversarial — SSRF URLs publiques (A10)", () => {
     assert.equal(isBlockedSsrfHost("169.254.169.254"), true);
     assert.equal(isBlockedSsrfHost("metadata.google.internal"), true);
     assert.equal(isBlockedSsrfHost("vorzix.com"), false);
+  });
+});
+
+describe("Adversarial — open redirect admin push SW (A01)", () => {
+  it("getSafeAdminNextPath bloque les URLs externes et chemins hors /admin", () => {
+    assert.equal(getSafeAdminNextPath("/admin/inquiries"), "/admin/inquiries");
+    assert.equal(getSafeAdminNextPath("//evil.com/phish"), null);
+    assert.equal(getSafeAdminNextPath("https://evil.com"), null);
+    assert.equal(getSafeAdminNextPath("/admin-evil"), null);
+    assert.equal(getSafeAdminNextPath("/admin/inquiries\\@evil.com"), null);
   });
 });
 
