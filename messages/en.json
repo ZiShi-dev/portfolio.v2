@@ -215,7 +215,6 @@
     "availableNow": "Available now",
     "viewListing": "View listing",
     "viewProject": "View project",
-    "otherWork": "Other work",
     "listingIndex": "{current} / {total}",
     "seeSite": "Visit site",
     "seeApp": "View app",
@@ -267,39 +266,6 @@
       "savoraille": {
         "title": "Savoraille — Restaurant",
         "desc": "A live restaurant site: table booking, an interactive seasonal menu, takeaway and delivery."
-      },
-      "nova": {
-        "title": "Nova — Dashboard",
-        "desc": "Analytics app concept: clear dashboard, charts and navigation designed for quick reading.",
-        "images": {
-          "home": "Home page",
-          "dashboard": "Dashboard",
-          "mobile": "Mobile version"
-        }
-      },
-      "maison-belle": {
-        "title": "Maison Belle — E-commerce",
-        "desc": "Online store mockup: catalog, product page and a simplified checkout flow.",
-        "images": {
-          "shop": "Shop",
-          "product": "Product page"
-        }
-      },
-      "atelier-lumiere": {
-        "title": "Atelier Lumière — Showcase",
-        "desc": "Showcase site for a creative studio: immersive gallery and integrated contact form.",
-        "images": {
-          "home": "Home",
-          "gallery": "Gallery"
-        }
-      },
-      "fitpro": {
-        "title": "FitPro — Sports coaching",
-        "desc": "Coaching platform concept: landing page, programs and member area.",
-        "images": {
-          "landing": "Landing page",
-          "member": "Member area"
-        }
       }
     },
     "viewCase": "→ View case study"

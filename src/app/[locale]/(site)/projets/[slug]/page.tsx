@@ -33,13 +33,7 @@ export async function generateStaticParams() {
     return fromDb.map((p) => ({ slug: p.slug }));
   }
   // Démo locale
-  return [
-    { slug: "savoraille" },
-    { slug: "nova" },
-    { slug: "maison-belle" },
-    { slug: "atelier-lumiere" },
-    { slug: "fitpro" },
-  ];
+  return [{ slug: "savoraille" }];
 }
 
 export async function generateMetadata({

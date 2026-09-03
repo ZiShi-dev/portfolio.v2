@@ -215,7 +215,6 @@
     "availableNow": "Disponible à la reprise",
     "viewListing": "Voir l’offre",
     "viewProject": "Voir le projet",
-    "otherWork": "Autres réalisations",
     "listingIndex": "{current} / {total}",
     "seeSite": "Voir le site",
     "seeApp": "Voir l'application",
@@ -269,39 +268,6 @@
       "savoraille": {
         "title": "Savoraille — Restaurant",
         "desc": "Site restaurant déjà en ligne : réservation de table, carte de saison interactive, commande à emporter et livraison."
-      },
-      "nova": {
-        "title": "Nova — Dashboard",
-        "desc": "Concept d'application analytics : tableau de bord clair, graphiques et navigation pensée pour une lecture rapide.",
-        "images": {
-          "home": "Page d'accueil",
-          "dashboard": "Tableau de bord",
-          "mobile": "Version mobile"
-        }
-      },
-      "maison-belle": {
-        "title": "Maison Belle — E-commerce",
-        "desc": "Maquette de boutique en ligne : catalogue, fiche produit et parcours d'achat simplifié.",
-        "images": {
-          "shop": "Boutique",
-          "product": "Fiche produit"
-        }
-      },
-      "atelier-lumiere": {
-        "title": "Atelier Lumière — Vitrine",
-        "desc": "Site vitrine pour un studio créatif : galerie immersive et formulaire de contact intégré.",
-        "images": {
-          "home": "Accueil",
-          "gallery": "Galerie"
-        }
-      },
-      "fitpro": {
-        "title": "FitPro — Coaching sportif",
-        "desc": "Concept de plateforme coaching : landing page, programmes et espace membre.",
-        "images": {
-          "landing": "Landing page",
-          "member": "Espace membre"
-        }
       }
     },
     "viewCase": "→ Voir l’étude de cas"
