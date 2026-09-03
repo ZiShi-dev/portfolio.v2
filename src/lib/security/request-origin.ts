@@ -53,18 +53,8 @@ function addVercelDeploymentOrigins(origins: Set<string>) {
   }
 }
 
-function getRequestHostOrigin(request: Request): string | null {
-  if (process.env.VERCEL !== "1") return null;
-
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  if (!host) return null;
-
-  const proto = request.headers.get("x-forwarded-proto") ?? "https";
-  return parseOrigin(`${proto}://${host.split(",")[0]?.trim()}`);
-}
-
 /** Origines autorisées pour les POST formulaire (anti-CSRF / anti-abus direct API). */
-export function getAllowedFormOrigins(request?: Request): Set<string> {
+export function getAllowedFormOrigins(): Set<string> {
   const origins = new Set<string>();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -79,11 +69,6 @@ export function getAllowedFormOrigins(request?: Request): Set<string> {
     const trimmed = entry.trim();
     if (!trimmed) continue;
     addSiteOriginVariants(origins, trimmed);
-  }
-
-  if (request) {
-    const hostOrigin = getRequestHostOrigin(request);
-    if (hostOrigin) origins.add(hostOrigin);
   }
 
   if (process.env.NODE_ENV !== "production") {
@@ -102,7 +87,7 @@ export function isAllowedFormOrigin(origin: string, allowed: Set<string>): boole
  * En production, rejette les requêtes sans en-tête d'origine fiable.
  */
 export function verifyFormRequestOrigin(request: Request): boolean {
-  const allowed = getAllowedFormOrigins(request);
+  const allowed = getAllowedFormOrigins();
   if (allowed.size === 0) return process.env.NODE_ENV !== "production";
 
   const origin = request.headers.get("origin");

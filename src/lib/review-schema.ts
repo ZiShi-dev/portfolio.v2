@@ -104,8 +104,42 @@ export function parseReviewPayload(body: unknown): ReviewValidationResult {
 export function isSafeHttpUrl(url: string): boolean {
   try {
     const parsed = new URL(url);
-    return parsed.protocol === "https:" || parsed.protocol === "http:";
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return false;
+    if (process.env.NODE_ENV === "production" && isBlockedSsrfHost(parsed.hostname)) {
+      return false;
+    }
+    return true;
   } catch {
     return false;
   }
+}
+
+/** Hôtes interdits pour les URLs publiques (OWASP A10 — SSRF / metadata). */
+export function isBlockedSsrfHost(hostname: string): boolean {
+  const host = hostname.trim().toLowerCase();
+  if (!host) return true;
+  if (host === "localhost" || host === "127.0.0.1" || host === "::1") return true;
+  if (host.endsWith(".local") || host.endsWith(".internal")) return true;
+  if (host === "169.254.169.254" || host === "metadata.google.internal") return true;
+
+  if (host.includes(":")) {
+    // IPv6 loopback / link-local simplifié
+    if (host.startsWith("fe80:") || host.startsWith("fc") || host.startsWith("fd")) {
+      return true;
+    }
+    return false;
+  }
+
+  const parts = host.split(".").map((part) => Number.parseInt(part, 10));
+  if (parts.length !== 4 || parts.some((part) => Number.isNaN(part))) return false;
+
+  const [a, b] = parts;
+  if (a === 10) return true;
+  if (a === 127) return true;
+  if (a === 0) return true;
+  if (a === 169 && b === 254) return true;
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  if (a === 192 && b === 168) return true;
+
+  return false;
 }

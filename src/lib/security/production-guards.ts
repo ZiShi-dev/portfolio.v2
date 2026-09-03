@@ -23,7 +23,7 @@ export function isTurnstileRequired(): boolean {
     if (explicit === false) {
       return readBoolEnv("FORM_ALLOW_INSECURE") === true ? false : true;
     }
-    return explicit !== false;
+    return true;
   }
 
   if (explicit !== undefined) return explicit;

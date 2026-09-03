@@ -182,7 +182,7 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
     assert.equal(verifyFormRequestOrigin(request), true);
   });
 
-  it("autorise l'origine Vercel du déploiement courant", () => {
+  it("autorise l'origine Vercel du déploiement courant (via VERCEL_URL)", () => {
     process.env.VERCEL = "1";
     process.env.VERCEL_URL = "portfolio-git-main-user.vercel.app";
     process.env.NEXT_PUBLIC_SITE_URL = "https://zishi.dev";
@@ -190,9 +190,6 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
       method: "POST",
       headers: {
         origin: "https://portfolio-git-main-user.vercel.app",
-        host: "portfolio-git-main-user.vercel.app",
-        "x-forwarded-host": "portfolio-git-main-user.vercel.app",
-        "x-forwarded-proto": "https",
       },
     });
     assert.equal(verifyFormRequestOrigin(request), true);

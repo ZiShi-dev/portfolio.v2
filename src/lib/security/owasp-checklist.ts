@@ -9,6 +9,7 @@ export const OWASP_CONTROLS = [
     controls: [
       "requireAdminApi (session + allowlist + MFA)",
       "verifyFormRequestOrigin (CSRF formulaires publics + admin mutations)",
+      "Origines CSRF limitées aux hôtes déclarés (pas de confiance aveugle au Host)",
       "Schémas Zod stricts (mass-assignment refusé)",
       "Routes admin sous /admin uniquement",
     ],
@@ -40,6 +41,7 @@ export const OWASP_CONTROLS = [
       "Déduplication anti double-clic",
       "Magic bytes upload images",
       "getTrustedClientIp (Vercel anti-spoof)",
+      "isSafeHttpUrl bloque réseaux privés / metadata en production",
     ],
   },
   {
