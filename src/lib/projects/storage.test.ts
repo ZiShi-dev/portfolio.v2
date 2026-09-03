@@ -79,6 +79,16 @@ describe("projects storage (upload + delete)", () => {
     if (!res.ok) assert.equal(res.reason, "not_configured");
   });
 
+  function webpBytes() {
+    return new Uint8Array([
+      0x52, 0x49, 0x46, 0x46, 0x00, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42, 0x50,
+    ]);
+  }
+
+  function jpegBytes() {
+    return new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00]);
+  }
+
   it("refuse MIME non whitelisté (OWASP A04 — pas de SVG)", async () => {
     reset();
     const file = new File([new Uint8Array([1])], "x.svg", {
@@ -106,9 +116,19 @@ describe("projects storage (upload + delete)", () => {
     if (!res.ok) assert.equal(res.reason, "too_large");
   });
 
+  it("refuse un fichier dont les magic bytes ne correspondent pas au MIME", async () => {
+    reset();
+    const file = new File([new Uint8Array([1, 2, 3])], "fake.png", {
+      type: "image/png",
+    });
+    const res = await uploadProjectImage(file);
+    assert.equal(res.ok, false);
+    if (!res.ok) assert.equal(res.reason, "invalid_type");
+  });
+
   it("upload OK : path UUID sous projects/ sans upsert", async () => {
     reset();
-    const file = new File([new Uint8Array([9, 9])], "ok.webp", {
+    const file = new File([webpBytes()], "ok.webp", {
       type: "image/webp",
     });
     const res = await uploadProjectImage(file);
@@ -124,7 +144,7 @@ describe("projects storage (upload + delete)", () => {
   it("propagate upload_failed", async () => {
     reset();
     uploadError = { message: "denied" };
-    const file = new File([new Uint8Array([1])], "x.jpg", {
+    const file = new File([jpegBytes()], "x.jpg", {
       type: "image/jpeg",
     });
     const res = await uploadProjectImage(file);

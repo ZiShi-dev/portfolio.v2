@@ -26,6 +26,18 @@ export async function POST(request: Request) {
     return adminErrorResponse(ADMIN_ERROR_CODES.INVALID_CONTENT_TYPE, 415);
   }
 
+  const contentLength = request.headers.get("content-length");
+  if (contentLength) {
+    const length = Number.parseInt(contentLength, 10);
+    const maxMultipartBytes = PROJECT_LIMITS.uploadMaxBytes + 8_192;
+    if (Number.isFinite(length) && length > maxMultipartBytes) {
+      return jsonResponse(
+        { error: "too_large", code: ADMIN_ERROR_CODES.INVALID_REQUEST },
+        400
+      );
+    }
+  }
+
   let form: FormData;
   try {
     form = await request.formData();

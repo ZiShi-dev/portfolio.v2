@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, it, afterEach } from "node:test";
 import {
   checkRateLimitInStore,
   getClientIp,
@@ -7,6 +7,26 @@ import {
   RATE_LIMIT_MAX_REQUESTS,
   RATE_LIMIT_WINDOW_MS,
 } from "@/lib/rate-limit-core";
+import { getTrustedClientIp } from "@/lib/security/client-ip";
+
+describe("OWASP A04 — client-ip (anti-spoof Vercel)", () => {
+  const envSnapshot = { ...process.env };
+
+  afterEach(() => {
+    process.env = envSnapshot;
+  });
+
+  it("priorise x-vercel-forwarded-for sur Vercel", () => {
+    process.env.VERCEL = "1";
+    const request = new Request("http://localhost", {
+      headers: {
+        "x-vercel-forwarded-for": "203.0.113.10",
+        "x-forwarded-for": "198.51.100.1",
+      },
+    });
+    assert.equal(getTrustedClientIp(request), "203.0.113.10");
+  });
+});
 
 describe("OWASP A04 — rate-limit-core", () => {
   it("getClientIp lit x-forwarded-for (première IP)", () => {
