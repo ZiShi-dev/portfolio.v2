@@ -171,6 +171,20 @@ describe("projects/store", () => {
     );
   });
 
+  it("getPublishedProjects inclut les projets sans visuel", async () => {
+    resultQueue.push({
+      data: [{ ...sampleRow, images: [], cover_image: null }],
+      error: null,
+    });
+    const items = await store.getPublishedProjects("fr", {
+      personal: "Perso",
+      for_sale: "Vente",
+      sold: "Vendu",
+    });
+    assert.equal(items.length, 1);
+    assert.equal(items[0]?.images.length, 0);
+  });
+
   it("getPublishedProjects place les projets mis en avant en premier", async () => {
     const later = {
       ...sampleRow,

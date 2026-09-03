@@ -357,15 +357,13 @@ export async function getPublishedProjects(
     return [];
   }
 
-  return rows
-    .filter((row) => row.images.length > 0 || row.cover_image)
-    .map((row) =>
-      projectRowToLocalized(
-        row,
-        locale,
-        categoryLabels[row.kind] ?? row.kind
-      )
-    );
+  return rows.map((row) =>
+    projectRowToLocalized(
+      row,
+      locale,
+      categoryLabels[row.kind] ?? row.kind
+    )
+  );
 }
 
 export async function listProjectsForAdmin(limit = 100): Promise<

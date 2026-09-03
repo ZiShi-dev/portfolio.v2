@@ -6,8 +6,8 @@ import {
   type ProjectCategoryKey,
 } from "@/data/projects";
 import {
-  getPublishedProjects,
   listPublishedProjectRows,
+  projectRowToLocalized,
 } from "@/lib/projects/store";
 
 async function categoryLabels(
@@ -51,8 +51,12 @@ export async function getSiteProjects(
   locale: Locale
 ): Promise<LocalizedProjectItem[]> {
   const labels = await categoryLabels(locale);
-  const fromDb = await getPublishedProjects(locale, labels);
-  if (fromDb.length > 0) return fromDb;
+  const rows = await listPublishedProjectRows();
+  if (rows !== null) {
+    return rows.map((row) =>
+      projectRowToLocalized(row, locale, labels[row.kind] ?? row.kind)
+    );
+  }
 
   const tItems = await getTranslations({ locale, namespace: "projects" });
   return localizeDemo(locale, labels, tItems);
