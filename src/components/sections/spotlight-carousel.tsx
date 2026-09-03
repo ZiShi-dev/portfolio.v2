@@ -2,12 +2,15 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { SpotlightPlate } from "@/components/sections/spotlight-plate";
 import type { LocalizedProjectItem } from "@/data/projects";
 import { getLocaleDirection, type Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+
+const AUTOPLAY_DELAY_MS = 6000;
 
 type SpotlightCarouselProps = {
   projects: LocalizedProjectItem[];
@@ -17,11 +20,12 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   const t = useTranslations("projects");
   const locale = useLocale() as Locale;
   const direction = getLocaleDirection(locale);
+  const reduceMotion = useReducedMotion();
   const multiple = projects.length > 1;
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
-    loop: false,
+    loop: multiple,
     containScroll: "trimSnaps",
     direction,
     skipSnaps: false,
@@ -31,6 +35,7 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [autoplayPaused, setAutoplayPaused] = useState(false);
 
   const scrollTo = useCallback(
     (index: number) => emblaApi?.scrollTo(index),
@@ -60,8 +65,18 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
 
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.reInit({ direction });
-  }, [emblaApi, direction]);
+    emblaApi.reInit({ direction, loop: multiple });
+  }, [emblaApi, direction, multiple]);
+
+  useEffect(() => {
+    if (!emblaApi || !multiple || reduceMotion || autoplayPaused) return;
+
+    const timer = window.setInterval(() => {
+      emblaApi.scrollNext();
+    }, AUTOPLAY_DELAY_MS);
+
+    return () => window.clearInterval(timer);
+  }, [emblaApi, multiple, reduceMotion, autoplayPaused]);
 
   if (projects.length === 0) return null;
 
@@ -70,7 +85,19 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   }
 
   return (
-    <div>
+    <div
+      onMouseEnter={() => setAutoplayPaused(true)}
+      onMouseLeave={() => setAutoplayPaused(false)}
+      onFocusCapture={() => setAutoplayPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setAutoplayPaused(false);
+        }
+      }}
+      onPointerDown={() => setAutoplayPaused(true)}
+      onPointerUp={() => setAutoplayPaused(false)}
+      onPointerCancel={() => setAutoplayPaused(false)}
+    >
       <div
         className="overflow-hidden select-none"
         ref={emblaRef}
