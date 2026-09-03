@@ -82,7 +82,6 @@ export const TurnstileWidget = forwardRef<
   const onExpireRef = useRef(onExpire);
   const onErrorRef = useRef(onError);
   const [scriptReady, setScriptReady] = useState(false);
-  const [containerWidth, setContainerWidth] = useState<number | null>(null);
 
   onTokenRef.current = onToken;
   onExpireRef.current = onExpire;
@@ -102,23 +101,6 @@ export const TurnstileWidget = forwardRef<
       setScriptReady(true);
     }
   }, []);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const updateWidth = () => setContainerWidth(container.clientWidth);
-    updateWidth();
-
-    const observer = new ResizeObserver(updateWidth);
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
-
-  const resolvedSize =
-    size === "flexible" && containerWidth !== null && containerWidth < 300
-      ? "compact"
-      : size;
 
   useEffect(() => {
     if (!siteKey || !scriptReady || !containerRef.current || !window.turnstile) {
@@ -149,7 +131,7 @@ export const TurnstileWidget = forwardRef<
       "refresh-expired": "auto",
       "refresh-timeout": "auto",
       theme,
-      size: resolvedSize,
+      size,
       appearance,
       language,
       action,
@@ -164,7 +146,7 @@ export const TurnstileWidget = forwardRef<
   }, [
     siteKey,
     scriptReady,
-    resolvedSize,
+    size,
     appearance,
     language,
     theme,
@@ -184,9 +166,8 @@ export const TurnstileWidget = forwardRef<
       <div
         ref={containerRef}
         className={cn(
-          "flex w-full max-w-full justify-center",
-          // Hauteur native Turnstile : normal/flexible 65px, compact 140px
-          resolvedSize === "compact" ? "min-h-[140px]" : "min-h-[65px]",
+          "flex w-full max-w-full justify-center overflow-hidden",
+          size === "compact" ? "min-h-[140px]" : "min-h-[65px]",
           className
         )}
       />

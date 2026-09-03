@@ -291,14 +291,18 @@ export function AdminLoginForm({
 
       {turnstileEnabled && (
         <div className="space-y-2">
-          <TurnstileWidget
-            key={turnstileVersion}
-            action="admin_login"
-            onToken={handleTurnstileToken}
-            onExpire={() => setTurnstileToken("")}
-            onError={handleTurnstileError}
-            language={locale}
-          />
+          <div className="overflow-hidden rounded-xl border border-border/60 bg-background/50 px-2 py-2.5 [&_iframe]:mx-auto [&_iframe]:max-w-full">
+            <TurnstileWidget
+              key={turnstileVersion}
+              action="admin_login"
+              onToken={handleTurnstileToken}
+              onExpire={() => setTurnstileToken("")}
+              onError={handleTurnstileError}
+              language={locale}
+              size="flexible"
+              className="w-full"
+            />
+          </div>
           {turnstileError ? <FormError message={turnstileError} /> : null}
         </div>
       )}

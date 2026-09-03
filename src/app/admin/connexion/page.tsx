@@ -106,7 +106,7 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
   if (initialNeedsEnrollment) uiStep = "enroll";
 
   return (
-    <div className="flex w-full max-w-md flex-col py-4">
+    <div className="flex w-full max-w-md flex-col py-4 sm:max-w-lg">
       <div className="mb-6 text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-step-accent/30 bg-background/60 px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-step-accent">
           <Shield className="h-3.5 w-3.5" aria-hidden />
