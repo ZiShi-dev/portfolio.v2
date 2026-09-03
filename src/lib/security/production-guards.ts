@@ -23,6 +23,7 @@ export function isTurnstileRequired(): boolean {
     if (explicit === false) {
       return readBoolEnv("FORM_ALLOW_INSECURE") === true ? false : true;
     }
+    // Prod : Turnstile requis par défaut (évite `explicit !== false` : TS2367 après le guard ci-dessus).
     return true;
   }
 
