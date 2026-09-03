@@ -34,7 +34,11 @@ function secureDocumentResponse(
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${
       isDev ? " 'unsafe-eval'" : ""
     } https://challenges.cloudflare.com`,
-    `style-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-inline'" : ""}`,
+    // En dev : pas de nonce sur style-src — sinon 'unsafe-inline' est ignoré
+    // (React/HMR appliquent des styles inline via element.style).
+    isDev
+      ? "style-src 'self' 'unsafe-inline'"
+      : `style-src 'self' 'nonce-${nonce}'`,
     "style-src-attr 'unsafe-inline'",
     "img-src 'self' data: blob: https://*.supabase.co",
     "font-src 'self'",
