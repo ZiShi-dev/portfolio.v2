@@ -264,6 +264,16 @@
       "other": "Other"
     },
     "items": {
+      "savoraille": {
+        "title": "Savoraille — Restaurant",
+        "desc": "A live restaurant site: table booking, an interactive seasonal menu, takeaway and delivery.",
+        "images": {
+          "home": "Home",
+          "menu": "The menu",
+          "booking": "Booking",
+          "story": "Our story"
+        }
+      },
       "nova": {
         "title": "Nova — Dashboard",
         "desc": "Analytics app concept: clear dashboard, charts and navigation designed for quick reading.",

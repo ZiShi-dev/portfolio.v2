@@ -34,6 +34,7 @@ export async function generateStaticParams() {
   }
   // Démo locale
   return [
+    { slug: "savoraille" },
     { slug: "nova" },
     { slug: "maison-belle" },
     { slug: "atelier-lumiere" },
