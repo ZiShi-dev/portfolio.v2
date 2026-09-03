@@ -66,13 +66,6 @@ export default async function CaseStudyPage({ params }: PageProps) {
   if (!project) notFound();
 
   const all = await getSiteProjects(locale);
-  const idx = all.findIndex(
-    (p) => p.slug === project.slug || p.id === project.id
-  );
-  const next = idx >= 0 ? all[(idx + 1) % all.length] : null;
-  const nextSlug =
-    next && next.id !== project.id ? next.slug ?? next.id : null;
-
   const reviews = await getPublishedReviewsForProject(project.id);
   const relatedServices = await getLinkedServicesForProject(project.id, locale);
   const t = await getTranslations("projects");
@@ -148,7 +141,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
         <JsonLd data={projectJsonLd} nonce={nonce} />
         <ProjectSaleDetail
           project={project}
-          nextSlug={nextSlug}
+          moreProjects={all}
           reviews={reviews}
           relatedServices={relatedServices}
           contacts={{ socials }}
@@ -162,7 +155,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
       <JsonLd data={projectJsonLd} nonce={nonce} />
       <CaseStudyDetail
         project={project}
-        nextSlug={nextSlug}
+        moreProjects={all}
         reviews={reviews}
         relatedServices={relatedServices}
       />

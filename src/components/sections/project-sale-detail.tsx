@@ -30,6 +30,7 @@ import type { SaleCtaChannel } from "@/lib/projects/schema";
 import { routes, startProjectUrl } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import type { LocalizedProjectItem } from "@/data/projects";
+import { ProjectDetailMoreProjects } from "@/components/sections/project-detail-more-projects";
 import {
   ProjectTechnologies,
   RelatedServiceLinks,
@@ -43,7 +44,7 @@ export type ProjectSaleContacts = {
 
 type ProjectSaleDetailProps = {
   project: LocalizedProjectItem;
-  nextSlug?: string | null;
+  moreProjects: LocalizedProjectItem[];
   reviews?: ReviewItem[];
   relatedServices?: RelatedServiceLink[];
   contacts: ProjectSaleContacts;
@@ -241,7 +242,7 @@ function SalePrimaryCta({
 
 export function ProjectSaleDetail({
   project,
-  nextSlug,
+  moreProjects,
   reviews = [],
   relatedServices = [],
   contacts,
@@ -675,50 +676,14 @@ export function ProjectSaleDetail({
                 </Button>
               </p>
             </div>
-            {nextSlug ? (
-              <p className="mt-8">
-                <Link
-                  href={`${routes.projects}/${nextSlug}`}
-                  className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {tCase("ctaNext")}
-                </Link>
-              </p>
-            ) : (
-              <p className="mt-8">
-                <Link
-                  href={routes.projects}
-                  className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {tCase("backToList")}
-                </Link>
-              </p>
-            )}
           </section>
         </Reveal>
-        ) : nextSlug ? (
-          <Reveal delay={0.08}>
-            <p className="mt-10 text-center">
-              <Link
-                href={`${routes.projects}/${nextSlug}`}
-                className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
-              >
-                {tCase("ctaNext")}
-              </Link>
-            </p>
-          </Reveal>
-        ) : (
-          <Reveal delay={0.08}>
-            <p className="mt-8 text-center">
-              <Link
-                href={routes.projects}
-                className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
-              >
-                {tCase("backToList")}
-              </Link>
-            </p>
-          </Reveal>
-        )}
+        ) : null}
+
+        <ProjectDetailMoreProjects
+          projects={moreProjects}
+          currentProjectId={project.id}
+        />
       </div>
     </article>
   );

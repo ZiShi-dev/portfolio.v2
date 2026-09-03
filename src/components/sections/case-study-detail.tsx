@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
@@ -15,6 +15,7 @@ import type { ReviewItem } from "@/data/reviews";
 import { isSafeHttpUrl } from "@/lib/review-schema";
 import { routes } from "@/lib/routes";
 import type { LocalizedProjectItem } from "@/data/projects";
+import { ProjectDetailMoreProjects } from "@/components/sections/project-detail-more-projects";
 import {
   ProjectTechnologies,
   RelatedServiceLinks,
@@ -23,14 +24,14 @@ import {
 
 type CaseStudyDetailProps = {
   project: LocalizedProjectItem;
-  nextSlug?: string | null;
+  moreProjects: LocalizedProjectItem[];
   reviews?: ReviewItem[];
   relatedServices?: RelatedServiceLink[];
 };
 
 export function CaseStudyDetail({
   project,
-  nextSlug,
+  moreProjects,
   reviews = [],
   relatedServices = [],
 }: CaseStudyDetailProps) {
@@ -255,57 +256,15 @@ export function CaseStudyDetail({
               <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
                 <Link href={routes.startProject}>{t("ctaPrimary")}</Link>
               </Button>
-              {nextSlug ? (
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="min-h-12 w-full sm:w-auto"
-                >
-                  <Link href={`${routes.projects}/${nextSlug}`}>
-                    {t("ctaNext")}
-                    <ArrowRight className="h-4 w-4" aria-hidden />
-                  </Link>
-                </Button>
-              ) : (
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="min-h-12 w-full sm:w-auto"
-                >
-                  <Link href={routes.projects}>{t("backToList")}</Link>
-                </Button>
-              )}
             </div>
           </section>
         </Reveal>
-        ) : (
-          nextSlug ? (
-            <Reveal delay={0.08}>
-              <p className="mt-10 text-center">
-                <Link
-                  href={`${routes.projects}/${nextSlug}`}
-                  className="inline-flex min-h-11 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {t("ctaNext")}
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
-              </p>
-            </Reveal>
-          ) : (
-            <Reveal delay={0.08}>
-              <p className="mt-10 text-center">
-                <Link
-                  href={routes.projects}
-                  className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {t("backToList")}
-                </Link>
-              </p>
-            </Reveal>
-          )
-        )}
+        ) : null}
+
+        <ProjectDetailMoreProjects
+          projects={moreProjects}
+          currentProjectId={project.id}
+        />
       </div>
     </article>
   );

@@ -6,11 +6,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { ProjectCard } from "@/components/sections/project-card";
 import type { ProjectItem } from "@/components/sections/project-modal";
+import type { LocalizedProjectItem } from "@/data/projects";
 import { getLocaleDirection, type Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 type ProjectCarouselProps = {
-  projects: ProjectItem[];
+  projects: Array<ProjectItem | LocalizedProjectItem>;
   className?: string;
   padded?: boolean;
   showHint?: boolean;
