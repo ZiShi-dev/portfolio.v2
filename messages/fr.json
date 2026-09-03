@@ -271,7 +271,10 @@
       },
       "savoraille": {
         "title": "Savoraille — Restaurant",
-        "desc": "Site restaurant déjà en ligne : réservation de table, carte de saison interactive, commande à emporter et livraison."
+        "desc": "Site restaurant déjà en ligne : réservation de table, carte de saison interactive, commande à emporter et livraison.",
+        "images": {
+          "hero": "Aperçu du site Savoraille"
+        }
       }
     },
     "viewCase": "→ Voir l’étude de cas"

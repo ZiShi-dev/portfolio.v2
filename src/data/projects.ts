@@ -23,7 +23,7 @@ export const projectCatalog: ProjectCatalogItem[] = [
     id: "savoraille",
     categoryKey: "personal",
     businessTypeIds: ["showcase", "booking"],
-    images: [],
+    images: [{ src: "/projects/savoraille-hero.png", labelKey: "hero" }],
     link: "https://savoraille.vorzix.com/fr",
   },
 ];
