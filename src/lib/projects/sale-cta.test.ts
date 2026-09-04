@@ -12,6 +12,7 @@ const socials = buildFooterSocials({
   whatsapp: "https://wa.me/33",
   instagram: "",
   tiktok: "",
+  facebook: "",
 });
 
 describe("sale-cta", () => {
@@ -42,8 +43,9 @@ describe("sale-cta", () => {
         whatsapp: "https://wa.me/33",
         instagram: "",
         tiktok: "",
+        facebook: "",
       },
-      ["discord", "whatsapp", "instagram", "tiktok"]
+      ["discord", "whatsapp", "instagram", "tiktok", "facebook"]
     );
     const buttons = resolveSaleCtaButtons({
       channels: ["whatsapp", "discord"],

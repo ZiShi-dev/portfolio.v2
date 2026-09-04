@@ -730,28 +730,32 @@
         "discord": "Discord",
         "whatsapp": "WhatsApp",
         "instagram": "Instagram",
-        "tiktok": "TikTok"
+        "tiktok": "TikTok",
+        "facebook": "Facebook"
       },
       "hints": {
         "contactEmail": "يظهر على الموقع (التذييل، التواصل، الإشارات).",
         "discord": "دعوة أو ملف على discord.gg / discord.com",
         "whatsapp": "رابط wa.me (رمز الدولة بدون +)",
         "instagram": "ملف instagram.com/…",
-        "tiktok": "ملف tiktok.com/@…"
+        "tiktok": "ملف tiktok.com/@…",
+        "facebook": "ملف أو صفحة facebook.com/…"
       },
       "placeholders": {
         "contactEmail": "contact@yourdomain.com",
         "discord": "https://discord.gg/…",
         "whatsapp": "https://wa.me/33612345678",
         "instagram": "https://www.instagram.com/…",
-        "tiktok": "https://www.tiktok.com/@…"
+        "tiktok": "https://www.tiktok.com/@…",
+        "facebook": "https://www.facebook.com/profile.php?id=…"
       },
       "validation": {
         "contactEmail": "أدخل بريداً إلكترونياً صالحاً.",
         "discord": "رابط Discord https غير صالح (discord.gg أو discord.com).",
         "whatsapp": "رابط WhatsApp https غير صالح (wa.me أو whatsapp.com).",
         "instagram": "رابط Instagram https غير صالح (instagram.com).",
-        "tiktok": "رابط TikTok https غير صالح (tiktok.com)."
+        "tiktok": "رابط TikTok https غير صالح (tiktok.com).",
+        "facebook": "رابط Facebook https غير صالح (facebook.com)."
       },
       "priorityTitle": "أولوية وسائل التواصل",
       "priorityHint": "الترتيب المستخدم في صفحات الحلول المعروضة للبيع وفي التواصل المفضل بالتذييل. أول شبكة مُعدّة تصبح الزر الرئيسي.",

@@ -3,13 +3,19 @@ import { describe, it } from "node:test";
 import { buildFooterSocials } from "@/lib/brand";
 import { getConfiguredSocialLinks } from "@/lib/social/public-links";
 
+const emptySocial = {
+  discord: "",
+  whatsapp: "",
+  instagram: "",
+  tiktok: "",
+  facebook: "",
+};
+
 describe("buildFooterSocials", () => {
   it("marque le premier réseau renseigné comme preferred", () => {
     const links = buildFooterSocials({
+      ...emptySocial,
       discord: "https://discord.gg/x",
-      whatsapp: "",
-      instagram: "",
-      tiktok: "",
     });
     const discord = links.find((l) => l.id === "discord");
     assert.equal(discord?.preferred, true);
@@ -18,10 +24,9 @@ describe("buildFooterSocials", () => {
 
   it("privilégie WhatsApp par défaut", () => {
     const links = buildFooterSocials({
+      ...emptySocial,
       discord: "https://discord.gg/x",
       whatsapp: "https://wa.me/33",
-      instagram: "",
-      tiktok: "",
     });
     assert.equal(links[0]?.id, "whatsapp");
     assert.equal(links[0]?.preferred, true);
@@ -31,16 +36,16 @@ describe("buildFooterSocials", () => {
   it("suit la priorité réglée en admin", () => {
     const links = buildFooterSocials(
       {
+        ...emptySocial,
         discord: "https://discord.gg/x",
         whatsapp: "https://wa.me/33",
         instagram: "https://www.instagram.com/x",
-        tiktok: "",
       },
       ["instagram", "discord"]
     );
     assert.deepEqual(
       links.map((l) => l.id),
-      ["instagram", "discord", "whatsapp", "tiktok"]
+      ["instagram", "discord", "whatsapp", "tiktok", "facebook"]
     );
     assert.equal(links[0]?.preferred, true);
   });
@@ -48,25 +53,18 @@ describe("buildFooterSocials", () => {
   it("ignore une priorité invalide", () => {
     const links = buildFooterSocials(
       {
-        discord: "",
+        ...emptySocial,
         whatsapp: "https://wa.me/33",
-        instagram: "",
-        tiktok: "",
       },
       ["email", "nope"] as never
     );
-    assert.equal(links.length, 4);
+    assert.equal(links.length, 5);
     assert.equal(links[0]?.id, "whatsapp");
   });
 
   it("conserve les href vides (masqués côté UI)", () => {
-    const links = buildFooterSocials({
-      discord: "",
-      whatsapp: "",
-      instagram: "",
-      tiktok: "",
-    });
-    assert.equal(links.length, 4);
+    const links = buildFooterSocials(emptySocial);
+    assert.equal(links.length, 5);
     assert.ok(links.every((l) => l.href === ""));
     assert.ok(links.every((l) => l.preferred === undefined));
   });
@@ -76,12 +74,11 @@ describe("getConfiguredSocialLinks", () => {
   it("masque les réseaux vides sans modifier l'ordre de priorité", () => {
     const links = buildFooterSocials(
       {
+        ...emptySocial,
         discord: "https://discord.gg/x",
-        whatsapp: "",
         instagram: "https://www.instagram.com/x",
-        tiktok: "",
       },
-      ["instagram", "whatsapp", "discord", "tiktok"]
+      ["instagram", "whatsapp", "discord", "tiktok", "facebook"]
     );
 
     assert.deepEqual(
@@ -91,12 +88,7 @@ describe("getConfiguredSocialLinks", () => {
   });
 
   it("retourne une liste vide quand aucun réseau n'est configuré", () => {
-    const links = buildFooterSocials({
-      discord: "",
-      whatsapp: "",
-      instagram: "",
-      tiktok: "",
-    });
+    const links = buildFooterSocials(emptySocial);
 
     assert.deepEqual(getConfiguredSocialLinks(links), []);
   });

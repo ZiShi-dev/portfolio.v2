@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Check, ChevronDown, ExternalLink } from "lucide-react";
 import {
   SiDiscord,
+  SiFacebook,
   SiInstagram,
   SiTiktok,
   SiWhatsapp,
@@ -70,6 +71,7 @@ const CHANNEL_ICONS: Record<
   discord: SiDiscord,
   instagram: SiInstagram,
   tiktok: SiTiktok,
+  facebook: SiFacebook,
 };
 
 /**

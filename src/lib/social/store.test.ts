@@ -96,6 +96,7 @@ describe("social/store — settings email + réseaux", () => {
         whatsapp: "",
         instagram: "https://www.instagram.com/x",
         tiktok: "",
+        facebook: "",
         contact_priority: ["instagram", "whatsapp"],
       },
     });
@@ -108,6 +109,7 @@ describe("social/store — settings email + réseaux", () => {
       "whatsapp",
       "discord",
       "tiktok",
+      "facebook",
     ]);
   });
 
@@ -139,6 +141,7 @@ describe("social/store — settings email + réseaux", () => {
         whatsapp: "",
         instagram: "",
         tiktok: "",
+        facebook: "",
       },
     });
     const settings = await store.getSiteSettings();
@@ -154,6 +157,7 @@ describe("social/store — settings email + réseaux", () => {
         whatsapp: "",
         instagram: "",
         tiktok: "",
+        facebook: "",
       },
     });
     const email = await store.getPublicContactEmail();
@@ -168,6 +172,7 @@ describe("social/store — settings email + réseaux", () => {
         whatsapp: "",
         instagram: "",
         tiktok: "",
+        facebook: "",
       },
     });
     const links = await store.getSiteSocialLinks();
@@ -183,7 +188,8 @@ describe("social/store — settings email + réseaux", () => {
         whatsapp: "",
         instagram: "",
         tiktok: "",
-        contact_priority: ["discord", "whatsapp", "instagram", "tiktok"],
+        facebook: "",
+        contact_priority: ["discord", "whatsapp", "instagram", "tiktok", "facebook"],
         updated_at: "2026-07-16T00:00:00Z",
       },
     });
@@ -204,12 +210,14 @@ describe("social/store — settings email + réseaux", () => {
       "whatsapp",
       "instagram",
       "tiktok",
+      "facebook",
     ]);
     assert.deepEqual(saved.ok ? saved.settings.contactPriority : null, [
       "discord",
       "whatsapp",
       "instagram",
       "tiktok",
+      "facebook",
     ]);
   });
 
@@ -227,6 +235,7 @@ describe("social/store — settings email + réseaux", () => {
         whatsapp: "",
         instagram: "",
         tiktok: "",
+        facebook: "",
         updated_at: "2026-07-16T00:00:00Z",
       },
     });

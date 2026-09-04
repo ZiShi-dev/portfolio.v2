@@ -27,6 +27,13 @@ const ALLOWED_HOSTS: Record<keyof SiteSocialLinks, readonly string[]> = {
   ],
   instagram: ["instagram.com", "www.instagram.com"],
   tiktok: ["tiktok.com", "www.tiktok.com", "vm.tiktok.com"],
+  facebook: [
+    "facebook.com",
+    "www.facebook.com",
+    "m.facebook.com",
+    "fb.com",
+    "www.fb.com",
+  ],
 };
 
 function hostAllowed(url: string, network: keyof SiteSocialLinks): boolean {
@@ -66,6 +73,7 @@ export const siteSocialUpdateSchema = z.object({
   whatsapp: optionalSocialUrl("whatsapp"),
   instagram: optionalSocialUrl("instagram"),
   tiktok: optionalSocialUrl("tiktok"),
+  facebook: optionalSocialUrl("facebook"),
   contactPriority: z
     .array(z.enum(SITE_SOCIAL_IDS))
     .max(SITE_SOCIAL_IDS.length)
