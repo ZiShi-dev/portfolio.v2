@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Mail, MessageCircle, X } from "lucide-react";
 import {
   SiDiscord,
@@ -31,15 +31,73 @@ const socialIcons: Record<
   facebook: SiFacebook,
 };
 
+/** Amplitude horizontale de l’arc (px). */
+const ARC_AMPLITUDE = 34;
+
+/**
+ * Décalage horizontal le long d’un arc vertical (sinusoïde).
+ * Les icônes du haut et du bas restent alignées ; le milieu bulge vers l’intérieur.
+ */
+function getVerticalArcOffset(
+  index: number,
+  total: number,
+  mirrorX: boolean
+): number {
+  const t = total <= 1 ? 0.5 : index / (total - 1);
+  const shift = Math.sin(t * Math.PI) * ARC_AMPLITUDE;
+  return mirrorX ? shift : -shift;
+}
+
+function ArcGuides({
+  itemCount,
+  reduceMotion,
+}: {
+  itemCount: number;
+  reduceMotion: boolean;
+}) {
+  const height = Math.max(120, itemCount * 64 + 16);
+  return (
+    <motion.div
+      aria-hidden
+      className="pointer-events-none absolute -end-6 bottom-2 top-0 w-28"
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={reduceMotion ? { opacity: 0 } : { opacity: 0 }}
+      transition={{ duration: 0.24 }}
+    >
+      <svg
+        className="h-full w-full"
+        viewBox={`0 0 112 ${height}`}
+        preserveAspectRatio="xMaxYMid meet"
+        fill="none"
+      >
+        {[0.42, 0.62, 0.82].map((scale) => (
+          <ellipse
+            key={scale}
+            cx={96}
+            cy={height * 0.52}
+            rx={88 * scale}
+            ry={height * 0.48 * scale}
+            stroke="rgba(201,169,106,0.12)"
+            strokeWidth="0.75"
+          />
+        ))}
+      </svg>
+    </motion.div>
+  );
+}
+
 /**
  * Speed dial public alimenté par les réglages sociaux de l'admin.
- * L'ordre reçu correspond déjà à `contact_priority`.
+ * Icônes disposées en arc vertical (courbe) au-dessus du bouton.
  */
 export function FloatingContactButton({
   contactEmail,
   socials,
 }: FloatingContactButtonProps) {
   const t = useTranslations("floatingContact");
+  const locale = useLocale();
+  const mirrorX = locale === "ar";
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -95,7 +153,8 @@ export function FloatingContactButton({
 
   if (contactItems.length === 0) return null;
 
-  const duration = reduceMotion ? 0 : 0.18;
+  const duration = reduceMotion ? 0 : 0.2;
+  const total = contactItems.length;
 
   return (
     <div
@@ -111,23 +170,37 @@ export function FloatingContactButton({
           <motion.div
             id={menuId}
             aria-label={t("menuLabel")}
-            initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+            className="relative"
+            style={{ paddingInlineStart: ARC_AMPLITUDE + 4 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
             transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ul className="flex list-none flex-col items-end gap-2.5">
+            <ArcGuides itemCount={total} reduceMotion={Boolean(reduceMotion)} />
+
+            <ul className="relative z-[1] flex list-none flex-col items-end gap-2.5">
               {contactItems.map((item, index) => {
                 const Icon = item.Icon;
+                const arcX = getVerticalArcOffset(index, total, mirrorX);
+
                 return (
                   <motion.li
                     key={item.id}
-                    initial={reduceMotion ? false : { opacity: 0, x: 10, scale: 0.94 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                    exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 8, scale: 0.96 }}
+                    initial={
+                      reduceMotion
+                        ? false
+                        : { opacity: 0, x: arcX + (mirrorX ? -10 : 10), scale: 0.92 }
+                    }
+                    animate={{ opacity: 1, x: arcX, scale: 1 }}
+                    exit={
+                      reduceMotion
+                        ? { opacity: 0 }
+                        : { opacity: 0, x: arcX + (mirrorX ? -6 : 6), scale: 0.95 }
+                    }
                     transition={{
                       duration,
-                      delay: reduceMotion ? 0 : index * 0.025,
+                      delay: reduceMotion ? 0 : index * 0.04,
                       ease: [0.22, 1, 0.36, 1],
                     }}
                   >
@@ -144,13 +217,17 @@ export function FloatingContactButton({
                       title={item.label}
                       onClick={() => setOpen(false)}
                       className={cn(
-                        "group flex max-w-[calc(100vw-2rem)] items-center gap-2.5 rounded-full outline-none",
+                        "group flex max-w-[calc(100vw-2rem)] items-center gap-0 outline-none",
                         "focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       )}
                     >
-                      <span className="max-w-[min(13rem,calc(100vw-6rem))] truncate rounded-full border border-border-gold bg-surface/95 px-3 py-1.5 text-xs font-medium text-foreground/85 shadow-[0_8px_24px_-14px_rgba(0,0,0,0.9)] backdrop-blur-xl transition-colors group-hover:border-primary/45 group-hover:text-primary">
+                      <span className="max-w-[min(11rem,calc(100vw-7.5rem))] truncate rounded-full border border-border-gold bg-surface/95 px-3 py-1.5 text-xs font-medium text-foreground/85 shadow-[0_8px_24px_-14px_rgba(0,0,0,0.9)] backdrop-blur-xl transition-colors group-hover:border-primary/45 group-hover:text-primary">
                         {item.label}
                       </span>
+                      <span
+                        className="mx-2 h-px w-5 shrink-0 bg-primary/25 transition-colors group-hover:bg-primary/45"
+                        aria-hidden
+                      />
                       <span
                         className={cn(
                           "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-gold",
