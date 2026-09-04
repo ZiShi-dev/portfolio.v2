@@ -7,6 +7,10 @@ describe("routing i18n — URLs localisées", () => {
     assert.equal(routing.localePrefix, "as-needed");
   });
 
+  it("ne redirige pas `/` selon le cookie ou Accept-Language", () => {
+    assert.equal(routing.localeDetection, false);
+  });
+
   it("locales autorisées fr, en, ar", () => {
     assert.deepEqual([...routing.locales], ["fr", "en", "ar"]);
     assert.equal(routing.defaultLocale, "fr");

@@ -32,6 +32,7 @@ describe("redirectLegacyLocalePrefix — français canonique sans /fr", () => {
     assert.match(res!.headers.get("location") ?? "", /\/contact$/);
     const cookie = res!.headers.get("set-cookie") ?? "";
     assert.match(cookie, new RegExp(`${NEXT_LOCALE_COOKIE}=fr`));
+    assert.doesNotMatch(cookie, /httponly/i);
   });
 
   it("ne confond pas admin avec une locale", () => {

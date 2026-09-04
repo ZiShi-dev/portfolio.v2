@@ -8,6 +8,16 @@ export const routing = defineRouting({
   defaultLocale: "fr",
   // Français sur `/`, traductions indexables sur `/en` et `/ar`.
   localePrefix: "as-needed",
+  // L’URL fait foi : `/` reste français même si le cookie ou
+  // Accept-Language est `ar`. Sinon le retour vers FR depuis /ar
+  // est réécrit vers l’arabe.
+  localeDetection: false,
+  localeCookie: {
+    name: "NEXT_LOCALE",
+    path: "/",
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 365,
+  },
 });
 
 export const localeLabels: Record<Locale, string> = {
