@@ -138,11 +138,11 @@ export function Navbar() {
   let linkIndex = 0;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
+    <header className="fixed inset-x-0 top-0 z-50 px-2 pt-2 sm:px-4 sm:pt-4">
       <div className="relative mx-auto w-full max-w-5xl">
         <div
           className={cn(
-            "relative z-50 flex h-12 w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-full border px-1.5 transition-colors duration-300 sm:h-14 sm:gap-2 sm:px-3 lg:gap-3",
+            "relative z-50 flex h-11 w-full min-w-0 items-center gap-1 rounded-full border px-1 transition-colors duration-300 sm:h-14 sm:gap-2 sm:px-3 lg:gap-3",
             scrolled
               ? "border-border bg-surface/95 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.55)] backdrop-blur-xl"
               : "border-border bg-surface/80 backdrop-blur-md"
@@ -183,15 +183,15 @@ export function Navbar() {
             </ul>
           </nav>
 
-          <div className="ms-auto flex shrink-0 items-center gap-1 sm:gap-1.5 lg:gap-2">
-            <div className="flex h-9 items-center rounded-full border border-border bg-background/60 px-0.5 max-[380px]:h-8">
+          <div className="ms-auto flex shrink-0 items-center gap-0.5 sm:gap-1.5 lg:gap-2">
+            <div className="hidden h-9 items-center rounded-full border border-border bg-background/60 px-0.5 sm:flex">
               <LanguageSwitcher compact embedded />
             </div>
 
             <Button
               asChild
               size="sm"
-              className="hidden h-9 whitespace-nowrap rounded-full px-3.5 text-sm min-[380px]:inline-flex"
+              className="hidden h-9 whitespace-nowrap rounded-full px-3.5 text-sm sm:inline-flex"
             >
               <ContactOpenLink onOpen={() => setOpen(false)}>
                 {t("workTogetherShort")}
@@ -201,7 +201,7 @@ export function Navbar() {
             <button
               type="button"
               className={cn(
-                "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-background/60 text-foreground outline-none transition-colors lg:hidden",
+                "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border bg-background/60 text-foreground outline-none transition-colors sm:h-9 sm:w-9 lg:hidden",
                 "focus-visible:ring-2 focus-visible:ring-primary/45",
                 open
                   ? "border-primary/40 text-primary"
@@ -318,11 +318,14 @@ export function Navbar() {
                 </nav>
 
                 <div className="border-t border-border p-3">
-                  <Button asChild className="mb-2 h-11 w-full rounded-lg min-[380px]:hidden">
+                  <Button asChild className="mb-2 h-11 w-full rounded-lg sm:hidden">
                     <ContactOpenLink onOpen={() => setOpen(false)}>
                       {t("workTogetherShort")}
                     </ContactOpenLink>
                   </Button>
+                  <div className="mb-2 flex justify-center sm:hidden">
+                    <LanguageSwitcher />
+                  </div>
                   <Link
                     href={leaveReview.href}
                     onClick={(e) => handleItem(leaveReview, e)}

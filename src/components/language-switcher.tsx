@@ -59,7 +59,7 @@ export function LanguageSwitcher({ className, compact, embedded }: LanguageSwitc
           className={cn(
             "rounded-full text-center text-[11px] font-semibold uppercase tracking-wide transition-all",
             embedded
-              ? "min-w-[1.65rem] px-1.5 py-1.5 text-[10px] sm:min-w-[2rem] sm:px-2 sm:text-[11px]"
+              ? "min-w-[1.45rem] px-1 py-1 text-[10px] sm:min-w-[2rem] sm:px-2 sm:py-1.5 sm:text-[11px]"
               : "min-w-[2.25rem] px-2.5 py-1",
             locale === code
               ? "bg-step-accent text-primary-foreground shadow-sm"
