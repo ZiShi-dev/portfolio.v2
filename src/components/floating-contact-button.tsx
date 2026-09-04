@@ -34,9 +34,10 @@ const socialIcons: Record<
 const TRIGGER_SIZE = 56;
 const TRIGGER_CENTER = TRIGGER_SIZE / 2;
 const ICON_SIZE = 40;
+const ICON_PAD = 12;
 
 function getArcRadius(total: number) {
-  return 84 + Math.max(0, total - 2) * 26;
+  return 76 + Math.max(0, total - 2) * 22;
 }
 
 /**
@@ -49,15 +50,30 @@ function getArcOffset(
   radius: number,
   mirrorX: boolean
 ) {
-  const startDeg = 128;
-  const endDeg = 208;
+  // Arc uniquement au-dessus du bouton (évite le clipping vers le bas).
+  const startDeg = 118;
+  const endDeg = 172;
   const t = total <= 1 ? 0.5 : index / (total - 1);
-  const deg = total === 1 ? 142 : startDeg + (endDeg - startDeg) * t;
+  const deg = total === 1 ? 145 : startDeg + (endDeg - startDeg) * t;
   const rad = (deg * Math.PI) / 180;
   return {
     x: Math.cos(rad) * radius * (mirrorX ? -1 : 1),
     y: -Math.sin(rad) * radius,
   };
+}
+
+/** Taille du conteneur pour que toutes les icônes restent visibles. */
+function getMenuSpread(total: number, radius: number, mirrorX: boolean) {
+  let maxUp = TRIGGER_SIZE;
+  let maxSide = TRIGGER_SIZE;
+
+  for (let i = 0; i < total; i++) {
+    const { x, y } = getArcOffset(i, total, radius, mirrorX);
+    maxUp = Math.max(maxUp, TRIGGER_CENTER - y + ICON_SIZE / 2 + ICON_PAD);
+    maxSide = Math.max(maxSide, TRIGGER_CENTER - x + ICON_SIZE / 2 + ICON_PAD);
+  }
+
+  return Math.ceil(Math.max(maxUp, maxSide));
 }
 
 /** Convertit un offset (x,y) en position CSS depuis le coin bas-inline-end. */
@@ -102,7 +118,7 @@ function MoonArcGuide({
       </defs>
       <circle cx={cx} cy={cy} r={radius * 0.9} fill="url(#moon-halo)" />
       <path
-        d={`M ${cx + radius * 0.62} ${cy - radius * 0.12} A ${radius * 0.88} ${radius * 0.88} 0 0 0 ${cx - radius * 0.12} ${cy + radius * 0.62}`}
+        d={`M ${cx + radius * 0.55} ${cy - radius * 0.18} A ${radius * 0.92} ${radius * 0.92} 0 0 0 ${cx - radius * 0.18} ${cy + radius * 0.55}`}
         fill="none"
         stroke="rgba(201,169,106,0.18)"
         strokeWidth="1"
@@ -154,7 +170,9 @@ export function FloatingContactButton({
   ];
 
   const arcRadius = getArcRadius(contactItems.length);
-  const menuSpread = arcRadius + TRIGGER_SIZE + 24;
+  const menuSpread = open
+    ? getMenuSpread(contactItems.length, arcRadius, mirrorX)
+    : TRIGGER_SIZE;
 
   useEffect(() => {
     if (!open) return;
@@ -188,7 +206,7 @@ export function FloatingContactButton({
     <div
       ref={rootRef}
       className={cn(
-        "fixed z-[45]",
+        "fixed z-[45] overflow-visible",
         "bottom-[max(1rem,env(safe-area-inset-bottom))] end-[max(1rem,env(safe-area-inset-right))]",
         "sm:bottom-[max(1.5rem,env(safe-area-inset-bottom))] sm:end-[max(1.5rem,env(safe-area-inset-right))]"
       )}
@@ -236,18 +254,18 @@ export function FloatingContactButton({
                 return (
                   <motion.li
                     key={item.id}
-                    className="pointer-events-auto absolute"
+                    className="pointer-events-auto absolute z-20"
                     style={offsetToAnchorStyle(x, y)}
                     initial={
                       reduceMotion
                         ? false
-                        : { opacity: 0, scale: 0.55, y: 10 }
+                        : { opacity: 0, scale: 0.55 }
                     }
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     exit={
                       reduceMotion
                         ? { opacity: 0 }
-                        : { opacity: 0, scale: 0.65, y: 8 }
+                        : { opacity: 0, scale: 0.65 }
                     }
                     transition={{
                       duration,
