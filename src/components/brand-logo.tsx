@@ -9,6 +9,8 @@ type BrandLogoProps = {
   className?: string;
   showSubtitle?: boolean;
   showMark?: boolean;
+  /** Masque le nom de marque sur les très petits écrans (barre navbar). */
+  compact?: boolean;
   subtitleClassName?: string;
 };
 
@@ -47,15 +49,21 @@ export function BrandLogo({
   className,
   showSubtitle = false,
   showMark = true,
+  compact = false,
   subtitleClassName,
 }: BrandLogoProps) {
   const t = useTranslations("hero");
 
   return (
     <div className={cn("notranslate flex min-w-0 items-center gap-2.5 sm:gap-3", className)}>
-      {showMark && <VorzixMark priority className="h-8 w-8 sm:h-9 sm:w-9" />}
+      {showMark && (
+        <VorzixMark
+          priority
+          className={cn("h-8 w-8 sm:h-9 sm:w-9", compact && "h-7 w-7 sm:h-9 sm:w-9")}
+        />
+      )}
 
-      <div className="min-w-0 leading-none">
+      <div className={cn("min-w-0 leading-none", compact && "hidden sm:block")}>
         <BrandName variant="modern" className="truncate text-[13px] sm:text-sm" />
         {showSubtitle && (
           <span
