@@ -1,13 +1,27 @@
 import { FORM_SECURITY } from "@/lib/security/constants";
 
 const DANGEROUS_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+/** Profondeur max pour éviter DoS JSON + pollution imbriquée (OWASP A08). */
+const MAX_JSON_DEPTH = 8;
 
 export type ParseJsonBodyResult =
   | { ok: true; body: unknown }
   | { ok: false; reason: "too_large" | "invalid_json" | "invalid_shape" | "dangerous_keys" };
 
-function hasDangerousKeys(value: Record<string, unknown>): boolean {
-  return Object.keys(value).some((key) => DANGEROUS_KEYS.has(key));
+function hasDangerousKeysDeep(value: unknown, depth = 0): boolean {
+  if (depth > MAX_JSON_DEPTH) return true;
+  if (!value || typeof value !== "object") return false;
+
+  if (Array.isArray(value)) {
+    return value.some((item) => hasDangerousKeysDeep(item, depth + 1));
+  }
+
+  for (const [key, nested] of Object.entries(value as Record<string, unknown>)) {
+    if (DANGEROUS_KEYS.has(key)) return true;
+    if (hasDangerousKeysDeep(nested, depth + 1)) return true;
+  }
+
+  return false;
 }
 
 /** Parse JSON avec limite de taille et garde-fous structurels. */
@@ -55,7 +69,7 @@ export async function parseJsonBody(
     return { ok: false, reason: "invalid_shape" };
   }
 
-  if (hasDangerousKeys(record)) {
+  if (hasDangerousKeysDeep(record)) {
     return { ok: false, reason: "dangerous_keys" };
   }
 

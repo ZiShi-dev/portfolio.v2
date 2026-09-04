@@ -111,6 +111,7 @@ describe("API admin social-links (settings)", () => {
           whatsapp: "",
           instagram: "",
           tiktok: "",
+          facebook: "",
         }),
         getPublicContactEmail: async () => DEFAULT_SITE_SETTINGS.contactEmail,
       },
@@ -163,6 +164,7 @@ describe("API admin social-links (settings)", () => {
     whatsapp: "",
     instagram: "",
     tiktok: "",
+    facebook: "",
   };
 
   it("GET refuse sans session", async () => {
@@ -269,7 +271,7 @@ describe("API admin social-links (settings)", () => {
     assert.equal(res.status, 200);
     assert.deepEqual(
       (lastUpsert as { contactPriority?: string[] }).contactPriority,
-      ["discord", "instagram", "whatsapp", "tiktok"]
+      ["discord", "instagram", "whatsapp", "tiktok", "facebook"]
     );
   });
 

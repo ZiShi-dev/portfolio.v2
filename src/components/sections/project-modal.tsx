@@ -13,6 +13,7 @@ import { lockBodyScroll } from "@/lib/lock-body-scroll";
 import { useModalA11y } from "@/hooks/use-modal-a11y";
 import { PROJECT_MODAL_TITLE_ID } from "@/lib/modal-a11y-ids";
 import { isSafeHttpUrl } from "@/lib/review-schema";
+import type { SaleCtaChannel } from "@/lib/projects/schema";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
 
 export type ProjectImage = {
@@ -51,7 +52,7 @@ export type ProjectItem = {
   listingIntent?: string;
   saleCtaMode?: "inquiry" | "contacts";
   saleCtaLabel?: string;
-  saleCtaChannels?: Array<"whatsapp" | "discord" | "instagram" | "tiktok">;
+  saleCtaChannels?: SaleCtaChannel[];
 };
 
 type ProjectModalProps = {

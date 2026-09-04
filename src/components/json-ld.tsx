@@ -44,6 +44,7 @@ export async function OrganizationJsonLd({ nonce }: { nonce?: string }) {
     settings.whatsapp,
     settings.instagram,
     settings.tiktok,
+    settings.facebook,
   ].filter((url): url is string => Boolean(url));
   const logoUrl = absoluteUrlWithoutSearch(absoluteUrl(brand.profileImage));
 

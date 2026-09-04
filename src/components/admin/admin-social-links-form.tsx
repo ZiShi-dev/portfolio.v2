@@ -186,7 +186,7 @@ export function AdminSocialLinksForm({
           <div className="h-4 w-full max-w-md animate-pulse rounded bg-muted/70" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          {Array.from({ length: 5 }, (_, i) => (
+          {Array.from({ length: 6 }, (_, i) => (
             <div key={`social-skel-${i}`} className="space-y-2">
               <div className="h-3.5 w-28 animate-pulse rounded bg-muted/80" />
               <div className="h-10 w-full animate-pulse rounded-lg bg-muted/60" />

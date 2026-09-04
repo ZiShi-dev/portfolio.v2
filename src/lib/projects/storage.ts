@@ -3,6 +3,7 @@ import {
   createSupabaseServiceClient,
   isSupabaseServiceConfigured,
 } from "@/lib/supabase/service";
+import { matchesImageMimeSignature } from "@/lib/security/image-signature";
 import {
   PROJECT_IMAGE_BUCKET,
   PROJECT_LIMITS,
@@ -48,6 +49,11 @@ export async function uploadProjectImage(
   const ext = EXT_BY_MIME[mime] ?? "bin";
   const path = `projects/${randomUUID()}.${ext}`;
   const buffer = Buffer.from(await file.arrayBuffer());
+  const bytes = new Uint8Array(buffer);
+
+  if (!matchesImageMimeSignature(bytes, mime)) {
+    return { ok: false, reason: "invalid_type" };
+  }
 
   const { error } = await supabase.storage
     .from(PROJECT_IMAGE_BUCKET)

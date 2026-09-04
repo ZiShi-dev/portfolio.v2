@@ -8,6 +8,7 @@ import {
   requestMethodRequiresOrigin,
   verifyFormRequestOrigin,
 } from "@/lib/security/request-origin";
+import { getTrustedClientIp } from "@/lib/security/client-ip";
 import {
   createSubmissionFingerprint,
   hashForAudit,
@@ -101,6 +102,28 @@ describe("OWASP A08 — parseJsonBody (intégrité / prototype pollution)", () =
       if (!result.ok) assert.equal(result.reason, "dangerous_keys");
     }
   });
+
+  it("rejette les clés dangereuses imbriquées (pollution profonde)", async () => {
+    const result = await parseJsonBody(
+      new Request("http://localhost/api/test", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: '{"nested":{"deep":{"__proto__":{"admin":true}}}}',
+      })
+    );
+    assert.equal(result.ok, false);
+    if (!result.ok) assert.equal(result.reason, "dangerous_keys");
+  });
+
+  it("rejette un JSON trop profond (anti-DoS)", async () => {
+    let body: Record<string, unknown> = { leaf: 1 };
+    for (let i = 0; i < 12; i += 1) {
+      body = { nested: body };
+    }
+    const result = await parseJsonBody(jsonRequest(body));
+    assert.equal(result.ok, false);
+    if (!result.ok) assert.equal(result.reason, "dangerous_keys");
+  });
 });
 
 describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () => {
@@ -109,6 +132,10 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
   beforeEach(() => {
     process.env = { ...envSnapshot, NODE_ENV: "production" };
     delete process.env.FORM_ALLOWED_ORIGINS;
+    delete process.env.VERCEL;
+    delete process.env.VERCEL_URL;
+    delete process.env.VERCEL_BRANCH_URL;
+    delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
   });
 
   afterEach(() => {
@@ -151,6 +178,19 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
     const request = new Request("https://zishi.dev/api/contact", {
       method: "POST",
       headers: { referer: "https://zishi.dev/contact" },
+    });
+    assert.equal(verifyFormRequestOrigin(request), true);
+  });
+
+  it("autorise l'origine Vercel du déploiement courant (via VERCEL_URL)", () => {
+    process.env.VERCEL = "1";
+    process.env.VERCEL_URL = "portfolio-git-main-user.vercel.app";
+    process.env.NEXT_PUBLIC_SITE_URL = "https://zishi.dev";
+    const request = new Request("https://portfolio-git-main-user.vercel.app/api/contact", {
+      method: "POST",
+      headers: {
+        origin: "https://portfolio-git-main-user.vercel.app",
+      },
     });
     assert.equal(verifyFormRequestOrigin(request), true);
   });
@@ -230,8 +270,28 @@ describe("OWASP A05 — production-guards (Turnstile)", () => {
   });
 
   it("permet de désactiver explicitement Turnstile", () => {
+    process.env = { ...process.env, NODE_ENV: "development" };
+    process.env.FORM_REQUIRE_TURNSTILE = "false";
+    delete process.env.TURNSTILE_SECRET_KEY;
+    delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    assert.equal(isTurnstileRequired(), false);
+    assert.equal(getTurnstileGuardFailure(), null);
+  });
+
+  it("ignore FORM_REQUIRE_TURNSTILE=false en production (fail-closed)", () => {
     process.env = { ...process.env, NODE_ENV: "production" };
     process.env.FORM_REQUIRE_TURNSTILE = "false";
+    delete process.env.FORM_ALLOW_INSECURE;
+    delete process.env.TURNSTILE_SECRET_KEY;
+    delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    assert.equal(isTurnstileRequired(), true);
+    assert.equal(getTurnstileGuardFailure(), "missing_config");
+  });
+
+  it("autorise FORM_REQUIRE_TURNSTILE=false en prod seulement avec FORM_ALLOW_INSECURE", () => {
+    process.env = { ...process.env, NODE_ENV: "production" };
+    process.env.FORM_REQUIRE_TURNSTILE = "false";
+    process.env.FORM_ALLOW_INSECURE = "true";
     delete process.env.TURNSTILE_SECRET_KEY;
     delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
     assert.equal(isTurnstileRequired(), false);

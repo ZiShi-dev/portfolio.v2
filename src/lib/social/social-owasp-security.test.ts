@@ -21,6 +21,7 @@ function valid(overrides: Record<string, unknown> = {}) {
     whatsapp: "",
     instagram: "",
     tiktok: "",
+    facebook: "",
     ...overrides,
   };
 }
@@ -114,7 +115,7 @@ describe("OWASP A03 — Injection (email / URLs)", () => {
     const req = new Request("http://localhost/api/admin/social-links", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
-      body: '{"contactEmail":"a@b.co","__proto__":{"admin":true},"discord":"","whatsapp":"","instagram":"","tiktok":""}',
+      body: '{"contactEmail":"a@b.co","__proto__":{"admin":true},"discord":"","whatsapp":"","instagram":"","tiktok":"","facebook":""}',
     });
     const parsed = await parseJsonBody(req, SITE_SOCIAL_LIMITS.maxBodyBytes);
     assert.equal(parsed.ok, false);
@@ -182,6 +183,7 @@ describe("OWASP A10 — Open redirect footer", () => {
       whatsapp: "",
       instagram: "",
       tiktok: "",
+      facebook: "",
     });
     assert.ok(links.every((l) => l.href === "" || l.href.startsWith("https://")));
   });

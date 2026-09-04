@@ -38,6 +38,21 @@ function addSiteOriginVariants(origins: Set<string>, siteUrl: string) {
   }
 }
 
+function addVercelDeploymentOrigins(origins: Set<string>) {
+  if (process.env.VERCEL !== "1") return;
+
+  for (const key of [
+    "VERCEL_URL",
+    "VERCEL_BRANCH_URL",
+    "VERCEL_PROJECT_PRODUCTION_URL",
+  ] as const) {
+    const raw = process.env[key]?.trim();
+    if (!raw) continue;
+    const url = raw.startsWith("http") ? raw : `https://${raw}`;
+    addSiteOriginVariants(origins, url);
+  }
+}
+
 /** Origines autorisées pour les POST formulaire (anti-CSRF / anti-abus direct API). */
 export function getAllowedFormOrigins(): Set<string> {
   const origins = new Set<string>();
@@ -46,6 +61,8 @@ export function getAllowedFormOrigins(): Set<string> {
   if (siteUrl) {
     addSiteOriginVariants(origins, siteUrl);
   }
+
+  addVercelDeploymentOrigins(origins);
 
   const extras = process.env.FORM_ALLOWED_ORIGINS?.split(",") ?? [];
   for (const entry of extras) {

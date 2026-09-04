@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Mail, MessageCircle, X } from "lucide-react";
 import {
   SiDiscord,
+  SiFacebook,
   SiInstagram,
   SiTiktok,
   SiWhatsapp,
@@ -27,6 +28,7 @@ const socialIcons: Record<
   whatsapp: SiWhatsapp,
   instagram: SiInstagram,
   tiktok: SiTiktok,
+  facebook: SiFacebook,
 };
 
 /**

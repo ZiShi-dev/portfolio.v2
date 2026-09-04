@@ -71,6 +71,7 @@ const nextConfig: NextConfig = {
         source: "/api/:path*",
         headers: [
           { key: "Cache-Control", value: "no-store, max-age=0" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Robots-Tag", value: "noindex, nofollow" },
         ],
       },

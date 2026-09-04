@@ -16,14 +16,17 @@ type SiteSocialRow = {
   whatsapp: string;
   instagram: string;
   tiktok: string;
+  facebook?: string | null;
   contact_priority?: string[] | null;
   updated_at?: string;
 };
 
-const BASE_COLUMNS = "contact_email, discord, whatsapp, instagram, tiktok";
-const ROW_COLUMNS = `${BASE_COLUMNS}, contact_priority`;
+const LEGACY_COLUMNS = "contact_email, discord, whatsapp, instagram, tiktok";
+const SOCIAL_COLUMNS = `${LEGACY_COLUMNS}, facebook`;
+const ROW_COLUMNS = `${SOCIAL_COLUMNS}, contact_priority`;
 const ROW_COLUMNS_WITH_META = `${ROW_COLUMNS}, updated_at`;
-const BASE_COLUMNS_WITH_META = `${BASE_COLUMNS}, updated_at`;
+const SOCIAL_COLUMNS_WITH_META = `${SOCIAL_COLUMNS}, updated_at`;
+const LEGACY_COLUMNS_WITH_META = `${LEGACY_COLUMNS}, updated_at`;
 
 type SupabaseError = { code?: string; message?: string } | null;
 
@@ -35,6 +38,12 @@ function isMissingContactPriority(error: SupabaseError): boolean {
   if (!error) return false;
   if (error.code === "42703" || error.code === "PGRST204") return true;
   return String(error.message ?? "").includes("contact_priority");
+}
+
+function isMissingFacebook(error: SupabaseError): boolean {
+  if (!error) return false;
+  if (error.code === "42703" || error.code === "PGRST204") return true;
+  return String(error.message ?? "").includes("facebook");
 }
 
 function defaultSettings(): SiteSettings {
@@ -63,8 +72,41 @@ function rowToValues(row: SiteSocialRow): SiteSettings {
     whatsapp: String(row.whatsapp ?? "").trim(),
     instagram: String(row.instagram ?? "").trim(),
     tiktok: String(row.tiktok ?? "").trim(),
+    facebook: String(row.facebook ?? "").trim(),
     contactPriority: normalizeContactPriority(row.contact_priority),
   };
+}
+
+async function readSiteSocialRow(
+  supabase: NonNullable<ReturnType<typeof createSupabaseServiceClient>>,
+  columns: string
+) {
+  return supabase
+    .from("site_social_links")
+    .select(columns)
+    .eq("id", "default")
+    .maybeSingle();
+}
+
+async function fetchSiteSocialRow(
+  supabase: NonNullable<ReturnType<typeof createSupabaseServiceClient>>,
+  withMeta: boolean
+) {
+  const full = withMeta ? ROW_COLUMNS_WITH_META : ROW_COLUMNS;
+  let { data, error } = await readSiteSocialRow(supabase, full);
+  if (isMissingContactPriority(error)) {
+    ({ data, error } = await readSiteSocialRow(
+      supabase,
+      withMeta ? SOCIAL_COLUMNS_WITH_META : SOCIAL_COLUMNS
+    ));
+  }
+  if (isMissingFacebook(error)) {
+    ({ data, error } = await readSiteSocialRow(
+      supabase,
+      withMeta ? LEGACY_COLUMNS_WITH_META : LEGACY_COLUMNS
+    ));
+  }
+  return { data, error };
 }
 
 /** Réglages publics (footer / SEO / affichage email). */
@@ -76,17 +118,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   const supabase = createSupabaseServiceClient();
   if (!supabase) return defaultSettings();
 
-  const read = (columns: string) =>
-    supabase
-      .from("site_social_links")
-      .select(columns)
-      .eq("id", "default")
-      .maybeSingle();
-
-  let { data, error } = await read(ROW_COLUMNS);
-  if (isMissingContactPriority(error)) {
-    ({ data, error } = await read(BASE_COLUMNS));
-  }
+  const { data, error } = await fetchSiteSocialRow(supabase, false);
 
   if (error || !data) {
     return defaultSettings();
@@ -109,6 +141,7 @@ export async function getSiteSocialLinks() {
     whatsapp: settings.whatsapp,
     instagram: settings.instagram,
     tiktok: settings.tiktok,
+    facebook: settings.facebook,
   };
 }
 
@@ -152,17 +185,7 @@ export async function getSiteSettingsForAdmin(): Promise<GetSiteSocialAdminResul
     };
   }
 
-  const read = (columns: string) =>
-    supabase
-      .from("site_social_links")
-      .select(columns)
-      .eq("id", "default")
-      .maybeSingle();
-
-  let { data, error } = await read(ROW_COLUMNS_WITH_META);
-  if (isMissingContactPriority(error)) {
-    ({ data, error } = await read(BASE_COLUMNS_WITH_META));
-  }
+  let { data, error } = await fetchSiteSocialRow(supabase, true);
 
   if (error) {
     console.error("[site-social]", error.message);
@@ -212,6 +235,7 @@ export async function upsertSiteSocialLinks(
     whatsapp: values.whatsapp,
     instagram: values.instagram,
     tiktok: values.tiktok,
+    facebook: values.facebook,
     updated_at: updatedAt,
   };
 
@@ -230,7 +254,11 @@ export async function upsertSiteSocialLinks(
     ROW_COLUMNS_WITH_META
   );
   if (isMissingContactPriority(error)) {
-    ({ data, error } = await write(baseRow, BASE_COLUMNS_WITH_META));
+    ({ data, error } = await write(baseRow, SOCIAL_COLUMNS_WITH_META));
+  }
+  if (isMissingFacebook(error)) {
+    const { facebook: _fb, ...legacyRow } = baseRow;
+    ({ data, error } = await write(legacyRow, LEGACY_COLUMNS_WITH_META));
   }
 
   if (error || !data) {

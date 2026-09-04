@@ -730,28 +730,32 @@
         "discord": "Discord",
         "whatsapp": "WhatsApp",
         "instagram": "Instagram",
-        "tiktok": "TikTok"
+        "tiktok": "TikTok",
+        "facebook": "Facebook"
       },
       "hints": {
         "contactEmail": "Shown on the site (footer, contact, legal).",
         "discord": "Invite or profile on discord.gg / discord.com",
         "whatsapp": "wa.me link (country code, no +)",
         "instagram": "instagram.com/… profile",
-        "tiktok": "tiktok.com/@… profile"
+        "tiktok": "tiktok.com/@… profile",
+        "facebook": "facebook.com profile or page"
       },
       "placeholders": {
         "contactEmail": "contact@yourdomain.com",
         "discord": "https://discord.gg/…",
         "whatsapp": "https://wa.me/33612345678",
         "instagram": "https://www.instagram.com/…",
-        "tiktok": "https://www.tiktok.com/@…"
+        "tiktok": "https://www.tiktok.com/@…",
+        "facebook": "https://www.facebook.com/profile.php?id=…"
       },
       "validation": {
         "contactEmail": "Enter a valid email address.",
         "discord": "Invalid Discord HTTPS URL (discord.gg or discord.com).",
         "whatsapp": "Invalid WhatsApp HTTPS URL (wa.me or whatsapp.com).",
         "instagram": "Invalid Instagram HTTPS URL (instagram.com).",
-        "tiktok": "Invalid TikTok HTTPS URL (tiktok.com)."
+        "tiktok": "Invalid TikTok HTTPS URL (tiktok.com).",
+        "facebook": "Invalid Facebook HTTPS URL (facebook.com)."
       },
       "priorityTitle": "Contact priority",
       "priorityHint": "Order used on listing pages and for the preferred contact in the footer. The first filled network becomes the main button.",

@@ -12,6 +12,7 @@ function valid(overrides: Record<string, unknown> = {}) {
     whatsapp: "https://wa.me/33612345678",
     instagram: "",
     tiktok: "https://www.tiktok.com/@user",
+    facebook: "",
     ...overrides,
   };
 }
@@ -103,6 +104,29 @@ describe("parseSiteSocialUpdateBody", () => {
     assert.ok(SITE_SOCIAL_LIMITS.maxBodyBytes <= 8_192);
     assert.equal(SITE_SOCIAL_LIMITS.urlMax, 500);
     assert.equal(SITE_SOCIAL_LIMITS.emailMax, 254);
+  });
+
+  it("accepte un profil Facebook https valide", () => {
+    const parsed = parseSiteSocialUpdateBody(
+      valid({
+        facebook: "https://www.facebook.com/profile.php?id=61593748724833",
+      })
+    );
+    assert.equal(parsed.ok, true);
+    if (parsed.ok) {
+      assert.equal(
+        parsed.values.facebook,
+        "https://www.facebook.com/profile.php?id=61593748724833"
+      );
+    }
+  });
+
+  it("rejette Facebook hors domaine", () => {
+    const parsed = parseSiteSocialUpdateBody(
+      valid({ facebook: "https://evil.example/facebook" })
+    );
+    assert.equal(parsed.ok, false);
+    if (!parsed.ok) assert.equal(parsed.error, "invalid_facebook_url");
   });
 
   it("strip clés inconnues (schéma object sans passthrough)", () => {

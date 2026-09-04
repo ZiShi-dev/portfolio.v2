@@ -3,6 +3,7 @@ export const SITE_SOCIAL_IDS = [
   "whatsapp",
   "instagram",
   "tiktok",
+  "facebook",
 ] as const;
 
 export type SiteSocialId = (typeof SITE_SOCIAL_IDS)[number];
@@ -18,6 +19,7 @@ export const DEFAULT_CONTACT_PRIORITY = [
   "discord",
   "instagram",
   "tiktok",
+  "facebook",
 ] as const satisfies readonly SiteSocialId[];
 
 /** Réglages publics éditables (email affiché + réseaux + priorité de contact). */
@@ -35,6 +37,7 @@ export const DEFAULT_SITE_SOCIAL: SiteSocialLinks = {
   whatsapp: "",
   instagram: "",
   tiktok: "",
+  facebook: "",
 };
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
@@ -48,6 +51,7 @@ export const SITE_SOCIAL_LABELS: Record<SiteSocialId, string> = {
   whatsapp: "WhatsApp",
   instagram: "Instagram",
   tiktok: "TikTok",
+  facebook: "Facebook",
 };
 
 export function isSiteSocialId(value: unknown): value is SiteSocialId {

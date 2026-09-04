@@ -1,9 +1,10 @@
 import { Mail } from "lucide-react";
 import {
   SiDiscord,
-  SiWhatsapp,
+  SiFacebook,
   SiInstagram,
   SiTiktok,
+  SiWhatsapp,
 } from "react-icons/si";
 import { getTranslations } from "next-intl/server";
 import { BrandLogoFooter } from "@/components/brand-logo";
@@ -29,6 +30,7 @@ const socialIcons: Record<
   whatsapp: SiWhatsapp,
   instagram: SiInstagram,
   tiktok: SiTiktok,
+  facebook: SiFacebook,
 };
 
 const footerLinkClass =

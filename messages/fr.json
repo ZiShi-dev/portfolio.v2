@@ -732,28 +732,32 @@
         "discord": "Discord",
         "whatsapp": "WhatsApp",
         "instagram": "Instagram",
-        "tiktok": "TikTok"
+        "tiktok": "TikTok",
+        "facebook": "Facebook"
       },
       "hints": {
         "contactEmail": "Visible sur le site (footer, contact, mentions).",
         "discord": "Invite ou profil discord.gg / discord.com",
         "whatsapp": "Lien wa.me (indicatif sans +)",
         "instagram": "Profil instagram.com/…",
-        "tiktok": "Profil tiktok.com/@…"
+        "tiktok": "Profil tiktok.com/@…",
+        "facebook": "Profil ou page facebook.com/…"
       },
       "placeholders": {
         "contactEmail": "contact@votredomaine.com",
         "discord": "https://discord.gg/…",
         "whatsapp": "https://wa.me/33612345678",
         "instagram": "https://www.instagram.com/…",
-        "tiktok": "https://www.tiktok.com/@…"
+        "tiktok": "https://www.tiktok.com/@…",
+        "facebook": "https://www.facebook.com/profile.php?id=…"
       },
       "validation": {
         "contactEmail": "Indiquez une adresse email valide.",
         "discord": "URL Discord https invalide (discord.gg ou discord.com).",
         "whatsapp": "URL WhatsApp https invalide (wa.me ou whatsapp.com).",
         "instagram": "URL Instagram https invalide (instagram.com).",
-        "tiktok": "URL TikTok https invalide (tiktok.com)."
+        "tiktok": "URL TikTok https invalide (tiktok.com).",
+        "facebook": "URL Facebook https invalide (facebook.com)."
       },
       "priorityTitle": "Priorité des moyens de contact",
       "priorityHint": "Ordre utilisé sur les fiches à vendre et pour le contact préféré du footer. Le premier réseau renseigné devient le bouton principal.",
