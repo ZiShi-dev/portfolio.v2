@@ -33,25 +33,33 @@ const socialIcons: Record<
 
 const TRIGGER_SIZE = 56;
 const TRIGGER_CENTER = TRIGGER_SIZE / 2;
+const ICON_SIZE = 40;
 
-/** Positions le long d’un arc de croissant (quart de lune autour du bouton). */
+/** Rayon dynamique : plus d’icônes → arc plus large (évite les chevauchements). */
+function getArcRadius(total: number) {
+  return 84 + Math.max(0, total - 2) * 26;
+}
+
+/** Positions sur un quart de cercle (croissant) autour du bouton déclencheur. */
 function getArcOffset(
   index: number,
   total: number,
   radius: number,
   mirrorX: boolean
 ) {
-  const startDeg = 108;
-  const endDeg = 198;
+  const startDeg = 126;
+  const endDeg = 212;
   const t = total <= 1 ? 0.5 : index / (total - 1);
   const deg = startDeg + (endDeg - startDeg) * t;
   const rad = (deg * Math.PI) / 180;
-  const x = Math.cos(rad) * radius * (mirrorX ? -1 : 1);
-  const y = -Math.sin(rad) * radius;
-  return { x, y };
+  return {
+    x: Math.cos(rad) * radius * (mirrorX ? -1 : 1),
+    y: -Math.sin(rad) * radius,
+  };
 }
 
-function MoonCrescent({
+/** Halo lunaire discret — hairline uniquement, conforme charte Atlas Céleste. */
+function MoonArcGuide({
   radius,
   mirrorX,
   reduceMotion,
@@ -60,68 +68,46 @@ function MoonCrescent({
   mirrorX: boolean;
   reduceMotion: boolean;
 }) {
-  const size = radius * 2.15;
+  const size = radius + TRIGGER_CENTER;
+  const cx = radius;
+  const cy = radius;
+
   return (
-    <motion.div
+    <motion.svg
       aria-hidden
-      className="pointer-events-none absolute bottom-0 end-0"
-      style={{
-        width: size,
-        height: size,
-        marginBottom: TRIGGER_CENTER - size * 0.08,
-        marginInlineEnd: TRIGGER_CENTER - size * 0.08,
-        transform: mirrorX ? "scaleX(-1)" : undefined,
-      }}
-      initial={reduceMotion ? false : { opacity: 0, scale: 0.88 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.92 }}
-      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      className="pointer-events-none absolute bottom-0 end-0 overflow-visible"
+      width={size}
+      height={size}
+      style={{ transform: mirrorX ? "scaleX(-1)" : undefined }}
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Halo lunaire */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle at 72% 72%, rgba(201,169,106,0.14) 0%, rgba(201,169,106,0.04) 38%, transparent 68%)",
-        }}
-      />
-      {/* Croissant — deux disques décalés */}
-      <div
-        className="absolute inset-[6%] rounded-full border border-primary/10"
-        style={{
-          boxShadow:
-            "inset -6px 6px 18px -4px rgba(201,169,106,0.12), 0 0 40px -8px rgba(201,169,106,0.18)",
-        }}
-      />
-      <div
-        className="absolute rounded-full bg-background"
-        style={{
-          width: "78%",
-          height: "78%",
-          top: "4%",
-          insetInlineEnd: "-8%",
-          boxShadow: "inset 0 0 20px rgba(7,10,18,0.6)",
-        }}
-      />
-      {/* Arc hairline le long du croissant */}
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 100 100"
+      <defs>
+        <radialGradient id="moon-halo" cx="100%" cy="100%" r="75%">
+          <stop offset="0%" stopColor="rgba(201,169,106,0.08)" />
+          <stop offset="55%" stopColor="rgba(201,169,106,0.02)" />
+          <stop offset="100%" stopColor="rgba(201,169,106,0)" />
+        </radialGradient>
+      </defs>
+      <circle cx={cx} cy={cy} r={radius * 0.9} fill="url(#moon-halo)" />
+      <path
+        d={`M ${cx + radius * 0.68} ${cy - radius * 0.08} A ${radius * 0.85} ${radius * 0.85} 0 0 0 ${cx - radius * 0.08} ${cy + radius * 0.68}`}
         fill="none"
-      >
-        <path
-          d="M 78 22 A 42 42 0 0 0 22 78"
-          stroke="rgba(201,169,106,0.22)"
-          strokeWidth="0.6"
-          strokeLinecap="round"
-        />
-      </svg>
-    </motion.div>
+        stroke="rgba(201,169,106,0.18)"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+    </motion.svg>
   );
 }
 
+const iconButtonClass =
+  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-step-accent/20 bg-background/80 text-foreground/60 backdrop-blur-md transition-[transform,border-color,color,box-shadow] duration-200 hover:border-primary/35 hover:text-foreground hover:shadow-[0_0_20px_-10px_rgba(201,169,106,0.35)] motion-reduce:transition-none motion-reduce:hover:scale-100";
+
 /**
- * Speed dial en arc de lune — réseaux depuis les réglages admin.
+ * Speed dial en arc lunaire — icônes seules, libellé au survol (comme le footer).
  */
 export function FloatingContactButton({
   contactEmail,
@@ -161,8 +147,8 @@ export function FloatingContactButton({
       : []),
   ];
 
-  const arcRadius =
-    contactItems.length <= 2 ? 76 : contactItems.length <= 4 ? 88 : 100;
+  const arcRadius = getArcRadius(contactItems.length);
+  const menuSpread = arcRadius + TRIGGER_SIZE + 20;
 
   useEffect(() => {
     if (!open) return;
@@ -190,7 +176,7 @@ export function FloatingContactButton({
 
   if (contactItems.length === 0) return null;
 
-  const duration = reduceMotion ? 0 : 0.22;
+  const duration = reduceMotion ? 0 : 0.2;
 
   return (
     <div
@@ -202,181 +188,160 @@ export function FloatingContactButton({
       )}
     >
       <div
-        className="relative"
-        style={{ width: TRIGGER_SIZE, height: TRIGGER_SIZE }}
+        className="relative transition-[width,height] duration-200 motion-reduce:transition-none"
+        style={{
+          width: open ? menuSpread : TRIGGER_SIZE,
+          height: open ? menuSpread : TRIGGER_SIZE,
+        }}
       >
-        <AnimatePresence>
-          {open ? (
-            <MoonCrescent
-              radius={arcRadius}
-              mirrorX={mirrorX}
-              reduceMotion={Boolean(reduceMotion)}
-            />
-          ) : null}
-        </AnimatePresence>
-
-        <AnimatePresence initial={false}>
-          {open ? (
-            <motion.ul
-              id={menuId}
-              aria-label={t("menuLabel")}
-              className="pointer-events-none absolute inset-0 list-none"
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: duration * 0.8 }}
-            >
-              {contactItems.map((item, index) => {
-                const Icon = item.Icon;
-                const { x, y } = getArcOffset(
-                  index,
-                  contactItems.length,
-                  arcRadius,
-                  mirrorX
-                );
-                const centerX = TRIGGER_CENTER + x;
-                const centerY = TRIGGER_CENTER + y;
-
-                return (
-                  <motion.li
-                    key={item.id}
-                    className="pointer-events-auto absolute"
-                    style={{
-                      left: centerX,
-                      top: centerY,
-                      transform: "translate(-50%, -50%)",
-                    }}
-                    initial={
-                      reduceMotion
-                        ? false
-                        : {
-                            opacity: 0,
-                            scale: 0.5,
-                            x: mirrorX ? -10 : 10,
-                            y: 10,
-                          }
-                    }
-                    animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-                    exit={
-                      reduceMotion
-                        ? { opacity: 0 }
-                        : { opacity: 0, scale: 0.6, x: mirrorX ? -6 : 6, y: 6 }
-                    }
-                    transition={{
-                      duration,
-                      delay: reduceMotion ? 0 : index * 0.04,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                  >
-                    <a
-                      ref={index === 0 ? firstLinkRef : undefined}
-                      href={item.href}
-                      target={item.external ? "_blank" : undefined}
-                      rel={item.external ? "noopener noreferrer" : undefined}
-                      aria-label={
-                        item.id === "email"
-                          ? t("emailLabel")
-                          : t("networkLabel", { network: item.label })
-                      }
-                      title={item.label}
-                      onClick={() => setOpen(false)}
-                      className={cn(
-                        "group flex items-center gap-2 outline-none",
-                        "focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border",
-                          "bg-surface-elevated/95 text-foreground/75 shadow-[0_8px_22px_-10px_rgba(0,0,0,0.85)] backdrop-blur-xl",
-                          "transition-[transform,border-color,color,box-shadow] duration-200",
-                          "group-hover:scale-105 group-hover:border-primary/30 group-hover:text-foreground",
-                          "group-hover:shadow-[0_10px_26px_-8px_rgba(0,0,0,0.9),0_0_18px_-10px_rgba(201,169,106,0.35)]",
-                          "motion-reduce:transition-none motion-reduce:group-hover:scale-100",
-                          item.preferred
-                            ? "border-primary/25 text-foreground/90"
-                            : "border-border"
-                        )}
-                      >
-                        <Icon className="h-[1.15rem] w-[1.15rem]" aria-hidden />
-                      </span>
-                      <span
-                        className={cn(
-                          "max-w-[min(11rem,calc(100vw-7rem))] truncate rounded-full border border-border bg-surface/95 px-2.5 py-1",
-                          "text-[11px] font-medium text-foreground/75 shadow-[0_6px_18px_-12px_rgba(0,0,0,0.9)] backdrop-blur-xl",
-                          "opacity-0 transition-[opacity,color,border-color] duration-200",
-                          "group-hover:opacity-100 group-hover:border-primary/20 group-hover:text-foreground/90",
-                          "group-focus-visible:opacity-100",
-                          open && "opacity-100"
-                        )}
-                      >
-                        {item.label}
-                      </span>
-                    </a>
-                  </motion.li>
-                );
-              })}
-            </motion.ul>
-          ) : null}
-        </AnimatePresence>
-
-        <button
-          ref={triggerRef}
-          type="button"
-          aria-expanded={open}
-          aria-controls={menuId}
-          aria-label={open ? t("close") : t("open")}
-          title={open ? t("close") : t("open")}
-          onClick={() => setOpen((current) => !current)}
-          className={cn(
-            "relative z-10 flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border outline-none",
-            "border-border bg-surface-elevated/95 text-foreground/80 backdrop-blur-xl",
-            "shadow-[0_12px_36px_-12px_rgba(0,0,0,0.95)]",
-            "transition-[transform,border-color,box-shadow,color] duration-200",
-            "hover:scale-105 hover:border-primary/35 hover:text-foreground",
-            "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-            "motion-reduce:transition-none motion-reduce:hover:scale-100",
-            open &&
-              "border-primary/40 text-primary shadow-[0_12px_36px_-12px_rgba(0,0,0,0.95),0_0_32px_-12px_rgba(201,169,106,0.45)]"
-          )}
+        <div
+          className="absolute bottom-0 end-0"
+          style={{ width: TRIGGER_SIZE, height: TRIGGER_SIZE }}
         >
-          {/* Anneaux lunaires au repos / ouvert */}
-          <span
-            className={cn(
-              "pointer-events-none absolute inset-[5px] rounded-full border transition-colors duration-300",
-              open ? "border-primary/25" : "border-foreground/8"
-            )}
-          />
-          <span
-            className={cn(
-              "pointer-events-none absolute inset-[10px] rounded-full border transition-opacity duration-300",
-              open ? "border-primary/12 opacity-100" : "opacity-0"
-            )}
-          />
-
-          <AnimatePresence initial={false} mode="wait">
-            <motion.span
-              key={open ? "close" : "contact"}
-              initial={
-                reduceMotion ? false : { opacity: 0, rotate: -20, scale: 0.75 }
-              }
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              exit={
-                reduceMotion
-                  ? { opacity: 0 }
-                  : { opacity: 0, rotate: 20, scale: 0.75 }
-              }
-              transition={{ duration: reduceMotion ? 0 : 0.16 }}
-              className="relative flex"
-            >
-              {open ? (
-                <X className="h-6 w-6" strokeWidth={1.7} aria-hidden />
-              ) : (
-                <Moon className="h-[1.35rem] w-[1.35rem]" strokeWidth={1.5} aria-hidden />
-              )}
-            </motion.span>
+          <AnimatePresence>
+            {open ? (
+              <MoonArcGuide
+                radius={arcRadius}
+                mirrorX={mirrorX}
+                reduceMotion={Boolean(reduceMotion)}
+              />
+            ) : null}
           </AnimatePresence>
-        </button>
+
+          <AnimatePresence initial={false}>
+            {open ? (
+              <motion.ul
+                id={menuId}
+                aria-label={t("menuLabel")}
+                className="pointer-events-none absolute inset-0 m-0 list-none p-0"
+                initial={reduceMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: duration * 0.8 }}
+              >
+                {contactItems.map((item, index) => {
+                  const Icon = item.Icon;
+                  const { x, y } = getArcOffset(
+                    index,
+                    contactItems.length,
+                    arcRadius,
+                    mirrorX
+                  );
+                  const len = Math.hypot(x, y) || 1;
+                  const tipX = (x / len) * 52;
+                  const tipY = (y / len) * 52;
+
+                  return (
+                    <motion.li
+                      key={item.id}
+                      className="pointer-events-auto absolute"
+                      style={{
+                        bottom: TRIGGER_CENTER + y - ICON_SIZE / 2,
+                        insetInlineEnd: TRIGGER_CENTER - x - ICON_SIZE / 2,
+                      }}
+                      initial={
+                        reduceMotion
+                          ? false
+                          : { opacity: 0, scale: 0.55, y: 8 }
+                      }
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={
+                        reduceMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, scale: 0.65, y: 6 }
+                      }
+                      transition={{
+                        duration,
+                        delay: reduceMotion ? 0 : index * 0.045,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                    >
+                      <a
+                        ref={index === 0 ? firstLinkRef : undefined}
+                        href={item.href}
+                        target={item.external ? "_blank" : undefined}
+                        rel={item.external ? "noopener noreferrer" : undefined}
+                        aria-label={
+                          item.id === "email"
+                            ? t("emailLabel")
+                            : t("networkLabel", { network: item.label })
+                        }
+                        title={item.label}
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                          "group relative flex outline-none",
+                          iconButtonClass,
+                          item.preferred &&
+                            "border-primary/30 text-foreground/80",
+                          "focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        )}
+                      >
+                        <Icon className="h-[1.05rem] w-[1.05rem]" aria-hidden />
+                        <span
+                          className={cn(
+                            "pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap rounded-md",
+                            "border border-border bg-surface/95 px-2 py-0.5 text-[11px] font-medium text-foreground/80",
+                            "opacity-0 shadow-[0_6px_18px_-10px_rgba(0,0,0,0.9)] backdrop-blur-md",
+                            "transition-opacity duration-150",
+                            "group-hover:opacity-100 group-focus-visible:opacity-100"
+                          )}
+                          style={{
+                            transform: `translate(calc(-50% + ${tipX}px), calc(-50% + ${tipY}px))`,
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                      </a>
+                    </motion.li>
+                  );
+                })}
+              </motion.ul>
+            ) : null}
+          </AnimatePresence>
+
+          <button
+            ref={triggerRef}
+            type="button"
+            aria-expanded={open}
+            aria-controls={menuId}
+            aria-label={open ? t("close") : t("open")}
+            title={open ? t("close") : t("open")}
+            onClick={() => setOpen((current) => !current)}
+            className={cn(
+              "relative z-10 flex h-14 w-14 items-center justify-center rounded-full border outline-none",
+              "border-step-accent/25 bg-surface-elevated/95 text-foreground/65 backdrop-blur-md",
+              "shadow-[0_10px_32px_-14px_rgba(0,0,0,0.9)]",
+              "transition-[transform,border-color,box-shadow,color] duration-200",
+              "hover:scale-[1.03] hover:border-primary/35 hover:text-foreground",
+              "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              "motion-reduce:transition-none motion-reduce:hover:scale-100",
+              open && "border-primary/35 text-primary shadow-[0_0_28px_-12px_rgba(201,169,106,0.4)]"
+            )}
+          >
+            <AnimatePresence initial={false} mode="wait">
+              <motion.span
+                key={open ? "close" : "moon"}
+                initial={
+                  reduceMotion ? false : { opacity: 0, rotate: -16, scale: 0.8 }
+                }
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={
+                  reduceMotion
+                    ? { opacity: 0 }
+                    : { opacity: 0, rotate: 16, scale: 0.8 }
+                }
+                transition={{ duration: reduceMotion ? 0 : 0.14 }}
+                className="relative flex"
+              >
+                {open ? (
+                  <X className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+                ) : (
+                  <Moon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
+                )}
+              </motion.span>
+            </AnimatePresence>
+          </button>
+        </div>
       </div>
     </div>
   );
