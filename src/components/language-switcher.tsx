@@ -55,7 +55,9 @@ export function LanguageSwitcher({ className, compact, embedded }: LanguageSwitc
           onClick={() => switchLocale(code)}
           className={cn(
             "rounded-full text-center text-[11px] font-semibold uppercase tracking-wide transition-all",
-            embedded ? "min-w-[2rem] px-2 py-1.5" : "min-w-[2.25rem] px-2.5 py-1",
+            embedded
+              ? "min-w-[1.625rem] px-1.5 py-1.5 sm:min-w-[2rem] sm:px-2"
+              : "min-w-[2.25rem] px-2.5 py-1",
             locale === code
               ? "bg-step-accent text-primary-foreground shadow-sm"
               : "text-foreground/55 hover:bg-muted/70 hover:text-foreground"
