@@ -42,6 +42,7 @@ export function FloatingContactButton({
   const t = useTranslations("floatingContact");
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const reduceMotion = useReducedMotion();
@@ -70,6 +71,18 @@ export function FloatingContactButton({
         ]
       : []),
   ];
+  /** Priorité haute près du bouton ; évite que les liens du haut sortent de l’écran. */
+  const displayItems = [...contactItems].reverse();
+
+  useEffect(() => {
+    if (!open) return;
+    const menu = menuRef.current;
+    if (!menu) return;
+    const frame = window.requestAnimationFrame(() => {
+      menu.scrollTop = menu.scrollHeight;
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, displayItems.length]);
 
   useEffect(() => {
     if (!open) return;
@@ -101,7 +114,7 @@ export function FloatingContactButton({
     <div
       ref={rootRef}
       className={cn(
-        "fixed z-[45] flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-3",
+        "fixed z-[45] flex max-h-[calc(100dvh-1.5rem)] min-h-0 max-w-[calc(100vw-1.5rem)] flex-col items-end justify-end gap-3",
         "bottom-[max(1rem,env(safe-area-inset-bottom))] end-[max(1rem,env(safe-area-inset-right))]",
         "sm:bottom-[max(1.5rem,env(safe-area-inset-bottom))] sm:end-[max(1.5rem,env(safe-area-inset-right))]"
       )}
@@ -109,15 +122,17 @@ export function FloatingContactButton({
       <AnimatePresence initial={false}>
         {open ? (
           <motion.div
+            ref={menuRef}
             id={menuId}
             aria-label={t("menuLabel")}
+            className="min-h-0 max-h-[min(58dvh,calc(100dvh-7rem))] shrink overflow-y-auto overscroll-contain pe-0.5 [scrollbar-width:thin]"
             initial={reduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
             transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
           >
             <ul className="flex list-none flex-col items-end gap-2.5">
-              {contactItems.map((item, index) => {
+              {displayItems.map((item, index) => {
                 const Icon = item.Icon;
                 return (
                   <motion.li
@@ -132,7 +147,7 @@ export function FloatingContactButton({
                     }}
                   >
                     <a
-                      ref={index === 0 ? firstLinkRef : undefined}
+                      ref={index === displayItems.length - 1 ? firstLinkRef : undefined}
                       href={item.href}
                       target={item.external ? "_blank" : undefined}
                       rel={item.external ? "noopener noreferrer" : undefined}
