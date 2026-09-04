@@ -2,8 +2,9 @@
 
 import { useLocale } from "next-intl";
 import { useRouter as useNextRouter } from "next/navigation";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { locales, localeLabels, type Locale } from "@/i18n/routing";
+import { getLocaleSwitchHref } from "@/lib/locale-navigation";
 import { markLocaleChange, setNextLocaleCookie } from "@/lib/locale-cookie";
 import { cn } from "@/lib/utils";
 
@@ -16,27 +17,20 @@ type LanguageSwitcherProps = {
 
 export function LanguageSwitcher({ className, compact, embedded }: LanguageSwitcherProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const nextRouter = useNextRouter();
   const locale = useLocale() as Locale;
 
   function switchLocale(code: Locale) {
     if (code === locale) return;
-
-    const hash = window.location.hash;
-
     if (!setNextLocaleCookie(code)) return;
 
     markLocaleChange();
-    router.replace(pathname, { locale: code, scroll: false });
-    nextRouter.refresh();
-
-    if (!hash) return;
-
-    requestAnimationFrame(() => {
-      const url = `${window.location.pathname}${window.location.search}${hash}`;
-      window.history.replaceState(null, "", url);
-    });
+    nextRouter.replace(
+      getLocaleSwitchHref(pathname, code, {
+        search: window.location.search,
+        hash: window.location.hash,
+      })
+    );
   }
 
   return (
