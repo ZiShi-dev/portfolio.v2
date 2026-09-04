@@ -126,6 +126,15 @@ export function Navbar() {
     };
   }, [open]);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => {
+      if (mq.matches) setOpen(false);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   let linkIndex = 0;
 
   return (
@@ -133,7 +142,7 @@ export function Navbar() {
       <div className="relative mx-auto w-full max-w-5xl">
         <div
           className={cn(
-            "relative z-50 flex h-12 w-full items-center gap-2 rounded-full border px-2 transition-colors duration-300 sm:h-14 sm:gap-3 sm:px-3",
+            "relative z-50 flex h-12 w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-full border px-1.5 transition-colors duration-300 sm:h-14 sm:gap-2 sm:px-3 lg:gap-3",
             scrolled
               ? "border-border bg-surface/95 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.55)] backdrop-blur-xl"
               : "border-border bg-surface/80 backdrop-blur-md"
@@ -141,10 +150,10 @@ export function Navbar() {
         >
           <Link
             href={routes.home}
-            className="shrink-0 rounded-lg ps-1 outline-none focus-visible:ring-2 focus-visible:ring-primary/45"
+            className="min-w-0 shrink rounded-lg ps-0.5 outline-none focus-visible:ring-2 focus-visible:ring-primary/45 sm:ps-1"
             onClick={() => setOpen(false)}
           >
-            <BrandLogo />
+            <BrandLogo compact />
           </Link>
 
           <nav
@@ -159,7 +168,7 @@ export function Navbar() {
                     <Link
                       href={item.href}
                       className={cn(
-                        "inline-flex h-9 items-center whitespace-nowrap rounded-full px-3 text-sm transition-colors outline-none",
+                        "inline-flex h-9 items-center whitespace-nowrap rounded-full px-2.5 text-[13px] transition-colors outline-none xl:px-3 xl:text-sm",
                         "focus-visible:ring-2 focus-visible:ring-primary/45",
                         active
                           ? "bg-primary/10 text-primary"
@@ -174,15 +183,15 @@ export function Navbar() {
             </ul>
           </nav>
 
-          <div className="ms-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <div className="flex h-9 items-center rounded-full border border-border bg-background/60 px-0.5">
+          <div className="ms-auto flex shrink-0 items-center gap-1 sm:gap-1.5 lg:gap-2">
+            <div className="flex h-9 items-center rounded-full border border-border bg-background/60 px-0.5 max-[380px]:h-8">
               <LanguageSwitcher compact embedded />
             </div>
 
             <Button
               asChild
               size="sm"
-              className="h-9 whitespace-nowrap rounded-full px-3.5 text-sm"
+              className="hidden h-9 whitespace-nowrap rounded-full px-3.5 text-sm min-[380px]:inline-flex"
             >
               <ContactOpenLink onOpen={() => setOpen(false)}>
                 {t("workTogetherShort")}
@@ -192,7 +201,7 @@ export function Navbar() {
             <button
               type="button"
               className={cn(
-                "inline-flex h-9 w-9 items-center justify-center rounded-full border bg-background/60 text-foreground outline-none transition-colors",
+                "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-background/60 text-foreground outline-none transition-colors lg:hidden",
                 "focus-visible:ring-2 focus-visible:ring-primary/45",
                 open
                   ? "border-primary/40 text-primary"
@@ -222,7 +231,7 @@ export function Navbar() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.16 }}
-                className="fixed inset-0 z-40 cursor-default bg-background/70 backdrop-blur-[2px]"
+                className="fixed inset-0 z-40 cursor-default bg-background/70 backdrop-blur-[2px] lg:hidden"
                 onClick={() => setOpen(false)}
               />
               <motion.div
@@ -234,7 +243,7 @@ export function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.18 }}
-                className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-xl border border-border-gold bg-surface-elevated/95 shadow-[0_16px_40px_-20px_rgba(0,0,0,0.7)] backdrop-blur-xl sm:max-w-[22rem]"
+                className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-full max-h-[min(32rem,calc(100dvh-5.5rem))] overflow-y-auto overscroll-contain rounded-xl border border-border-gold bg-surface-elevated/95 shadow-[0_16px_40px_-20px_rgba(0,0,0,0.7)] backdrop-blur-xl sm:max-w-[22rem] lg:hidden"
               >
                 <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5 ps-4">
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary/80">
@@ -309,6 +318,11 @@ export function Navbar() {
                 </nav>
 
                 <div className="border-t border-border p-3">
+                  <Button asChild className="mb-2 h-11 w-full rounded-lg min-[380px]:hidden">
+                    <ContactOpenLink onOpen={() => setOpen(false)}>
+                      {t("workTogetherShort")}
+                    </ContactOpenLink>
+                  </Button>
                   <Link
                     href={leaveReview.href}
                     onClick={(e) => handleItem(leaveReview, e)}
