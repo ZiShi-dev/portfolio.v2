@@ -180,7 +180,7 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
 
         <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 sm:grid-cols-2 lg:mt-16">
           {filtered.map((project, index) => (
-            <Reveal key={project.id} delay={index * 0.06}>
+            <Reveal key={project.id} delay={Math.min(index, 4) * 0.04} variant="fade" className="h-full">
               <ProjectCard project={project} priority={index === 0} />
             </Reveal>
           ))}

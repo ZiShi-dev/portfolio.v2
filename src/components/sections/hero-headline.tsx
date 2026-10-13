@@ -10,10 +10,10 @@ export function HeroHeadline() {
   const reduceMotion = useReducedMotion();
 
   const enter = (delay: number) => ({
-    initial: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24, filter: "blur(6px)" },
-    animate: reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" },
+    initial: reduceMotion ? false as const : { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
     transition: {
-      duration: reduceMotion ? 0.2 : 0.65,
+      duration: reduceMotion ? 0 : 0.55,
       delay: reduceMotion ? 0 : delay,
       ease: enterEase,
     },

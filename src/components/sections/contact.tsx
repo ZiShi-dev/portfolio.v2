@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { Mail, Send, Check, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -57,6 +57,7 @@ type ContactFormProps = {
 };
 
 export function ContactForm({ contactEmail }: ContactFormProps) {
+  const reduceMotion = useReducedMotion();
   const locale = useLocale();
   const t = useTranslations("contact");
   const tValidation = useTranslations("validation");
@@ -183,8 +184,9 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
 
       {sent ? (
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={reduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: reduceMotion ? 0 : 0.4, ease: "easeOut" }}
           className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-accent/30 bg-accent/10 p-8 text-center"
         >
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/20 text-accent">
@@ -307,7 +309,7 @@ export function Contact({ contactEmail }: ContactProps) {
     >
       <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[min(400px,80vw)] w-[min(700px,120vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--color-primary),transparent_60%)] opacity-10 blur-3xl" />
 
-      <Reveal>
+      <Reveal variant="fade">
         <div className="mx-auto max-w-3xl overflow-hidden rounded-xl border border-border-gold bg-surface-elevated/90 p-5 text-center sm:p-8 md:p-12">
           <span className="inline-flex items-center gap-2 rounded-full border border-border-gold bg-background/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
             <Mail className="h-3.5 w-3.5" aria-hidden /> {t("eyebrow")}

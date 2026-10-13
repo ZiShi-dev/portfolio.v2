@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { isSafeHttpUrl } from "@/lib/review-schema";
@@ -31,6 +31,7 @@ export function ProjectCard({
   swipeFriendly = false,
 }: ProjectCardProps) {
   const t = useTranslations("projects");
+  const reduceMotion = useReducedMotion();
   const href = `${routes.projects}/${project.slug ?? project.id}`;
   const openLabel = t("openDetails", { title: project.title });
 
@@ -89,8 +90,8 @@ export function ProjectCard({
 
   return (
     <motion.div
-      whileHover={swipeFriendly ? undefined : { y: -4 }}
-      transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      whileHover={swipeFriendly || reduceMotion ? undefined : { y: -2 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
       className={
         className ??
         cn(

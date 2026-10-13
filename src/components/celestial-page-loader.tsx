@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { brand } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 function AstrolabeMark({ size = 56 }: { size?: number }) {
@@ -68,50 +67,13 @@ function AstrolabeMark({ size = 56 }: { size?: number }) {
   );
 }
 
-function LoaderMark({ compact }: { compact?: boolean }) {
+function LoaderMark() {
   const t = useTranslations("common");
-
   return (
-    <div
-      className={cn(
-        "relative flex items-center justify-center overflow-hidden bg-[#070A12]",
-        compact ? "min-h-[40vh] w-full" : "h-full w-full"
-      )}
-      aria-busy="true"
-      aria-live="polite"
-      aria-label={t("loading")}
-    >
-      <div
-        className="pointer-events-none absolute inset-0 celestial-vault opacity-60"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,169,106,0.07),transparent_55%)]"
-        aria-hidden
-      />
-
-      <div className="relative z-10 flex flex-col items-center gap-5 px-6">
-        <AstrolabeMark size={compact ? 48 : 64} />
-
-        <div className="flex flex-col items-center gap-2 text-center">
-          <p className="font-display text-lg tracking-[0.18em] text-foreground sm:text-xl">
-            {brand.name}
-          </p>
-          <p className="font-technical text-[10px] text-muted-foreground">
-            {t("loadingCatalog")}
-          </p>
-        </div>
-
-        {/* Barre de progression hairline */}
-        <div
-          className="h-px w-28 overflow-hidden rounded-full bg-foreground/10 sm:w-36"
-          aria-hidden
-        >
-          <div className="celestial-loader-bar h-full w-1/2 rounded-full bg-primary/70" />
-        </div>
-
-        <span className="sr-only">{t("loading")}</span>
-      </div>
+    <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-background" aria-busy="true" aria-label={t("loading")}>
+      <div className="pointer-events-none absolute inset-0 celestial-vault opacity-50" aria-hidden />
+      <AstrolabeMark size={64} />
+      <span className="sr-only">{t("loading")}</span>
     </div>
   );
 }
@@ -122,35 +84,52 @@ export function CelestialPageSplash() {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const minMs = reduced ? 200 : 950;
-    const started = performance.now();
-    let fadeTimer = 0;
+    let cancelled = false;
+    let checking = false;
+    let frame = 0;
     let goneTimer = 0;
-    let safetyTimer = 0;
-    let startedFade = false;
 
-    const beginFade = () => {
-      if (startedFade) return;
-      startedFade = true;
-      const wait = Math.max(0, minMs - (performance.now() - started));
-      fadeTimer = window.setTimeout(() => {
-        setPhase("fade");
-        goneTimer = window.setTimeout(() => setPhase("gone"), 450);
-      }, wait);
+    const isReady = () => {
+      if (document.readyState === "loading" || document.querySelector("[data-route-loading]") || document.fonts.status === "loading") return false;
+      return Array.from(document.images).every((image) => {
+        const rect = image.getBoundingClientRect();
+        const visible = rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
+        return !visible || image.complete;
+      });
     };
 
-    if (document.readyState === "complete") {
-      beginFade();
-    } else {
-      window.addEventListener("load", beginFade, { once: true });
-      safetyTimer = window.setTimeout(beginFade, minMs + 1000);
-    }
+    const checkReady = () => {
+      if (cancelled || checking || !isReady()) return;
+      checking = true;
+      // Give the committed page two paint frames before revealing it.
+      frame = window.requestAnimationFrame(() => {
+        frame = window.requestAnimationFrame(() => {
+          if (cancelled) return;
+          if (!isReady()) { checking = false; return; }
+          setPhase("fade");
+          goneTimer = window.setTimeout(() => setPhase("gone"), reduced ? 0 : 180);
+        });
+      });
+    };
+
+    const observer = new MutationObserver(checkReady);
+    observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("load", checkReady);
+    document.addEventListener("DOMContentLoaded", checkReady);
+    document.addEventListener("load", checkReady, true);
+    document.addEventListener("error", checkReady, true);
+    void document.fonts.ready.then(checkReady);
+    checkReady();
 
     return () => {
-      window.clearTimeout(fadeTimer);
+      cancelled = true;
+      observer.disconnect();
+      window.cancelAnimationFrame(frame);
       window.clearTimeout(goneTimer);
-      window.clearTimeout(safetyTimer);
-      window.removeEventListener("load", beginFade);
+      window.removeEventListener("load", checkReady);
+      document.removeEventListener("DOMContentLoaded", checkReady);
+      document.removeEventListener("load", checkReady, true);
+      document.removeEventListener("error", checkReady, true);
     };
   }, []);
 
@@ -159,7 +138,7 @@ export function CelestialPageSplash() {
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[100] transition-opacity duration-500 ease-out",
+        "fixed inset-0 z-[100] transition-opacity duration-[180ms] ease-out motion-reduce:transition-none",
         phase === "fade" ? "pointer-events-none opacity-0" : "opacity-100"
       )}
       role="status"
@@ -172,8 +151,8 @@ export function CelestialPageSplash() {
 /** Pour `loading.tsx` (navigation / Suspense). */
 export function CelestialRouteLoader() {
   return (
-    <div className="fixed inset-0 z-40 bg-[#070A12] md:static md:inset-auto md:min-h-[40vh]">
-      <LoaderMark compact />
+    <div data-route-loading="true" className="fixed inset-0 z-[100] bg-background">
+      <LoaderMark />
     </div>
   );
 }

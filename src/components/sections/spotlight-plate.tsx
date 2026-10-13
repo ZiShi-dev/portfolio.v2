@@ -31,8 +31,9 @@ export function SpotlightPlate({ project, priority }: SpotlightPlateProps) {
               src={cover}
               alt=""
               fill
+              draggable={false}
               priority={priority}
-              sizes="(max-width: 1024px) 100vw, 560px"
+              sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(100vw - 48px), 560px"
               className="object-cover object-center"
             />
           ) : (

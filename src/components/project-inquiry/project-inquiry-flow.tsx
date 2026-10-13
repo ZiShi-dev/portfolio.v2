@@ -1648,11 +1648,11 @@ export function ProjectInquiryFlow({
           <motion.div
             key={step}
             initial={
-              reduceMotion ? false : { opacity: 0, y: 10 }
+              reduceMotion ? false : { opacity: 0 }
             }
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-            transition={{ duration: reduceMotion ? 0.01 : 0.28 }}
+            animate={{ opacity: 1 }}
+            exit={reduceMotion ? undefined : { opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.25, 0.1, 0.25, 1] }}
             className={cn(transitioning && "pointer-events-none")}
           >
             {renderQuestionBody()}

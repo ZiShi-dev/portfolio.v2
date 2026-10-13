@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { useReducedMotion } from "framer-motion";
+import { useInView, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { SpotlightPlate } from "@/components/sections/spotlight-plate";
@@ -22,6 +22,8 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   const direction = getLocaleDirection(locale);
   const reduceMotion = useReducedMotion();
   const multiple = projects.length > 1;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(containerRef, { amount: 0.25 });
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -29,7 +31,8 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
     containScroll: "trimSnaps",
     direction,
     skipSnaps: false,
-    duration: 28,
+    duration: reduceMotion ? 0 : 22,
+    dragThreshold: 8,
   });
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -38,11 +41,11 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   const [autoplayPaused, setAutoplayPaused] = useState(false);
 
   const scrollTo = useCallback(
-    (index: number) => emblaApi?.scrollTo(index),
-    [emblaApi]
+    (index: number) => emblaApi?.scrollTo(index, Boolean(reduceMotion)),
+    [emblaApi, reduceMotion]
   );
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(Boolean(reduceMotion)), [emblaApi, reduceMotion]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(Boolean(reduceMotion)), [emblaApi, reduceMotion]);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -65,11 +68,11 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
 
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.reInit({ direction, loop: multiple });
-  }, [emblaApi, direction, multiple]);
+    emblaApi.reInit({ direction, loop: multiple, duration: reduceMotion ? 0 : 22 });
+  }, [emblaApi, direction, multiple, reduceMotion]);
 
   useEffect(() => {
-    if (!emblaApi || !multiple || reduceMotion || autoplayPaused) return;
+    if (!emblaApi || !multiple || reduceMotion || autoplayPaused || !inView) return;
 
     const timer = window.setInterval(() => {
       // Keep the current card still while reading or swiping on mobile.
@@ -78,30 +81,43 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
     }, AUTOPLAY_DELAY_MS);
 
     return () => window.clearInterval(timer);
-  }, [emblaApi, multiple, reduceMotion, autoplayPaused]);
+  }, [emblaApi, multiple, reduceMotion, autoplayPaused, inView]);
 
   if (projects.length === 0) return null;
 
   if (!multiple) {
-    return <SpotlightPlate project={projects[0]} priority />;
+    return <SpotlightPlate project={projects[0]} />;
   }
 
   return (
     <div
+      ref={containerRef}
+      role="region"
+      aria-label={t("title")}
+      aria-roledescription="carousel"
+      onKeyDown={(event) => {
+        if (event.target instanceof HTMLElement && event.target.closest("a, input, textarea, select")) return;
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          event.preventDefault();
+          const next = (event.key === "ArrowRight") === (direction === "ltr");
+          if (next) scrollNext(); else scrollPrev();
+        }
+      }}
       onMouseEnter={() => setAutoplayPaused(true)}
-      onMouseLeave={() => setAutoplayPaused(false)}
+      onMouseLeave={(event) => setAutoplayPaused(event.currentTarget.contains(document.activeElement))}
       onFocusCapture={() => setAutoplayPaused(true)}
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          setAutoplayPaused(false);
+          setAutoplayPaused(event.currentTarget.matches(":hover"));
         }
       }}
       onPointerDown={() => setAutoplayPaused(true)}
-      onPointerUp={() => setAutoplayPaused(false)}
-      onPointerCancel={() => setAutoplayPaused(false)}
+      onPointerUp={(event) => setAutoplayPaused(event.currentTarget.matches(":hover") || event.currentTarget.contains(document.activeElement))}
+      onPointerCancel={(event) => setAutoplayPaused(event.currentTarget.matches(":hover") || event.currentTarget.contains(document.activeElement))}
     >
       <div
-        className="overflow-hidden select-none"
+        className="overflow-hidden select-none rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+        tabIndex={0}
         ref={emblaRef}
         style={{ touchAction: "pan-y pinch-zoom" }}
       >
@@ -109,9 +125,12 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
           {projects.map((project, index) => (
             <div
               key={project.id}
+              role="group"
+              aria-label={t("listingIndex", { current: String(index + 1).padStart(2, "0"), total: String(projects.length).padStart(2, "0") })}
+              inert={index !== selectedIndex}
               className="min-w-0 shrink-0 grow-0 basis-full ps-4 sm:ps-6"
             >
-              <SpotlightPlate project={project} priority={index === 0} />
+              <SpotlightPlate project={project} />
             </div>
           ))}
         </div>
@@ -122,7 +141,7 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
           type="button"
           onClick={scrollPrev}
           disabled={!canScrollPrev}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground transition-opacity disabled:opacity-30"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-30"
           aria-label={t("prevProject")}
         >
           <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
@@ -139,7 +158,7 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
           type="button"
           onClick={scrollNext}
           disabled={!canScrollNext}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground transition-opacity disabled:opacity-30"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-30"
           aria-label={t("nextProject")}
         >
           <ChevronRight className="h-4 w-4 rtl:rotate-180" />
@@ -154,13 +173,15 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
             aria-label={t("goToProject", { index: index + 1 })}
             aria-current={index === selectedIndex ? "true" : undefined}
             onClick={() => scrollTo(index)}
-            className={cn(
-              "h-1.5 rounded-full transition-all",
+            className="flex h-11 min-w-8 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          >
+            <span aria-hidden className={cn(
+              "h-1.5 rounded-full transition-[width,background-color] duration-200 motion-reduce:transition-none",
               index === selectedIndex
                 ? "w-6 bg-primary"
                 : "w-1.5 bg-foreground/25 hover:bg-foreground/40"
-            )}
-          />
+            )} />
+          </button>
         ))}
       </div>
 

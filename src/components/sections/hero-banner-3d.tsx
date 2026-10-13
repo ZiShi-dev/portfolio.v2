@@ -234,6 +234,7 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
   const userInteractedRef = useRef(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const visibleRef = useRef(false);
 
   const isInteractive = !reduceMotion;
   const tiltX = isCompact ? TILT_X_COMPACT : TILT_X;
@@ -337,10 +338,11 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
   );
 
   const scheduleIdleAdvance = useCallback(() => {
-    if (reduceMotion || userInteractedRef.current) return;
+    if (reduceMotion || userInteractedRef.current || !visibleRef.current || document.hidden) return;
     clearIdleTimers();
 
     advanceTimerRef.current = setTimeout(() => {
+      if (!visibleRef.current || document.hidden) return;
       if (dragging.current || snapping.current) {
         scheduleIdleAdvance();
         return;
@@ -399,15 +401,29 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
   }, [tiltX, rotateX]);
 
   useEffect(() => {
-    scheduleIdleAdvance();
+    const node = cubeSizerRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      visibleRef.current = entry.isIntersecting;
+      if (entry.isIntersecting) scheduleIdleAdvance();
+      else clearIdleTimers();
+    }, { threshold: 0.1 });
+    observer.observe(node);
+    const onVisibilityChange = () => {
+      if (document.hidden) clearIdleTimers();
+      else scheduleIdleAdvance();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       clearIdleTimers();
       stopInertia();
       detachDragListeners();
     };
-    // Mount / unmount only — timers + listeners cleaned via refs.
+    // Drag listeners use the current motion values and are detached on unmount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [scheduleIdleAdvance, clearIdleTimers, stopInertia]);
 
   function detachDragListeners() {
     const target = dragListenersTarget.current;

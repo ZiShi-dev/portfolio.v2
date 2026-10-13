@@ -51,12 +51,12 @@ export function HomeSection() {
             initial={
               reduceMotion
                 ? { opacity: 0 }
-                : { opacity: 0, y: 24, filter: "blur(6px)" }
+                : { opacity: 0, y: 16 }
             }
             animate={
               reduceMotion
                 ? { opacity: 1 }
-                : { opacity: 1, y: 0, filter: "blur(0px)" }
+                : { opacity: 1, y: 0 }
             }
             transition={{
               ...enterTransition,

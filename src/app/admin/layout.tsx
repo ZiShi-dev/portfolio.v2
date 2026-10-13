@@ -3,7 +3,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AdminPrefetchSite } from "@/components/admin/admin-prefetch-site";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { CelestialPageSplash } from "@/components/celestial-page-loader";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { AppToastHost } from "@/components/ui/app-toast";
 import { getAdminLocale, getAdminMessages } from "@/lib/admin/i18n";
@@ -35,7 +34,6 @@ export default async function AdminLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <CelestialPageSplash />
       <AdminPrefetchSite />
       <NavigationProgress />
       <AdminShell>{children}</AdminShell>

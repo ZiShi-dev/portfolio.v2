@@ -48,7 +48,7 @@ export function ReviewsPage({ reviews }: ReviewsPageProps) {
 
         <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 md:grid-cols-2 lg:mt-16 lg:grid-cols-3">
           {items.map((r, i) => (
-            <Reveal key={r.id} delay={i * 0.04}>
+            <Reveal key={r.id} delay={Math.min(i, 4) * 0.04} variant="fade" className="h-full">
               <ReviewCard review={r} onOpen={() => setOpenIndex(i)} />
             </Reveal>
           ))}

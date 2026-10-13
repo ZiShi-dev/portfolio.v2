@@ -22,6 +22,7 @@ export function CelestialAtlas({
 
   return (
     <div
+      data-celestial-atlas="true"
       className={cn(
         "pointer-events-none absolute inset-0 overflow-hidden",
         className

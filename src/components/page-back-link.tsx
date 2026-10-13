@@ -19,7 +19,7 @@ export function PageBackLink({ href, label, className }: PageBackLinkProps) {
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center gap-2 text-sm text-foreground/55 transition-colors hover:text-foreground",
+        "inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
         className
       )}
     >
@@ -32,7 +32,7 @@ export function PageBackLink({ href, label, className }: PageBackLinkProps) {
 export function PageBackBar({ href, label }: { href: string; label: string }) {
   return (
     <div className={cn(pageShellClass, pageTopClass)}>
-      <Reveal>
+      <Reveal variant="fade">
         <PageBackLink href={href} label={label} />
       </Reveal>
     </div>

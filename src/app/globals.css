@@ -325,6 +325,24 @@ video {
     radial-gradient(ellipse at 80% 100%, rgb(13 19 34 / 0.6), transparent 50%);
 }
 
+/* One continuous star background on public pages, excluding home. */
+.star-page section,
+.star-page article.bg-background {
+  background-color: transparent;
+}
+
+.star-page article > .celestial-vault {
+  display: none;
+}
+
+.star-page [data-celestial-atlas] {
+  display: none;
+}
+
+.star-page > [data-celestial-atlas] {
+  display: block;
+}
+
 /* Admin: calm visual depth that keeps operational data legible. */
 .admin-ambient-bg {
   pointer-events: none;
@@ -364,6 +382,9 @@ video {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .animate-twinkle,
   .animate-code-scroll,
   .celestial-draw,

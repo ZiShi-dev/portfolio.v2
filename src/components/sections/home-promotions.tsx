@@ -23,7 +23,7 @@ export function HomePromotions({ services }: { services: LocalizedService[] }) {
       <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-2">
         {offers.map(({ service, promotion }, index) => (
           <motion.div key={service.id} initial={reduceMotion ? false : { opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: reduceMotion ? 0 : Math.min(index, 5) * 0.08 }} className="relative overflow-hidden rounded-2xl border border-primary/30 bg-surface-elevated p-6">
-            <motion.div aria-hidden className="pointer-events-none absolute -inset-20 bg-gradient-to-r from-transparent via-primary/10 to-transparent" animate={reduceMotion ? undefined : { x: ["-100%", "100%"] }} transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 }} />
+            <motion.div aria-hidden className="pointer-events-none absolute -inset-20 bg-gradient-to-r from-transparent via-primary/10 to-transparent" initial={{ x: "-100%" }} whileInView={reduceMotion ? undefined : { x: ["-100%", "100%"] }} viewport={{ amount: 0.1 }} transition={{ duration: 4, repeat: Infinity, repeatDelay: 3 }} />
             <div className="relative">
               <p className="flex items-center gap-2 text-sm font-medium text-primary"><Sparkles className="h-4 w-4" aria-hidden />{t("promotion")} <span className="rounded-full border border-primary/30 px-2 py-1">−{promotion.discount}%</span></p>
               <h2 className="mt-3 font-display text-2xl">{service.title}</h2>
