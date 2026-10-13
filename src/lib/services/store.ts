@@ -47,6 +47,7 @@ export type ServiceRow = {
   show_cta_start: boolean;
   pricing_mode: ServicePricingMode;
   starting_price_cents: number | null;
+  promotion_price_cents?: number | null;
   currency: ServiceCurrency;
   inquiry_project_type: ProjectInquiryType | null;
   seo_title: ServiceI18n;
@@ -71,6 +72,7 @@ export type LocalizedService = {
   showCtaStart: boolean;
   pricingMode: ServicePricingMode;
   startingPriceCents: number | null;
+  promotionPriceCents?: number | null;
   currency: ServiceCurrency;
   inquiryProjectType: ProjectInquiryType | null;
   seoTitle?: string;
@@ -83,7 +85,7 @@ const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const SERVICE_SELECT =
-  "id, created_at, updated_at, reference, slug, icon, status, sort_order, title, short_description, description, ideal_for, included_features, cta_label, show_cta_start, pricing_mode, starting_price_cents, currency, inquiry_project_type, seo_title, seo_description, published_at";
+  "id, created_at, updated_at, reference, slug, icon, status, sort_order, title, short_description, description, ideal_for, included_features, cta_label, show_cta_start, pricing_mode, starting_price_cents, promotion_price_cents, currency, inquiry_project_type, seo_title, seo_description, published_at";
 
 function asI18n(value: unknown, fallback = ""): ServiceI18n {
   const obj = (value && typeof value === "object" ? value : {}) as Record<
@@ -185,6 +187,7 @@ function normalizeRow(
         ? Math.trunc(cents)
         : null,
     currency: asCurrency(raw.currency),
+    promotion_price_cents: typeof raw.promotion_price_cents === "number" ? raw.promotion_price_cents : null,
     inquiry_project_type: asInquiryType(raw.inquiry_project_type),
     seo_title: asI18n(raw.seo_title),
     seo_description: asI18n(raw.seo_description),
@@ -224,6 +227,7 @@ export function serviceRowToLocalized(
     showCtaStart: row.show_cta_start,
     pricingMode: row.pricing_mode,
     startingPriceCents: row.starting_price_cents,
+    promotionPriceCents: row.promotion_price_cents ?? null,
     currency: row.currency,
     inquiryProjectType: row.inquiry_project_type,
     seoTitle: pickLocale(row.seo_title, locale) || undefined,
@@ -386,6 +390,7 @@ function writeToDbPayload(input: ServiceWriteInput) {
     show_cta_start: input.showCtaStart,
     pricing_mode: input.pricingMode,
     starting_price_cents: startingCents,
+    promotion_price_cents: input.promotionPriceCents ?? null,
     currency: input.currency,
     inquiry_project_type: input.inquiryProjectType,
     seo_title: input.seoTitle,
@@ -399,6 +404,7 @@ function patchToDbPayload(
   current: ServiceRow
 ): Record<string, unknown> {
   const payload: Record<string, unknown> = {};
+  if (input.promotionPriceCents !== undefined) payload.promotion_price_cents = input.promotionPriceCents;
 
   if (input.reference !== undefined) payload.reference = input.reference;
   if (input.slug !== undefined) payload.slug = input.slug;
@@ -693,7 +699,8 @@ export async function updateService(
         | "not_found"
         | "duplicate_slug"
         | "duplicate_reference"
-        | "publish_incomplete";
+        | "publish_incomplete"
+        | "service_invalid_promotion";
     }
 > {
   if (!UUID_RE.test(id)) return { ok: false, reason: "invalid_id" };
@@ -706,8 +713,15 @@ export async function updateService(
   const current = await getServiceByIdForAdmin(id);
   if (!current) return { ok: false, reason: "not_found" };
 
+  const mode = input.pricingMode ?? current.pricing_mode;
+  const cents = input.startingPriceCents !== undefined ? input.startingPriceCents : current.starting_price_cents;
+  const promotion = input.promotionPriceCents !== undefined ? input.promotionPriceCents : current.promotion_price_cents;
+  if (promotion != null && (mode === "contact" || cents == null || promotion >= cents)) {
+    return { ok: false, reason: "service_invalid_promotion" };
+  }
+
   // Validation publication merge
-  if (input.status === "published") {
+  if ((input.status ?? current.status) === "published") {
     const title = input.title ?? current.title;
     const short = input.shortDescription ?? current.short_description;
     if (!title.fr?.trim() || !short.fr?.trim()) {
@@ -718,7 +732,7 @@ export async function updateService(
       input.startingPriceCents !== undefined
         ? input.startingPriceCents
         : current.starting_price_cents;
-    if (mode === "starting_at" && (cents === null || cents < 0)) {
+    if ((mode === "starting_at" || mode === "fixed") && (cents === null || cents < 0)) {
       return { ok: false, reason: "publish_incomplete" };
     }
   }
@@ -875,7 +889,8 @@ export async function archiveService(
         | "not_found"
         | "duplicate_slug"
         | "duplicate_reference"
-        | "publish_incomplete";
+        | "publish_incomplete"
+        | "service_invalid_promotion";
     }
 > {
   return updateService(id, { status: "archived" });

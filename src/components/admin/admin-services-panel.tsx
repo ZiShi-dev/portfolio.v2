@@ -112,6 +112,7 @@ type EditorState = {
   showCtaStart: boolean;
   pricingMode: ServicePricingMode;
   startingPriceEuros: string;
+  promotionPriceEuros: string;
   currency: (typeof SERVICE_CURRENCIES)[number];
   inquiryProjectType: string;
   caseStudies: ServiceCaseStudyInput[];
@@ -137,6 +138,7 @@ function emptyEditor(): EditorState {
     showCtaStart: true,
     pricingMode: "contact",
     startingPriceEuros: "",
+    promotionPriceEuros: "",
     currency: "EUR",
     inquiryProjectType: "",
     caseStudies: [],
@@ -162,6 +164,7 @@ function rowToEditor(row: ServiceRow): EditorState {
     showCtaStart: row.show_cta_start,
     pricingMode: row.pricing_mode,
     startingPriceEuros: centsToEurosInput(row.starting_price_cents),
+    promotionPriceEuros: centsToEurosInput(row.promotion_price_cents ?? null),
     currency: row.currency,
     inquiryProjectType: row.inquiry_project_type ?? "",
     caseStudies: (row.case_studies?.length
@@ -204,6 +207,7 @@ function editorToPayload(editor: EditorState) {
     showCtaStart: editor.showCtaStart,
     pricingMode: editor.pricingMode,
     startingPriceCents,
+    promotionPriceCents: editor.pricingMode === "contact" ? null : parseEurosToCents(editor.promotionPriceEuros),
     currency: editor.currency,
     inquiryProjectType: editor.inquiryProjectType || null,
     caseStudies: editor.caseStudies,
@@ -366,6 +370,11 @@ export function AdminServicesPanel({
     }
 
     const payload = editorToPayload(draft);
+    if (draft.pricingMode !== "contact" && draft.promotionPriceEuros.trim() && payload.promotionPriceCents === null) {
+      setSubmitError(tErrors("service_invalid_promotion"));
+      setLoading(false);
+      return;
+    }
     const parsed = parseServiceWriteBody(payload);
     if (!parsed.ok) {
       setSubmitError(translateErr(parsed.error, tErrors));
@@ -969,6 +978,13 @@ export function AdminServicesPanel({
                   </FormField>
                 ) : null}
                 <FormField
+                  label={t("fields.promotionPrice")}
+                  id="svc-promotion-price"
+                  hint={t("hints.promotionPrice")}
+                >
+                  <Input id="svc-promotion-price" inputMode="decimal" disabled={editor.pricingMode === "contact"} value={editor.promotionPriceEuros} onChange={(e) => setEditor((p) => ({ ...p, promotionPriceEuros: e.target.value }))} placeholder="750" />
+                </FormField>
+                <FormField
                   label={t("fields.inquiryType")}
                   id="svc-inquiry"
                 >
@@ -1424,6 +1440,15 @@ export function AdminServicesPanel({
               disabled={loading}
             >
               {t("cancel")}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => save()}
+              loading={loading}
+            >
+              {!loading && <Save className="h-4 w-4" />}
+              {t("save")}
             </Button>
             <Button
               type="button"

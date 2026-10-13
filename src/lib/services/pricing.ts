@@ -43,13 +43,27 @@ type PriceLabels = {
   contact: string;
 };
 
+export function getServicePromotion(input: {
+  pricingMode: ServicePricingMode;
+  startingPriceCents: number | null;
+  promotionPriceCents?: number | null;
+}) {
+  const regular = input.startingPriceCents;
+  const reduced = input.promotionPriceCents;
+  if (input.pricingMode === "contact" || regular == null || reduced == null || !Number.isSafeInteger(reduced) || reduced < 0 || reduced >= regular) return null;
+  return { regular, reduced, discount: Math.round((1 - reduced / regular) * 100) };
+}
+
 export function resolveServicePriceDisplay(input: {
   pricingMode: ServicePricingMode;
   startingPriceCents: number | null;
+  promotionPriceCents?: number | null;
   currency: string;
   locale: string;
   labels: PriceLabels;
 }): ServicePriceDisplay {
+  const promotion = getServicePromotion(input);
+  if (promotion) input = { ...input, startingPriceCents: promotion.reduced };
   const hasAmount =
     input.startingPriceCents !== null && input.startingPriceCents >= 0;
 
@@ -94,7 +108,7 @@ export function centsToEurosInput(cents: number | null): string {
 
 export function parseEurosToCents(raw: string): number | null {
   const cleaned = raw.replace(/\s/g, "").replace(",", ".");
-  if (!cleaned) return null;
+  if (!/^\d+(?:\.\d{1,2})?$/.test(cleaned)) return null;
   const n = Number(cleaned);
   if (!Number.isFinite(n) || n < 0) return null;
   return Math.round(n * 100);

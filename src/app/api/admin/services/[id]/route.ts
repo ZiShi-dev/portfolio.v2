@@ -114,6 +114,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       updated.reason === "duplicate_slug" ||
       updated.reason === "duplicate_reference" ||
       updated.reason === "publish_incomplete"
+      || updated.reason === "service_invalid_promotion"
     ) {
       return jsonResponse(
         {

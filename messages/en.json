@@ -156,7 +156,9 @@
     "catalogTitleHighlight": "websites and applications.",
     "catalogSubtitle": "Eight clear offers. Pick the one that matches your activity.",
     "viewAll": "View all offers",
-    "otherOffers": "Also in the catalogue"
+    "otherOffers": "Also in the catalogue",
+    "promotion": "Special offer",
+    "promotionView": "View offer"
   },
   "engagements": {
     "eyebrow": "Commitments · VORZIX",
@@ -939,7 +941,8 @@
       "invalid_reference": "Invalid reference.",
       "invalid_services": "Invalid linked services.",
       "duplicate_service": "Duplicate service.",
-      "duplicate_id": "Duplicate id."
+      "duplicate_id": "Duplicate id.",
+      "service_invalid_promotion": "The promotional price must be a valid amount below the regular price."
     },
     "engagements": {
       "listTitle": "Commitments",
@@ -1176,15 +1179,18 @@
         "ctaLabel": "Start CTA label",
         "projectUrl": "Project URL or slug",
         "pickProject": "Choose a project",
-        "projectBlurb": "Short description (offer page)"
+        "projectBlurb": "Short description (offer page)",
+        "promotionPrice": "Promotional price"
       },
       "hints": {
         "projectUrl": "Paste /projets/my-project, the full URL, or the slug.",
-        "slug": "Public address: /offres/your-slug"
+        "slug": "Public address: /offres/your-slug",
+        "promotionPrice": "Reduced price in the selected currency, lower than the regular price. Leave empty to disable the promotion and its home animation."
       },
       "caseStudiesHint": "Add several projects: their images and descriptions appear on /offres/[slug]. Clicking opens the project page.",
       "duplicate": "Duplicate",
-      "archive": "Archive"
+      "archive": "Archive",
+      "save": "Save changes"
     }
   },
   "caseStudy": {

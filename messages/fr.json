@@ -156,7 +156,9 @@
     "catalogTitleHighlight": "création de sites et d’applications.",
     "catalogSubtitle": "Huit offres claires. Choisissez celle qui correspond à votre activité.",
     "viewAll": "Voir toutes les offres",
-    "otherOffers": "Également au catalogue"
+    "otherOffers": "Également au catalogue",
+    "promotion": "Promotion",
+    "promotionView": "Découvrir l’offre"
   },
   "engagements": {
     "eyebrow": "Engagements · VORZIX",
@@ -941,7 +943,8 @@
       "invalid_reference": "Référence invalide.",
       "invalid_services": "Services associés invalides.",
       "duplicate_service": "Service en double.",
-      "duplicate_id": "Identifiant en double."
+      "duplicate_id": "Identifiant en double.",
+      "service_invalid_promotion": "Le prix promotionnel doit être un montant valide inférieur au prix normal."
     },
     "engagements": {
       "listTitle": "Engagements",
@@ -1178,15 +1181,18 @@
         "ctaLabel": "Libellé CTA démarrer",
         "projectUrl": "URL ou slug du projet",
         "pickProject": "Choisir un projet",
-        "projectBlurb": "Courte description (page offre)"
+        "projectBlurb": "Courte description (page offre)",
+        "promotionPrice": "Prix promotionnel"
       },
       "hints": {
         "projectUrl": "Collez /projets/mon-projet, l’URL complète, ou le slug.",
-        "slug": "Adresse publique : /offres/votre-slug"
+        "slug": "Adresse publique : /offres/votre-slug",
+        "promotionPrice": "Prix réduit dans la devise sélectionnée, inférieur au prix normal. Laisser vide pour désactiver la promotion et son animation sur l’accueil."
       },
       "caseStudiesHint": "Ajoutez plusieurs projets : leurs images et descriptions apparaissent sur /offres/[slug]. Le clic ouvre la page projet.",
       "duplicate": "Dupliquer",
-      "archive": "Archiver"
+      "archive": "Archiver",
+      "save": "Enregistrer les modifications"
     }
   },
   "caseStudy": {

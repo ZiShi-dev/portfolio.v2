@@ -149,6 +149,7 @@ export const serviceWriteSchema = z
       .optional()
       .transform((v) => (v === undefined ? null : v)),
     currency: z.enum(SERVICE_CURRENCIES).default("EUR"),
+    promotionPriceCents: z.number().int().min(0).max(SERVICE_LIMITS.startingPriceCentsMax).nullable().optional(),
     inquiryProjectType: z
       .enum(PROJECT_INQUIRY_TYPES)
       .nullable()
@@ -174,6 +175,9 @@ export const serviceWriteSchema = z
     seoDescription: localeOptional(SERVICE_LIMITS.seoDescriptionMax),
   })
   .superRefine((data, ctx) => {
+    if (data.promotionPriceCents != null && (data.pricingMode === "contact" || data.startingPriceCents == null || data.promotionPriceCents >= data.startingPriceCents)) {
+      ctx.addIssue({ code: "custom", message: "service_invalid_promotion", path: ["promotionPriceCents"] });
+    }
     if (
       data.pricingMode === "starting_at" ||
       data.pricingMode === "fixed"
@@ -240,6 +244,7 @@ export const servicePatchSchema = z
       .nullable()
       .optional(),
     currency: serviceWriteSchema.shape.currency.optional(),
+    promotionPriceCents: serviceWriteSchema.shape.promotionPriceCents,
     inquiryProjectType: z
       .enum(PROJECT_INQUIRY_TYPES)
       .nullable()

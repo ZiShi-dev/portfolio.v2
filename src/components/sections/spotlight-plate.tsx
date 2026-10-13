@@ -23,9 +23,9 @@ export function SpotlightPlate({ project, priority }: SpotlightPlateProps) {
   const forSale = project.categoryKey === "for_sale";
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-border-gold bg-surface-elevated shadow-[0_22px_60px_-38px_rgba(0,0,0,0.95)]">
-      <div className="grid lg:grid-cols-2">
-        <figure className="relative aspect-[4/3] bg-[#0A0E1A] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[22rem]">
+    <article className="h-full min-w-0 overflow-hidden rounded-2xl border border-border-gold bg-surface-elevated shadow-[0_22px_60px_-38px_rgba(0,0,0,0.95)]">
+      <div className="grid h-full min-w-0 grid-cols-1 lg:grid-cols-2">
+        <figure className="relative m-0 aspect-[4/3] min-w-0 overflow-hidden bg-[#0A0E1A] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[22rem]">
           {cover ? (
             <Image
               src={cover}
@@ -46,7 +46,7 @@ export function SpotlightPlate({ project, priority }: SpotlightPlateProps) {
           </div>
         </figure>
 
-        <div className="min-w-0 flex flex-col justify-center p-5 text-start sm:p-8 lg:p-10">
+        <div className="flex min-w-0 flex-col p-5 text-start sm:p-8 lg:justify-center lg:p-10">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary rtl:font-sans rtl:tracking-normal">
             {forSale ? t("availableNow") : project.reference ?? t("eyebrow")}
           </p>
@@ -67,7 +67,7 @@ export function SpotlightPlate({ project, priority }: SpotlightPlateProps) {
               {project.desc}
             </p>
           ) : null}
-          <div className="mt-6 sm:mt-8">
+          <div className="mt-auto pt-6 sm:pt-8">
             <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
               <Link href={href} onClick={markHomeForScrollRestore}>
                 {forSale ? t("viewListing") : t("viewProject")}

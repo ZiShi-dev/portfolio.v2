@@ -9,6 +9,7 @@ import {
 import { parseProjectSlugFromInput } from "@/lib/services/project-ref";
 import {
   formatServicePrice,
+  getServicePromotion,
   parseEurosToCents,
   resolveServicePriceDisplay,
 } from "@/lib/services/pricing";
@@ -43,6 +44,18 @@ function valid(overrides: Record<string, unknown> = {}) {
 }
 
 describe("services schema", () => {
+  it("accepte une réduction et refuse un prix promotionnel égal, supérieur ou sans tarif", () => {
+    const offer = { pricingMode: "fixed", startingPriceCents: 10000 };
+    assert.equal(parseServiceWriteBody(valid({ ...offer, promotionPriceCents: 7500 })).ok, true);
+    for (const promotionPriceCents of [10000, 12000, -1, 0.5]) {
+      assert.equal(parseServiceWriteBody(valid({ ...offer, promotionPriceCents })).ok, false);
+    }
+    assert.equal(parseServiceWriteBody(valid({ promotionPriceCents: 7500 })).ok, false);
+    assert.equal(parseServiceWriteBody(valid({ ...offer, promotionPriceCents: null })).ok, true);
+    const patch = parseServicePatchBody({ promotionPriceCents: null });
+    assert.equal(patch.ok, true);
+    if (patch.ok) assert.equal(patch.values.promotionPriceCents, null);
+  });
   it("accepte une offre brouillon minimale", () => {
     const parsed = parseServiceWriteBody(valid());
     assert.equal(parsed.ok, true);
@@ -156,6 +169,20 @@ describe("project-ref", () => {
 });
 
 describe("services pricing", () => {
+  it("calcule la réduction et ignore les promotions invalides ou désactivées", () => {
+    assert.deepEqual(getServicePromotion({ pricingMode: "fixed", startingPriceCents: 10000, promotionPriceCents: 7500 }), { regular: 10000, reduced: 7500, discount: 25 });
+    assert.equal(getServicePromotion({ pricingMode: "contact", startingPriceCents: 10000, promotionPriceCents: 7500 }), null);
+    assert.equal(getServicePromotion({ pricingMode: "fixed", startingPriceCents: 10000, promotionPriceCents: null }), null);
+  });
+  it("affiche le prix réduit et conserve le mode à partir de", () => {
+    const result = resolveServicePriceDisplay({ pricingMode: "starting_at", startingPriceCents: 10000, promotionPriceCents: 7500, currency: "EUR", locale: "fr", labels: { startingAt: (price) => `À partir de ${price}`, fixed: (price) => price, contact: "Contact" } });
+    assert.equal(result.mode, "starting_at");
+    assert.equal(result.label, `À partir de ${formatServicePrice(7500, "EUR", "fr")}`);
+  });
+  it("refuse les montants ambigus au lieu de les arrondir", () => {
+    for (const raw of ["1e3", "0x10", "12.345", "-5", "abc"]) assert.equal(parseEurosToCents(raw), null);
+    assert.equal(parseEurosToCents("0"), 0);
+  });
   it("convertit euros → cents", () => {
     assert.equal(parseEurosToCents("900"), 90000);
     assert.equal(parseEurosToCents("1 500,50"), 150050);

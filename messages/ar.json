@@ -156,7 +156,9 @@
     "catalogTitleHighlight": "المواقع والتطبيقات.",
     "catalogSubtitle": "ثماني عروض واضحة. اختاروا ما يناسب نشاطكم.",
     "viewAll": "عرض كل العروض",
-    "otherOffers": "أيضاً في الكتالوج"
+    "otherOffers": "أيضاً في الكتالوج",
+    "promotion": "عرض خاص",
+    "promotionView": "عرض التفاصيل"
   },
   "engagements": {
     "eyebrow": "الالتزامات · VORZIX",
@@ -939,7 +941,8 @@
       "invalid_reference": "مرجع غير صالح.",
       "invalid_services": "خدمات مرتبطة غير صالحة.",
       "duplicate_service": "خدمة مكررة.",
-      "duplicate_id": "معرّف مكرر."
+      "duplicate_id": "معرّف مكرر.",
+      "service_invalid_promotion": "يجب أن يكون السعر الترويجي صالحًا وأقل من السعر الأصلي."
     },
     "engagements": {
       "listTitle": "الالتزامات",
@@ -1176,15 +1179,18 @@
         "ctaLabel": "نص زر ابدأ",
         "projectUrl": "رابط المشروع أو المعرّف",
         "pickProject": "اختر مشروعاً",
-        "projectBlurb": "وصف قصير (صفحة العرض)"
+        "projectBlurb": "وصف قصير (صفحة العرض)",
+        "promotionPrice": "السعر الترويجي"
       },
       "hints": {
         "projectUrl": "الصق /projets/mon-projet أو الرابط الكامل أو المعرّف.",
-        "slug": "العنوان العام: /offres/your-slug"
+        "slug": "العنوان العام: /offres/your-slug",
+        "promotionPrice": "سعر مخفض بالعملة المحددة أقل من السعر الأصلي. اتركه فارغًا لإلغاء العرض وحركته في الصفحة الرئيسية."
       },
       "caseStudiesHint": "أضف عدة مشاريع: تظهر صورها ووصفها في /offres/[slug]. النقر يفتح صفحة المشروع.",
       "duplicate": "تكرار",
-      "archive": "أرشفة"
+      "archive": "أرشفة",
+      "save": "حفظ التغييرات"
     }
   },
   "caseStudy": {

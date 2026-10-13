@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { getLocale, getTranslations } from "next-intl/server";
 import { HomeSection } from "@/components/sections/home";
+import { HomePromotions } from "@/components/sections/home-promotions";
 import { Services } from "@/components/sections/services";
 import { brand } from "@/lib/brand";
 import { createPageMetadata, routes } from "@/lib/routes";
@@ -58,6 +59,7 @@ export default async function Home() {
   return (
     <>
       <HomeSection />
+      <HomePromotions services={services} />
       <Services services={services} />
       <Engagements engagements={engagements} />
       <Journey />

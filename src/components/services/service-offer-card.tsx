@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { GlowCard } from "@/components/ui/glow-card";
 import { Link } from "@/i18n/navigation";
 import { ServiceIcon } from "@/lib/services/icons";
-import { resolveServicePriceDisplay } from "@/lib/services/pricing";
+import { resolveServicePriceDisplay, getServicePromotion, formatServicePrice } from "@/lib/services/pricing";
 import { serviceDetailPath } from "@/lib/routes";
 import type { LocalizedService } from "@/lib/services/store";
 import { cn } from "@/lib/utils";
@@ -25,10 +25,12 @@ export function ServiceOfferCard({
 }: ServiceOfferCardProps) {
   const t = useTranslations("services");
   const locale = useLocale();
+  const promotion = getServicePromotion(service);
 
   const price = resolveServicePriceDisplay({
     pricingMode: service.pricingMode,
     startingPriceCents: service.startingPriceCents,
+    promotionPriceCents: service.promotionPriceCents,
     currency: service.currency,
     locale,
     labels: {
@@ -77,9 +79,9 @@ export function ServiceOfferCard({
           {service.shortDescription}
         </p>
 
-        {!compact &&
-        (price.mode === "starting_at" || price.mode === "fixed") ? (
+        {(price.mode === "starting_at" || price.mode === "fixed") ? (
           <p className="mt-4 font-mono text-[11px] tracking-wide text-foreground/80">
+            {promotion ? <><span className="me-2 rounded-full bg-primary/10 px-2 py-1 text-primary">{t("promotion")} −{promotion.discount}%</span><del className="me-2 text-muted-foreground">{formatServicePrice(promotion.regular, service.currency, locale)}</del></> : null}
             {price.label}
           </p>
         ) : null}

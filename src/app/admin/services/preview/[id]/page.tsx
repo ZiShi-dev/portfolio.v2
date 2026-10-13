@@ -39,6 +39,7 @@ export default async function AdminServicePreviewPage({ params }: PageProps) {
   const price = resolveServicePriceDisplay({
     pricingMode: service.pricingMode,
     startingPriceCents: service.startingPriceCents,
+    promotionPriceCents: service.promotionPriceCents,
     currency: service.currency,
     locale,
     labels: {

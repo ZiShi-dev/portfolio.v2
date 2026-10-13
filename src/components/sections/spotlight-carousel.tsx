@@ -72,6 +72,8 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
     if (!emblaApi || !multiple || reduceMotion || autoplayPaused) return;
 
     const timer = window.setInterval(() => {
+      // Keep the current card still while reading or swiping on mobile.
+      if (!window.matchMedia("(min-width: 1024px)").matches || document.hidden) return;
       emblaApi.scrollNext();
     }, AUTOPLAY_DELAY_MS);
 
@@ -101,13 +103,13 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
       <div
         className="overflow-hidden select-none"
         ref={emblaRef}
-        style={{ touchAction: "manipulation" }}
+        style={{ touchAction: "pan-y pinch-zoom" }}
       >
-        <div className="flex">
+        <div className="-ms-4 flex items-stretch sm:-ms-6">
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className="min-w-0 shrink-0 grow-0 basis-full"
+              className="min-w-0 shrink-0 grow-0 basis-full ps-4 sm:ps-6"
             >
               <SpotlightPlate project={project} priority={index === 0} />
             </div>

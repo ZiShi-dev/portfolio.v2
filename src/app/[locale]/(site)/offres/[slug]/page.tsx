@@ -17,7 +17,7 @@ import {
   serviceDetailPath,
 } from "@/lib/routes";
 import { ServiceIcon } from "@/lib/services/icons";
-import { resolveServicePriceDisplay } from "@/lib/services/pricing";
+import { resolveServicePriceDisplay, getServicePromotion, formatServicePrice } from "@/lib/services/pricing";
 import {
   getLinkedProjectsForService,
   getSiteServiceBySlug,
@@ -66,10 +66,12 @@ export default async function OffreDetailPage({ params }: PageProps) {
   const t = await getTranslations("services");
   const service = await getSiteServiceBySlug(locale, slug);
   if (!service) notFound();
+  const promotion = getServicePromotion(service);
 
   const price = resolveServicePriceDisplay({
     pricingMode: service.pricingMode,
     startingPriceCents: service.startingPriceCents,
+    promotionPriceCents: service.promotionPriceCents,
     currency: service.currency,
     locale,
     labels: {
@@ -121,7 +123,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
               offers: {
                 "@type": "Offer",
                 priceCurrency: service.currency,
-                price: (service.startingPriceCents / 100).toFixed(2),
+                price: ((promotion?.reduced ?? service.startingPriceCents) / 100).toFixed(2),
                 url: serviceUrl,
               },
             }
@@ -156,6 +158,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
             </h1>
             {price.mode === "starting_at" || price.mode === "fixed" ? (
               <p className="mt-4 font-mono text-lg tracking-wide text-primary sm:text-xl">
+                {promotion ? <><span className="me-2 text-primary">{t("promotion")} −{promotion.discount}%</span><del className="me-2 text-muted-foreground">{formatServicePrice(promotion.regular, service.currency, locale)}</del></> : null}
                 {price.label}
               </p>
             ) : null}
