@@ -29,7 +29,8 @@ export const PROJECT_LIMITS = {
   uploadMaxBytes: 3 * 1024 * 1024,
   allowedMime: ["image/jpeg", "image/png", "image/webp", "image/gif"] as const,
   referenceMax: 32,
-  listingIntentMax: 800,
+  // Les descriptions de vente du catalogue peuvent dépasser 800 caractères.
+  listingIntentMax: 4000,
   saleCtaLabelMax: 80,
   listingPriceCentsMax: 99_999_999,
 } as const;

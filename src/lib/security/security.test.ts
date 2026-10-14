@@ -8,7 +8,6 @@ import {
   requestMethodRequiresOrigin,
   verifyFormRequestOrigin,
 } from "@/lib/security/request-origin";
-import { getTrustedClientIp } from "@/lib/security/client-ip";
 import {
   createSubmissionFingerprint,
   hashForAudit,
@@ -34,6 +33,13 @@ function jsonRequest(body: unknown, headers: Record<string, string> = {}): Reque
 }
 
 describe("OWASP A08 — parseJsonBody (intégrité / prototype pollution)", () => {
+  it("borne les octets UTF-8 sans Content-Length, même pour les emojis", async () => {
+    const result = await parseJsonBody(jsonRequest({ message: "😀".repeat(16) }), 50);
+    assert.deepEqual(result, { ok: false, reason: "too_large" });
+    const allowed = await parseJsonBody(jsonRequest({ message: "été العربية" }), 100);
+    assert.equal(allowed.ok, true);
+    if (allowed.ok) assert.deepEqual(allowed.body, { message: "été العربية" });
+  });
   it("accepte un objet JSON valide", async () => {
     const result = await parseJsonBody(jsonRequest({ name: "Test" }));
     assert.equal(result.ok, true);

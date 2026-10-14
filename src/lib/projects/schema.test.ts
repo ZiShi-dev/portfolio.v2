@@ -35,6 +35,20 @@ function valid(overrides: Record<string, unknown> = {}) {
 }
 
 describe("parseProjectWriteBody", () => {
+  it("permet de modifier le prix sans rejeter une description de vente existante longue", () => {
+    const listingIntent = { fr: "Description de vente. ".repeat(60).trim(), en: "Sale description. ".repeat(60).trim(), ar: "وصف البيع المفصل. ".repeat(60).trim() };
+    assert.ok(listingIntent.fr.length > 800);
+    const body = valid({ kind: "for_sale", listingPriceCents: 75000, listingIntent });
+    const write = parseProjectWriteBody(body);
+    assert.equal(write.ok, true);
+    const patch = parseProjectPatchBody(body);
+    assert.equal(patch.ok, true);
+    if (patch.ok) {
+      assert.equal(patch.values.listingPriceCents, 75000);
+      assert.deepEqual(patch.values.listingIntent, listingIntent);
+    }
+    assert.equal(parseProjectPatchBody({ listingIntent: { fr: "x".repeat(PROJECT_LIMITS.listingIntentMax + 1), en: "", ar: "" } }).ok, false);
+  });
   it("accepte un projet valide", () => {
     const parsed = parseProjectWriteBody(valid());
     assert.equal(parsed.ok, true);

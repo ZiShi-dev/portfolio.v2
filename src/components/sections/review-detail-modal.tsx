@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, Quote, X } from "lucide-react";
 import { AnimatedStarRating } from "@/components/ui/animated-star-rating";
@@ -23,6 +23,7 @@ export function ReviewDetailModal({
   onIndexChange,
 }: ReviewDetailModalProps) {
   const t = useTranslations("reviews");
+  const reduceMotion = useReducedMotion();
   const tCommon = useTranslations("common");
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -103,10 +104,10 @@ export function ReviewDetailModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            initial={{ opacity: 0, y: 16, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
+            initial={reduceMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.16 }}
             className="relative my-auto flex max-h-[min(92dvh,40rem)] w-full max-w-lg flex-col rounded-2xl border border-border bg-background p-5 shadow-2xl sm:p-6"
             onClick={(e) => e.stopPropagation()}
           >

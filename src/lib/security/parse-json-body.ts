@@ -37,15 +37,31 @@ export async function parseJsonBody(
     }
   }
 
-  let text: string;
+  let text = "";
   try {
-    text = await request.text();
+    // Count real UTF-8 bytes and stop reading oversized bodies immediately.
+    const reader = request.body?.getReader();
+    if (reader) {
+      const decoder = new TextDecoder();
+      let bytes = 0;
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          bytes += value.byteLength;
+          if (bytes > maxBytes) {
+            await reader.cancel();
+            return { ok: false, reason: "too_large" };
+          }
+          text += decoder.decode(value, { stream: true });
+        }
+        text += decoder.decode();
+      } finally {
+        reader.releaseLock();
+      }
+    }
   } catch {
     return { ok: false, reason: "invalid_json" };
-  }
-
-  if (text.length > maxBytes) {
-    return { ok: false, reason: "too_large" };
   }
 
   if (!text.trim()) {

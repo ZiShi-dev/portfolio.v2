@@ -17,7 +17,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-[1000] bg-black/65 backdrop-blur-[3px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-[1000] bg-black/65 backdrop-blur-[3px] motion-reduce:animate-none duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -61,7 +61,7 @@ const DialogContent = React.forwardRef<
           className={cn(
             dialogSurfaceClass,
             "fixed inset-y-0 start-0 z-[1001] h-dvh w-[min(88vw,20rem)] gap-0 rounded-none border-y-0 border-s-0",
-            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left-full data-[state=open]:slide-in-from-left-full rtl:data-[state=closed]:slide-out-to-right-full rtl:data-[state=open]:slide-in-from-right-full",
+            "motion-reduce:animate-none duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left-full data-[state=open]:slide-in-from-left-full rtl:data-[state=closed]:slide-out-to-right-full rtl:data-[state=open]:slide-in-from-right-full",
             className
           )}
           {...props}
@@ -84,7 +84,7 @@ const DialogContent = React.forwardRef<
             className={cn(
               dialogSurfaceClass,
               "pointer-events-auto relative h-[min(94dvh,100%)] w-full max-w-none rounded-t-2xl rounded-b-none border-x-0 border-b-0 pb-[env(safe-area-inset-bottom)]",
-              "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4",
+              "motion-reduce:animate-none duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4",
               "sm:h-dvh sm:max-h-none sm:max-w-3xl sm:rounded-none sm:border-s sm:border-y-0 sm:border-e-0 sm:pb-0",
               "sm:data-[state=closed]:slide-out-to-right-full sm:data-[state=open]:slide-in-from-right-full",
               "rtl:sm:data-[state=closed]:slide-out-to-left-full rtl:sm:data-[state=open]:slide-in-from-left-full",
@@ -114,8 +114,8 @@ const DialogContent = React.forwardRef<
           className={cn(
             dialogSurfaceClass,
             "pointer-events-auto relative max-h-[min(94dvh,52rem)] w-full max-w-none gap-4 rounded-t-2xl rounded-b-none border-x-0 border-b-0 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]",
-            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4",
-            "sm:max-h-[min(90dvh,52rem)] sm:max-w-lg sm:rounded-2xl sm:border sm:p-6 sm:pb-6 sm:data-[state=closed]:fade-out-0 sm:data-[state=open]:fade-in-0 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95",
+            "motion-reduce:animate-none duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom-4 data-[state=open]:slide-in-from-bottom-4",
+            "sm:max-h-[min(90dvh,52rem)] sm:max-w-lg sm:rounded-2xl sm:border sm:p-6 sm:pb-6 sm:data-[state=closed]:fade-out-0 sm:data-[state=open]:fade-in-0 ",
             className
           )}
           {...props}

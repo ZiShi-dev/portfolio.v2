@@ -457,7 +457,7 @@ export function ProjectInquiryFlow({
       window.setTimeout(() => {
         setStep(next);
         setTransitioning(false);
-      }, 380);
+      }, 120);
     },
     [clearAllFieldErrors, reduceMotion, transitioning]
   );

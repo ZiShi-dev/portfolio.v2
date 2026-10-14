@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReviewFormPage } from "@/components/sections/review-form-page";
@@ -33,6 +33,7 @@ function clearOpenReviewQuery() {
 
 export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) {
   const [open, setOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
   const [projectId, setProjectId] = useState<string | null>(null);
   const unlockScrollRef = useRef<(() => void) | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -135,10 +136,10 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={REVIEW_MODAL_TITLE_ID}
-                initial={{ opacity: 0, y: 20, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 12, scale: 0.98 }}
-                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                initial={reduceMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reduceMotion ? 0 : 0.16, ease: "easeOut" }}
                 className="relative my-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
               >

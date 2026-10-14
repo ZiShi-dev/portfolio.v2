@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { ExternalLink, Smartphone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Reveal } from "@/components/ui/reveal";
@@ -36,6 +36,8 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
   const [type, setType] = useState<TypeFilter>("all");
   const [linkKind, setLinkKind] = useState<LinkFilter>("all");
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const sortedProjects = useMemo(() => [...projects].sort((a, b) => homeProjectRank(a) - homeProjectRank(b)), [projects]);
   const categories = useProjectCategoryFilters();
 
   const availableTypes = useMemo(() => {
@@ -47,9 +49,8 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
   }, [projects]);
 
   const filtered = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return [...projects]
-      .sort((a, b) => homeProjectRank(a) - homeProjectRank(b))
+    const needle = deferredQuery.trim().toLowerCase();
+    return sortedProjects
       .filter((project) => {
         if (category !== "all" && project.categoryKey !== category) return false;
         if (
@@ -70,7 +71,7 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
         }
         return true;
       });
-  }, [projects, category, type, linkKind, query]);
+  }, [sortedProjects, category, type, linkKind, deferredQuery]);
 
   const chipClass = (active: boolean) =>
     cn(

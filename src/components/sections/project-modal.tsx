@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { X, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { BrowserPreview3D } from "@/components/ui/browser-preview-3d";
@@ -68,6 +68,7 @@ export function ProjectModal(props: ProjectModalProps) {
 
 function ProjectModalContent({ project, onClose }: ProjectModalProps) {
   const t = useTranslations("projects");
+  const reduceMotion = useReducedMotion();
   const tCommon = useTranslations("common");
   const [index, setIndex] = useState(0);
   const unlockScrollRef = useRef<(() => void) | null>(null);
@@ -119,10 +120,10 @@ function ProjectModalContent({ project, onClose }: ProjectModalProps) {
               role="dialog"
               aria-modal="true"
               aria-labelledby={PROJECT_MODAL_TITLE_ID}
-              initial={{ opacity: 0, y: 40, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.98 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.16, ease: "easeOut" }}
               className="relative my-auto w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-background p-4 shadow-2xl sm:rounded-2xl sm:p-6 md:p-7"
               onClick={(e) => e.stopPropagation()}
             >
