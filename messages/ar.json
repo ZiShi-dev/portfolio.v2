@@ -9,6 +9,11 @@
     "contactDescription": "تواصل مع {brand} بشأن موقعك أو متجرك الإلكتروني أو تطبيقك. نرد خلال 48 ساعة."
   },
   "nav": {
+    "home": "الرئيسية",
+    "explore": "استكشف VORZIX",
+    "menuSubtitle": "مشروعك القادم يبدأ هنا.",
+    "offersHint": "اعثر على الحل المناسب لنشاطك.",
+    "projectsHint": "اكتشف أحدث أعمالنا.",
     "services": "عروضنا",
     "engagements": "التزامات",
     "projects": "المشاريع",

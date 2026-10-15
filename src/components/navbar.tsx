@@ -1,9 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useId, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import {
+  ArrowUpRight,
+  ArrowRight,
+  Home,
   CircleHelp,
   Compass,
   Layers,
@@ -23,6 +26,8 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { openLeaveReviewModal } from "@/lib/open-leave-review-modal";
 import { homeSectionUrl, routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
+import { useModalA11y } from "@/hooks/use-modal-a11y";
+import { lockBodyScroll } from "@/lib/lock-body-scroll";
 
 type NavItem = {
   id: string;
@@ -42,10 +47,6 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   "leave-review": PenLine,
 };
 
-function catalogIndex(index: number) {
-  return String(index + 1).padStart(2, "0");
-}
-
 function isActiveHref(href: string, pathname: string) {
   if (href.includes("#")) return false;
   if (href === "/") return pathname === "/";
@@ -62,6 +63,9 @@ export function Navbar() {
   const menuId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  useModalA11y(open, panelRef);
 
   const primary: NavItem[] = [
     { id: "services", label: t("services"), href: routes.services, icon: NAV_ICONS.services },
@@ -88,10 +92,10 @@ export function Navbar() {
     openReview: true,
   };
 
-  const drawerGroups = [
-    primary.slice(0, 2),
-    [...primary.slice(2), more[0]!],
-    [more[1]!],
+  const secondary = [
+    { id: "home", label: t("home"), href: routes.home, icon: Home },
+    ...primary.slice(2),
+    ...more,
   ];
 
   const handleItem = useCallback(
@@ -118,22 +122,21 @@ export function Navbar() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
-    document.body.style.overflow = "hidden";
+    const unlock = lockBodyScroll();
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = "";
+      unlock();
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
-  let linkIndex = 0;
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
       <div className="relative mx-auto w-full min-w-0 max-w-5xl">
         <div
           className={cn(
-            "relative z-50 flex h-12 w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-full border px-1.5 transition-colors duration-300 sm:h-14 sm:gap-3 sm:px-3",
+            "relative z-50 flex h-14 w-full min-w-0 items-center gap-1.5 overflow-hidden rounded-full border px-1.5 transition-colors duration-300 sm:gap-3 sm:px-3",
             scrolled
               ? "border-border bg-surface/95 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.55)] backdrop-blur-xl"
               : "border-border bg-surface/80 backdrop-blur-md"
@@ -158,6 +161,7 @@ export function Navbar() {
                   <li key={item.id}>
                     <Link
                       href={item.href}
+                      aria-current={active ? "page" : undefined}
                       className={cn(
                         "inline-flex h-9 items-center whitespace-nowrap rounded-full px-3 text-sm transition-colors outline-none",
                         "focus-visible:ring-2 focus-visible:ring-primary/45",
@@ -192,7 +196,7 @@ export function Navbar() {
             <button
               type="button"
               className={cn(
-                "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-background/60 text-foreground outline-none transition-colors",
+                "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border bg-background/60 text-foreground outline-none transition-colors",
                 "focus-visible:ring-2 focus-visible:ring-primary/45",
                 open
                   ? "border-primary/40 text-primary"
@@ -213,123 +217,65 @@ export function Navbar() {
         </div>
 
         <AnimatePresence>
-          {open ? (
+          {open && (
             <>
-              <motion.button
-                type="button"
-                aria-label={t("closeMenu")}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.16 }}
-                className="fixed inset-0 z-40 cursor-default bg-background/70 backdrop-blur-[2px]"
+              <motion.div
+                aria-hidden="true"
+                initial={reduceMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                transition={{ duration: reduceMotion ? 0 : 0.16 }}
+                className="fixed inset-0 z-40 bg-background/60 backdrop-blur-[3px]"
                 onClick={() => setOpen(false)}
               />
               <motion.div
-                id={menuId}
-                role="dialog"
-                aria-modal="true"
-                aria-label={t("menu")}
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18 }}
-                className="absolute end-0 top-[calc(100%+0.5rem)] z-50 w-full overflow-hidden rounded-xl border border-border-gold bg-surface-elevated/95 shadow-[0_16px_40px_-20px_rgba(0,0,0,0.7)] backdrop-blur-xl sm:max-w-[22rem]"
+                ref={panelRef} id={menuId} role="dialog" aria-modal="true"
+                aria-labelledby={menuId + "-title"}
+                initial={reduceMotion ? false : { opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                transition={{ duration: reduceMotion ? 0 : 0.16, ease: "easeOut" }}
+                className="absolute end-0 top-[calc(100%+0.75rem)] z-50 flex max-h-[calc(100dvh-6rem)] w-full flex-col overflow-hidden rounded-3xl border border-primary/20 bg-surface shadow-[0_24px_80px_-20px_rgba(0,0,0,0.7)] sm:max-w-[30rem]"
               >
-                <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5 ps-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary/80">
-                    VZ—NAV
-                  </p>
-                  <button
-                    type="button"
-                    className={cn(
-                      "inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background/60 text-foreground outline-none transition-colors",
-                      "hover:border-primary/40 hover:text-primary",
-                      "focus-visible:ring-2 focus-visible:ring-primary/45"
-                    )}
-                    aria-label={t("closeMenu")}
-                    onClick={() => setOpen(false)}
-                  >
-                    <X className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+                <div className="flex shrink-0 items-start justify-between gap-4 px-5 pb-3 pt-5 sm:px-6">
+                  <div>
+                    <h2 id={menuId + "-title"} className="font-display text-xl font-semibold text-foreground">{t("explore")}</h2>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t("menuSubtitle")}</p>
+                  </div>
+                  <button type="button" data-modal-initial-focus aria-label={t("closeMenu")} onClick={() => setOpen(false)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50">
+                    <X className="h-4 w-4" aria-hidden />
                   </button>
                 </div>
-
-                <nav aria-label={t("menu")}>
-                  {drawerGroups.map((group, groupIndex) => (
-                    <ul
-                      key={groupIndex}
-                      className={cn(
-                        "flex list-none flex-col gap-0.5 px-2 py-2",
-                        groupIndex > 0 && "border-t border-border"
-                      )}
-                    >
-                      {group.map((item) => {
+                <div className="overflow-y-auto overscroll-contain px-3 pb-3 sm:px-4">
+                  <nav aria-label={t("menu")}>
+                    <ul className="grid grid-cols-2 gap-2">
+                      {primary.slice(0, 2).map((item) => {
                         const Icon = item.icon;
-                        const index = linkIndex++;
                         const active = isActiveHref(item.href, pathname);
                         return (
                           <li key={item.id}>
-                            <Link
-                              href={item.href}
-                              onClick={(e) => handleItem(item, e)}
-                              aria-current={active ? "page" : undefined}
-                              className={cn(
-                                "group flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm outline-none transition-colors",
-                                "focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated",
-                                active
-                                  ? "bg-primary/10 text-primary"
-                                  : "text-foreground/85 hover:bg-surface-high hover:text-primary"
-                              )}
-                            >
-                              <span
-                                dir="ltr"
-                                className="w-6 shrink-0 font-mono text-[10px] tracking-[0.16em] text-primary/65"
-                              >
-                                {catalogIndex(index)}
-                              </span>
-                              <Icon
-                                className={cn(
-                                  "h-4 w-4 shrink-0",
-                                  active
-                                    ? "text-primary"
-                                    : "text-muted-foreground group-hover:text-primary"
-                                )}
-                                aria-hidden
-                                strokeWidth={1.6}
-                              />
-                              <span className="min-w-0 flex-1 truncate text-start">
-                                {item.label}
-                              </span>
+                            <Link href={item.href} onClick={(e) => handleItem(item, e)} aria-current={active ? "page" : undefined} className={cn("group flex h-full flex-col gap-3 rounded-2xl border p-4 text-start transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50", active ? "border-primary/35 bg-primary/10" : "border-border bg-surface-elevated hover:border-primary/30 hover:bg-surface-high")}>
+                              <span className="flex items-center justify-between"><span className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-primary/5 text-primary"><Icon className="h-4 w-4" aria-hidden /></span><ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary rtl:-rotate-90" aria-hidden /></span>
+                              <span><span className="block text-sm font-semibold text-foreground">{item.label}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{t(item.id === "services" ? "offersHint" : "projectsHint")}</span></span>
                             </Link>
                           </li>
                         );
                       })}
                     </ul>
-                  ))}
-                </nav>
-
-                <div className="flex flex-col gap-2 border-t border-border p-3">
-                  <Button
-                    asChild
-                    size="sm"
-                    className="h-11 w-full rounded-lg sm:hidden"
-                  >
-                    <ContactOpenLink onOpen={() => setOpen(false)}>
-                      {t("workTogetherShort")}
-                    </ContactOpenLink>
-                  </Button>
-                  <Link
-                    href={leaveReview.href}
-                    onClick={(e) => handleItem(leaveReview, e)}
-                    className="flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border-gold bg-background/40 px-4 text-sm text-foreground transition-colors hover:border-primary/45 hover:bg-surface-high hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45"
-                  >
-                    <PenLine className="h-4 w-4" aria-hidden strokeWidth={1.6} />
-                    {leaveReview.label}
-                  </Link>
+                    <ul className="mt-3 grid grid-cols-2 gap-1 border-t border-border pt-3">
+                      {secondary.map((item) => {
+                        const Icon = item.icon;
+                        const active = isActiveHref(item.href, pathname);
+                        return <li key={item.id}><Link href={item.href} onClick={(e) => handleItem(item, e)} aria-current={active ? "page" : undefined} className={cn("flex min-h-12 items-center gap-2.5 rounded-xl px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50", active ? "bg-primary/10 text-primary" : "text-foreground/75 hover:bg-surface-elevated hover:text-primary")}><Icon className="h-4 w-4 shrink-0 text-primary/70" aria-hidden /><span>{item.label}</span></Link></li>;
+                      })}
+                      <li><button type="button" onClick={() => { setOpen(false); window.requestAnimationFrame(() => openLeaveReviewModal()); }} className="flex min-h-12 w-full items-center gap-2.5 rounded-xl px-3 py-2 text-start text-sm text-foreground/75 transition-colors hover:bg-surface-elevated hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"><PenLine className="h-4 w-4 shrink-0 text-primary/70" aria-hidden />{leaveReview.label}</button></li>
+                    </ul>
+                  </nav>
+                </div>
+                <div className="shrink-0 border-t border-border bg-surface-elevated/50 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+                  <Button asChild className="w-full rounded-xl"><ContactOpenLink onOpen={() => setOpen(false)}>{t("workTogether")}<ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden /></ContactOpenLink></Button>
                 </div>
               </motion.div>
             </>
-          ) : null}
+          )}
         </AnimatePresence>
       </div>
     </header>
