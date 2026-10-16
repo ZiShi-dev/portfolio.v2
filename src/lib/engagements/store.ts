@@ -141,7 +141,7 @@ export async function listPublishedEngagementRows(): Promise<
   EngagementRow[] | null
 > {
   if (!isSupabaseServiceConfigured()) return null;
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:engagements' });
   if (!supabase) return null;
 
   const { data, error } = await supabase

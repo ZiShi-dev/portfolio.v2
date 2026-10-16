@@ -1,3 +1,4 @@
+import { revalidateTag } from "next/cache";
 import { requireAdminApi } from "@/lib/admin/require-admin-api";
 import {
   adminErrorResponse,
@@ -81,6 +82,7 @@ export async function PATCH(request: Request) {
     return adminErrorResponse(ADMIN_ERROR_CODES.UNAVAILABLE, 503);
   }
 
+  revalidateTag('public:about', { expire: 0 });
   logAdminAuthEvent("about_stats_updated", ip);
 
   return jsonResponse(

@@ -1,6 +1,6 @@
 import webpush from "web-push";
 import type { ProjectInquiryRow } from "@/lib/project-inquiry/store";
-import { buildInquiryPushPayload } from "@/lib/admin/push/schema";
+import { buildInquiryPushPayload, isAllowedPushEndpoint } from "@/lib/admin/push/schema";
 import {
   deleteAdminPushSubscription,
   listAdminPushSubscriptions,
@@ -30,6 +30,7 @@ export async function notifyAdminsOfNewInquiry(
 
   await Promise.all(
     subscriptions.map(async (row) => {
+      if (!isAllowedPushEndpoint(row.endpoint)) return;
       try {
         await webpush.sendNotification(
           {
@@ -37,7 +38,7 @@ export async function notifyAdminsOfNewInquiry(
             keys: { p256dh: row.p256dh, auth: row.auth },
           },
           payload,
-          { TTL: 60 * 60 * 12, urgency: "high" }
+          { TTL: 60 * 60 * 12, urgency: "high", timeout: 10_000 }
         );
       } catch (error) {
         const status =

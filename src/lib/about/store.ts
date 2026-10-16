@@ -33,7 +33,7 @@ export async function getAboutStats(): Promise<AboutStatsValues> {
     return { ...DEFAULT_ABOUT_STATS };
   }
 
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:about' });
   if (!supabase) return { ...DEFAULT_ABOUT_STATS };
 
   const { data, error } = await supabase

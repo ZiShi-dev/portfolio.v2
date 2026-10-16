@@ -1,7 +1,5 @@
 import {
-  markHomeForScrollRestore,
   restoreScrollPosition,
-  saveScrollPosition,
 } from "@/lib/scroll-position";
 
 const SCROLL_LOCK_ATTR = "data-scroll-locked";
@@ -27,7 +25,6 @@ export function lockBodyScroll(): () => void {
   const scrollY = window.scrollY;
   const scrollbarWidth = Math.max(0, window.innerWidth - html.clientWidth);
 
-  saveScrollPosition(window.location.pathname, scrollY);
 
   html.setAttribute(SCROLL_LOCK_ATTR, "true");
   html.style.setProperty("--scrollbar-compensation", `${scrollbarWidth}px`);
@@ -46,7 +43,6 @@ export function lockBodyScroll(): () => void {
 
     unlockScrollStyles();
     restoreScrollPosition(scrollY);
-    saveScrollPosition(window.location.pathname, scrollY);
   };
 }
 
@@ -65,5 +61,3 @@ function unlockScrollStyles() {
   body.style.width = "";
   body.style.overflow = "";
 }
-
-export { markHomeForScrollRestore };

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
+import { useFloatingAction } from "@/components/floating-actions-provider";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Mail, MessageCircle, X } from "lucide-react";
@@ -45,7 +46,7 @@ export function FloatingContactButton({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const reduceMotion = useReducedMotion();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useFloatingAction("contact");
   const configuredSocials = getConfiguredSocialLinks(socials);
   const email = contactEmail?.trim() ?? "";
   const contactItems = [
@@ -91,7 +92,7 @@ export function FloatingContactButton({
       document.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [open]);
+  }, [open, setOpen]);
 
   if (contactItems.length === 0) return null;
 
@@ -101,7 +102,7 @@ export function FloatingContactButton({
     <div
       ref={rootRef}
       className={cn(
-        "fixed z-[45] flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-3",
+        "pointer-events-none fixed z-[45] flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-3",
         "bottom-[max(1rem,env(safe-area-inset-bottom))] end-[max(1rem,env(safe-area-inset-right))]",
         "sm:bottom-[max(1.5rem,env(safe-area-inset-bottom))] sm:end-[max(1.5rem,env(safe-area-inset-right))]"
       )}
@@ -109,6 +110,7 @@ export function FloatingContactButton({
       <AnimatePresence initial={false}>
         {open ? (
           <motion.div
+            className="pointer-events-auto mb-[4.25rem]"
             id={menuId}
             aria-label={t("menuLabel")}
             initial={reduceMotion ? false : { opacity: 0, y: 8 }}
@@ -180,7 +182,7 @@ export function FloatingContactButton({
         title={open ? t("close") : t("open")}
         onClick={() => setOpen((current) => !current)}
         className={cn(
-          "relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border outline-none",
+          "pointer-events-auto relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border outline-none",
           "border-primary/45 bg-surface-elevated/95 text-primary backdrop-blur-xl",
           "shadow-[0_12px_36px_-12px_rgba(0,0,0,0.95),0_0_28px_-14px_rgba(201,169,106,0.75)]",
           "transition-[transform,border-color,box-shadow] duration-200 hover:scale-105 hover:border-primary/75 hover:shadow-[0_14px_40px_-12px_rgba(0,0,0,0.95),0_0_32px_-10px_rgba(201,169,106,0.65)]",

@@ -35,10 +35,12 @@ describe("API admin about-stats — auth, CSRF, validation, persist", () => {
   let lastUpsert: unknown = null;
   let getCalled = false;
   let auditEvents: string[] = [];
+  let invalidations: unknown[][] = [];
 
   let route: typeof import("@/app/api/admin/about-stats/route");
 
   before(() => {
+    mock.module("next/cache", { namedExports: { revalidateTag: (...args: unknown[]) => { invalidations.push(args); } } });
     mock.module("@/lib/admin/require-admin-api", {
       namedExports: {
         requireAdminApi: async (
@@ -146,6 +148,7 @@ describe("API admin about-stats — auth, CSRF, validation, persist", () => {
     lastUpsert = null;
     getCalled = false;
     auditEvents = [];
+    invalidations = [];
   }
 
   function patchRequest(
@@ -350,6 +353,7 @@ describe("API admin about-stats — auth, CSRF, validation, persist", () => {
     assert.deepEqual(body.stats, payload);
     assert.equal(body.updatedAt, "2026-07-16T02:00:00Z");
     assert.ok(auditEvents.includes("about_stats_updated"));
+    assert.deepEqual(invalidations, [["public:about", { expire: 0 }]]);
   });
 
   it("PATCH ignore champs mass-assignment avant upsert", async () => {

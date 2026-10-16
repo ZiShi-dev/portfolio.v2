@@ -1,29 +1,3 @@
-import { routes } from "@/lib/routes";
-
-const SCROLL_KEY_PREFIX = "portfolio:scroll:";
-const RESTORE_HOME_FLAG = "portfolio:should-restore-home";
-
-export function scrollStorageKey(pathname: string) {
-  return SCROLL_KEY_PREFIX + pathname;
-}
-
-export function saveScrollPosition(pathname: string, y = window.scrollY) {
-  sessionStorage.setItem(scrollStorageKey(pathname), String(y));
-}
-
-export function markHomeForScrollRestore() {
-  saveScrollPosition(routes.home);
-  sessionStorage.setItem(RESTORE_HOME_FLAG, "1");
-}
-
-export function shouldRestoreHomeScroll() {
-  return sessionStorage.getItem(RESTORE_HOME_FLAG) === "1";
-}
-
-export function clearHomeScrollRestoreFlag() {
-  sessionStorage.removeItem(RESTORE_HOME_FLAG);
-}
-
 /** Restaure le scroll une fois le contenu assez haut (sections dynamiques). */
 export function restoreScrollPosition(y: number) {
   if (y <= 0) return;

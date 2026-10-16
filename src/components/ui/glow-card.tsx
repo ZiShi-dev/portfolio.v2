@@ -12,10 +12,18 @@ export function GlowCard({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const frame = useRef<number | null>(null);
+  const motionAllowed = useRef(false);
   const pointer = useRef({ x: 0, y: 0 });
 
-  useEffect(() => () => {
-    if (frame.current !== null) cancelAnimationFrame(frame.current);
+  useEffect(() => {
+    const preference = window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const sync = () => { motionAllowed.current = preference.matches; };
+    sync();
+    preference.addEventListener("change", sync);
+    return () => {
+      preference.removeEventListener("change", sync);
+      if (frame.current !== null) cancelAnimationFrame(frame.current);
+    };
   }, []);
 
   function updatePos(clientX: number, clientY: number) {
@@ -35,7 +43,7 @@ export function GlowCard({
     <div
       ref={ref}
       onPointerMove={(e) => {
-        if (e.pointerType !== "mouse") return;
+        if (e.pointerType !== "mouse" || !motionAllowed.current) return;
         updatePos(e.clientX, e.clientY);
       }}
       className={cn(

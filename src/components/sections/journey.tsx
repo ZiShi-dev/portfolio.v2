@@ -19,12 +19,12 @@ export function Journey() {
 
       <div className="relative z-10 mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
-          <Reveal>
+          <Reveal variant="down">
             <span className="inline-block rounded-full border border-border-gold bg-surface-elevated/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
               {t("eyebrow")}
             </span>
           </Reveal>
-          <Reveal delay={0.05}>
+          <Reveal delay={0.05} variant="left">
             <h2
               id="journey-heading"
               className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
@@ -33,7 +33,7 @@ export function Journey() {
               <span className="text-primary">{t("titleHighlight")}</span>
             </h2>
           </Reveal>
-          <Reveal delay={0.1}>
+          <Reveal delay={0.1} variant="right">
             <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
               {t("subtitle")}
             </p>

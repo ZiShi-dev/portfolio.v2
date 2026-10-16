@@ -59,12 +59,16 @@ export async function getPublishedReviews(): Promise<ReviewItem[]> {
     return [];
   }
 
-  const rows = await listReviews({ status: "published", limit: 100 });
-  if (rows === null) {
-    return [];
-  }
-
-  return rows.map(reviewRowToItem);
+  const client = createSupabaseServiceClient({ publicCacheTag: "public:reviews" });
+  if (!client) return [];
+  // Public projection deliberately excludes email, fingerprints and IP hashes.
+  const { data, error } = await client.from("reviews")
+    .select("id, name, role, message, rating")
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .limit(100);
+  if (error) return [];
+  return (data ?? []).map(reviewRowToItem);
 }
 
 export type SaveReviewResult =
@@ -340,7 +344,7 @@ export async function getPublishedReviewsForProject(
   projectId: string
 ): Promise<ReviewItem[]> {
   if (!UUID_RE.test(projectId) || !isSupabaseServiceConfigured()) return [];
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:reviews' });
   if (!supabase) return [];
 
   const { data, error } = await supabase

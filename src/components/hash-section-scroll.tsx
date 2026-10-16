@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { usePathname } from "@/i18n/navigation";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import {
-  scrollBehaviorForMotion,
-  scrollToSection,
   waitAndScrollToHash,
 } from "@/lib/scroll-to-section";
 
@@ -14,10 +12,12 @@ import {
  */
 export function HashSectionScroll() {
   const pathname = usePathname();
+  const pendingScroll = useRef<() => void>(() => {});
 
   useEffect(() => {
-    if (!window.location.hash) return;
-    return waitAndScrollToHash(window.location.hash);
+    pendingScroll.current();
+    if (window.location.hash) pendingScroll.current = waitAndScrollToHash(window.location.hash);
+    return () => pendingScroll.current();
   }, [pathname]);
 
   useEffect(() => {
@@ -50,23 +50,48 @@ export function HashSectionScroll() {
       if (window.location.hash !== url.hash) {
         window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
       }
-      scrollToSection(url.hash, scrollBehaviorForMotion());
+      pendingScroll.current();
+      pendingScroll.current = waitAndScrollToHash(url.hash);
     };
 
     document.addEventListener("click", onClick, true);
-    return () => document.removeEventListener("click", onClick, true);
+    return () => {
+      pendingScroll.current();
+      document.removeEventListener("click", onClick, true);
+    };
   }, []);
 
   useEffect(() => {
-    let cancel = () => {};
+    // Once the visitor scrolls manually, the old anchor is no longer their
+    // destination. Sync the clean URL with Next so reload uses the real position.
+    const clearAnchor = () => {
+      if (!window.location.hash || document.body.style.position === "fixed") return;
+      pendingScroll.current();
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable]")) return;
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) clearAnchor();
+    };
+    window.addEventListener("wheel", clearAnchor, { passive: true });
+    window.addEventListener("touchmove", clearAnchor, { passive: true });
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("wheel", clearAnchor);
+      window.removeEventListener("touchmove", clearAnchor);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
+  useEffect(() => {
     const onHashChange = () => {
-      cancel();
+      pendingScroll.current();
       if (!window.location.hash) return;
-      cancel = waitAndScrollToHash(window.location.hash);
+      pendingScroll.current = waitAndScrollToHash(window.location.hash);
     };
     window.addEventListener("hashchange", onHashChange);
     return () => {
-      cancel();
+      pendingScroll.current();
       window.removeEventListener("hashchange", onHashChange);
     };
   }, []);

@@ -7,7 +7,7 @@ export const OWASP_CONTROLS = [
     id: "A01",
     name: "Broken Access Control",
     controls: [
-      "requireAdminApi (session + allowlist + MFA)",
+      "requireAdminApi et requireAdminPageUser (session + allowlist + MFA)",
       "verifyFormRequestOrigin (CSRF formulaires publics + admin mutations)",
       "Origines CSRF limitées aux hôtes déclarés (pas de confiance aveugle au Host)",
       "Schémas Zod stricts (mass-assignment refusé)",
@@ -39,7 +39,7 @@ export const OWASP_CONTROLS = [
       "Rate limit IP (proxy) + email + journalier",
       "Honeypot formulaires publics",
       "Déduplication anti double-clic",
-      "Magic bytes upload images",
+      "Magic bytes upload images et limite multipart pendant la lecture",
       "getTrustedClientIp (Vercel anti-spoof)",
       "isSafeHttpUrl bloque réseaux privés / metadata en production",
     ],
@@ -89,6 +89,7 @@ export const OWASP_CONTROLS = [
     controls: [
       "isSafeHttpUrl sur liens projet / offre",
       "URLs images limitées à *.supabase.co (CSP + schéma)",
+      "Destinations Web Push limitées aux fournisseurs connus, revérifiées à l’envoi",
     ],
   },
 ] as const;

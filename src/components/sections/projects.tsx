@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ProjectHomeShowcase } from "@/components/sections/project-home-showcase";
 import type { LocalizedProjectItem } from "@/data/projects";
@@ -34,7 +35,9 @@ export function Projects({ projects }: ProjectsProps) {
         />
       </div>
 
-      <ProjectHomeShowcase projects={projects} />
+      <Reveal variant="rise">
+        <ProjectHomeShowcase projects={projects} />
+      </Reveal>
     </section>
   );
 }

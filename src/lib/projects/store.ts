@@ -282,7 +282,7 @@ export function projectRowToLocalized(
 export async function listPublishedProjectRows(): Promise<ProjectRow[] | null> {
   if (!isSupabaseServiceConfigured()) return null;
 
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:projects' });
   if (!supabase) return null;
 
   const { data, error } = await supabase
@@ -308,7 +308,7 @@ export async function getPublishedProjectBySlug(
 ): Promise<ProjectRow | null> {
   if (!slug || slug.length < 2) return null;
   if (!isSupabaseServiceConfigured()) return null;
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:projects' });
   if (!supabase) return null;
 
   const { data, error } = await supabase
@@ -330,7 +330,7 @@ export async function listPublishedProjectSlugs(): Promise<
   { slug: string; updated_at: string }[]
 > {
   if (!isSupabaseServiceConfigured()) return [];
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:projects' });
   if (!supabase) return [];
 
   const { data, error } = await supabase

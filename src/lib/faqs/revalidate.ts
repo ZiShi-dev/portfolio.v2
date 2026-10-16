@@ -1,7 +1,8 @@
-import { revalidatePath } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 /** Invalide Home + catalogue offres (FAQ générales / liées). */
 export function revalidateFaqSurfaces(serviceSlugs?: string[]) {
+  revalidateTag('public:faqs', { expire: 0 });
   revalidatePath("/", "layout");
   revalidatePath("/offres");
   revalidatePath("/services");

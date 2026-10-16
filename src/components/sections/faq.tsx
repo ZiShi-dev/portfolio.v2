@@ -53,12 +53,12 @@ export function FaqSection({
         )}
       >
         <div className={cn(!compact && "text-center")}>
-          <Reveal>
+          <Reveal variant="down">
             <span className="inline-block rounded-full border border-border-gold bg-surface-elevated/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
               {t("eyebrow")}
             </span>
           </Reveal>
-          <Reveal delay={0.05}>
+          <Reveal delay={0.05} variant="left">
             <h2
               id={headingId}
               className={cn(
@@ -73,7 +73,7 @@ export function FaqSection({
             </h2>
           </Reveal>
           {!compact ? (
-            <Reveal delay={0.1}>
+            <Reveal delay={0.1} variant="right">
               <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
                 {t("subtitle")}
               </p>
@@ -83,7 +83,7 @@ export function FaqSection({
 
         {!compact ? <CelestialDivider className="mt-10 sm:mt-12" /> : null}
 
-        <Reveal delay={0.12}>
+        <Reveal delay={0.12} variant="right">
           <ul
             className={cn("space-y-0", compact ? "mt-6" : "mt-10 sm:mt-12")}
             role="list"

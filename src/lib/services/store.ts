@@ -278,12 +278,13 @@ function linksFromWriteInput(input: ServiceWriteInput): ServiceCaseStudyLink[] {
 }
 
 async function loadCaseStudies(
-  serviceIds: string[]
+  serviceIds: string[],
+  publicRead = false
 ): Promise<Map<string, ServiceCaseStudyLink[]>> {
   const map = new Map<string, ServiceCaseStudyLink[]>();
   if (serviceIds.length === 0) return map;
   if (!isSupabaseServiceConfigured()) return map;
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient(publicRead ? { publicCacheTag: "public:services" } : undefined);
   if (!supabase) return map;
 
   const { data, error } = await supabase
@@ -459,7 +460,7 @@ function patchToDbPayload(
 
 export async function listPublishedServiceRows(): Promise<ServiceRow[] | null> {
   if (!isSupabaseServiceConfigured()) return null;
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:services' });
   if (!supabase) return null;
 
   const { data, error } = await supabase
@@ -478,7 +479,7 @@ export async function listPublishedServiceRows(): Promise<ServiceRow[] | null> {
     const rows = (data ?? []).map((row) =>
       normalizeRow(row as Record<string, unknown>)
     );
-    const caseMap = await loadCaseStudies(rows.map((r) => r.id));
+    const caseMap = await loadCaseStudies(rows.map((r) => r.id), true);
     return rows.map((r) => withCaseStudies(r, caseMap.get(r.id) ?? []));
   } catch (err) {
     console.error("[services] list published normalize", err);
@@ -491,7 +492,7 @@ export async function getPublishedServiceBySlug(
 ): Promise<ServiceRow | null> {
   if (!slug || slug.length < 2) return null;
   if (!isSupabaseServiceConfigured()) return null;
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:services' });
   if (!supabase) return null;
 
   const { data, error } = await supabase
@@ -508,7 +509,7 @@ export async function getPublishedServiceBySlug(
   if (!data) return null;
 
   const row = normalizeRow(data as Record<string, unknown>);
-  const caseMap = await loadCaseStudies([row.id]);
+  const caseMap = await loadCaseStudies([row.id], true);
   return withCaseStudies(row, caseMap.get(row.id) ?? []);
 }
 
@@ -582,7 +583,7 @@ export async function listPublishedServiceSlugs(): Promise<
   { slug: string; updated_at: string }[]
 > {
   if (!isSupabaseServiceConfigured()) return [];
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:services' });
   if (!supabase) return [];
 
   const { data, error } = await supabase

@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { LocalizedProjectItem } from "@/data/projects";
-import { markHomeForScrollRestore } from "@/lib/lock-body-scroll";
 import { routes } from "@/lib/routes";
 import { ProjectStatusBadge } from "@/components/sections/project-status-badge";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
@@ -70,7 +69,7 @@ export function SpotlightPlate({ project, priority }: SpotlightPlateProps) {
           ) : null}
           <div className="mt-auto pt-6 sm:pt-8">
             <Button asChild size="lg" className="min-h-12 w-full sm:w-auto">
-              <Link href={href} onClick={markHomeForScrollRestore}>
+              <Link href={href}>
                 {forSale ? t("viewListing") : t("viewProject")}
                 <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
               </Link>

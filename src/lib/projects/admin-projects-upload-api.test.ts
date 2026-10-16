@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { after, before, describe, it, mock } from "node:test";
+import { PROJECT_LIMITS } from "@/lib/projects/schema";
 import { ADMIN_ERROR_CODES } from "@/lib/admin/error-codes";
 
 type GuardMode = "ok" | "unauthorized" | "forbidden_origin" | "mfa";
@@ -221,4 +222,21 @@ describe("API admin projects upload", () => {
     const res = await uploadRoute.GET();
     assert.equal(res.status, 405);
   });
+  it("rejects oversized chunked multipart before parsing or storing it", async () => {
+    reset();
+    let cancelled = false;
+    const request = new Request("http://localhost/api/admin/projects/upload", {
+      method: "POST", headers: { "content-type": "multipart/form-data; boundary=test", "content-length": "1" },
+      body: new ReadableStream<Uint8Array>({
+        pull(controller) { controller.enqueue(new Uint8Array(PROJECT_LIMITS.uploadMaxBytes + 8_193)); },
+        cancel() { cancelled = true; },
+      }), duplex: "half",
+    } as RequestInit & { duplex: "half" });
+    const response = await uploadRoute.POST(request);
+    assert.equal(response.status, 400);
+    assert.equal((await response.json()).error, "too_large");
+    assert.equal(cancelled, true);
+    assert.equal(lastFile, null);
+  });
+
 });

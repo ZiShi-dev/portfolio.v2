@@ -25,7 +25,7 @@ export function scrollBehaviorForMotion(): ScrollBehavior {
  */
 export function waitAndScrollToHash(
   hash: string,
-  timeoutMs = 2800
+  timeoutMs = 12000
 ): () => void {
   const id = hash.startsWith("#") ? hash.slice(1) : hash;
   if (!id) return () => {};
@@ -33,10 +33,17 @@ export function waitAndScrollToHash(
   let cancelled = false;
   const started = Date.now();
   const behavior = scrollBehaviorForMotion();
+  let readyFrames = 0;
 
   const tick = () => {
     if (cancelled) return;
-    if (scrollToSection(`#${id}`, behavior)) return;
+    const locked = document.body.style.position === "fixed"
+      || Number(document.documentElement.dataset.scrollLockCount ?? "0") > 0;
+    if (locked || !document.getElementById(id)) readyFrames = 0;
+    else readyFrames += 1;
+    // Scroll-lock cleanup restores the old position on the next frame.
+    // Let that restoration finish before applying the requested destination.
+    if (readyFrames >= 3 && scrollToSection(`#${id}`, behavior)) return;
     if (Date.now() - started >= timeoutMs) return;
     window.requestAnimationFrame(tick);
   };

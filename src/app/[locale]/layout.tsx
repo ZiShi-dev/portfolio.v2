@@ -22,9 +22,11 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  // Admin has its own provider; its large catalogue is never needed by public pages.
+  const publicMessages = Object.fromEntries(Object.entries(messages).filter(([namespace]) => namespace !== "admin"));
 
   return (
-    <NextIntlClientProvider key={locale} locale={locale} messages={messages}>
+    <NextIntlClientProvider key={locale} locale={locale} messages={publicMessages}>
       <LocaleDocumentSync locale={locale as Locale} />
       {children}
     </NextIntlClientProvider>

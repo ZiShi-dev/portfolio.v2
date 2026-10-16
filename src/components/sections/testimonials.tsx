@@ -13,7 +13,6 @@ import { ReviewDetailModal } from "@/components/sections/review-detail-modal";
 import { Link } from "@/i18n/navigation";
 import type { ReviewItem } from "@/data/reviews";
 import { getHomeGridClass, HOME_SECTION_PREVIEW } from "@/lib/home-layout";
-import { markHomeForScrollRestore } from "@/lib/lock-body-scroll";
 import { routes } from "@/lib/routes";
 
 type TestimonialsProps = {
@@ -72,7 +71,7 @@ export function Testimonials({ reviews }: TestimonialsProps) {
           className={`mx-auto mt-10 grid max-w-6xl gap-4 sm:mt-14 sm:gap-5 lg:mt-16 ${getHomeGridClass(preview.length)}`}
         >
           {preview.map((r, i) => (
-            <Reveal key={r.id} delay={i * 0.08}>
+            <Reveal key={r.id} delay={i * 0.08} variant={i % 2 === 0 ? "left" : "right"}>
               <ReviewCard
                 review={r}
                 featured={i === 0 && preview.length > 1}
@@ -92,7 +91,7 @@ export function Testimonials({ reviews }: TestimonialsProps) {
               size="lg"
               className="min-h-12 w-full max-w-sm sm:w-auto"
             >
-              <Link href={routes.reviews} onClick={markHomeForScrollRestore}>
+              <Link href={routes.reviews}>
                 {t("seeMore")}
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>

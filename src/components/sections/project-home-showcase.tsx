@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { LocalizedProjectItem } from "@/data/projects";
-import { markHomeForScrollRestore } from "@/lib/lock-body-scroll";
 import { homeProjectRank } from "@/lib/projects/home-order";
 import { routes } from "@/lib/routes";
 import { SpotlightCarousel } from "@/components/sections/spotlight-carousel";
@@ -33,7 +32,7 @@ export function ProjectHomeShowcase({ projects }: ProjectHomeShowcaseProps) {
           variant="outline"
           className="min-h-12 w-full px-6 sm:w-auto"
         >
-          <Link href={routes.projects} onClick={markHomeForScrollRestore}>
+          <Link href={routes.projects}>
             {t("exploreAll")}
             <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
           </Link>

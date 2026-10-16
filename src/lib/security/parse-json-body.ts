@@ -1,3 +1,4 @@
+import { readBoundedBody } from "@/lib/security/bounded-body";
 import { FORM_SECURITY } from "@/lib/security/constants";
 
 const DANGEROUS_KEYS = new Set(["__proto__", "constructor", "prototype"]);
@@ -29,40 +30,9 @@ export async function parseJsonBody(
   request: Request,
   maxBytes: number = FORM_SECURITY.MAX_BODY_BYTES
 ): Promise<ParseJsonBodyResult> {
-  const contentLength = request.headers.get("content-length");
-  if (contentLength) {
-    const length = Number.parseInt(contentLength, 10);
-    if (Number.isFinite(length) && length > maxBytes) {
-      return { ok: false, reason: "too_large" };
-    }
-  }
-
-  let text = "";
-  try {
-    // Count real UTF-8 bytes and stop reading oversized bodies immediately.
-    const reader = request.body?.getReader();
-    if (reader) {
-      const decoder = new TextDecoder();
-      let bytes = 0;
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          bytes += value.byteLength;
-          if (bytes > maxBytes) {
-            await reader.cancel();
-            return { ok: false, reason: "too_large" };
-          }
-          text += decoder.decode(value, { stream: true });
-        }
-        text += decoder.decode();
-      } finally {
-        reader.releaseLock();
-      }
-    }
-  } catch {
-    return { ok: false, reason: "invalid_json" };
-  }
+  const result = await readBoundedBody(request, maxBytes);
+  if (!result.ok) return { ok: false, reason: result.reason === "too_large" ? "too_large" : "invalid_json" };
+  const text = new TextDecoder().decode(result.bytes);
 
   if (!text.trim()) {
     return { ok: false, reason: "invalid_json" };

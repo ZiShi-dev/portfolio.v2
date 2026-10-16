@@ -12,6 +12,7 @@ import { getSiteServices } from "@/lib/services/site";
 import { getSiteEngagements } from "@/lib/engagements/site";
 import { getSiteGeneralFaqs } from "@/lib/faqs/site";
 import type { Locale } from "@/i18n/routing";
+import { Suspense } from "react";
 
 const Journey = dynamic(
   () => import("@/components/sections/journey").then((m) => m.Journey)
@@ -48,6 +49,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Home() {
   const locale = (await getLocale()) as Locale;
+  return <>
+    <HomeSection />
+    <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
+      <HomeContent locale={locale} />
+    </Suspense>
+  </>;
+}
+
+async function HomeContent({ locale }: { locale: Locale }) {
   const [reviews, projects, services, engagements, faqs] = await Promise.all([
     getPublishedReviews(),
     getSiteProjects(locale),
@@ -58,7 +68,6 @@ export default async function Home() {
 
   return (
     <>
-      <HomeSection />
       <HomePromotions services={services} />
       <Services services={services} />
       <Engagements engagements={engagements} />

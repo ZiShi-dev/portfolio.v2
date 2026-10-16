@@ -23,7 +23,7 @@ export function useModalA11y(
       const initial =
         dialog.querySelector<HTMLElement>("[data-modal-initial-focus]") ??
         dialog.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-      initial?.focus();
+      initial?.focus({ preventScroll: true });
     });
 
     function onKeyDown(e: KeyboardEvent) {
@@ -53,7 +53,7 @@ export function useModalA11y(
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("keydown", onKeyDown);
-      previousFocusRef.current?.focus?.();
+      previousFocusRef.current?.focus?.({ preventScroll: true });
     };
   }, [active, dialogRef]);
 }

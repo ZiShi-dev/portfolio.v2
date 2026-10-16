@@ -41,10 +41,12 @@ describe("API admin social-links (settings)", () => {
   };
   let lastUpsert: unknown = null;
   let auditEvents: string[] = [];
+  let invalidations: unknown[][] = [];
 
   let route: typeof import("@/app/api/admin/social-links/route");
 
   before(() => {
+    mock.module("next/cache", { namedExports: { revalidateTag: (...args: unknown[]) => { invalidations.push(args); } } });
     mock.module("@/lib/admin/require-admin-api", {
       namedExports: {
         requireAdminApi: async (
@@ -141,6 +143,7 @@ describe("API admin social-links (settings)", () => {
     serviceConfigured = true;
     lastUpsert = null;
     auditEvents = [];
+    invalidations = [];
     adminResult = {
       ok: true,
       configured: true,
@@ -254,6 +257,7 @@ describe("API admin social-links (settings)", () => {
       contactPriority: [...DEFAULT_CONTACT_PRIORITY],
     });
     assert.ok(auditEvents.includes("social_links_updated"));
+    assert.deepEqual(invalidations, [["public:settings", { expire: 0 }]]);
   });
 
   it("PATCH enregistre la priorité de contact", async () => {

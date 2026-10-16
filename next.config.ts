@@ -30,6 +30,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Keep the development indicator from covering the mobile navigation.
+  devIndicators: false,
   images: {
     /**
      * Next 16 : allowlist obligatoire pour `quality`.

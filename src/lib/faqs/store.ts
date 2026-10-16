@@ -128,11 +128,11 @@ export function faqRowToLocalized(
   };
 }
 
-async function loadServiceIds(faqIds: string[]): Promise<Map<string, string[]>> {
+async function loadServiceIds(faqIds: string[], publicRead = false): Promise<Map<string, string[]>> {
   const map = new Map<string, string[]>();
   if (faqIds.length === 0) return map;
   if (!isSupabaseServiceConfigured()) return map;
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient(publicRead ? { publicCacheTag: "public:faqs" } : undefined);
   if (!supabase) return map;
 
   const { data, error } = await supabase
@@ -225,7 +225,7 @@ function patchToDbPayload(
 
 export async function listPublishedGeneralFaqRows(): Promise<FaqRow[] | null> {
   if (!isSupabaseServiceConfigured()) return null;
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:faqs' });
   if (!supabase) return null;
 
   const { data, error } = await supabase
@@ -244,7 +244,7 @@ export async function listPublishedGeneralFaqRows(): Promise<FaqRow[] | null> {
   const rows = (data ?? []).map((row) =>
     normalizeRow(row as Record<string, unknown>)
   );
-  const serviceMap = await loadServiceIds(rows.map((r) => r.id));
+  const serviceMap = await loadServiceIds(rows.map((r) => r.id), true);
   return rows.map((r) => ({
     ...r,
     service_ids: serviceMap.get(r.id) ?? [],
@@ -257,7 +257,7 @@ export async function listPublishedFaqRowsForService(
 ): Promise<FaqRow[] | null> {
   if (!UUID_RE.test(serviceId)) return [];
   if (!isSupabaseServiceConfigured()) return null;
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:faqs' });
   if (!supabase) return null;
 
   const { data: links, error: linkError } = await supabase

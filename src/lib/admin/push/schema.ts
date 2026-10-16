@@ -13,6 +13,21 @@ const keySchema = z
   .min(8)
   .max(PUSH_LIMITS.maxKey);
 
+/** Browser-owned push services only: endpoints are later contacted by our server. */
+export function isAllowedPushEndpoint(value: string): boolean {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" || url.username || url.password || url.port || url.hash) return false;
+    const host = url.hostname;
+    return host === "fcm.googleapis.com" || host === "android.googleapis.com"
+      || host === "web.push.apple.com"
+      || host === "updates.push.services.mozilla.com"
+      || host.endsWith(".push.services.mozilla.com")
+      || host.endsWith(".notify.windows.com")
+      || host.endsWith(".wns.windows.com");
+  } catch { return false; }
+}
+
 export const pushSubscriptionBodySchema = z.object({
   endpoint: z
     .string()
@@ -20,10 +35,7 @@ export const pushSubscriptionBodySchema = z.object({
     .url()
     .min(12)
     .max(PUSH_LIMITS.maxEndpoint)
-    .refine(
-      (value) => value.startsWith("https://") || value.startsWith("http://localhost"),
-      "endpoint_insecure"
-    ),
+    .refine(isAllowedPushEndpoint, "endpoint_not_allowed"),
   keys: z.object({
     p256dh: keySchema,
     auth: keySchema,

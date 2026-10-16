@@ -115,7 +115,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     return defaultSettings();
   }
 
-  const supabase = createSupabaseServiceClient();
+  const supabase = createSupabaseServiceClient({ publicCacheTag: 'public:settings' });
   if (!supabase) return defaultSettings();
 
   const { data, error } = await fetchSiteSocialRow(supabase, false);

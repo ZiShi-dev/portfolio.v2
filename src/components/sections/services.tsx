@@ -43,12 +43,12 @@ export function Services({ services, variant = "home" }: ServicesProps) {
 
       <div className="relative z-10 mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
-          <Reveal variant={isPage ? "fade" : "rise"}>
+          <Reveal variant={isPage ? "fade" : "down"}>
             <span className="inline-block rounded-full border border-border-gold bg-surface-elevated/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
               {t("eyebrow")}
             </span>
           </Reveal>
-          <Reveal delay={0.05} variant={isPage ? "fade" : "rise"}>
+          <Reveal delay={0.05} variant={isPage ? "fade" : "left"}>
             {isPage ? (
               <h1
                 id="services-heading"
@@ -67,7 +67,7 @@ export function Services({ services, variant = "home" }: ServicesProps) {
               </h2>
             )}
           </Reveal>
-          <Reveal delay={0.1} variant={isPage ? "fade" : "rise"}>
+          <Reveal delay={0.1} variant={isPage ? "fade" : "right"}>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
               {isPage
                 ? t("catalogSubtitle")
@@ -95,7 +95,7 @@ export function Services({ services, variant = "home" }: ServicesProps) {
               )}
             >
               {preview.map((service, i) => (
-                <Reveal key={service.id} delay={0.04 + Math.min(i, 5) * 0.04} variant={isPage ? "fade" : "rise"} className="h-full">
+                <Reveal key={service.id} delay={0.04 + Math.min(i, 5) * 0.04} variant={i % 3 === 0 ? "left" : i % 3 === 1 ? "rise" : "right"} className="h-full">
                   <ServiceOfferCard service={service} compact={!isPage} />
                 </Reveal>
               ))}

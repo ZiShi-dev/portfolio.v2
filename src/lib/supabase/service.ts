@@ -1,6 +1,6 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseConfig } from "@/lib/supabase/config";
-import { supabaseFetch } from "@/lib/supabase/fetch";
+import { publicSupabaseFetch, supabaseFetch, type PublicDataTag } from "@/lib/supabase/fetch";
 
 function readEnv(name: string): string {
   return process.env[name]?.trim() ?? "";
@@ -10,7 +10,7 @@ function readEnv(name: string): string {
  * Client service_role — serveur UNIQUEMENT.
  * Bypass RLS : ne jamais exposer la clé ni l'importer dans un composant client.
  */
-export function createSupabaseServiceClient(): SupabaseClient | null {
+export function createSupabaseServiceClient(options?: { publicCacheTag: PublicDataTag }): SupabaseClient | null {
   const config = getSupabaseConfig();
   const serviceKey = readEnv("SUPABASE_SERVICE_ROLE_KEY");
 
@@ -19,7 +19,7 @@ export function createSupabaseServiceClient(): SupabaseClient | null {
   }
 
   return createClient(config.config.url, serviceKey, {
-    global: { fetch: supabaseFetch },
+    global: { fetch: options ? publicSupabaseFetch(options.publicCacheTag) : supabaseFetch },
     auth: {
       persistSession: false,
       autoRefreshToken: false,

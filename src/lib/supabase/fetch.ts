@@ -1,6 +1,21 @@
 /** Délai max d’un appel REST Supabase (évite les pages bloquées ~20 s). */
 export const SUPABASE_FETCH_TIMEOUT_MS = 8_000;
 
+export type PublicDataTag = `public:${"projects" | "services" | "faqs" | "engagements" | "reviews" | "settings" | "about"}`;
+
+/** Opt-in only for published/site-wide reads. Admin and writes never use this cache. */
+export function publicSupabaseFetch(tag: PublicDataTag) {
+  return (input: RequestInfo | URL, init?: RequestInit) => {
+    const method = init?.method ?? (input instanceof Request ? input.method : "GET");
+    if (method.toUpperCase() !== "GET") return supabaseFetch(input, init);
+    return supabaseFetch(input, {
+      ...init,
+      cache: "force-cache",
+      next: { revalidate: 60, tags: [tag] },
+    } as RequestInit);
+  };
+}
+
 function requestPath(input: RequestInfo | URL): string {
   try {
     const raw =
