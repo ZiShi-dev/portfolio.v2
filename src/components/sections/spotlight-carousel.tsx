@@ -9,6 +9,7 @@ import { SpotlightPlate } from "@/components/sections/spotlight-plate";
 import type { LocalizedProjectItem } from "@/data/projects";
 import { getLocaleDirection, type Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { usePageVisible } from "@/hooks/use-page-visible";
 
 const AUTOPLAY_DELAY_MS = 6000;
 
@@ -21,6 +22,7 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   const locale = useLocale() as Locale;
   const direction = getLocaleDirection(locale);
   const reduceMotion = useReducedMotion();
+  const pageVisible = usePageVisible();
   const multiple = projects.length > 1;
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef, { amount: 0.25 });
@@ -72,16 +74,20 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   }, [emblaApi, direction, multiple, reduceMotion]);
 
   useEffect(() => {
-    if (!emblaApi || !multiple || reduceMotion || autoplayPaused || !inView) return;
-
-    const timer = window.setInterval(() => {
-      // Keep the current card still while reading or swiping on mobile.
-      if (!window.matchMedia("(min-width: 1024px)").matches || document.hidden) return;
-      emblaApi.scrollNext();
-    }, AUTOPLAY_DELAY_MS);
-
-    return () => window.clearInterval(timer);
-  }, [emblaApi, multiple, reduceMotion, autoplayPaused, inView]);
+    if (!emblaApi || !multiple || reduceMotion || autoplayPaused || !inView || !pageVisible) return;
+    const desktop = window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)");
+    let timer: number | undefined;
+    const syncTimer = () => {
+      window.clearInterval(timer);
+      if (desktop.matches) timer = window.setInterval(() => emblaApi.scrollNext(), AUTOPLAY_DELAY_MS);
+    };
+    syncTimer();
+    desktop.addEventListener("change", syncTimer);
+    return () => {
+      window.clearInterval(timer);
+      desktop.removeEventListener("change", syncTimer);
+    };
+  }, [emblaApi, multiple, reduceMotion, autoplayPaused, inView, pageVisible]);
 
   if (projects.length === 0) return null;
 

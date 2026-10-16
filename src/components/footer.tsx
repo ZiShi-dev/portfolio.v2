@@ -8,7 +8,6 @@ import {
 } from "react-icons/si";
 import { getTranslations } from "next-intl/server";
 import { BrandLogoFooter } from "@/components/brand-logo";
-import { ContactOpenLink } from "@/components/contact-open-link";
 import { FooterContactButton } from "@/components/footer-contact-button";
 import { FooterContactLink } from "@/components/footer-contact-link";
 import { FooterLeaveReviewLink } from "@/components/footer-leave-review-link";
@@ -110,7 +109,8 @@ export async function Footer({ contactEmail, socials }: FooterProps) {
                   {t("preferredContact", { network: preferredSocial.label })}
                 </p>
               ) : null}
-              <ContactOpenLink
+              <a
+                href={`mailto:${contactEmail.trim()}`}
                 className={cn(
                   footerLinkClass,
                   "inline-flex items-center gap-2 no-underline hover:underline"
@@ -118,7 +118,7 @@ export async function Footer({ contactEmail, socials }: FooterProps) {
               >
                 <Mail className="h-4 w-4 shrink-0 text-step-accent" aria-hidden />
                 {contactEmail}
-              </ContactOpenLink>
+              </a>
 
               {configuredSocials.length > 0 ? (
                 <div>

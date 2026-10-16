@@ -9,6 +9,11 @@
     "contactDescription": "Contact {brand} about your website, e-commerce platform or application. We reply within 48 hours."
   },
   "nav": {
+    "home": "Home",
+    "explore": "Explore VORZIX",
+    "menuSubtitle": "Your next project starts here.",
+    "offersHint": "Find the right solution for your business.",
+    "projectsHint": "Discover our latest work.",
     "services": "Offers",
     "engagements": "Commitments",
     "projects": "Projects",

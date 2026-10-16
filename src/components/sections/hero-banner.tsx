@@ -1,154 +1,53 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { brand } from "@/lib/brand";
-import { cn } from "@/lib/utils";
+import { useRef, type Ref } from "react";
+import { useInView, useReducedMotion } from "framer-motion";
+import { usePageVisible } from "@/hooks/use-page-visible";
+import { HERO_ARTWORK } from "@/lib/hero-artwork";
 
-type HeroBannerProps = {
-  className?: string;
-  /**
-   * `panel` — carte latérale.
-   * `concave` — fond hero plein écran.
-   */
-  variant?: "panel" | "concave";
-};
+type HeroImageProps = { imageRef?: Ref<HTMLImageElement>; priority?: boolean };
 
-const sunriseEase = [0.22, 1, 0.36, 1] as const;
-/** Opacité finale de la bannière (texte / CTA restent lisibles). */
-const BANNER_OPACITY = 0.45;
-const subscribeToHydration = () => () => {};
-const getClientHydrationSnapshot = () => true;
-const getServerHydrationSnapshot = () => false;
-
-/**
- * Bannière en `<img>` natif (pas via /_next/image) :
- * - évite re-encode Sharp / timeouts
- * - sert le JPEG déjà optimisé tel quel
- */
-function HeroImage({
-  className,
-  alt = "",
-  priority,
-}: {
-  className?: string;
-  alt?: string;
-  priority?: boolean;
-}) {
+/** Serve the precompressed artwork directly; the browser selects one composition. */
+function HeroImage({ imageRef, priority = false }: HeroImageProps) {
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- asset local HD, éviter l’optimiseur Next
-    <img
-      src={brand.heroBanner}
-      alt={alt}
-      width={1024}
-      height={576}
-      decoding="async"
-      fetchPriority={priority ? "high" : "auto"}
-      draggable={false}
-      className={className}
-    />
+    <picture className="block h-full w-full">
+      <source media={HERO_ARTWORK.mobileMedia} srcSet={HERO_ARTWORK.mobile.src}
+        width={HERO_ARTWORK.mobile.width} height={HERO_ARTWORK.mobile.height} />
+      <img ref={imageRef} src={HERO_ARTWORK.desktop.src} alt=""
+        width={HERO_ARTWORK.desktop.width} height={HERO_ARTWORK.desktop.height}
+        decoding="async" fetchPriority={priority ? "high" : "low"} draggable={false}
+        className="h-full w-full object-cover object-center" />
+    </picture>
   );
 }
 
-function HeroBackdrop({
-  className,
-  sunrise,
-}: {
-  className?: string;
-  sunrise: boolean;
-}) {
+function WaterReflection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { amount: 0.1 });
+  const reduceMotion = useReducedMotion();
+  const pageVisible = usePageVisible();
+  if (reduceMotion) return null;
+  const animationPlayState = inView && pageVisible ? "running" : "paused";
   return (
-    <div
-      className={cn(
-        "relative h-full w-full overflow-hidden bg-background",
-        className
-      )}
-      aria-hidden
-    >
-      <motion.div
-        className="absolute inset-0"
-        initial={sunrise ? { opacity: 0 } : false}
-        animate={{ opacity: BANNER_OPACITY }}
-        transition={
-          sunrise
-            ? { duration: 1.8, delay: 0.1, ease: sunriseEase }
-            : { duration: 0 }
-        }
-      >
-        <HeroImage
-          priority
-          className="h-full w-full object-cover object-center"
-        />
-      </motion.div>
-
-      {sunrise ? (
-        <motion.div
-          className="pointer-events-none absolute inset-0 z-[1] bg-background"
-          initial={{ opacity: 0.92 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: 2.4, delay: 0.2, ease: sunriseEase }}
-          aria-hidden
-        />
-      ) : null}
-
-      {sunrise ? (
-        <motion.div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[50%] origin-bottom"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(201,169,106,0.22) 0%, rgba(201,169,106,0.06) 45%, transparent 100%)",
-          }}
-          initial={{ opacity: 0, scaleY: 0.4 }}
-          animate={{ opacity: 1, scaleY: 1 }}
-          transition={{ duration: 2.2, delay: 0.35, ease: sunriseEase }}
-          aria-hidden
-        />
-      ) : (
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[40%] bg-gradient-to-t from-[rgba(201,169,106,0.12)] to-transparent"
-          aria-hidden
-        />
-      )}
-
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-24 bg-gradient-to-b from-background/70 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-28 bg-gradient-to-t from-background/80 to-transparent" />
+    <div ref={ref} className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      <div className="hero-water-reflection absolute inset-0" style={{ animationPlayState }}>
+        <HeroImage />
+      </div>
+      <div className="hero-water-ripples absolute inset-x-0 bottom-0 h-[28%]" style={{ animationPlayState }} />
     </div>
   );
 }
 
-function ConcaveBanner({ className }: { className?: string }) {
-  const reduceMotion = useReducedMotion();
-  const mounted = useSyncExternalStore(
-    subscribeToHydration,
-    getClientHydrationSnapshot,
-    getServerHydrationSnapshot
-  );
-
-  const sunrise = Boolean(mounted && !reduceMotion);
-
-  return <HeroBackdrop className={className} sunrise={sunrise} />;
-}
-
-export function HeroBanner({
-  className,
-  variant = "panel",
-}: HeroBannerProps) {
-  if (variant === "concave") {
-    return <ConcaveBanner className={className} />;
-  }
-
+export function HeroBanner({ imageRef }: Pick<HeroImageProps, "imageRef">) {
   return (
-    <figure
-      className={cn(
-        "relative w-full overflow-hidden rounded-xl border border-border-gold bg-surface-elevated shadow-[0_0_40px_-12px_rgba(201,169,106,0.18)]",
-        className
-      )}
-    >
-      <HeroImage
-        alt={brand.heroBannerAlt}
-        priority
-        className="h-auto w-full object-cover"
-      />
-    </figure>
+    <div className="relative h-full w-full overflow-hidden bg-background" aria-hidden>
+      <div className="hero-image-layer absolute inset-0 opacity-45">
+        <HeroImage imageRef={imageRef} priority />
+      </div>
+      <WaterReflection />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[40%] bg-gradient-to-t from-[rgba(201,169,106,0.12)] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-24 bg-gradient-to-b from-background/70 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-28 bg-gradient-to-t from-background/80 to-transparent" />
+    </div>
   );
 }

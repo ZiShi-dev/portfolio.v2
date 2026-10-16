@@ -185,7 +185,7 @@ export async function getSiteSettingsForAdmin(): Promise<GetSiteSocialAdminResul
     };
   }
 
-  let { data, error } = await fetchSiteSocialRow(supabase, true);
+  const { data, error } = await fetchSiteSocialRow(supabase, true);
 
   if (error) {
     console.error("[site-social]", error.message);
@@ -257,7 +257,8 @@ export async function upsertSiteSocialLinks(
     ({ data, error } = await write(baseRow, SOCIAL_COLUMNS_WITH_META));
   }
   if (isMissingFacebook(error)) {
-    const { facebook: _fb, ...legacyRow } = baseRow;
+    const legacyRow: Partial<typeof baseRow> = { ...baseRow };
+    delete legacyRow.facebook;
     ({ data, error } = await write(legacyRow, LEGACY_COLUMNS_WITH_META));
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -26,6 +27,7 @@ export function ProjectCarousel({
   const t = useTranslations("projects");
   const locale = useLocale() as Locale;
   const direction = getLocaleDirection(locale);
+  const reduceMotion = useReducedMotion();
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -39,9 +41,9 @@ export function ProjectCarousel({
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
-  const scrollTo = useCallback((index: number) => emblaApi?.scrollTo(index), [emblaApi]);
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  const scrollTo = useCallback((index: number) => emblaApi?.scrollTo(index, Boolean(reduceMotion)), [emblaApi, reduceMotion]);
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(Boolean(reduceMotion)), [emblaApi, reduceMotion]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(Boolean(reduceMotion)), [emblaApi, reduceMotion]);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -72,14 +74,24 @@ export function ProjectCarousel({
   if (projects.length === 0) return null;
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative", className)} role="region" aria-label={t("title")} aria-roledescription="carousel"
+      onKeyDown={(event) => {
+        if (event.target instanceof HTMLElement && event.target.closest("a, input, textarea, select")) return;
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          event.preventDefault();
+          const next = (event.key === "ArrowRight") === (direction === "ltr");
+          if (next) scrollNext(); else scrollPrev();
+        }
+      }}>
+
       <div
         className={cn(
-          "overflow-hidden select-none",
+          "overflow-hidden select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
           padded && "px-4 sm:px-6"
         )}
+        tabIndex={0}
         ref={emblaRef}
-        style={{ touchAction: "manipulation" }}
+        style={{ touchAction: "pan-y pinch-zoom" }}
       >
         <div className="-ms-4 flex sm:-ms-6">
           {projects.map((project, index) => (
@@ -103,13 +115,13 @@ export function ProjectCarousel({
             type="button"
             onClick={scrollPrev}
             disabled={!canScrollPrev}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background/80 text-foreground transition-colors hover:border-primary/45 hover:text-primary disabled:opacity-30"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-background/80 text-foreground transition-colors hover:border-primary/45 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-30"
             aria-label={t("prevProject")}
           >
             <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
           </button>
 
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2 overflow-x-auto">
             {projects.map((_, index) => (
               <button
                 key={index}
@@ -117,13 +129,12 @@ export function ProjectCarousel({
                 aria-label={t("goToProject", { index: index + 1 })}
                 aria-current={index === selectedIndex ? "true" : undefined}
                 onClick={() => scrollTo(index)}
-                className={cn(
-                  "h-2 rounded-full transition-all",
-                  index === selectedIndex
-                    ? "w-6 bg-primary"
-                    : "w-2 bg-foreground/20 hover:bg-foreground/40"
-                )}
-              />
+                className="flex h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+              >
+                <span aria-hidden className={cn("h-2 rounded-full transition-[width,background-color] motion-reduce:transition-none",
+                  index === selectedIndex ? "w-6 bg-primary" : "w-2 bg-foreground/20 hover:bg-foreground/40"
+                )} />
+              </button>
             ))}
           </div>
 
@@ -131,7 +142,7 @@ export function ProjectCarousel({
             type="button"
             onClick={scrollNext}
             disabled={!canScrollNext}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background/80 text-foreground transition-colors hover:border-primary/45 hover:text-primary disabled:opacity-30"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-background/80 text-foreground transition-colors hover:border-primary/45 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-30"
             aria-label={t("nextProject")}
           >
             <ChevronRight className="h-4 w-4 rtl:rotate-180" />

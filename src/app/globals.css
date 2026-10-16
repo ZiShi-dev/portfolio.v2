@@ -394,3 +394,108 @@ video {
     animation: none;
   }
 }
+
+/* Branch preview: calm motion restricted to the water/reflection area. */
+.hero-water-reflection {
+  opacity: 0.24;
+  mask-image: linear-gradient(to bottom, transparent 65%, #000 76%);
+  transform-origin: center 70%;
+  animation: hero-water-drift 8s ease-in-out infinite alternate;
+}
+.hero-water-ripples {
+  background: repeating-linear-gradient(to bottom, transparent 0 12px, rgb(201 169 106 / 0.04) 13px, transparent 15px 27px);
+  mask-image: linear-gradient(to bottom, transparent, #000 30%, transparent);
+  animation: hero-water-ripple 5s ease-in-out infinite alternate;
+}
+@keyframes hero-water-drift {
+  from { transform: scaleX(1.012) translate3d(-3px, 0, 0); }
+  to { transform: scaleX(1.02) translate3d(3px, 2px, 0); }
+}
+@keyframes hero-water-ripple {
+  from { transform: translate3d(0, -3px, 0); opacity: 0.25; }
+  to { transform: translate3d(0, 3px, 0); opacity: 0.65; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-water-reflection, .hero-water-ripples { animation: none; display: none; }
+}
+
+/* Share the desktop artwork, centered framing and water animation on all screens. */
+.hero-with-artwork.hero-cinematic {
+  min-height: 100svh;
+}
+.hero-responsive-visual {
+  height: 100%;
+}
+
+/* Artwork first, waterline emergence, then a quiet retreat into the page. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-cinematic { overflow: clip; }
+  .hero-cinematic .hero-responsive-visual {
+    transform-origin: 50% 72%;
+    animation: hero-scene-retreat 1.2s cubic-bezier(.22,1,.36,1) both;
+  }
+  .hero-cinematic .hero-image-layer {
+    animation: hero-scene-settle 1.2s ease both;
+  }
+  .hero-cinematic .hero-water-emergence {
+    position: relative;
+    animation: hero-emerge 650ms cubic-bezier(.22,1,.36,1) 150ms both;
+  }
+  .hero-cinematic .hero-water-emergence::after {
+    content: "";
+    position: absolute;
+    inset: auto 10% -10px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(201 169 106 / .6), transparent);
+    box-shadow: 0 2px 18px rgb(201 169 106 / .2);
+    animation: hero-waterline 700ms ease 150ms both;
+    pointer-events: none;
+  }
+  .hero-cinematic .hero-arrival-actions,
+  .hero-cinematic .hero-arrival-trust,
+  .hero-cinematic .hero-arrival-scroll {
+    animation: hero-content-arrive 350ms ease 650ms both;
+  }
+  .hero-cinematic .hero-arrival-trust { animation-delay: 750ms; }
+  .hero-cinematic .hero-arrival-scroll { animation-delay: 850ms; }
+  .hero-cinematic[data-art-ready="false"] .hero-responsive-visual,
+  .hero-cinematic[data-art-ready="false"] .hero-image-layer,
+  .hero-cinematic[data-art-ready="false"] .hero-water-emergence,
+  .hero-cinematic[data-art-ready="false"] .hero-water-emergence::after,
+  .hero-cinematic[data-art-ready="false"] .hero-arrival-actions,
+  .hero-cinematic[data-art-ready="false"] .hero-arrival-trust,
+  .hero-cinematic[data-art-ready="false"] .hero-arrival-scroll {
+    animation-play-state: paused;
+  }
+  /* Keyboard navigation can reveal controls immediately. */
+  .hero-cinematic:focus-within .hero-arrival-actions { animation: none; }
+}
+@keyframes hero-scene-retreat {
+  0%, 25% { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+@keyframes hero-scene-settle {
+  0%, 25% { opacity: .85; }
+  100% { opacity: .45; }
+}
+@keyframes hero-emerge {
+  from { opacity: 0; transform: translate3d(0, 42px, 0); clip-path: inset(100% 0 0 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); clip-path: inset(0 0 0 0); }
+}
+@keyframes hero-waterline {
+  0% { opacity: 0; transform: scaleX(.65); }
+  35% { opacity: .7; }
+  100% { opacity: 0; transform: scaleX(1.1); }
+}
+@keyframes hero-content-arrive {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-arrival { animation: page-arrival 160ms ease-out; }
+}
+@keyframes page-arrival {
+  from { opacity: .94; }
+  to { opacity: 1; }
+}

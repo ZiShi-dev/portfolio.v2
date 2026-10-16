@@ -28,7 +28,7 @@ import {
   type SaleCtaButton,
 } from "@/lib/projects/sale-cta";
 import type { SaleCtaChannel } from "@/lib/projects/schema";
-import { routes, startProjectUrl } from "@/lib/routes";
+import { startProjectUrl } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import type { LocalizedProjectItem } from "@/data/projects";
 import { ProjectDetailMoreProjects } from "@/components/sections/project-detail-more-projects";
