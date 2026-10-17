@@ -185,7 +185,7 @@ function CubeJourneyFace({
       aria-hidden
       data-face={faceId}
       className={cn(
-        "absolute left-0 top-0 flex flex-col items-center justify-center gap-2 overflow-hidden p-3 text-center [backface-visibility:hidden] transition-[box-shadow,border-color,background-color] duration-300",
+        "absolute left-0 top-0 flex flex-col items-center justify-center gap-2 overflow-hidden p-2 text-center [backface-visibility:hidden] transition-[box-shadow,border-color,background-color] duration-300",
         active
           ? "border-2 border-step-accent/70 bg-gradient-to-br from-step-surface via-card to-step-accent/35 shadow-[0_0_28px_-6px_var(--color-step-accent)]"
           : "border-2 border-step-accent/20 bg-gradient-to-br from-step-surface via-card to-step-accent/10"
@@ -590,7 +590,7 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
   return (
     <div
       className={cn(
-        "relative w-full select-none overflow-visible px-1 py-2 sm:px-3 sm:py-6",
+        "relative w-full select-none rounded-3xl border border-border-gold bg-surface/65 p-3 sm:p-5",
         className
       )}
     >
@@ -601,11 +601,12 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
         />
       )}
 
-      <p className="mb-3 text-center text-[0.65rem] font-medium uppercase tracking-[0.2em] text-step-accent/90 sm:mb-4 sm:text-xs">
+      <p className="sr-only">
         {t("storyLabel")}
       </p>
 
-      <div className="relative mx-auto aspect-square w-full max-w-[min(100%,15rem)] overflow-visible sm:max-w-none sm:aspect-[16/11] [perspective:1000px]">
+      <div className="grid items-center gap-2 sm:grid-cols-[0.9fr_1.1fr] sm:gap-5">
+      <div className="relative mx-auto h-44 w-full overflow-visible sm:h-56 [perspective:1000px]">
         <div
           ref={cubeSizerRef}
           className={cn(
@@ -653,7 +654,7 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
 
       <div
         id="hero-cube-caption"
-        className="mx-auto mt-4 min-h-[5.5rem] max-w-sm text-center sm:mt-5 sm:min-h-[5rem]"
+        className="mx-auto min-h-28 w-full max-w-sm text-center sm:min-h-40 sm:text-start"
         aria-live="polite"
         aria-atomic="true"
       >
@@ -679,13 +680,14 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
         </AnimatePresence>
       </div>
 
+      </div>
       <div
         data-stage-control
-        className="mt-4 flex flex-wrap items-center justify-center gap-1.5 sm:mt-5"
+        className="mt-3 grid grid-cols-6 gap-0 border-t border-border pt-3"
         role="tablist"
         aria-label={t("stagesNavLabel")}
       >
-        {JOURNEY_FACES.map((faceId) => {
+        {JOURNEY_FACES.map((faceId, index) => {
           const selected = activeFace === faceId;
           return (
             <button
@@ -697,25 +699,18 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
               data-stage-control
               onClick={() => goToFace(faceId)}
               className={cn(
-                "min-h-11 min-w-11 rounded-full px-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                "flex items-center justify-center"
+                "flex min-h-11 min-w-0 items-center justify-center rounded-xl font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                selected ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
               )}
             >
-              <span
-                className={cn(
-                  "block rounded-full transition-all duration-300",
-                  selected
-                    ? "h-2 w-6 bg-step-accent"
-                    : "h-2 w-2 bg-foreground/25 hover:bg-foreground/45"
-                )}
-              />
+              <span aria-hidden>{String(index + 1).padStart(2, "0")}</span>
             </button>
           );
         })}
       </div>
 
       {isInteractive && (
-        <p className="mx-auto mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-foreground/40 sm:text-sm">
+        <p className="mx-auto mt-2 flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground">
           <Move3D className="size-3.5 shrink-0 opacity-70" aria-hidden />
           <span>{t("dragHint")}</span>
         </p>

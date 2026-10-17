@@ -59,7 +59,7 @@
   },
   "heroCube": {
     "storyLabel": "From idea to website",
-    "dragHint": "Drag or use the dots to explore",
+    "dragHint": "Drag the cube or choose a step",
     "ariaLabel": "Interactive client journey cube — six stages of your project",
     "roleDescription": "Interactive 3D cube",
     "stagesNavLabel": "Journey stages",
