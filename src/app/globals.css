@@ -262,6 +262,13 @@ body {
   overflow-x: clip;
 }
 
+/* Caret alignée sur le laiton céleste (charte + lisibilité sur fond nuit). */
+input,
+textarea,
+[contenteditable="true"] {
+  caret-color: var(--color-primary);
+}
+
 html[lang="ar"] body,
 html[dir="rtl"] body {
   font-family: var(--font-arabic-body), var(--font-sans);
@@ -286,17 +293,6 @@ video {
 ::selection {
   background-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
   color: var(--color-foreground);
-}
-
-.text-gradient {
-  background: linear-gradient(
-    105deg,
-    var(--color-primary-light),
-    color-mix(in srgb, var(--color-primary) 70%, var(--color-foreground))
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .font-brand {
@@ -517,12 +513,16 @@ video {
 
 /* Small interaction feedback, restricted to devices that actually support hover. */
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .ui-button:not(:disabled):not([aria-busy="true"]):hover { transform: translateY(-2px); }
-  .ui-button:not(:disabled):active { transform: translateY(0); }
-  .ui-button > svg { transition: translate 200ms ease; }
-  .ui-button:not([aria-busy="true"]):hover > svg { translate: 2px 0; }
-  [dir="rtl"] .ui-button:not([aria-busy="true"]):hover > svg { translate: -2px 0; }
+  .ui-button > svg { transition: translate 180ms ease; }
+  .ui-button:not([aria-busy="true"]):hover > svg { translate: 1px 0; }
+  [dir="rtl"] .ui-button:not([aria-busy="true"]):hover > svg { translate: -1px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ui-button { transition: none; }
+  .ui-button {
+    transition-property: color, background-color, border-color;
+    transition-duration: 200ms;
+  }
+  .ui-button:active {
+    transform: none;
+  }
 }

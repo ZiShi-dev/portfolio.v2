@@ -40,19 +40,23 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
-  const project = await getSiteProjectBySlug(locale as Locale, slug);
+  const localeTyped = locale as Locale;
+  const project = await getSiteProjectBySlug(localeTyped, slug);
   if (!project) {
     return { title: brand.name, robots: { index: false, follow: false } };
   }
 
+  const t = await getTranslations({ locale: localeTyped, namespace: "projects" });
   const title = project.seoTitle || `${project.title} — ${brand.name}`;
   const description =
-    project.seoDescription || project.desc || brand.description;
+    (project.seoDescription && project.seoDescription.trim()) ||
+    (project.desc && project.desc.trim()) ||
+    t("page.detailMetaFallback", { title: project.title, brand: brand.name });
   return createPageMetadata({
     title,
     description,
     path: `${routes.projects}/${project.slug ?? slug}`,
-    locale: locale as Locale,
+    locale: localeTyped,
     // La convention locale génère une carte PNG à partir de la couverture,
     // y compris lorsque l'image source est un SVG.
     image: null,

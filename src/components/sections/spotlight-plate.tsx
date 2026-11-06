@@ -22,7 +22,7 @@ export function SpotlightPlate({ project, priority }: SpotlightPlateProps) {
   const forSale = project.categoryKey === "for_sale";
 
   return (
-    <article className="h-full min-w-0 overflow-hidden rounded-2xl border border-border-gold bg-surface-elevated shadow-[0_22px_60px_-38px_rgba(0,0,0,0.95)]">
+    <article className="h-full min-w-0 overflow-hidden rounded-[var(--radius-xl)] border border-border-gold bg-surface-elevated">
       <div className="grid h-full min-w-0 grid-cols-1 lg:grid-cols-2">
         <figure className="relative m-0 aspect-[4/3] min-w-0 overflow-hidden bg-[#0A0E1A] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[22rem]">
           {cover ? (

@@ -81,7 +81,7 @@ export function CaseStudyDetail({
 
         {cover ? (
           <Reveal delay={0.08}>
-            <figure className="relative mt-10 overflow-hidden rounded-xl border border-border-gold bg-surface-elevated sm:mt-12">
+            <figure className="relative mt-10 overflow-hidden rounded-[var(--radius-lg)] border border-border-strong bg-surface-elevated sm:mt-12">
               <ProjectLiveImageLink href={liveUrl} label={t("visitSite")}>
                 <Image
                   src={cover}
@@ -152,7 +152,7 @@ export function CaseStudyDetail({
                 {gallery.map((img) => (
                   <figure
                     key={img.src}
-                    className="overflow-hidden rounded-xl border border-border bg-surface-elevated"
+                    className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface-elevated"
                   >
                     <ProjectLiveImageLink href={liveUrl} label={t("visitSite")}>
                       <Image
@@ -245,7 +245,7 @@ export function CaseStudyDetail({
 
         {project.categoryKey !== "personal" ? (
         <Reveal delay={0.08}>
-          <section className="mt-10 rounded-xl border border-border-gold bg-surface-elevated/90 p-6 text-center sm:p-10">
+          <section className="mt-10 rounded-[var(--radius-lg)] border border-border-strong bg-surface-elevated/90 p-6 text-center sm:p-10">
             <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
               {t("ctaTitle")}
             </h2>
@@ -293,7 +293,7 @@ function ProjectListingDetails({ project }: { project: LocalizedProjectItem }) {
   if (project.categoryKey === "for_sale") {
     return (
       <Reveal delay={0.05}>
-        <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface-elevated/60 p-5 sm:mt-12 sm:p-6">
+        <section className="mt-10 rounded-[var(--radius-lg)] border border-border bg-surface-elevated/60 p-5 sm:mt-12 sm:p-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
             {t("forSaleEyebrow")}
           </p>
@@ -319,7 +319,7 @@ function ProjectListingDetails({ project }: { project: LocalizedProjectItem }) {
 
   return (
     <Reveal delay={0.05}>
-      <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface-elevated/60 p-5 sm:mt-12 sm:p-6">
+      <section className="mt-10 rounded-[var(--radius-lg)] border border-border bg-surface-elevated/60 p-5 sm:mt-12 sm:p-6">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
           {t("soldEyebrow")}
         </p>

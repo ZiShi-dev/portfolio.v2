@@ -90,7 +90,7 @@ function ScopeDisclosure({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mt-4 overflow-hidden rounded-xl border border-border-gold/40 bg-surface-elevated/50">
+    <div className="mt-4 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface-elevated/50">
       <button
         type="button"
         aria-expanded={open}
@@ -152,7 +152,7 @@ function SaleContactPanel({
       className={cn(
         "w-full text-start",
         !plain &&
-          "rounded-xl border border-border-gold bg-surface-elevated/80",
+          "rounded-[var(--radius-lg)] border border-border-strong bg-surface-elevated/80",
         !plain && (compact ? "p-4 sm:p-5" : "p-5 sm:p-6")
       )}
     >
@@ -346,7 +346,7 @@ export function ProjectSaleDetail({
 
         {cover ? (
           <Reveal delay={0.08}>
-            <figure className="relative mt-8 overflow-hidden rounded-xl border border-border-gold bg-surface-elevated sm:mt-10">
+            <figure className="relative mt-8 overflow-hidden rounded-[var(--radius-lg)] border border-border-strong bg-surface-elevated sm:mt-10">
               <ProjectLiveImageLink href={demoUrl} label={t("ctaDemo")}>
                 <Image
                   src={cover}
@@ -379,7 +379,7 @@ export function ProjectSaleDetail({
               </h2>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {project.clientNeed ? (
-                  <GlowCard>
+                  <GlowCard interactive={false}>
                     <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
                       {t("forWhom")}
                     </p>
@@ -389,7 +389,7 @@ export function ProjectSaleDetail({
                   </GlowCard>
                 ) : null}
                 {project.solution ? (
-                  <GlowCard>
+                  <GlowCard interactive={false}>
                     <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
                       {t("whatYouGet")}
                     </p>
@@ -399,7 +399,7 @@ export function ProjectSaleDetail({
                   </GlowCard>
                 ) : null}
                 {project.result ? (
-                  <GlowCard className="sm:col-span-2">
+                  <GlowCard interactive={false} className="sm:col-span-2">
                     <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
                       {t("insteadOfZero")}
                     </p>
@@ -428,7 +428,7 @@ export function ProjectSaleDetail({
                 {features.map((feature) => (
                   <li
                     key={feature}
-                    className="flex gap-3 rounded-xl border border-border bg-surface-elevated/80 px-4 py-3 text-sm leading-relaxed text-foreground/80"
+                    className="flex gap-3 rounded-[var(--radius-md)] border border-border bg-surface-elevated/80 px-4 py-3 text-sm leading-relaxed text-foreground/80"
                   >
                     <Check
                       className="mt-0.5 h-4 w-4 shrink-0 text-primary"
@@ -440,7 +440,7 @@ export function ProjectSaleDetail({
               </ul>
             ) : null}
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <GlowCard>
+              <GlowCard interactive={false}>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
                   {t("costsIncludedLabel")}
                 </p>
@@ -451,7 +451,7 @@ export function ProjectSaleDetail({
                   {t("costsIncluded")}
                 </p>
               </GlowCard>
-              <GlowCard>
+              <GlowCard interactive={false}>
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
                   {t("costsThirdLabel")}
                 </p>
@@ -478,7 +478,7 @@ export function ProjectSaleDetail({
               >
                 {t("gettingStartedTitle")}
               </h2>
-              <GlowCard className="mt-6">
+              <GlowCard interactive={false} className="mt-6">
                 <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
                   {project.objective}
                 </p>
@@ -533,7 +533,7 @@ export function ProjectSaleDetail({
                   <figure
                     key={img.src}
                     hidden={!showAllImages && index >= GALLERY_PREVIEW_COUNT}
-                    className="overflow-hidden rounded-xl border border-border bg-surface-elevated"
+                    className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface-elevated"
                   >
                     <ProjectLiveImageLink href={demoUrl} label={t("ctaDemo")}>
                       <Image
@@ -609,7 +609,7 @@ export function ProjectSaleDetail({
             >
               {t("faqTitle")}
             </h2>
-            <div className="mt-6 divide-y divide-border rounded-xl border border-border bg-surface-elevated/70">
+            <div className="mt-6 divide-y divide-border rounded-[var(--radius-lg)] border border-border bg-surface-elevated/70">
               {FAQ_KEYS.map((key) => {
                 const panelId = `${faqBaseId}-${key}`;
                 const open = openFaq === key;
@@ -662,7 +662,7 @@ export function ProjectSaleDetail({
         <Reveal delay={0.08}>
           <section
             id="sale-contact"
-            className="mt-10 scroll-mt-28 rounded-xl border border-border-gold bg-surface-elevated/90 p-6 text-center sm:p-10"
+            className="mt-10 scroll-mt-28 rounded-[var(--radius-lg)] border border-border-strong bg-surface-elevated/90 p-6 text-center sm:p-10"
           >
             <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
               {t("finalTitle", { title: project.title })}

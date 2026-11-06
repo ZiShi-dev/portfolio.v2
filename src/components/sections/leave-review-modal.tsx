@@ -14,6 +14,8 @@ import {
 import { useModalA11y } from "@/hooks/use-modal-a11y";
 import { REVIEW_MODAL_TITLE_ID } from "@/lib/modal-a11y-ids";
 
+const MODAL_EASE = [0.22, 1, 0.36, 1] as const;
+
 type LeaveReviewModalProps = {
   showCallout?: boolean;
 };
@@ -127,6 +129,10 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.2,
+              ease: MODAL_EASE,
+            }}
             onClick={closeModal}
             role="presentation"
           >
@@ -136,10 +142,22 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={REVIEW_MODAL_TITLE_ID}
-                initial={reduceMotion ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: reduceMotion ? 0 : 0.16, ease: "easeOut" }}
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.97, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={
+                  reduceMotion
+                    ? { opacity: 0 }
+                    : {
+                        opacity: 0,
+                        scale: 0.985,
+                        y: 8,
+                        transition: { duration: 0.18, ease: MODAL_EASE },
+                      }
+                }
+                transition={{
+                  duration: reduceMotion ? 0 : 0.26,
+                  ease: MODAL_EASE,
+                }}
                 className="relative my-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
               >

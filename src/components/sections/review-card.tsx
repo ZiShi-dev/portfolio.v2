@@ -29,7 +29,7 @@ export function ReviewCard({
         className={cn(
           "flex h-full flex-col rounded-xl border bg-surface-elevated/70 p-5 transition-colors sm:p-6",
           featured
-            ? "border-border-gold/50 shadow-[0_0_32px_-16px_rgba(201,169,106,0.35)]"
+            ? "border-border-gold/50"
             : "border-border hover:border-primary/30"
         )}
       >

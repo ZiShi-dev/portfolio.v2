@@ -5,17 +5,17 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "ui-button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
+  "ui-button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-md)] text-sm font-medium transition-[color,background-color,border-color,transform] duration-150 ease-out will-change-transform motion-safe:active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary-hover hover:shadow-[0_0_20px_-4px_rgba(201,169,106,0.35)]",
+          "border border-transparent bg-primary text-primary-foreground hover:bg-primary-hover active:opacity-[0.96]",
         outline:
-          "border border-border-gold bg-transparent text-foreground hover:border-primary/50 hover:bg-surface-elevated",
+          "border border-border bg-transparent text-foreground hover:border-border-strong hover:bg-surface-elevated/80",
         ghost: "hover:bg-muted",
         secondary:
-          "bg-muted text-foreground hover:bg-muted/70 border border-border",
+          "rounded-[var(--radius-sm)] bg-muted text-foreground hover:bg-muted/70 border border-border-subtle",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive-hover focus-visible:ring-destructive",
       },

@@ -240,7 +240,7 @@ function ReviewFormBody({
                 )}
               >
                 {t("title")}{" "}
-                <span className="text-gradient">{t("titleHighlight")}</span>
+                <span className="text-primary">{t("titleHighlight")}</span>
               </h1>
               <p
                 className={cn(

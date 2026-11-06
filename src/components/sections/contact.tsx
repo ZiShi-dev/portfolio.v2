@@ -195,7 +195,8 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
           id={CONTACT_MODAL_TITLE_ID}
           className="mt-4 font-display-serif text-2xl font-semibold tracking-tight sm:text-3xl"
         >
-          {t("title")} <span className="text-gradient">{t("titleHighlight")}</span>
+          {t("title")}{" "}
+          <span className="text-primary">{t("titleHighlight")}</span>
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-foreground/60">
           {t("subtitle")}

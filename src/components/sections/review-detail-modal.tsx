@@ -9,6 +9,8 @@ import { getReviewInitials, type ReviewItem } from "@/data/reviews";
 import { useModalA11y } from "@/hooks/use-modal-a11y";
 import { lockBodyScroll } from "@/lib/lock-body-scroll";
 
+const MODAL_EASE = [0.22, 1, 0.36, 1] as const;
+
 type ReviewDetailModalProps = {
   reviews: ReviewItem[];
   index: number | null;
@@ -95,6 +97,10 @@ export function ReviewDetailModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{
+            duration: reduceMotion ? 0 : 0.2,
+            ease: MODAL_EASE,
+          }}
           onClick={onClose}
           role="presentation"
         >
@@ -104,10 +110,22 @@ export function ReviewDetailModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            initial={reduceMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.16 }}
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.97, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : {
+                    opacity: 0,
+                    scale: 0.985,
+                    y: 8,
+                    transition: { duration: 0.18, ease: MODAL_EASE },
+                  }
+            }
+            transition={{
+              duration: reduceMotion ? 0 : 0.26,
+              ease: MODAL_EASE,
+            }}
             className="relative my-auto flex max-h-[min(92dvh,40rem)] w-full max-w-lg flex-col rounded-2xl border border-border bg-background p-5 shadow-2xl sm:p-6"
             onClick={(e) => e.stopPropagation()}
           >

@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useRef, type ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type RevealVariant = "rise" | "fade" | "left" | "right" | "down";
@@ -18,28 +18,84 @@ type RevealProps = {
   delay?: number;
   className?: string;
   variant?: RevealVariant;
+  /**
+   * `inView` — au scroll (sections longues).
+   * `mount` — une seule fois au premier rendu (grille / liste : stagger sans rejouer au scroll).
+   */
+  trigger?: "inView" | "mount";
+  /** Si false, pas d’animation (contenu visible directement). */
+  animate?: boolean;
 };
 
-/** Native scroll progress drives the entrance in both directions, without a timed tween. */
-function ScrollReveal({ children, delay = 0, className, variant = "rise" }: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 96%", "start 62%"] });
-  // Existing stagger values now offset scroll progress instead of adding a time delay.
-  const start = Math.min(Math.max(delay, 0), 0.24);
-  const opacity = useTransform(scrollYProgress, [start, 1], [0, 1]);
-  const x = useTransform(scrollYProgress, [start, 1], [origins[variant].x, 0]);
-  const y = useTransform(scrollYProgress, [start, 1], [origins[variant].y, 0]);
+const REVEAL_EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Entrée au scroll via le viewport (pas via scrollYProgress global).
+ * L’ancienne approche laissait scrollYProgress à 0 au premier rendu : tout le bloc
+ * restait à opacity 0 pendant que le footer (hors Reveal) s’affichait seul.
+ */
+function InViewReveal({
+  children,
+  delay = 0,
+  className,
+  variant = "rise",
+}: Omit<RevealProps, "trigger" | "animate">) {
+  const origin = origins[variant];
+  const stagger = Math.min(Math.max(delay, 0), 0.35);
   return (
-    <motion.div ref={ref} className={cn("scroll-reveal", className)} data-reveal-direction={variant}
-      initial={false} style={{ opacity, x, y }}>
+    <motion.div
+      className={cn("scroll-reveal", className)}
+      data-reveal-direction={variant}
+      initial={{ opacity: 0, x: origin.x, y: origin.y }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true, amount: 0.12, margin: "0px 0px -12% 0px" }}
+      transition={{
+        duration: 0.42,
+        ease: REVEAL_EASE,
+        delay: stagger,
+      }}
+    >
       {children}
     </motion.div>
   );
 }
 
-export function Reveal(props: RevealProps) {
+/** Stagger au premier paint uniquement (pas d’IntersectionObserver). */
+function MountReveal({
+  children,
+  delay = 0,
+  className,
+  variant = "rise",
+}: Omit<RevealProps, "trigger" | "animate">) {
+  const origin = origins[variant];
+  const stagger = Math.min(Math.max(delay, 0), 0.35);
+  return (
+    <motion.div
+      className={cn("scroll-reveal", className)}
+      data-reveal-direction={variant}
+      data-reveal-trigger="mount"
+      initial={{ opacity: 0, x: origin.x, y: origin.y }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      transition={{
+        duration: 0.28,
+        ease: REVEAL_EASE,
+        delay: stagger,
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function Reveal({
+  trigger = "inView",
+  animate = true,
+  ...props
+}: RevealProps) {
   const reduceMotion = useReducedMotion();
   // Mount no scroll observer when the visitor requests reduced motion.
-  if (reduceMotion) return <div className={props.className}>{props.children}</div>;
-  return <ScrollReveal {...props} />;
+  if (reduceMotion || !animate)
+    return <div className={props.className}>{props.children}</div>;
+  if (trigger === "mount") return <MountReveal {...props} />;
+  return <InViewReveal {...props} />;
 }

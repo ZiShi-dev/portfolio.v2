@@ -40,7 +40,8 @@ export function ReviewsPage({ reviews }: ReviewsPageProps) {
           eyebrow={t("eyebrow")}
           title={
             <>
-              {t("title")} <span className="text-gradient">{t("titleHighlight")}</span>
+              {t("title")}{" "}
+              <span className="text-primary">{t("titleHighlight")}</span>
             </>
           }
           subtitle={`${total} — ${REVIEWS_PAGE_SIZE}/page`}

@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Websites, apps and e-commerce",
-    "description": "VORZIX designs custom websites, web applications, e-commerce stores and digital solutions — premium design, reliable engineering and dedicated team support.",
+    "description": "VORZIX designs custom websites, applications, online stores and other digital products. Restrained design, maintainable code, one team from first contact to go-live.",
     "jobTitle": "Technology agency",
     "reviewsTitle": "Client reviews — {brand}",
     "reviewsDescription": "Read client reviews and testimonials about {brand}'s custom websites, e-commerce platforms and applications.",
@@ -11,9 +11,9 @@
   "nav": {
     "home": "Home",
     "explore": "Explore VORZIX",
-    "menuSubtitle": "Your next project starts here.",
-    "offersHint": "Find the right solution for your business.",
-    "projectsHint": "Discover our latest work.",
+    "menuSubtitle": "Tell us about your next project.",
+    "offersHint": "Showcase site, store, booking or app: pick the offer that fits.",
+    "projectsHint": "Published projects with the brief, our response and the outcome.",
     "services": "Offers",
     "engagements": "Commitments",
     "projects": "Projects",
@@ -41,21 +41,21 @@
     "contact": "Start your project",
     "projects": "View our work",
     "scroll": "Explore",
-    "trustLine": "Reply within 48h · Transparent quote · Dedicated team"
+    "trustLine": "Reply within 48 hours · Quote with line items visible · Same contact on your file"
   },
   "hero": {
     "eyebrow": "Technology agency",
     "title": "Websites, apps and platforms",
     "titleHighlight": "measured to a tenth.",
-    "subtitle": "VORZIX crafts premium digital products — websites, applications, e-commerce and platforms — with the precision of a celestial atlas.",
-    "tagline": "Sites & apps that convert",
-    "bio": "We design custom websites, applications and digital products — premium design, reliable engineering, guided delivery. A dedicated team from brief to launch."
+    "subtitle": "VORZIX builds websites, applications, online stores and internal tools. Each deliverable is named and tested, like an atlas card.",
+    "tagline": "Sites and apps built around outcomes",
+    "bio": "Custom websites, apps and digital products. Approved mockups, documented stack, go-live support from the same team."
   },
   "journey": {
     "eyebrow": "Journey",
     "title": "From idea",
     "titleHighlight": "to a live site",
-    "subtitle": "Six clear steps — explore the cube to see how we guide your project, from the first conversation onward."
+    "subtitle": "Six numbered steps. Rotate the cube or pick a step to see what happens between first contact and what comes next."
   },
   "heroCube": {
     "storyLabel": "From idea to website",
@@ -71,11 +71,11 @@
       },
       "design": {
         "title": "Design",
-        "desc": "A polished, readable look that builds trust and makes people want to reach out."
+        "desc": "A readable interface that matches your brand: clear buttons and navigation you can follow without getting lost."
       },
       "build": {
         "title": "Creation",
-        "desc": "We build your site piece by piece — clear, fast, ready to welcome visitors."
+        "desc": "We ship code in batches. Each batch is reviewed and checked before release."
       },
       "launch": {
         "title": "Go live",
@@ -83,7 +83,7 @@
       },
       "growth": {
         "title": "Growth",
-        "desc": "We improve what converts: pages, messaging, journeys — to attract more inquiries."
+        "desc": "We measure forms, landing pages and journeys, then suggest concrete changes with before-and-after figures."
       },
       "support": {
         "title": "Support",
@@ -95,8 +95,8 @@
     "eyebrow": "Offers · Websites & apps",
     "title": "We create",
     "titleHighlight": "websites and applications.",
-    "subtitle": "A website or an app to present your work, sell, take bookings, publish or launch an offer — pick what matches your need.",
-    "homeSubtitle": "The most common needs. The full catalogue is one click away.",
+    "subtitle": "Showcase site, shop, booking, blog, landing page or internal tool: pick the offer that matches your scope.",
+    "homeSubtitle": "The offers clients ask for most often. The full catalogue fits on one page.",
     "discover": "Discover",
     "cta": "Talk about your needs",
     "page": {
@@ -169,23 +169,23 @@
     "eyebrow": "Commitments · VORZIX",
     "title": "Our",
     "titleHighlight": "commitments.",
-    "subtitle": "A clear framework to work together — from scope to post-launch support."
+    "subtitle": "Written scope, dated milestones, acceptance criteria. After go-live, fixes and changes stay tracked."
   },
   "faq": {
     "eyebrow": "FAQ · VORZIX",
     "title": "Frequent",
     "titleHighlight": "questions.",
-    "subtitle": "Answers to the most common questions before starting a project.",
+    "subtitle": "Pricing, timelines, changes after launch and hosting: what clients usually ask before signing.",
     "ctaTitle": "Still have a question?",
-    "ctaSubtitle": "Describe your need — we will clarify the scope together.",
+    "ctaSubtitle": "Send context and your target date; we reply with scope and a quote.",
     "ctaPrimary": "Start a project"
   },
   "about": {
     "eyebrow": "About",
     "title": "A clear method for your",
     "titleHighlight": "online presence",
-    "p1": "At VORZIX, we design custom websites, applications and digital products. Our obsession: clarity, performance and flawless delivery.",
-    "p2": "A dedicated team supports you from scoping to launch. Simple communication, shared priorities, a usable result fast.",
+    "p1": "VORZIX designs custom websites, applications and internal tools. Each project has a short brief, approved mockups or components, then code reviewed before production.",
+    "p2": "A small team handles your file from kickoff to go-live. You know who answers email and when the next delivery is due.",
     "page": {
       "metaTitle": "About — {brand}",
       "metaDescription": "Discover {brand}: our team, our method and our support for your digital presence."
@@ -200,22 +200,22 @@
   "process": {
     "step1": {
       "title": "Discovery & scope",
-      "desc": "We take time to understand your business, goals and audience. Every project starts with a clear vision and shared priorities."
+      "desc": "We note your business, goals and visitor profiles. We produce a list of priority pages and features, approved by you before we write code."
     },
     "step2": {
       "title": "Custom design",
-      "desc": "Mockups, visual approval then development: an elegant online presence aligned with your brand and built to convert."
+      "desc": "We deliver mockups or a clickable prototype, you approve, then we build the screens and components in your repository."
     },
     "step3": {
       "title": "Launch & support",
-      "desc": "Go-live, final tests and post-launch follow-up. Your site stays fast, reliable and evolvable — with a team by your side throughout."
+      "desc": "Deploy, acceptance testing on target browsers, then a hotline and fixes for the agreed period. Later changes ship as small billed or estimated batches."
     }
   },
   "projects": {
     "eyebrow": "Work",
     "title": "Our latest",
     "titleHighlight": "work",
-    "subtitle": "Published case studies: need, VORZIX response and outcome.",
+    "subtitle": "Each case lists the client brief, what we shipped, and the URL or proof available.",
     "openDetails": "View project details for {title}",
     "seeMore": "See more",
     "exploreAll": "Explore all projects",
@@ -258,6 +258,7 @@
     "page": {
       "metaTitle": "Projects — {brand}",
       "metaDescription": "Explore {brand}'s work: showcase sites, e-commerce and custom web applications.",
+      "detailMetaFallback": "{title} — {brand} project: context, scope and deliverables.",
       "eyebrow": "Portfolio",
       "title": "All our",
       "titleHighlight": "projects",
@@ -282,11 +283,26 @@
     "items": {
       "quotishop": {
         "title": "Quotishop",
-        "desc": "A ready online shop, in three languages, with your name and colors — without building from scratch."
+        "desc": "An online store already live in three languages, with your domain and colours. No full redesign from a blank page.",
+        "seoDescription": "Quotishop: a multilingual e-commerce store you can take over and customise — scope, live demo, and production without starting from scratch.",
+        "clientNeed": "An independent seller needed to sell online in several languages without funding a full bespoke rebuild from zero.",
+        "objective": "Launch quickly under their brand, with budget and scope stated clearly.",
+        "solution": "Takeover of the Quotishop base: adapt brand visuals and copy, three-language UI, connect the domain, and ship using an already stable stack.",
+        "result": "Public demo: product path, cart and checkout are testable; catalogue and copy are editable from the admin.",
+        "listingIntent": "You take over a store that is already online: checkout, multilingual catalogue and order management.\nThe fee covers the agreed customisation; domain, hosting, email and other third-party services stay in your name and at your cost.",
+        "technologies": "Next.js\nTypeScript\nManaged hosting",
+        "features": "Three-language catalogue\nCheckout and payments\nProduct and content admin\nBrand and copy customisation\nDomain connection after approval"
       },
       "savoraille": {
         "title": "Savoraille — Restaurant",
-        "desc": "A live restaurant site: table booking, an interactive seasonal menu, takeaway and delivery.",
+        "desc": "A live restaurant site: booking, a menu updated each season, takeaway and delivery.",
+        "seoDescription": "Savoraille: live restaurant website with booking, seasonal menu, takeaway and delivery — VORZIX case study.",
+        "clientNeed": "The venue wanted one entry point for booking, menu and orders instead of juggling separate tools.",
+        "objective": "Clarify the guest journey and reduce friction for staff: up-to-date menu, reserve a table or order without leaving the site.",
+        "solution": "Structured site with booking, season-based menu, takeaway and delivery, managed from a back office.",
+        "result": "Live at savoraille.vorzix.com; bookings and orders handled in the planned channels.",
+        "technologies": "Next.js\nLocale (English)\nBooking and order flows",
+        "features": "Table booking\nSeasonal menu and specials\nTakeaway and delivery\nLocation and practical info",
         "images": {
           "hero": "Savoraille site preview"
         }
@@ -298,14 +314,14 @@
     "eyebrow": "Testimonials",
     "title": "They trust",
     "titleHighlight": "me",
-    "empty": "Client reviews will appear here. Work with me, then share your experience.",
-    "one": "One verified review — every submission is read before publishing.",
+    "empty": "No reviews here yet. After a project, you can leave feedback via the link on this page.",
+    "one": "One verified review. Each text is read before it appears.",
     "many": "verified reviews{suffix}.",
     "previewSuffix": " — preview below",
     "seeMore": "All reviews",
     "leaveReview": "Leave a review",
-    "nonePublished": "No public reviews yet — let's talk about your project; results come first.",
-    "verifiedNote": "Reviews approved before publishing",
+    "nonePublished": "No public reviews on this page yet. Email us to talk about your brief.",
+    "verifiedNote": "Only reviews checked by hand appear here.",
     "prev": "Previous",
     "next": "Next",
     "page": "Page {current} of {total}",
@@ -1220,12 +1236,12 @@
     "clientReview": "Client review",
     "visitSite": "Visit the live site",
     "visitApp": "Open the app",
-    "ctaTitle": "Have a similar project?",
-    "ctaSubtitle": "Tell us about your need — a clear reply within 48h.",
+    "ctaTitle": "A similar brief?",
+    "ctaSubtitle": "Send context. We reply within 48 hours with scope and a quote.",
     "ctaPrimary": "Start a project",
     "ctaNext": "See next project",
-    "moreProjectsTitle": "See our other work",
-    "moreProjectsSubtitle": "Browse every published project on VORZIX.",
+    "moreProjectsTitle": "Other case studies",
+    "moreProjectsSubtitle": "The full list is on the Work page.",
     "backToList": "All case studies",
     "forSaleEyebrow": "Project for sale",
     "soldEyebrow": "Sold project",
@@ -1238,18 +1254,18 @@
   "projectSale": {
     "eyebrow": "Available solution",
     "heroKicker": "Ready to customize",
-    "heroKickerShop": "E-commerce shop ready to customize",
+    "heroKickerShop": "Online store ready to customize",
     "ctaInterest": "I'm interested in {title}",
     "ctaSimilarProject": "I want a similar project",
     "ctaDemo": "View the demo",
     "contactWays": "Get in touch",
-    "contactWaysHint": "Pick the way that suits you.",
+    "contactWaysHint": "Use whichever channel works for you.",
     "otherWays": "Other ways to reach us",
     "valueTitle": "What you are buying",
     "forWhom": "Who it's for",
     "whatYouGet": "What you get",
-    "insteadOfZero": "Rather than building from scratch",
-    "includedTitle": "What's included — {price}",
+    "insteadOfZero": "Without a rebuild from a blank page",
+    "includedTitle": "Scope at the listed price ({price})",
     "scopeDetails": "Full scope details",
     "galleryMore": "See {count} more previews",
     "galleryLess": "Show fewer previews",
@@ -1258,36 +1274,36 @@
     "process": {
       "interest": {
         "title": "You choose this solution",
-        "desc": "You express interest. We confirm together what the listed price covers."
+        "desc": "You say the offer fits. We confirm in writing what the listed price covers."
       },
       "customize": {
         "title": "We personalize the shop",
-        "desc": "Within 7 to 14 days: name, colours, style and the content agreed before work starts are adapted to your brand."
+        "desc": "Within 7 to 14 days we align name, colours, style and the content approved before work to your brand."
       },
       "launch": {
         "title": "Launch",
-        "desc": "We take care of preparing and fully deploying your store, with no additional setup fee. We assess your needs, recommend suitable hosting solutions and services, then handle their configuration and integration with Quotishop."
+        "desc": "We prepare the shop, deploy it, and point your domain at Quotishop, with no extra setup invoice on top of the advertised price. We suggest hosting and services that fit, then configure what you approve."
       },
       "sell": {
         "title": "You start selling",
-        "desc": "The shop is ready to take its first orders."
+        "desc": "The shop can record its first orders."
       }
     },
     "costsIncludedLabel": "Solution price",
-    "costsIncluded": "The €600 includes Quotishop, the complete source code of your copy, the planned customisation, technical configuration, production preparation, infrastructure choice support, initial deployment and connection of the domain and required services — not recurring bills from external providers.",
+    "costsIncluded": "The €600 covers Quotishop, the full source of your copy, the agreed customisation, technical setup, production prep, help choosing hosting, the first deployment and domain wiring. It does not cover recurring fees from third-party vendors.",
     "costsThirdLabel": "External services",
-    "costsThird": "Technical configuration and deployment are included in the project price. Any external service costs — such as the domain name, hosting, database, storage, email services or other third-party services — remain the client's responsibility. We can recommend solutions suited to your store and configure them for you, while the accounts and subscriptions remain in your name so that you retain control of your infrastructure.",
+    "costsThird": "Setup and first deployment sit in the project price. The domain, hosting, database, storage, email and other third-party services stay on your bill. We can suggest providers and configure what you sign off. Accounts and subscriptions stay in your name so you keep control of the stack.",
     "proofTitle": "The shop in pictures",
-    "proofSubtitle": "Previews of the product as it exists today.",
+    "proofSubtitle": "Screens of the product as shipped.",
     "faqTitle": "Questions",
     "faq": {
       "ready": {
         "q": "Is this shop already built?",
-        "a": "Yes. It is an existing solution offered for purchase, then personalized — not a project built from scratch."
+        "a": "Yes. It is an existing product, sold and then skinned for your brand, not a full greenfield build."
       },
       "included": {
         "q": "What does the price include?",
-        "a": "Quotishop, the complete source code of your copy, the agreed customisation, technical configuration, production preparation, infrastructure choice support, initial deployment and connection of the domain and required services, plus one month of simple visual adjustments — not new pages or new features. Recurring bills from external providers remain the client's responsibility."
+        "a": "Quotishop, the full source of your copy, the agreed customisation, technical setup, production prep, hosting guidance, first deployment and domain wiring, plus one month of small visual tweaks with no new pages or features. Third-party subscriptions stay on your side."
       },
       "catalog": {
         "q": "Who enters the products?",
@@ -1299,7 +1315,7 @@
       }
     },
     "finalTitle": "Interested in {title}?",
-    "finalSubtitle": "Just tell us this solution is a fit. Clear reply within 48 hours."
+    "finalSubtitle": "Say this offer works for you. We reply within 48 hours with next steps."
   },
   "projectInquiry": {
     "brand": "VZ—PROJECT",

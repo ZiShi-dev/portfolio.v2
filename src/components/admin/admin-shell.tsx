@@ -74,7 +74,7 @@ function AdminNavigation({ onNavigate }: { onNavigate?: () => void }) {
             aria-current={active ? "page" : undefined}
             onClick={onNavigate}
             className={cn(
-              "group relative flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium outline-none transition-all",
+              "group relative flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium outline-none transition-[color,background-color,transform] duration-200 ease-out",
               "focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               active
                 ? "bg-primary/12 text-primary ring-1 ring-inset ring-primary/20"

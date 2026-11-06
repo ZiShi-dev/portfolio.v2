@@ -46,7 +46,7 @@ export function FloatingLanguageButton() {
       initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
       transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl border border-primary/25 bg-surface/95 p-2 shadow-[0_12px_36px_-12px_rgba(0,0,0,0.95)] backdrop-blur-xl">
+      className="rounded-2xl border border-primary/25 bg-surface/95 p-2 backdrop-blur-xl">
       <LanguageSwitcher embedded onNavigate={(navigate) => {
         setOpen(false);
         trigger.current?.focus({ preventScroll: true });
@@ -54,7 +54,7 @@ export function FloatingLanguageButton() {
       }} />
     </motion.div>}
     </AnimatePresence>
-    <button ref={trigger} type="button" aria-label={label} title={label} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => setOpen((value) => !value)} className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-primary/45 bg-surface-elevated/95 text-primary shadow-[0_12px_36px_-12px_rgba(0,0,0,0.95),0_0_28px_-14px_rgba(201,169,106,0.75)] backdrop-blur-xl transition-[transform,border-color] duration-200 hover:scale-105 hover:border-primary/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none">
+    <button ref={trigger} type="button" aria-label={label} title={label} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => setOpen((value) => !value)} className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-primary/45 bg-surface-elevated/95 text-primary backdrop-blur-xl transition-[border-color,background-color] duration-200 hover:border-primary/75 hover:bg-surface-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none">
       <span className="pointer-events-none absolute inset-[5px] rounded-full border border-primary/15" />
       <AnimatePresence initial={false} mode="wait">
         <motion.span key={open ? "close" : "language"}

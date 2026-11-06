@@ -106,8 +106,8 @@ export function AdminDashboardOverview({
                 <Link
                   href={item.href}
                   className={cn(
-                    "group flex min-h-16 items-center gap-3 rounded-2xl border bg-card/60 px-4 py-3 text-sm font-medium outline-none transition-all",
-                    "hover:-translate-y-0.5 hover:bg-card focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                    "group flex min-h-16 items-center gap-3 rounded-2xl border bg-card/60 px-4 py-3 text-sm font-medium outline-none transition-[transform,background-color,border-color] duration-200 ease-out motion-reduce:transition-none",
+                    "hover:-translate-y-0.5 hover:bg-card motion-reduce:hover:translate-y-0 focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     item.tone === "urgent"
                       ? "border-red-400/22 hover:border-red-400/38"
                       : item.tone === "attention"

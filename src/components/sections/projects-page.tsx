@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -73,6 +73,16 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
         return true;
       });
   }, [sortedProjects, category, type, linkKind, deferredQuery]);
+
+  /** Stagger une seule fois : premier affichage avec au moins un résultat ; les filtres suivants sont instantanés. */
+  const hasRunProjectStaggerRef = useRef(false);
+  const [staggerProjects, setStaggerProjects] = useState(false);
+
+  useEffect(() => {
+    if (filtered.length === 0 || hasRunProjectStaggerRef.current) return;
+    hasRunProjectStaggerRef.current = true;
+    setStaggerProjects(true);
+  }, [filtered.length]);
 
   const hasFilters = category !== "all" || type !== "all" || linkKind !== "all" || query.length > 0;
   function resetFilters() {
@@ -158,7 +168,14 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
         </div>
         <div id="project-results" aria-busy={query !== deferredQuery} className="mt-6 grid grid-cols-1 gap-5 sm:mt-8 sm:grid-cols-2">
           {filtered.map((project, index) => (
-            <Reveal key={project.id} delay={Math.min(index, 4) * 0.04} variant="fade" className="h-full">
+            <Reveal
+              key={project.id}
+              trigger="mount"
+              animate={staggerProjects}
+              delay={Math.min(index, 6) * 0.05}
+              variant="fade"
+              className="h-full"
+            >
               <ProjectCard project={project} priority={index === 0} />
             </Reveal>
           ))}

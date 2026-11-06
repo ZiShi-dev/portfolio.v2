@@ -150,15 +150,15 @@ export function FloatingContactButton({
                         "focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       )}
                     >
-                      <span className="max-w-[min(13rem,calc(100vw-6rem))] truncate rounded-full border border-border-gold bg-surface/95 px-3 py-1.5 text-xs font-medium text-foreground/85 shadow-[0_8px_24px_-14px_rgba(0,0,0,0.9)] backdrop-blur-xl transition-colors group-hover:border-primary/45 group-hover:text-primary">
+                      <span className="max-w-[min(13rem,calc(100vw-6rem))] truncate rounded-full border border-border-gold bg-surface/95 px-3 py-1.5 text-xs font-medium text-foreground/85 backdrop-blur-xl transition-colors group-hover:border-primary/45 group-hover:text-primary">
                         {item.label}
                       </span>
                       <span
                         className={cn(
                           "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-gold",
-                          "bg-surface-elevated/95 text-primary shadow-[0_10px_28px_-12px_rgba(0,0,0,0.9)] backdrop-blur-xl",
-                          "transition-[transform,border-color,background-color] duration-200 group-hover:scale-105 group-hover:border-primary/55 group-hover:bg-surface-high",
-                          "motion-reduce:transition-none motion-reduce:group-hover:scale-100",
+                          "bg-surface-elevated/95 text-primary backdrop-blur-xl",
+                          "transition-[border-color,background-color] duration-200 group-hover:border-primary/55 group-hover:bg-surface-high",
+                          "motion-reduce:transition-none",
                           item.preferred && "border-primary/45 bg-primary/10"
                         )}
                       >
@@ -184,10 +184,9 @@ export function FloatingContactButton({
         className={cn(
           "pointer-events-auto relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border outline-none",
           "border-primary/45 bg-surface-elevated/95 text-primary backdrop-blur-xl",
-          "shadow-[0_12px_36px_-12px_rgba(0,0,0,0.95),0_0_28px_-14px_rgba(201,169,106,0.75)]",
-          "transition-[transform,border-color,box-shadow] duration-200 hover:scale-105 hover:border-primary/75 hover:shadow-[0_14px_40px_-12px_rgba(0,0,0,0.95),0_0_32px_-10px_rgba(201,169,106,0.65)]",
+          "transition-[border-color,background-color] duration-200 hover:border-primary/70 hover:bg-surface-high",
           "focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-          "motion-reduce:transition-none motion-reduce:hover:scale-100"
+          "motion-reduce:transition-none"
         )}
       >
         <span className="pointer-events-none absolute inset-[5px] rounded-full border border-primary/15" />

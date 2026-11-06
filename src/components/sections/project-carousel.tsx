@@ -6,6 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { ProjectCard } from "@/components/sections/project-card";
+import { Reveal } from "@/components/ui/reveal";
 import type { ProjectItem } from "@/components/sections/project-modal";
 import type { LocalizedProjectItem } from "@/data/projects";
 import { getLocaleDirection, type Locale } from "@/i18n/routing";
@@ -95,8 +96,11 @@ export function ProjectCarousel({
       >
         <div className="-ms-4 flex sm:-ms-6">
           {projects.map((project, index) => (
-            <div
+            <Reveal
               key={project.id}
+              trigger="mount"
+              delay={Math.min(index, 5) * 0.05}
+              variant="fade"
               className="min-w-0 shrink-0 grow-0 basis-[92%] ps-4 sm:basis-[78%] sm:ps-6"
             >
               <ProjectCard
@@ -104,13 +108,13 @@ export function ProjectCarousel({
                 priority={index === 0}
                 swipeFriendly
               />
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
 
       {projects.length > 1 && (
-        <div className="mx-auto mt-5 flex w-fit max-w-full items-center justify-center gap-3 rounded-full border border-border-gold bg-surface-elevated/70 px-2 py-1.5 shadow-[0_12px_30px_-22px_rgba(0,0,0,0.9)] backdrop-blur-sm sm:mt-6 sm:px-3">
+        <div className="mx-auto mt-5 flex w-fit max-w-full items-center justify-center gap-3 rounded-full border border-border-gold bg-surface-elevated/70 px-2 py-1.5 backdrop-blur-sm sm:mt-6 sm:px-3">
           <button
             type="button"
             onClick={scrollPrev}

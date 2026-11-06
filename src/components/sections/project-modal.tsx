@@ -16,6 +16,9 @@ import { isSafeHttpUrl } from "@/lib/review-schema";
 import type { SaleCtaChannel } from "@/lib/projects/schema";
 import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
 
+/** Courbe crisp — entrées UI modale (alignée charte + emil-design-eng). */
+const MODAL_EASE = [0.22, 1, 0.36, 1] as const;
+
 export type ProjectImage = {
   src: string;
   label?: string;
@@ -110,6 +113,10 @@ function ProjectModalContent({ project, onClose }: ProjectModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{
+            duration: reduceMotion ? 0 : 0.2,
+            ease: MODAL_EASE,
+          }}
           className="scrollbar-overlay fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-black/60 backdrop-blur-sm"
           onClick={onClose}
           role="presentation"
@@ -120,10 +127,22 @@ function ProjectModalContent({ project, onClose }: ProjectModalProps) {
               role="dialog"
               aria-modal="true"
               aria-labelledby={PROJECT_MODAL_TITLE_ID}
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.16, ease: "easeOut" }}
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.97, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={
+                reduceMotion
+                  ? { opacity: 0 }
+                  : {
+                      opacity: 0,
+                      scale: 0.985,
+                      y: 8,
+                      transition: { duration: 0.18, ease: MODAL_EASE },
+                    }
+              }
+              transition={{
+                duration: reduceMotion ? 0 : 0.26,
+                ease: MODAL_EASE,
+              }}
               className="relative my-auto w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-background p-4 shadow-2xl sm:rounded-2xl sm:p-6 md:p-7"
               onClick={(e) => e.stopPropagation()}
             >
@@ -188,7 +207,7 @@ function ProjectModalContent({ project, onClose }: ProjectModalProps) {
                     initial={{ opacity: 0, x: 24 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -24 }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: reduceMotion ? 0 : 0.26, ease: [...MODAL_EASE] }}
                   >
                     <BrowserPreview3D
                       image={current.src}
@@ -242,7 +261,7 @@ function ProjectModalContent({ project, onClose }: ProjectModalProps) {
                         onClick={() => setIndex(i)}
                         aria-label={img.label ?? t("goToImage", { index: i + 1 })}
                         className={cn(
-                          "h-2 rounded-full transition-all",
+                          "h-2 rounded-full transition-[width,background-color] duration-200 motion-reduce:transition-none",
                           i === index
                             ? "w-6 bg-foreground"
                             : "w-2 bg-foreground/25 hover:bg-foreground/40"

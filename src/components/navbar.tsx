@@ -166,7 +166,7 @@ export function Navbar() {
       <div className="relative mx-auto w-full min-w-0 max-w-6xl">
         <div className={cn(
           "relative z-50 overflow-hidden rounded-2xl border transition-colors duration-200",
-          scrolled || open ? "border-primary/20 bg-surface/95 shadow-[0_12px_40px_-20px_rgba(0,0,0,0.65)] backdrop-blur-xl" : "border-foreground/10 bg-surface/90 backdrop-blur-md"
+          scrolled || open ? "border-primary/20 bg-surface/95 shadow-[0_1px_0_0_rgb(244_241_232_/_0.08)] backdrop-blur-xl" : "border-foreground/10 bg-surface/90 backdrop-blur-md"
         )}>
         <div className={cn(
           "flex h-16 items-center gap-3 px-3 sm:px-5"
@@ -207,7 +207,7 @@ export function Navbar() {
         }}>
           {open && <>
             <motion.div aria-hidden="true" initial={reduceMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.18 }} className="fixed inset-0 z-40 bg-background/65 backdrop-blur-sm" onClick={() => setOpen(false)} />
-            <motion.div ref={panelRef} id={menuId} role="dialog" aria-modal="true" aria-labelledby={menuId + "-title"} initial={reduceMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduceMotion ? 0 : -4 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-x-0 top-[calc(100%+0.5rem)] z-50 flex max-h-[calc(100dvh-6.5rem)] flex-col overflow-hidden rounded-[1.25rem] border border-primary/20 bg-surface shadow-[0_28px_90px_-24px_rgba(0,0,0,0.8)] sm:max-h-[calc(100dvh-8rem)]">
+            <motion.div ref={panelRef} id={menuId} role="dialog" aria-modal="true" aria-labelledby={menuId + "-title"} initial={reduceMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduceMotion ? 0 : -4 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-x-0 top-[calc(100%+0.5rem)] z-50 flex max-h-[calc(100dvh-6.5rem)] flex-col overflow-hidden rounded-[1.25rem] border border-primary/20 bg-surface sm:max-h-[calc(100dvh-8rem)]">
               <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-5 py-3 sm:px-8">
                 <h2 id={menuId + "-title"} className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">{t("explore")}</h2>
                 <button type="button" data-modal-initial-focus aria-label={t("closeMenu")} onClick={() => setOpen(false)} className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"><X className="h-4 w-4" aria-hidden /></button>

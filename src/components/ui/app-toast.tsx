@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
@@ -13,12 +13,14 @@ import {
 import { cn } from "@/lib/utils";
 
 const AUTO_DISMISS_MS = 6200;
+const TOAST_EASE = [0.22, 1, 0.36, 1] as const;
 const subscribeToHydration = () => () => {};
 const getClientHydrationSnapshot = () => true;
 const getServerHydrationSnapshot = () => false;
 
 export function AppToastHost() {
   const tCommon = useTranslations("common");
+  const reduceMotion = useReducedMotion();
   const [toast, setToast] = useState<AppToast | null>(null);
   const mounted = useSyncExternalStore(
     subscribeToHydration,
@@ -32,8 +34,29 @@ export function AppToastHost() {
 
   useEffect(() => {
     if (!toast) return;
-    const timer = window.setTimeout(() => clearAppToast(), AUTO_DISMISS_MS);
-    return () => window.clearTimeout(timer);
+
+    let timer: number | null = null;
+    const start = () => {
+      if (timer !== null) window.clearTimeout(timer);
+      timer = window.setTimeout(() => clearAppToast(), AUTO_DISMISS_MS);
+    };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        if (timer !== null) window.clearTimeout(timer);
+        timer = null;
+      } else {
+        start();
+      }
+    };
+
+    start();
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      if (timer !== null) window.clearTimeout(timer);
+    };
   }, [toast]);
 
   if (!mounted) return null;
@@ -53,10 +76,26 @@ export function AppToastHost() {
             key={toast.id}
             role={toast.variant === "error" ? "alert" : "status"}
             aria-live={toast.variant === "error" ? "assertive" : "polite"}
-            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            initial={
+              reduceMotion
+                ? false
+                : { opacity: 0, y: "120%", scale: 0.97 }
+            }
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : {
+                    opacity: 0,
+                    y: 8,
+                    scale: 0.985,
+                    transition: { duration: 0.18, ease: TOAST_EASE },
+                  }
+            }
+            transition={{
+              duration: reduceMotion ? 0 : 0.26,
+              ease: TOAST_EASE,
+            }}
             className={cn(
               "pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-2xl border px-4 py-3.5 shadow-[0_24px_70px_-28px_rgb(0_0_0/0.9)] backdrop-blur-xl",
               toast.variant === "success"

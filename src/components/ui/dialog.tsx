@@ -38,7 +38,7 @@ const DialogContent = React.forwardRef<
 >(({ className, children, showClose = true, closeLabel = "Close", placement = "center", ...props }, ref) => {
   const closeButton = showClose ? (
     <DialogPrimitive.Close
-      className="absolute end-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/80 text-foreground/65 shadow-sm outline-none backdrop-blur transition-all hover:border-primary/30 hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+      className="absolute end-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background/80 text-foreground/65 shadow-sm outline-none backdrop-blur transition-[color,background-color,border-color,transform] duration-200 ease-out motion-safe:active:scale-[0.97] hover:border-primary/30 hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
       aria-label={closeLabel}
     >
       <X className="h-4 w-4" aria-hidden />

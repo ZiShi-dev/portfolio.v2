@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Cursor / agent tooling (skills locales, hooks)
+.cursor/
+
+# Sorties locales / artefacts
+output/
