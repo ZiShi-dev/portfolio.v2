@@ -1,6 +1,6 @@
 import { HomeSkeleton } from "@/components/skeletons/site-route-skeletons";
 
-/** Accueil uniquement — les autres routes ont leur `loading.tsx` dédié. */
+/** Limité au segment accueil — évite d’empiler avec les `loading.tsx` des sous-routes `(site)`. */
 export default function Loading() {
   return <HomeSkeleton />;
 }

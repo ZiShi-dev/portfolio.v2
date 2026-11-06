@@ -82,13 +82,13 @@ export function SkeletonPageShell({
 }) {
   return (
     <div
-      className={cn(pageShellClass, pageTopClass, "pb-24", className)}
+      className={cn(pageTopClass, "pb-24", className)}
       aria-busy="true"
       aria-live="polite"
       role="status"
     >
       <span className="sr-only">Loading</span>
-      {children}
+      <div className={pageShellClass}>{children}</div>
     </div>
   );
 }
