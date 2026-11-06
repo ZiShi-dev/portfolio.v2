@@ -18,14 +18,16 @@ export function StarRating({ value, onChange, error, id = "review-rating" }: Sta
     <div
       className={cn(
         "w-full rounded-xl border bg-background/50 px-4 py-4 transition-colors",
-        error ? "border-red-500" : "border-border"
+        error ? "border-destructive" : "border-border"
       )}
     >
       <p id={`${id}-label`} className="text-sm font-medium text-foreground/75">
         {t("rating")} <span className="text-primary">*</span>
       </p>
       <div
-        className="mt-2 flex gap-1"
+        id={id}
+        tabIndex={-1}
+        className="mt-2 flex gap-1 outline-none focus-visible:ring-2 focus-visible:ring-primary"
         role="radiogroup"
         aria-labelledby={`${id}-label`}
         aria-required="true"
@@ -43,7 +45,7 @@ export function StarRating({ value, onChange, error, id = "review-rating" }: Sta
         ))}
       </div>
       {error && (
-        <p id={`${id}-error`} className="mt-1.5 text-xs text-red-600" role="alert">
+        <p id={`${id}-error`} className="mt-1.5 text-xs text-danger" role="alert">
           {error}
         </p>
       )}
@@ -69,12 +71,12 @@ function StarRatingButton({
       aria-checked={checked}
       onClick={onSelect}
       aria-label={ariaLabel}
-      className="rounded-md p-1 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      className="flex h-11 w-11 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
       <Star
         className={cn(
           "h-7 w-7 transition-colors sm:h-8 sm:w-8",
-          selected ? "fill-yellow-400 text-yellow-400" : "text-foreground/20"
+          selected ? "fill-primary text-primary" : "text-muted-foreground"
         )}
       />
     </button>

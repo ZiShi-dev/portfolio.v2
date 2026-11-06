@@ -60,7 +60,7 @@ export function BrandLogo({
         {showSubtitle && (
           <span
             className={cn(
-              "mt-1 block truncate text-[10px] font-normal leading-snug text-foreground/45 sm:text-[11px]",
+              "mt-1 block truncate text-[10px] font-normal leading-snug text-muted-foreground sm:text-[11px]",
               subtitleClassName
             )}
           >
@@ -80,7 +80,7 @@ export function BrandLogoFooter() {
       <VorzixMark className="h-9 w-9" />
       <div className="min-w-0 leading-none">
         <BrandName variant="modern" className="text-sm" />
-        <span className="mt-1 block text-xs font-normal text-foreground/45">
+        <span className="mt-1 block text-xs font-normal text-muted-foreground">
           {t("tagline")}
         </span>
       </div>

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { FormError } from "@/components/ui/form-error";
+import { FormErrorSummary } from "@/components/ui/form-error-summary";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -70,6 +71,7 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
     [translateError]
   );
   const [sent, setSent] = useState(false);
+  const [errorFocusToken, setErrorFocusToken] = useState(0);
   const [submitError, setSubmitError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const { loading, setLoading, trySubmit } = useSubmitGuard();
@@ -88,6 +90,22 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
     defaultValues: contactFormDefaultValues,
     mode: "onBlur",
   });
+
+  const fieldSummary = [
+    errors.name?.message
+      ? { id: "contact-name", label: t("name"), message: errors.name.message }
+      : null,
+    errors.email?.message
+      ? { id: "contact-email", label: t("email"), message: errors.email.message }
+      : null,
+    errors.message?.message
+      ? {
+          id: "contact-message",
+          label: t("message"),
+          message: errors.message.message,
+        }
+      : null,
+  ].filter((item) => item !== null);
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");
@@ -163,6 +181,8 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
     } finally {
       setLoading(false);
     }
+  }, () => {
+    setErrorFocusToken((value) => value + 1);
   });
 
   return (
@@ -203,6 +223,13 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
           aria-label={t("formAria")}
         >
           <HoneypotField {...register("_honeypot")} />
+
+          <FormErrorSummary
+            id="contact-error-summary"
+            title={tValidation("errorSummary")}
+            items={fieldSummary}
+            focusToken={errorFocusToken}
+          />
 
           <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField
@@ -280,7 +307,7 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
             {!loading && <Send className="h-4 w-4" aria-hidden />}
           </Button>
 
-          <p className="text-center text-xs leading-relaxed text-foreground/45">
+          <p className="text-center text-xs leading-relaxed text-muted-foreground">
             {t("privacy")}
           </p>
         </form>
@@ -336,7 +363,7 @@ export function Contact({ contactEmail }: ContactProps) {
             {t("orEmail")}{" "}
             <GmailContactLink email={contactEmail} />
           </p>
-          <p className="mt-3 text-xs leading-relaxed text-foreground/40">
+          <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
             {t("privacy")}
           </p>
         </div>

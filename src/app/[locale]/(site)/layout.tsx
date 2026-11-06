@@ -37,12 +37,12 @@ export default async function SiteLayout({ children, params }: SiteLayoutProps) 
       <SkipToContent />
       <HashSectionScroll />
       <NavigationProgress />
-      <Navbar key={locale} />
+      <Navbar key={`nav-${locale}`} />
       <main id="main-content" className="min-h-dvh flex-1 overflow-x-clip bg-background">
         <SitePageBackground>{children}</SitePageBackground>
       </main>
       <LeaveReviewModal showCallout={false} />
-      <FloatingActionsProvider key={locale}>
+      <FloatingActionsProvider key={`actions-${locale}`}>
         <FloatingLanguageButton />
         <Suspense fallback={null}><SiteContactChrome settings={settings} /></Suspense>
       </FloatingActionsProvider>

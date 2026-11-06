@@ -122,7 +122,7 @@ export async function Footer({ contactEmail, socials }: FooterProps) {
 
               {configuredSocials.length > 0 ? (
                 <div>
-                  <p className="mb-3 text-xs text-foreground/45">{t("networks")}</p>
+                  <p className="mb-3 text-xs text-muted-foreground">{t("networks")}</p>
                   <div className="flex flex-wrap gap-2">
                     {configuredSocials.map((s) => {
                         const Icon = socialIcons[s.id];
@@ -153,7 +153,7 @@ export async function Footer({ contactEmail, socials }: FooterProps) {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-step-accent/15 pt-6 sm:flex-row sm:items-center">
-          <p className="text-center text-xs text-foreground/45 sm:text-left sm:text-sm">
+          <p className="text-center text-xs text-muted-foreground sm:text-left sm:text-sm">
             © {year} {brand.name}. {t("rights")}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">

@@ -588,7 +588,7 @@ export function AdminReviewsPanel({
                       size="sm"
                       variant="outline"
                       disabled={pending}
-                      className="border-red-600/30 text-red-700 hover:bg-red-50"
+                      className="border-destructive/40 text-danger hover:bg-destructive/10"
                     >
                       <Trash2 className="h-4 w-4" />
                       {t("delete")}

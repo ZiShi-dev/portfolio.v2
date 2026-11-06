@@ -28,8 +28,8 @@ export default function GlobalError({
           alignItems: "center",
           justifyContent: "center",
           fontFamily: "system-ui, sans-serif",
-          background: "#0a0a0a",
-          color: "#fafafa",
+          background: "#070A12",
+          color: "#F4F1E8",
           padding: "1rem",
         }}
       >
@@ -54,9 +54,9 @@ export default function GlobalError({
               marginTop: "2rem",
               padding: "0.625rem 1.25rem",
               borderRadius: "0.5rem",
-              border: "1px solid #333",
-              background: "#171717",
-              color: "#fafafa",
+              border: "1px solid #C9A96A",
+              background: "#C9A96A",
+              color: "#070A12",
               cursor: "pointer",
               fontSize: "0.875rem",
             }}

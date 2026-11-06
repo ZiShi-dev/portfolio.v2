@@ -666,7 +666,7 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
             exit={reduceMotion ? undefined : { opacity: 0, y: -6 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="text-[0.65rem] uppercase tracking-[0.18em] text-foreground/40">
+            <p className="text-[0.65rem] uppercase tracking-[0.18em] text-muted-foreground">
               {t("stepLabel", { current: stepIndex, total: JOURNEY_FACES.length })}
             </p>
             <p className="mt-1.5 font-display-serif text-lg font-semibold tracking-tight text-foreground sm:text-xl">

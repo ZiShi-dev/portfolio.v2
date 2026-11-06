@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useInView, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { SpotlightPlate } from "@/components/sections/spotlight-plate";
 import type { LocalizedProjectItem } from "@/data/projects";
@@ -41,6 +41,7 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [autoplayPaused, setAutoplayPaused] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
 
   const scrollTo = useCallback(
     (index: number) => emblaApi?.scrollTo(index, Boolean(reduceMotion)),
@@ -74,7 +75,7 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
   }, [emblaApi, direction, multiple, reduceMotion]);
 
   useEffect(() => {
-    if (!emblaApi || !multiple || reduceMotion || autoplayPaused || !inView || !pageVisible) return;
+    if (!emblaApi || !multiple || reduceMotion || autoplayPaused || userPaused || !inView || !pageVisible) return;
     const desktop = window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)");
     let timer: number | undefined;
     const syncTimer = () => {
@@ -87,7 +88,7 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
       window.clearInterval(timer);
       desktop.removeEventListener("change", syncTimer);
     };
-  }, [emblaApi, multiple, reduceMotion, autoplayPaused, inView, pageVisible]);
+  }, [emblaApi, multiple, reduceMotion, autoplayPaused, userPaused, inView, pageVisible]);
 
   if (projects.length === 0) return null;
 
@@ -150,10 +151,14 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
           className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-30"
           aria-label={t("prevProject")}
         >
-          <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
+          <ChevronLeft className="h-4 w-4 rtl:rotate-180" aria-hidden />
         </button>
 
-        <p className="min-w-[4.5rem] text-center font-mono text-[11px] tracking-[0.18em] text-primary/80">
+        <p
+          className="min-w-[4.5rem] text-center font-mono text-[11px] tracking-[0.18em] text-primary/80"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {t("listingIndex", {
             current: String(selectedIndex + 1).padStart(2, "0"),
             total: String(projects.length).padStart(2, "0"),
@@ -167,8 +172,23 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
           className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-30"
           aria-label={t("nextProject")}
         >
-          <ChevronRight className="h-4 w-4 rtl:rotate-180" />
+          <ChevronRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
         </button>
+        {!reduceMotion && (
+          <button
+            type="button"
+            onClick={() => setUserPaused((value) => !value)}
+            aria-pressed={userPaused}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label={userPaused ? t("resumeRotation") : t("pauseRotation")}
+          >
+            {userPaused ? (
+              <Play className="h-4 w-4" aria-hidden />
+            ) : (
+              <Pause className="h-4 w-4" aria-hidden />
+            )}
+          </button>
+        )}
       </div>
 
       <div className="mt-3 flex items-center justify-center gap-2">
@@ -191,7 +211,7 @@ export function SpotlightCarousel({ projects }: SpotlightCarouselProps) {
         ))}
       </div>
 
-      <p className="mt-3 text-center text-xs text-foreground/40">
+      <p className="mt-3 text-center text-xs text-muted-foreground">
         {t("swipeHint")}
       </p>
     </div>

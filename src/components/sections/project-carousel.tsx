@@ -151,7 +151,7 @@ export function ProjectCarousel({
       )}
 
       {showHint ? (
-        <p className="mt-3 text-center text-xs text-foreground/40">
+        <p className="mt-3 text-center text-xs text-muted-foreground">
           {t("swipeHint")}
         </p>
       ) : null}

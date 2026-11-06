@@ -26,6 +26,12 @@
   --color-primary-hover: #e5c98f;
   --color-primary-light: #d4af7a;
 
+  /* Erreur — brique désaturée, lisible sur la nuit */
+  --color-destructive: #b56a62;
+  --color-destructive-foreground: #f4f1e8;
+  --color-destructive-hover: #c4847c;
+  --color-danger: #e4b2ab;
+
   /* Alias sémantiques (rétrocompatibilité) */
   --color-accent: #c9a96a;
   --color-profile: #0d1322;
@@ -169,6 +175,8 @@ html {
   scrollbar-gutter: stable;
   overflow-x: clip;
   scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
+  scroll-padding-bottom: 1.5rem;
 }
 
 html[data-scroll-locked] {

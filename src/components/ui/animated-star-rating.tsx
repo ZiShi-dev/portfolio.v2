@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 type AnimatedStarRatingProps = {
@@ -18,6 +19,7 @@ export function AnimatedStarRating({
   starClassName,
   delay = 0,
 }: AnimatedStarRatingProps) {
+  const t = useTranslations("reviews");
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-20px" });
   const reduceMotion = useReducedMotion();
@@ -52,7 +54,7 @@ export function AnimatedStarRating({
     reduceMotion || safeRating === 0 ? safeRating : Math.min(filled, safeRating);
 
   return (
-    <div ref={ref} className={cn("flex gap-1", className)} aria-label={`${safeRating} sur 5 étoiles`}>
+    <div ref={ref} className={cn("flex gap-1", className)} aria-label={t("stars", { rating: safeRating })}>
       {[1, 2, 3, 4, 5].map((value) => {
         const active = value <= displayedFilled;
 
@@ -71,8 +73,8 @@ export function AnimatedStarRating({
               className={cn(
                 "h-4 w-4",
                 active
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-foreground/15",
+                  ? "fill-primary text-primary"
+                  : "text-muted-foreground",
                 starClassName
               )}
               aria-hidden

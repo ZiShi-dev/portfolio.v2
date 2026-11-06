@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { PageBackBar } from "@/components/page-back-link";
 import { Reveal } from "@/components/ui/reveal";
 import { FormError } from "@/components/ui/form-error";
+import { FormErrorSummary } from "@/components/ui/form-error-summary";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -63,6 +64,7 @@ function ReviewFormBody({
     [translateError]
   );
   const [submitError, setSubmitError] = useState("");
+  const [errorFocusToken, setErrorFocusToken] = useState(0);
   const [turnstileToken, setTurnstileToken] = useState("");
   const { loading, setLoading, trySubmit } = useSubmitGuard();
   const [turnstileVersion, setTurnstileVersion] = useState(0);
@@ -97,6 +99,24 @@ function ReviewFormBody({
       router.push(routes.reviews);
     }
   }, [onClose, reset, router, t, variant]);
+
+  const fieldSummary = [
+    errors.name?.message
+      ? { id: "review-name", label: t("name"), message: errors.name.message }
+      : null,
+    errors.email?.message
+      ? { id: "review-email", label: t("email"), message: errors.email.message }
+      : null,
+    errors.role?.message
+      ? { id: "review-role", label: t("role"), message: errors.role.message }
+      : null,
+    errors.rating?.message
+      ? { id: "review-rating", label: t("rating"), message: errors.rating.message }
+      : null,
+    errors.message?.message
+      ? { id: "review-message", label: t("review"), message: errors.message.message }
+      : null,
+  ].filter((item) => item !== null);
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");
@@ -179,6 +199,8 @@ function ReviewFormBody({
     } finally {
       setLoading(false);
     }
+  }, () => {
+    setErrorFocusToken((value) => value + 1);
   });
 
   const isModal = variant === "modal";
@@ -240,6 +262,13 @@ function ReviewFormBody({
                 aria-label={t("formAria")}
               >
                 <HoneypotField {...register("_honeypot")} />
+
+                <FormErrorSummary
+                  id="review-error-summary"
+                  title={tValidation("errorSummary")}
+                  items={fieldSummary}
+                  focusToken={errorFocusToken}
+                />
 
                 <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2">
                   <FormField
@@ -346,7 +375,7 @@ function ReviewFormBody({
                   {!loading && <Send className="h-4 w-4" aria-hidden />}
                 </Button>
 
-                <p className="text-center text-xs text-foreground/45">{t("consent")}</p>
+                <p className="text-center text-xs text-muted-foreground">{t("consent")}</p>
               </form>
           </div>
         </Reveal>

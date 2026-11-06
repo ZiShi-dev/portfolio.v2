@@ -63,7 +63,7 @@ export function AppToastHost() {
                 ? "border-primary/35 bg-card/95 text-foreground"
                 : toast.variant === "info"
                 ? "border-accent/30 bg-card/95 text-foreground"
-                : "border-red-500/25 bg-card/95 text-foreground"
+                : "border-destructive/40 bg-card/95 text-foreground"
             )}
           >
             <Icon
@@ -73,7 +73,7 @@ export function AppToastHost() {
                   ? "text-primary"
                   : toast.variant === "info"
                     ? "text-accent"
-                    : "text-red-400"
+                    : "text-danger"
               )}
               aria-hidden
             />

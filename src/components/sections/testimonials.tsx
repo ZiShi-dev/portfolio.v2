@@ -55,7 +55,7 @@ export function Testimonials({ reviews }: TestimonialsProps) {
       />
 
       <Reveal delay={0.05}>
-        <p className="mx-auto mt-4 max-w-md text-center text-xs text-foreground/45 sm:text-sm">
+        <p className="mx-auto mt-4 max-w-md text-center text-xs text-muted-foreground sm:text-sm">
           {t("verifiedNote")}
         </p>
       </Reveal>
