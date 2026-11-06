@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import {
   ArrowUpRight,
   ArrowRight,
+  ChevronRight,
   Home,
   CircleHelp,
   Compass,
@@ -14,7 +15,6 @@ import {
   PenLine,
   ShieldCheck,
   Sparkles,
-  X,
   type LucideIcon,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
@@ -85,9 +85,10 @@ export function Navbar() {
     { id: "reviews", label: t("reviews"), href: routes.reviews, icon: NAV_ICONS.reviews },
   ];
 
-  const secondary = [
+  /** Entrées du menu déployé — une seule colonne « fiche catalogue » (charte VORZIX). */
+  const drawerLinkItems: NavItem[] = [
     { id: "home", label: t("home"), href: routes.home, icon: Home },
-    ...primary.slice(2),
+    ...primary,
     ...more,
   ];
 
@@ -166,7 +167,9 @@ export function Navbar() {
       <div className="relative mx-auto w-full min-w-0 max-w-6xl">
         <div className={cn(
           "relative z-50 overflow-hidden rounded-2xl border transition-colors duration-200",
-          scrolled || open ? "border-primary/20 bg-surface/95 shadow-[0_1px_0_0_rgb(244_241_232_/_0.08)] backdrop-blur-xl" : "border-foreground/10 bg-surface/90 backdrop-blur-md"
+          scrolled || open
+            ? "border-border/60 bg-surface-elevated/92 shadow-[0_1px_0_0_rgba(244,241,232,0.06)] backdrop-blur-xl"
+            : "border-border/40 bg-surface/90 backdrop-blur-md"
         )}>
         <div className={cn(
           "flex h-16 items-center gap-3 px-3 sm:px-5"
@@ -190,7 +193,19 @@ export function Navbar() {
             <Button asChild size="sm" className="hidden min-h-11 rounded-xl px-4 md:inline-flex">
               <Link href={routes.startProject} onClick={(e) => handleItem({ id: "start", label: "", href: routes.startProject, icon: ArrowRight }, e)}>{t("workTogetherShort")}<ArrowUpRight className="h-3.5 w-3.5 rtl:-rotate-90" aria-hidden /></Link>
             </Button>
-            <button type="button" className={cn("flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50", open ? "bg-primary/10 text-primary" : "bg-foreground/5 text-foreground hover:bg-foreground/10")} aria-label={open ? t("closeMenu") : t("menu")} aria-expanded={open} aria-controls={menuId} onClick={() => setOpen((value) => !value)}>
+            <button
+              type="button"
+              className={cn(
+                "flex min-h-11 items-center gap-2.5 rounded-xl border px-3 text-sm font-medium transition-[color,background-color,border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45",
+                open
+                  ? "border-border-gold/35 bg-primary/[0.09] text-primary shadow-[0_0_0_1px_rgba(201,169,106,0.08)]"
+                  : "border-border/55 bg-surface/50 text-foreground/90 hover:border-border-gold/25 hover:bg-surface-elevated/70"
+              )}
+              aria-label={open ? t("closeMenu") : t("menu")}
+              aria-expanded={open}
+              aria-controls={menuId}
+              onClick={() => setOpen((value) => !value)}
+            >
               <span>{t("menu")}</span>
               <span className="relative flex h-4 w-4 items-center justify-center" aria-hidden>
                 <span className={cn("absolute h-px w-4 bg-current transition-transform duration-200 motion-reduce:transition-none", open ? "rotate-45" : "-translate-y-0.5")} />
@@ -207,41 +222,75 @@ export function Navbar() {
         }}>
           {open && <>
             <motion.div aria-hidden="true" initial={reduceMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.18 }} className="fixed inset-0 z-40 bg-background/65 backdrop-blur-sm" onClick={() => setOpen(false)} />
-            <motion.div ref={panelRef} id={menuId} role="dialog" aria-modal="true" aria-labelledby={menuId + "-title"} initial={reduceMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduceMotion ? 0 : -4 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-x-0 top-[calc(100%+0.5rem)] z-50 flex max-h-[calc(100dvh-6.5rem)] flex-col overflow-hidden rounded-[1.25rem] border border-primary/20 bg-surface sm:max-h-[calc(100dvh-8rem)]">
-              <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-5 py-3 sm:px-8">
-                <h2 id={menuId + "-title"} className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">{t("explore")}</h2>
-                <button type="button" data-modal-initial-focus aria-label={t("closeMenu")} onClick={() => setOpen(false)} className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"><X className="h-4 w-4" aria-hidden /></button>
-              </div>
+            <motion.div ref={panelRef} id={menuId} role="dialog" aria-modal="true" aria-labelledby={menuId + "-title"} initial={reduceMotion ? false : { opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: reduceMotion ? 0 : -4, scale: reduceMotion ? 1 : 0.985 }} transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }} className="absolute end-0 top-[calc(100%+0.5rem)] z-50 flex max-h-[calc(100dvh-6.5rem)] w-[min(18rem,100%)] origin-top-right flex-col overflow-hidden rounded-2xl border border-border/60 bg-surface-elevated shadow-[0_16px_40px_-20px_rgba(0,0,0,0.7)] rtl:origin-top-left sm:max-h-[calc(100dvh-8rem)]">
+              <h2 id={menuId + "-title"} className="sr-only">
+                {t("explore")}
+              </h2>
               <div className="min-h-0 overflow-y-auto overscroll-contain">
-                <nav aria-label={t("menu")} className="grid sm:grid-cols-[1.25fr_1fr]">
-                  <ul className="px-5 py-2 sm:px-8 sm:py-5">
-                    {primary.slice(0, 2).map((item, index) => {
+                <nav aria-label={t("menu")} className="p-1.5">
+                  <ul className="flex flex-col gap-0.5">
+                    {drawerLinkItems.map((item, index) => {
+                      const Icon = item.icon;
                       const active = itemIsActive(item);
-                      return <li key={item.id} className="border-b border-border last:border-b-0">
-                        <Link href={item.href} onClick={(e) => handleItem(item, e)} aria-current={active ? "page" : undefined} className={cn("group flex items-start gap-4 rounded-lg py-5 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 sm:py-7", active ? "text-primary" : "text-foreground hover:text-primary")}>
-                          <span className="pt-2 font-mono text-[10px] text-primary/60" aria-hidden>0{index + 1}</span>
-                          <span className="min-w-0 flex-1"><span className="block text-3xl font-medium tracking-tight sm:text-4xl">{item.label}</span><span className="mt-2 block max-w-64 text-xs leading-relaxed text-muted-foreground">{t(item.id === "services" ? "offersHint" : "projectsHint")}</span></span>
-                          <ArrowUpRight className="mt-1 h-6 w-6 shrink-0 text-primary/50 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transform-none rtl:-rotate-90" aria-hidden />
-                        </Link>
-                      </li>;
+                      return (
+                        <li key={item.id}>
+                          <Link
+                            href={item.href}
+                            onClick={(e) => handleItem(item, e)}
+                            data-modal-initial-focus={index === 0 ? true : undefined}
+                            aria-current={
+                              active
+                                ? item.href.includes("#")
+                                  ? "location"
+                                  : "page"
+                                : undefined
+                            }
+                            className={cn(
+                              "group flex min-h-12 items-center gap-3 rounded-xl px-3 outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50",
+                              active
+                                ? "bg-primary/[0.08] text-primary"
+                                : "text-foreground/90 hover:bg-foreground/[0.04] hover:text-foreground"
+                            )}
+                          >
+                            <Icon
+                              className={cn(
+                                "h-[18px] w-[18px] shrink-0 transition-colors",
+                                active ? "text-primary" : "text-primary/60 group-hover:text-primary/85"
+                              )}
+                              strokeWidth={1.5}
+                              aria-hidden
+                            />
+                            <span className="min-w-0 flex-1 truncate text-[0.9375rem] font-medium">
+                              {item.label}
+                            </span>
+                            <ChevronRight
+                              className="h-4 w-4 shrink-0 text-muted-foreground/50 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-primary/70 motion-reduce:transform-none rtl:rotate-180 rtl:group-hover:-translate-x-0.5"
+                              aria-hidden
+                            />
+                          </Link>
+                        </li>
+                      );
                     })}
                   </ul>
-                  <div className="border-t border-border bg-background/30 px-3 py-3 sm:border-s sm:border-t-0 sm:px-5 sm:py-5">
-                    <ul className="grid grid-cols-2 gap-1 sm:grid-cols-1">
-                      {secondary.map((item) => {
-                        const Icon = item.icon;
-                        const active = itemIsActive(item);
-                        return <li key={item.id}><Link href={item.href} onClick={(e) => handleItem(item, e)} aria-current={active ? (item.href.includes("#") ? "location" : "page") : undefined} className={cn("group flex min-h-12 items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50", active ? "bg-primary/10 text-primary" : "text-foreground/75 hover:bg-foreground/5 hover:text-foreground")}><Icon className="h-4 w-4 shrink-0 text-primary/60" aria-hidden /><span className="min-w-0 flex-1">{item.label}</span>{active && <span className="h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden />}</Link></li>;
-                      })}
-                      <li><button type="button" onClick={() => navigateAfterClose(() => openLeaveReviewModal())} className="flex min-h-12 w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"><PenLine className="h-4 w-4 shrink-0 text-primary/60" aria-hidden />{t("leaveReview")}</button></li>
-                    </ul>
-                  </div>
+                  <div className="mx-3 my-1.5 h-px bg-border/55" aria-hidden />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigateAfterClose(() => openLeaveReviewModal())
+                    }
+                    className="flex w-full min-h-11 items-center gap-3 rounded-xl px-3 text-start text-sm text-muted-foreground transition-colors duration-150 hover:bg-foreground/[0.04] hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
+                  >
+                    <PenLine className="h-[18px] w-[18px] shrink-0 text-primary/55" strokeWidth={1.5} aria-hidden />
+                    <span className="min-w-0 flex-1 truncate">{t("leaveReview")}</span>
+                  </button>
                 </nav>
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-3 sm:px-8">
-                  <span className="max-w-52 text-xs leading-relaxed text-muted-foreground">{t("menuSubtitle")}</span>
-                </div>
               </div>
-              <Link href={routes.startProject} onClick={(e) => handleItem({ id: "start", label: "", href: routes.startProject, icon: ArrowRight }, e)} className="group flex min-h-16 shrink-0 items-center justify-between gap-4 bg-primary px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-foreground sm:px-8"><span className="text-base font-semibold">{t("workTogether")}</span><ArrowUpRight className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-0.5 motion-reduce:transform-none rtl:-rotate-90" aria-hidden /></Link>
+              <div className="shrink-0 border-t border-border/55 p-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
+                <Link href={routes.startProject} onClick={(e) => handleItem({ id: "start", label: "", href: routes.startProject, icon: ArrowRight }, e)} className="group flex min-h-12 items-center justify-between gap-3 rounded-xl bg-primary px-4 text-primary-foreground transition-colors duration-150 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">
+                  <span className="truncate text-[0.9375rem] font-semibold">{t("workTogether")}</span>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transform-none rtl:-rotate-90" aria-hidden />
+                </Link>
+              </div>
             </motion.div>
           </>}
         </AnimatePresence>

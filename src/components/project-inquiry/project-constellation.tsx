@@ -104,7 +104,8 @@ export function ProjectConstellation({
         viewBox="0 14 320 92"
         preserveAspectRatio="xMidYMid meet"
         className={cn(
-          "mx-auto block h-auto w-full max-w-lg",
+          // min-height : en colonne flex centrée, h-auto peut tomber à 0 sur mobile.
+          "mx-auto block h-auto min-h-[52px] w-full max-w-lg sm:min-h-0",
           rtl && "-scale-x-100"
         )}
         fill="none"

@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type ChoiceOption = {
@@ -26,29 +27,55 @@ export function ChoiceCards({
   name,
   disabled,
 }: ChoiceCardsProps) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <fieldset disabled={disabled} className="min-w-0">
       <legend className="sr-only">{name}</legend>
       <div className="grid gap-3 sm:grid-cols-2">
-        {options.map((opt) => {
+        {options.map((opt, index) => {
           const selected = value === opt.id;
           return (
-            <button
+            <motion.button
               key={opt.id}
               type="button"
               aria-pressed={selected}
               disabled={disabled}
               onClick={() => onSelect(opt.id)}
+              layout={false}
+              initial={
+                reduceMotion ? false : { opacity: 0, y: 8 }
+              }
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: reduceMotion ? 0.01 : 0.22,
+                delay: reduceMotion ? 0 : Math.min(index, 10) * 0.04,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
+              whileHover={
+                reduceMotion || disabled
+                  ? undefined
+                  : { y: -1 }
+              }
+              whileTap={
+                reduceMotion || disabled ? undefined : { scale: 0.995 }
+              }
               className={cn(
-                "min-h-11 rounded-xl border px-4 py-3.5 text-start transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+                "min-h-11 rounded-xl border px-4 py-3.5 text-start transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 motion-reduce:transition-none",
                 selected
-                  ? "border-primary/50 bg-surface-elevated text-foreground"
+                  ? "border-primary/55 bg-surface-elevated text-foreground shadow-[0_0_0_1px_rgba(201,169,106,0.12),0_12px_40px_-18px_rgba(0,0,0,0.55)]"
                   : "border-border bg-surface/60 text-foreground/85 hover:border-border-gold hover:bg-surface-elevated/80"
               )}
             >
               <span className="flex items-start gap-3">
                 {opt.icon ? (
-                  <span className="mt-0.5 text-primary/80" aria-hidden>
+                  <span
+                    className={cn(
+                      "mt-0.5 text-primary/80 transition-transform duration-200 motion-reduce:transition-none",
+                      selected && "text-primary"
+                    )}
+                    aria-hidden
+                  >
                     {opt.icon}
                   </span>
                 ) : null}
@@ -71,7 +98,7 @@ export function ChoiceCards({
                   ) : null}
                 </span>
               </span>
-            </button>
+            </motion.button>
           );
         })}
       </div>

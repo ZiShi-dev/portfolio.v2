@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReviewFormPage } from "@/components/sections/review-form-page";
@@ -34,6 +35,8 @@ function clearOpenReviewQuery() {
 }
 
 export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) {
+  const tReview = useTranslations("reviewForm");
+  const tCommon = useTranslations("common");
   const [open, setOpen] = useState(false);
   const reduceMotion = useReducedMotion();
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -105,19 +108,18 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
   return (
     <div className={showCallout ? "bg-background px-4 py-16 sm:px-6 lg:py-20" : "contents"}>
       {showCallout && (
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 text-center">
-          <p className="text-xs uppercase tracking-widest text-foreground/50">
-            Témoignage
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/80">
+            {tReview("modalCalloutEyebrow")}
           </p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Laissez un avis en 1 minute
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+            {tReview("modalCalloutTitle")}
           </h2>
-          <p className="max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-lg">
-            Pas de page séparée : la modale s&apos;ouvre ici même. Votre avis est envoyé
-            puis publié après validation.
+          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {tReview("modalCalloutBody")}
           </p>
-          <Button size="lg" onClick={() => setOpen(true)}>
-            Ouvrir la modale
+          <Button size="lg" className="min-h-12" onClick={() => setOpen(true)}>
+            {tReview("modalCalloutOpen")}
           </Button>
         </div>
       )}
@@ -125,7 +127,7 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
       <AnimatePresence>
         {open && (
           <motion.div
-            className="scrollbar-overlay fixed inset-0 z-[999] overflow-y-auto overscroll-contain bg-black/55 px-3 py-4 sm:px-4 sm:py-6"
+            className="scrollbar-overlay fixed inset-0 z-[999] overflow-y-auto overscroll-contain bg-background/72 px-3 py-4 backdrop-blur-sm sm:px-4 sm:py-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -158,20 +160,20 @@ export function LeaveReviewModal({ showCallout = true }: LeaveReviewModalProps) 
                   duration: reduceMotion ? 0 : 0.26,
                   ease: MODAL_EASE,
                 }}
-                className="relative my-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
+                className="relative my-auto w-full max-w-xl overflow-hidden rounded-2xl border border-border-gold/30 bg-surface-elevated/96 shadow-[0_24px_64px_-44px_rgba(0,0,0,0.7)] backdrop-blur-xl sm:max-w-2xl"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
                   type="button"
                   onClick={closeModal}
                   data-modal-initial-focus
-                  className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground/70 transition-colors hover:text-foreground sm:right-4 sm:top-4"
-                  aria-label="Fermer la modale avis"
+                  className="absolute right-2.5 top-2.5 z-10 flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-background/60 text-muted-foreground transition-colors hover:border-border-gold/35 hover:bg-primary/5 hover:text-foreground sm:right-3 sm:top-3"
+                  aria-label={tCommon("closeModal")}
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4" aria-hidden />
                 </button>
 
-                <div className="p-4 sm:p-6">
+                <div className="p-3 sm:p-5">
                   <ReviewFormPage
                     variant="modal"
                     projectId={projectId}

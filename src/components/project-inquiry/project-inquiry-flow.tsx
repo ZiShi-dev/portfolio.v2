@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
-import { Building2, X } from "lucide-react";
+import { Building2, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/ui/form-error";
 import { FormField } from "@/components/ui/form-field";
@@ -1595,14 +1595,18 @@ export function ProjectInquiryFlow({
       <div
         className={cn(
           "relative z-10 mx-auto w-full min-w-0 max-w-2xl flex-1 px-4 sm:px-6",
-          fullscreen
+            fullscreen
             ? cn(
-                "scrollbar-overlay flex flex-col overflow-y-auto overscroll-contain",
+                "scrollbar-overlay flex min-h-0 flex-col overflow-y-auto overscroll-contain",
                 step === "summary"
                   ? "justify-start py-5 pb-6 sm:py-6"
                   : step === "success"
                     ? "justify-center py-8 pb-16"
-                    : "justify-center py-6 pb-16 sm:py-10"
+                    : step === "intro"
+                      ? "justify-center py-6 pb-16 sm:py-10"
+                      // Questions : pas de justify-center — avec du contenu haut, le centrage
+                      // vertical faisait remonter la bande d'étapes hors du premier écran.
+                      : "justify-start pb-[max(4rem,env(safe-area-inset-bottom))] pt-2 sm:pb-24 sm:pt-4"
               )
             : "space-y-10"
         )}
@@ -1615,15 +1619,24 @@ export function ProjectInquiryFlow({
           )}
         >
           {step !== "intro" && step !== "summary" && step !== "success" ? (
-            <ProjectConstellation
-              completedCount={completed}
-              currentIndex={currentIndex}
-              projectType={answers.projectType}
-              nodeCount={questionSteps.length}
-              ariaLabel={stepLabel}
-              rtl={locale === "ar"}
-              className="mx-auto flex justify-center"
-            />
+            <>
+              <ProjectInquiryStepStrip
+                className="sm:hidden"
+                steps={questionSteps}
+                activeStep={step}
+                completedCount={completed}
+                overviewLabel={t("progress.overview")}
+              />
+              <ProjectConstellation
+                completedCount={completed}
+                currentIndex={currentIndex}
+                projectType={answers.projectType}
+                nodeCount={questionSteps.length}
+                ariaLabel={stepLabel}
+                rtl={locale === "ar"}
+                className="mx-auto hidden shrink-0 justify-center sm:flex"
+              />
+            </>
           ) : null}
 
         {step === "summary" ? (
@@ -1648,11 +1661,23 @@ export function ProjectInquiryFlow({
           <motion.div
             key={step}
             initial={
-              reduceMotion ? false : { opacity: 0 }
+              reduceMotion
+                ? false
+                : {
+                    opacity: 0,
+                    y: 12,
+                  }
             }
-            animate={{ opacity: 1 }}
-            exit={reduceMotion ? undefined : { opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.22, ease: [0.25, 0.1, 0.25, 1] }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={
+              reduceMotion
+                ? undefined
+                : { opacity: 0, y: -8 }
+            }
+            transition={{
+              duration: reduceMotion ? 0 : 0.28,
+              ease: [0.25, 0.1, 0.25, 1],
+            }}
             className={cn(transitioning && "pointer-events-none")}
           >
             {renderQuestionBody()}
@@ -1673,6 +1698,80 @@ export function ProjectInquiryFlow({
         </div>
       ) : null}
     </motion.div>
+  );
+}
+
+function ProjectInquiryStepStrip({
+  steps,
+  activeStep,
+  completedCount,
+  overviewLabel,
+  className,
+}: {
+  steps: ProjectInquiryStep[];
+  activeStep: ProjectInquiryStep;
+  completedCount: number;
+  overviewLabel: string;
+  className?: string;
+}) {
+  const t = useTranslations("projectInquiry");
+  return (
+    <nav
+      aria-label={overviewLabel}
+      className={cn(
+        "border-b border-border/50 pb-3 pt-1 sm:hidden",
+        className
+      )}
+    >
+      <ul className="flex gap-1.5 overflow-x-auto overscroll-x-contain pb-1 [-webkit-overflow-scrolling:touch]">
+        {steps.map((id, index) => {
+          const done = index < completedCount;
+          const current = activeStep === id;
+          const label = t(`nodes.${id}` as const);
+          return (
+            <li key={id} className="flex shrink-0 items-center gap-1.5">
+              {index > 0 ? (
+                <span
+                  className="select-none font-mono text-[9px] text-border-gold/50"
+                  aria-hidden
+                >
+                  ·
+                </span>
+              ) : null}
+              <span
+                className={cn(
+                  "inline-flex min-h-8 max-w-[7.5rem] items-center gap-1 rounded-lg border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] transition-colors",
+                  done &&
+                    "border-primary/35 bg-primary/10 text-primary shadow-[0_0_12px_rgba(201,169,106,0.12)]",
+                  current &&
+                    !done &&
+                    "border-primary/50 bg-surface-elevated/90 text-foreground ring-1 ring-primary/35",
+                  !done &&
+                    !current &&
+                    "border-border/60 bg-background/40 text-muted-foreground/85"
+                )}
+                aria-current={current ? "step" : undefined}
+              >
+                {done ? (
+                  <Check
+                    className="h-3 w-3 shrink-0 text-primary"
+                    aria-hidden
+                  />
+                ) : (
+                  <span
+                    className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border border-current/40 font-mono text-[8px] text-current/90"
+                    aria-hidden
+                  >
+                    {index + 1}
+                  </span>
+                )}
+                <span className="min-w-0 truncate leading-tight">{label}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }
 

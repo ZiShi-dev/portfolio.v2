@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch, type FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { MessageSquareQuote, Send } from "lucide-react";
@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { PageBackBar } from "@/components/page-back-link";
 import { Reveal } from "@/components/ui/reveal";
 import { FormError } from "@/components/ui/form-error";
-import { FormErrorSummary } from "@/components/ui/form-error-summary";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,6 +38,27 @@ import { showAppToast } from "@/lib/app-toast";
 
 const turnstileEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
+/** Ordre des champs + ids DOM pour focus après soumission invalide (pas de résumé dupliqué). */
+const REVIEW_INVALID_FOCUS_SEQUENCE: { field: keyof ReviewFormValues; domId: string }[] = [
+  { field: "name", domId: "review-name" },
+  { field: "email", domId: "review-email" },
+  { field: "role", domId: "review-role" },
+  { field: "rating", domId: "review-rating" },
+  { field: "message", domId: "review-message" },
+];
+
+function focusFirstInvalidReviewField(errors: FieldErrors<ReviewFormValues>) {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  for (const { field, domId } of REVIEW_INVALID_FOCUS_SEQUENCE) {
+    if (!errors[field]) continue;
+    const el = document.getElementById(domId);
+    if (!el) continue;
+    el.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+    el.focus();
+    break;
+  }
+}
+
 type ReviewFormPageProps = {
   variant?: "page" | "modal";
   onClose?: () => void;
@@ -64,7 +84,6 @@ function ReviewFormBody({
     [translateError]
   );
   const [submitError, setSubmitError] = useState("");
-  const [errorFocusToken, setErrorFocusToken] = useState(0);
   const [turnstileToken, setTurnstileToken] = useState("");
   const { loading, setLoading, trySubmit } = useSubmitGuard();
   const [turnstileVersion, setTurnstileVersion] = useState(0);
@@ -78,12 +97,16 @@ function ReviewFormBody({
     control,
     handleSubmit,
     reset,
+    trigger,
     formState: { errors },
   } = useForm<ReviewFormValues>({
     resolver: zodResolver(schema),
     defaultValues: reviewFormDefaultValues,
     mode: "onBlur",
   });
+
+  const messageLen = useWatch({ control, name: "message", defaultValue: "" })
+    .length;
 
   const handleSuccess = useCallback(() => {
     showAppToast(t("successToast"), "success");
@@ -99,24 +122,6 @@ function ReviewFormBody({
       router.push(routes.reviews);
     }
   }, [onClose, reset, router, t, variant]);
-
-  const fieldSummary = [
-    errors.name?.message
-      ? { id: "review-name", label: t("name"), message: errors.name.message }
-      : null,
-    errors.email?.message
-      ? { id: "review-email", label: t("email"), message: errors.email.message }
-      : null,
-    errors.role?.message
-      ? { id: "review-role", label: t("role"), message: errors.role.message }
-      : null,
-    errors.rating?.message
-      ? { id: "review-rating", label: t("rating"), message: errors.rating.message }
-      : null,
-    errors.message?.message
-      ? { id: "review-message", label: t("review"), message: errors.message.message }
-      : null,
-  ].filter((item) => item !== null);
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");
@@ -199,9 +204,7 @@ function ReviewFormBody({
     } finally {
       setLoading(false);
     }
-  }, () => {
-    setErrorFocusToken((value) => value + 1);
-  });
+  }, focusFirstInvalidReviewField);
 
   const isModal = variant === "modal";
 
@@ -223,19 +226,22 @@ function ReviewFormBody({
           <div
             className={cn(
               isModal
-                ? "pt-8"
-                : "mt-8 overflow-hidden rounded-2xl border border-step-accent/20 bg-card/70 p-5 backdrop-blur-sm sm:rounded-3xl sm:p-8 md:p-10"
+                ? "border-b border-border/45 pb-4 pt-10 sm:pb-5 sm:pt-11"
+                : "mt-8 overflow-hidden rounded-2xl border border-border-gold/25 bg-surface-elevated/50 p-5 shadow-[inset_0_1px_0_rgba(244,241,232,0.04)] backdrop-blur-sm sm:rounded-3xl sm:p-8 md:p-10"
             )}
           >
             <div className="text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-step-accent/30 bg-background/60 px-4 py-1 text-xs font-medium uppercase tracking-widest text-step-accent">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary/75">
+                {t("catalogRef")}
+              </p>
+              <span className="mt-3 inline-flex items-center gap-2 rounded-full border border-border-gold/35 bg-background/55 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary sm:text-[11px]">
                 <MessageSquareQuote className="h-3.5 w-3.5" aria-hidden />
                 {t("eyebrow")}
               </span>
               <h1
                 id={isModal ? REVIEW_MODAL_TITLE_ID : undefined}
                 className={cn(
-                  "mt-4 font-display-serif font-semibold tracking-tight",
+                  "mt-4 font-display font-semibold tracking-tight text-foreground",
                   isModal ? "text-2xl sm:text-3xl" : "text-3xl sm:text-4xl"
                 )}
               >
@@ -244,8 +250,8 @@ function ReviewFormBody({
               </h1>
               <p
                 className={cn(
-                  "text-foreground/60",
-                  isModal ? "mt-3 text-sm" : "mt-4 text-sm sm:text-base"
+                  "mx-auto max-w-xl text-pretty text-muted-foreground",
+                  isModal ? "mt-3 text-sm leading-relaxed" : "mt-4 text-sm leading-relaxed sm:text-base"
                 )}
               >
                 {t("subtitle", { name: brand.name })}
@@ -253,24 +259,32 @@ function ReviewFormBody({
             </div>
 
             <form
-                onSubmit={onSubmit}
-                noValidate
+              onSubmit={onSubmit}
+              noValidate
+              className={cn(
+                "relative flex w-full flex-col",
+                isModal ? "mt-5 gap-5 sm:mt-6" : "mt-10 gap-6"
+              )}
+              aria-label={t("formAria")}
+            >
+              <HoneypotField {...register("_honeypot")} />
+
+              <section
                 className={cn(
-                  "relative flex w-full flex-col",
-                  isModal ? "mt-6 gap-4" : "mt-10 gap-5"
+                  "space-y-4",
+                  !isModal &&
+                    "rounded-2xl border border-border/55 bg-background/25 p-4 sm:p-5"
                 )}
-                aria-label={t("formAria")}
               >
-                <HoneypotField {...register("_honeypot")} />
-
-                <FormErrorSummary
-                  id="review-error-summary"
-                  title={tValidation("errorSummary")}
-                  items={fieldSummary}
-                  focusToken={errorFocusToken}
-                />
-
-                <div className="grid w-full grid-cols-1 gap-5 sm:grid-cols-2">
+                <h2 className="text-start">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                    {t("stepIdentity")}
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                    {t("stepIdentityDesc")}
+                  </span>
+                </h2>
+                <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                   <FormField
                     id="review-name"
                     label={t("name")}
@@ -292,6 +306,7 @@ function ReviewFormBody({
                   <FormField
                     id="review-email"
                     label={t("email")}
+                    required
                     error={errors.email?.message}
                   >
                     <Input
@@ -326,19 +341,48 @@ function ReviewFormBody({
                     {...register("role")}
                   />
                 </FormField>
+              </section>
 
+              <section className="space-y-3">
+                <h2 className="text-start">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                    {t("stepRating")}
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                    {t("stepRatingDesc")}
+                  </span>
+                </h2>
                 <Controller
                   name="rating"
                   control={control}
                   render={({ field }) => (
                     <StarRating
                       value={field.value}
-                      onChange={field.onChange}
+                      onChange={(next) => {
+                        field.onChange(next);
+                        void trigger("rating");
+                      }}
                       error={errors.rating?.message}
                     />
                   )}
                 />
+              </section>
 
+              <section
+                className={cn(
+                  "space-y-3",
+                  !isModal &&
+                    "rounded-2xl border border-border/55 bg-background/25 p-4 sm:p-5"
+                )}
+              >
+                <h2 className="text-start">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                    {t("stepMessage")}
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                    {t("stepMessageDesc")}
+                  </span>
+                </h2>
                 <FormField
                   id="review-message"
                   label={t("review")}
@@ -353,30 +397,54 @@ function ReviewFormBody({
                     autoComplete="off"
                     placeholder={t("messagePlaceholder")}
                     aria-invalid={Boolean(errors.message)}
-                    aria-describedby={errors.message ? "review-message-error" : undefined}
+                    aria-describedby={
+                      errors.message
+                        ? "review-message-error"
+                        : "review-message-counter"
+                    }
                     {...register("message")}
                   />
                 </FormField>
+                <p
+                  id="review-message-counter"
+                  className="text-end font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80"
+                  aria-live="polite"
+                >
+                  {t("messageCounter", {
+                    current: messageLen,
+                    max: REVIEW_LIMITS.messageMax,
+                  })}
+                  {messageLen < REVIEW_LIMITS.messageMax ? (
+                    <span className="mt-1 block text-[9px] normal-case tracking-normal text-muted-foreground/55 sm:text-[10px]">
+                      {t("charsRemaining", {
+                        count: REVIEW_LIMITS.messageMax - messageLen,
+                      })}
+                    </span>
+                  ) : null}
+                </p>
+              </section>
 
-                <FormError id="review-form-error" message={submitError} />
+              <FormError id="review-form-error" message={submitError} />
 
-                {turnstileEnabled && (
-                  <TurnstileWidget
-                    key={turnstileVersion}
-                    action="review"
-                    onToken={setTurnstileToken}
-                    onExpire={() => setTurnstileToken("")}
-                    language={locale}
-                  />
-                )}
+              {turnstileEnabled && (
+                <TurnstileWidget
+                  key={turnstileVersion}
+                  action="review"
+                  onToken={setTurnstileToken}
+                  onExpire={() => setTurnstileToken("")}
+                  language={locale}
+                />
+              )}
 
-                <Button type="submit" size="lg" className="w-full" loading={loading}>
-                  {loading ? t("sending") : t("send")}
-                  {!loading && <Send className="h-4 w-4" aria-hidden />}
-                </Button>
+              <Button type="submit" size="lg" className="min-h-12 w-full" loading={loading}>
+                {loading ? t("sending") : t("send")}
+                {!loading && <Send className="h-4 w-4" aria-hidden />}
+              </Button>
 
-                <p className="text-center text-xs text-muted-foreground">{t("consent")}</p>
-              </form>
+              <p className="text-center text-xs leading-relaxed text-muted-foreground">
+                {t("consent")}
+              </p>
+            </form>
           </div>
         </Reveal>
       </div>

@@ -308,6 +308,11 @@ video {
   font-family: var(--font-display);
 }
 
+/** Noms arabes du catalogue céleste (Amiri), hors flux RTL global. */
+.font-arabic-display {
+  font-family: var(--font-amiri), var(--font-arabic-body), serif;
+}
+
 .font-display {
   font-family: var(--font-display);
 }
