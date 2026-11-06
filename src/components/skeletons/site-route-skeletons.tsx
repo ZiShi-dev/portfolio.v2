@@ -7,7 +7,6 @@ import {
   SkeletonPulse,
   SkeletonTitle,
 } from "@/components/skeletons/vorzix-skeleton";
-import { pageShellClass } from "@/components/page-back-link";
 import { getHomeGridClass } from "@/lib/home-layout";
 import { cn } from "@/lib/utils";
 
@@ -135,32 +134,33 @@ export function PageWithBackSkeleton({
 
 export function ProjectDetailSkeleton() {
   return (
-    <>
-      <SkeletonBackBar />
+    <article
+      className="relative overflow-hidden bg-background px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-32"
+      aria-busy="true"
+      aria-live="polite"
+      role="status"
+    >
+      <span className="sr-only">Loading</span>
       <div
-        className="relative overflow-hidden bg-background pb-20 pt-28 sm:pb-28 sm:pt-32"
-        aria-busy="true"
-        aria-live="polite"
-        role="status"
-      >
-        <span className="sr-only">Loading</span>
-        <div className={cn(pageShellClass, "relative z-10 max-w-4xl space-y-8")}>
-          <SkeletonEyebrow />
-          <SkeletonTitle />
-          <SkeletonLine className="h-5 w-48" />
-          <div className="space-y-3">
-            <SkeletonLine className="h-4 w-full" />
-            <SkeletonLine className="h-4 w-full max-w-[92%]" />
-            <SkeletonLine className="h-4 w-full max-w-[85%]" />
-          </div>
-          <SkeletonPulse className="aspect-video w-full rounded-2xl border border-border bg-card/40" />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <SkeletonPulse className="h-28 rounded-xl border border-border bg-card/30" />
-            <SkeletonPulse className="h-28 rounded-xl border border-border bg-card/30" />
-          </div>
+        className="pointer-events-none absolute inset-0 celestial-vault opacity-40"
+        aria-hidden
+      />
+      <div className="relative z-10 mx-auto max-w-4xl space-y-8">
+        <SkeletonEyebrow />
+        <SkeletonTitle />
+        <SkeletonLine className="h-5 w-48 max-w-full" />
+        <div className="max-w-2xl space-y-3">
+          <SkeletonLine className="h-4 w-full" wide />
+          <SkeletonLine className="h-4 w-[92%]" wide />
+          <SkeletonLine className="h-4 w-[85%]" wide />
+        </div>
+        <SkeletonPulse className="aspect-video w-full rounded-2xl border border-border bg-card/40" />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <SkeletonPulse className="h-28 rounded-xl border border-border bg-card/30" />
+          <SkeletonPulse className="h-28 rounded-xl border border-border bg-card/30" />
         </div>
       </div>
-    </>
+    </article>
   );
 }
 
