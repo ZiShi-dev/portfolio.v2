@@ -9,6 +9,7 @@ import { CelestialAtlas } from "@/components/ui/celestial-atlas";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
 import { EngagementIcon } from "@/lib/engagements/icons";
 import type { LocalizedEngagement } from "@/lib/engagements/store";
+import { SITE_SECTION_CLASS } from "@/lib/site-section";
 import { cn } from "@/lib/utils";
 
 type EngagementsProps = {
@@ -30,7 +31,7 @@ export function Engagements({ engagements }: EngagementsProps) {
     <section
       id="engagements"
       aria-labelledby="engagements-heading"
-      className="relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className={SITE_SECTION_CLASS}
     >
       <CelestialAtlas intensity="subtle" />
 

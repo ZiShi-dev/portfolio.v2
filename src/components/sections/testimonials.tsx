@@ -13,6 +13,7 @@ import { ReviewDetailModal } from "@/components/sections/review-detail-modal";
 import { Link } from "@/i18n/navigation";
 import type { ReviewItem } from "@/data/reviews";
 import { getHomeGridClass, HOME_SECTION_PREVIEW } from "@/lib/home-layout";
+import { SITE_SECTION_CLASS } from "@/lib/site-section";
 import { routes } from "@/lib/routes";
 
 type TestimonialsProps = {
@@ -41,7 +42,7 @@ export function Testimonials({ reviews }: TestimonialsProps) {
     <section
       id="avis"
       aria-labelledby="reviews-heading"
-      className="relative scroll-mt-28 bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className={SITE_SECTION_CLASS}
     >
       <SectionHeading
         id="reviews-heading"

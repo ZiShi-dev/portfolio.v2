@@ -391,6 +391,31 @@ video {
   padding-inline: 1.25rem;
 }
 
+/* Micro-interactions VORZIX (Taste-inspired, charte Atlas Céleste) */
+@utility vz-pressable {
+  transition-property: transform, box-shadow, background-color, border-color, color;
+  transition-duration: 200ms;
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: translateY(0) scale(0.98);
+    }
+  }
+}
+
+@utility vz-card-lift {
+  transition-property: transform, border-color, box-shadow;
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -451,6 +476,19 @@ video {
     position: relative;
     animation: hero-emerge 650ms cubic-bezier(.22,1,.36,1) 150ms both;
   }
+  .hero-cinematic .hero-arrival-eyebrow,
+  .hero-cinematic .hero-arrival-title,
+  .hero-cinematic .hero-arrival-subtitle {
+    animation: hero-content-arrive 520ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+  .hero-cinematic .hero-arrival-eyebrow { animation-delay: 220ms; }
+  .hero-cinematic .hero-arrival-title { animation-delay: 320ms; }
+  .hero-cinematic .hero-arrival-subtitle { animation-delay: 420ms; }
+  .hero-cinematic[data-art-ready="false"] .hero-arrival-eyebrow,
+  .hero-cinematic[data-art-ready="false"] .hero-arrival-title,
+  .hero-cinematic[data-art-ready="false"] .hero-arrival-subtitle {
+    animation-play-state: paused;
+  }
   .hero-cinematic .hero-water-emergence::after {
     content: "";
     position: absolute;
@@ -464,10 +502,11 @@ video {
   .hero-cinematic .hero-arrival-actions,
   .hero-cinematic .hero-arrival-trust,
   .hero-cinematic .hero-arrival-scroll {
-    animation: hero-content-arrive 350ms ease 650ms both;
+    animation: hero-content-arrive 400ms cubic-bezier(.22, 1, .36, 1) both;
   }
-  .hero-cinematic .hero-arrival-trust { animation-delay: 750ms; }
-  .hero-cinematic .hero-arrival-scroll { animation-delay: 850ms; }
+  .hero-cinematic .hero-arrival-actions { animation-delay: 540ms; }
+  .hero-cinematic .hero-arrival-trust { animation-delay: 640ms; }
+  .hero-cinematic .hero-arrival-scroll { animation-delay: 740ms; }
   .hero-cinematic[data-art-ready="false"] .hero-responsive-visual,
   .hero-cinematic[data-art-ready="false"] .hero-image-layer,
   .hero-cinematic[data-art-ready="false"] .hero-water-emergence,
@@ -518,9 +557,15 @@ video {
 
 /* Small interaction feedback, restricted to devices that actually support hover. */
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .ui-button:not([aria-busy="true"]):hover {
+    transform: translateY(-1px);
+  }
   .ui-button > svg { transition: translate 180ms ease; }
   .ui-button:not([aria-busy="true"]):hover > svg { translate: 1px 0; }
   [dir="rtl"] .ui-button:not([aria-busy="true"]):hover > svg { translate: -1px 0; }
+  .vz-card-lift:hover {
+    transform: translateY(-2px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .ui-button {

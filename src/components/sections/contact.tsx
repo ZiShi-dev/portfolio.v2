@@ -17,6 +17,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { HoneypotField } from "@/components/ui/honeypot-field";
 import { TurnstileWidget } from "@/components/turnstile-widget";
 import { useSubmitGuard } from "@/hooks/use-submit-guard";
+import { SITE_SECTION_CLASS } from "@/lib/site-section";
+import { cn } from "@/lib/utils";
 import { CONTACT_LIMITS } from "@/lib/contact-schema";
 import {
   contactFormDefaultValues,
@@ -333,7 +335,7 @@ export function Contact({ contactEmail }: ContactProps) {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className={cn(SITE_SECTION_CLASS, "overflow-hidden")}
     >
       <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[min(400px,80vw)] w-[min(700px,120vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--color-primary),transparent_60%)] opacity-10 blur-3xl" />
 

@@ -5,6 +5,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ProjectHomeShowcase } from "@/components/sections/project-home-showcase";
 import type { LocalizedProjectItem } from "@/data/projects";
+import { SITE_SECTION_CLASS } from "@/lib/site-section";
 
 type ProjectsProps = {
   projects: LocalizedProjectItem[];
@@ -19,7 +20,7 @@ export function Projects({ projects }: ProjectsProps) {
     <section
       id="projets"
       aria-labelledby="projects-heading"
-      className="relative scroll-mt-28 overflow-x-clip bg-background py-16 sm:py-24 lg:py-28"
+      className={SITE_SECTION_CLASS}
     >
       <div className="px-4 sm:px-6">
         <SectionHeading

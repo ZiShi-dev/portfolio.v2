@@ -56,7 +56,7 @@ export function GlowCard({
       className={cn(
         "group relative overflow-hidden rounded-[var(--radius-lg)] border bg-surface-elevated/90 p-5 sm:p-6",
         interactive
-          ? "border-border transition-[border-color] duration-300 hover:border-border-gold"
+          ? "vz-card-lift border-border transition-[border-color,transform,box-shadow] duration-300 hover:border-border-gold hover:shadow-[0_0_28px_-10px_rgba(201,169,106,0.2)] motion-reduce:hover:transform-none"
           : "border-border-strong",
         className
       )}
