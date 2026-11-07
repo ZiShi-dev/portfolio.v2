@@ -4,6 +4,7 @@ import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { PageBackBar, pageShellClass } from "@/components/page-back-link";
@@ -101,12 +102,7 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
           as="h1"
           className="mt-8"
           eyebrow={t("page.eyebrow")}
-          title={
-            <>
-              {t("page.title")}{" "}
-              <span className="text-primary">{t("page.titleHighlight")}</span>
-            </>
-          }
+          title={<HeadingTitle title={t("page.title")} highlight={t("page.titleHighlight")} />}
           subtitle={t("page.subtitle")}
         />
 

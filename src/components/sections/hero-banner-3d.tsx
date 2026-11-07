@@ -254,13 +254,21 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
   const dragListenersTarget = useRef<HTMLDivElement | null>(null);
   const lastPointer = useRef({ x: 0, y: 0 });
   const snapping = useRef(false);
+  const snapAnimations = useRef<Array<{ stop: () => void }>>([]);
+
+  const stopSnap = useCallback(() => {
+    for (const animation of snapAnimations.current) animation.stop();
+    snapAnimations.current = [];
+    snapping.current = false;
+  }, []);
 
   const stopInertia = useCallback(() => {
     if (inertiaFrame.current !== null) {
       cancelAnimationFrame(inertiaFrame.current);
       inertiaFrame.current = null;
     }
-  }, []);
+    stopSnap();
+  }, [stopSnap]);
 
   const transform = useTransform(
     [rotateX, rotateY, rotateZ],
@@ -315,24 +323,17 @@ export function HeroBanner3D({ className }: HeroBanner3DProps) {
         return;
       }
 
-      animate(rotateX, pose.rx, {
-        type: "spring",
-        stiffness: 120,
-        damping: 20,
-      });
-      animate(rotateY, targetY, {
-        type: "spring",
-        stiffness: 120,
-        damping: 20,
-      });
-      animate(rotateZ, 0, {
-        type: "spring",
-        stiffness: 120,
-        damping: 20,
+      const spring = { type: "spring" as const, duration: 0.5, bounce: 0.15 };
+      const x = animate(rotateX, pose.rx, spring);
+      const y = animate(rotateY, targetY, spring);
+      const z = animate(rotateZ, 0, {
+        ...spring,
         onComplete: () => {
+          if (!snapAnimations.current.includes(z)) return;
           snapping.current = false;
         },
       });
+      snapAnimations.current = [x, y, z];
     },
     [reduceMotion, rotateX, rotateY, rotateZ, stopInertia, updateActiveFace]
   );

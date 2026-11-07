@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { aboutStatsToDisplay, visibleAboutStats } from "@/data/about-stats";
 import { getAboutStats } from "@/lib/about/store";
 import { AnimatedNumber } from "@/components/ui/animated-number";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
 import { ProcessStepper } from "@/components/ui/process-stepper";
 
@@ -27,8 +28,7 @@ export async function About() {
               id="about-heading"
               className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
             >
-              {t("title")}{" "}
-              <span className="text-primary">{t("titleHighlight")}</span>
+              <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
             </h2>
           </Reveal>
           <Reveal delay={0.1} variant="right">

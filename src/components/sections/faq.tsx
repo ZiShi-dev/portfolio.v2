@@ -6,6 +6,7 @@ import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
 import { CelestialAtlas } from "@/components/ui/celestial-atlas";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
@@ -68,8 +69,7 @@ export function FaqSection({
                   : "text-3xl sm:mt-5 sm:text-4xl md:text-5xl"
               )}
             >
-              {t("title")}{" "}
-              <span className="text-primary">{t("titleHighlight")}</span>
+              <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
             </h2>
           </Reveal>
           {!compact ? (
@@ -111,7 +111,7 @@ export function FaqSection({
                           prev === item.id ? null : item.id
                         )
                       }
-                      className="flex w-full min-h-14 items-start gap-3 py-4 text-start transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:py-5"
+                      className="pressable flex w-full min-h-14 items-start gap-3 py-4 text-start transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:py-5"
                     >
                       <span
                         className={cn(
@@ -137,7 +137,7 @@ export function FaqSection({
 
                       <ChevronDown
                         className={cn(
-                          "mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-300",
+                          "mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-150 ease-out",
                           isOpen && "rotate-180 text-primary"
                         )}
                         aria-hidden
@@ -150,21 +150,16 @@ export function FaqSection({
                           id={panelId}
                           role="region"
                           aria-labelledby={buttonId}
-                          initial={
-                            reduceMotion
-                              ? { opacity: 1, height: "auto" }
-                              : { opacity: 0, height: 0 }
-                          }
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={
-                            reduceMotion
-                              ? { opacity: 1, height: 0 }
-                              : { opacity: 0, height: 0 }
-                          }
+                          initial={reduceMotion ? false : { opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{
+                            opacity: reduceMotion ? 1 : 0,
+                            transition: { duration: reduceMotion ? 0 : 0.12, ease: [0.23, 1, 0.32, 1] },
+                          }}
                           transition={
                             reduceMotion
                               ? { duration: 0 }
-                              : { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
+                              : { duration: 0.16, ease: [0.23, 1, 0.32, 1] }
                           }
                           className="overflow-hidden"
                         >

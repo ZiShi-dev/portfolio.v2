@@ -53,12 +53,9 @@ export function FormErrorSummary({
                 const field = document.getElementById(item.id);
                 if (!field) return;
                 event.preventDefault();
-                const reduce = window.matchMedia(
-                  "(prefers-reduced-motion: reduce)"
-                ).matches;
                 field.scrollIntoView({
                   block: "center",
-                  behavior: reduce ? "auto" : "smooth",
+                  behavior: "auto",
                 });
                 field.focus();
               }}

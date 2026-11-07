@@ -73,10 +73,7 @@ export function HomeSection() {
             <span className="font-mono text-[10px] uppercase tracking-[0.22em]">
               {t("scroll")}
             </span>
-            <ArrowDown
-              className="h-4 w-4 motion-safe:animate-[fade-nudge_2.4s_ease-in-out_infinite]"
-              aria-hidden
-            />
+            <ArrowDown className="h-4 w-4" aria-hidden />
           </a>
         </div>
       </div>

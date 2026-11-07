@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -13,18 +14,48 @@ import { ProjectTypeBadges } from "@/components/sections/project-type-badges";
 type SpotlightPlateProps = {
   project: LocalizedProjectItem;
   priority?: boolean;
+  /** Une seule réalisation, assez grande pour occuper l’écran. */
+  featured?: boolean;
 };
 
-export function SpotlightPlate({ project, priority }: SpotlightPlateProps) {
+export function SpotlightPlate({ project, priority, featured = false }: SpotlightPlateProps) {
   const t = useTranslations("projects");
   const href = `${routes.projects}/${project.slug ?? project.id}`;
   const cover = project.images[0]?.src;
   const forSale = project.categoryKey === "for_sale";
+  const plateRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    if (!featured) return;
+    const plate = plateRef.current;
+    const curtain = plate?.querySelector<HTMLElement>(".work-curtain");
+    if (!plate || !curtain) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const reveal = () => curtain.setAttribute("data-reveal", "play");
+    const rect = plate.getBoundingClientRect();
+    const alreadyVisible = rect.top < window.innerHeight * 0.85 && rect.bottom > 80;
+    if (alreadyVisible) {
+      reveal();
+      return;
+    }
+
+    curtain.setAttribute("data-reveal", "pending");
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return;
+      reveal();
+      observer.disconnect();
+    }, { threshold: 0.2 });
+    observer.observe(plate);
+    return () => observer.disconnect();
+  }, [featured]);
 
   return (
-    <article className="h-full min-w-0 overflow-hidden rounded-[var(--radius-xl)] border border-border-gold bg-surface-elevated">
+    <article ref={plateRef} className="card-feedback h-full min-w-0 overflow-hidden rounded-[var(--radius-xl)] border border-border-gold bg-surface-elevated">
       <div className="grid h-full min-w-0 grid-cols-1 lg:grid-cols-2">
-        <figure className="relative m-0 aspect-[4/3] min-w-0 overflow-hidden bg-[#0A0E1A] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[22rem]">
+        <figure
+          className={`work-curtain relative m-0 aspect-[4/3] min-w-0 overflow-hidden bg-[#0A0E1A] sm:aspect-[16/10] lg:aspect-auto ${featured ? "lg:min-h-[70vh]" : "lg:min-h-[22rem]"}`}
+        >
           {cover ? (
             <Image
               src={cover}
@@ -32,7 +63,7 @@ export function SpotlightPlate({ project, priority }: SpotlightPlateProps) {
               fill
               draggable={false}
               priority={priority}
-              sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(100vw - 48px), 560px"
+              sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(100vw - 48px), 560px"}
               className="object-cover object-center"
             />
           ) : (

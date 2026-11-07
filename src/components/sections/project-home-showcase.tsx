@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import type { LocalizedProjectItem } from "@/data/projects";
 import { homeProjectRank } from "@/lib/projects/home-order";
 import { routes } from "@/lib/routes";
-import { SpotlightCarousel } from "@/components/sections/spotlight-carousel";
+import { SpotlightPlate } from "@/components/sections/spotlight-plate";
 
 type ProjectHomeShowcaseProps = {
   projects: LocalizedProjectItem[];
@@ -19,11 +19,12 @@ export function ProjectHomeShowcase({ projects }: ProjectHomeShowcaseProps) {
     (a, b) => homeProjectRank(a) - homeProjectRank(b)
   );
 
-  if (sorted.length === 0) return null;
+  const lead = sorted[0];
+  if (!lead) return null;
 
   return (
-    <div className="mx-auto mt-8 max-w-6xl px-4 sm:mt-14 sm:px-6">
-      <SpotlightCarousel projects={sorted} />
+    <div className="mx-auto mt-8 max-w-6xl px-4 sm:mt-10 sm:px-6">
+      <SpotlightPlate project={lead} priority featured />
 
       <div className="mt-9 flex justify-center sm:mt-10">
         <Button

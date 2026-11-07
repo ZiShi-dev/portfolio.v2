@@ -4,7 +4,7 @@
     "description": "VORZIX conçoit des sites web, des applications, des boutiques en ligne et d’autres produits numériques sur mesure. Design sobre, code maintenable, une même équipe du premier échange à la mise en ligne.",
     "jobTitle": "Agence technologique",
     "reviewsTitle": "Avis clients — {brand}",
-    "reviewsDescription": "Découvrez les témoignages et avis clients de {brand} : sites web, e-commerce et applications sur-mesure.",
+    "reviewsDescription": "Avis clients de {brand} : sites web, e-commerce et applications sur mesure.",
     "contactTitle": "Contact — {brand}",
     "contactDescription": "Contactez {brand} pour votre projet web, e-commerce ou application. Réponse sous 48h."
   },
@@ -24,8 +24,8 @@
     "about": "À\u00a0propos",
     "reviews": "Avis",
     "leaveReview": "Laisser un avis",
-    "workTogether": "Travaillons ensemble",
-    "workTogetherShort": "Démarrer",
+    "workTogether": "Démarrer un projet",
+    "workTogetherShort": "Démarrer un projet",
     "menu": "Menu",
     "closeMenu": "Fermer le menu"
   },
@@ -41,23 +41,24 @@
     "socialConfig": "{label} — lien à configurer"
   },
   "home": {
-    "contact": "Démarrer votre projet",
+    "contact": "Démarrer un projet",
     "projects": "Voir nos réalisations",
-    "scroll": "Découvrir",
+    "scroll": "Voir les offres",
     "trustLine": "Réponse sous 48 h · Devis avec postes visibles · Même interlocuteur sur le dossier"
   },
   "hero": {
     "eyebrow": "Agence technologique",
-    "title": "Sites, apps et plateformes",
-    "titleHighlight": "mesurés au dixième.",
-    "subtitle": "VORZIX produit des sites web, des applications, des boutiques en ligne et des outils métier. Chaque livrable est nommé et testé, sur le modèle d’une fiche d’atlas.",
+    "title": "Sites et applications",
+    "titleHighlight": "pour votre activité",
+    "brandLine": "Mesurés au dixième.",
+    "subtitle": "VORZIX conçoit le site, la boutique en ligne ou l’outil métier d’une entreprise, avec un périmètre écrit et la même équipe jusqu’à la mise en ligne.",
     "tagline": "Sites et apps orientés objectif",
     "bio": "Sites, applications et produits numériques sur mesure. Maquettes validées, stack documentée, accompagnement jusqu’à la mise en ligne avec la même équipe."
   },
   "journey": {
     "eyebrow": "Parcours",
-    "title": "De l’idée",
-    "titleHighlight": "au site en ligne",
+    "title": "De l’idée à la mise en ligne",
+    "titleHighlight": "",
     "subtitle": "Six étapes numérotées. Faites tourner le cube ou choisissez une étape pour voir ce qui se passe entre le premier contact et la suite."
   },
   "heroCube": {
@@ -96,12 +97,12 @@
   },
   "services": {
     "eyebrow": "Offres · Sites & applications",
-    "title": "Nos offres de",
-    "titleHighlight": "création de sites et d’applications.",
+    "title": "Offres de sites et d’applications",
+    "titleHighlight": "",
     "subtitle": "Site vitrine, boutique, prise de rendez-vous, blog, page d’atterrissage ou outil métier : choisissez l’offre qui suit le même périmètre que votre projet.",
     "homeSubtitle": "Les offres demandées le plus souvent. Le catalogue entier tient sur une page.",
-    "discover": "Découvrir",
-    "cta": "Parler de votre besoin",
+    "discover": "Voir l’offre",
+    "cta": "Démarrer un projet",
     "page": {
       "metaTitle": "Création de sites et d’applications — {brand}",
       "metaDescription": "Offres {brand} : site vitrine, e-commerce, réservation, application, blog, portfolio, landing page et site sur mesure."
@@ -143,7 +144,7 @@
     "empty": "Les offres seront bientôt disponibles.",
     "idealFor": "Pour qui",
     "included": "Ce que cela comprend",
-    "learnMore": "En savoir plus",
+    "learnMore": "Voir l’offre",
     "ctaStart": "Démarrer un projet",
     "backToServices": "Retour aux offres",
     "backToCatalog": "Retour aux offres",
@@ -156,42 +157,42 @@
     "pricing": {
       "startingAt": "À partir de {price}",
       "fixed": "{price}",
-      "contact": "Parlons de votre projet",
+      "contact": "Démarrer un projet",
       "disclaimer": "Le prix dépend de ce dont vous avez vraiment besoin. Nous le précisons ensemble avant de commencer.",
       "fixedDisclaimer": "Prix de l’offre telle que présentée. Options ou adaptations éventuelles sur devis."
     },
-    "catalogTitle": "Nos offres de",
-    "catalogTitleHighlight": "création de sites et d’applications.",
+    "catalogTitle": "Offres de sites et d’applications",
+    "catalogTitleHighlight": "",
     "catalogSubtitle": "Huit offres claires. Choisissez celle qui correspond à votre activité.",
     "viewAll": "Voir toutes les offres",
     "otherOffers": "Également au catalogue",
     "promotion": "Promotion",
-    "promotionView": "Découvrir l’offre"
+    "promotionView": "Voir l’offre"
   },
   "engagements": {
     "eyebrow": "Engagements · VORZIX",
-    "title": "Nos",
-    "titleHighlight": "engagements.",
+    "title": "Engagements",
+    "titleHighlight": "",
     "subtitle": "Périmètre écrit, jalons datés, critères de recette. Après la mise en ligne, les correctifs et les évolutions restent tracés."
   },
   "faq": {
     "eyebrow": "FAQ · VORZIX",
-    "title": "Questions",
-    "titleHighlight": "fréquentes.",
+    "title": "Questions fréquentes",
+    "titleHighlight": "",
     "subtitle": "Tarifs, délais, modifications après mise en ligne et hébergement : ce que les clients posent en général avant de signer.",
-    "ctaTitle": "Vous avez encore une question ?",
+    "ctaTitle": "Autre question",
     "ctaSubtitle": "Écrivez le contexte et le délai souhaité ; nous revenons avec un périmètre et un chiffrage.",
     "ctaPrimary": "Démarrer un projet"
   },
   "about": {
     "eyebrow": "À propos",
-    "title": "Une méthode claire pour votre",
-    "titleHighlight": "présence en ligne",
+    "title": "Méthode de travail",
+    "titleHighlight": "",
     "p1": "VORZIX conçoit des sites web, des applications et des outils métier sur mesure. Chaque projet a un cahier des charges court, des maquettes ou des composants validés, puis du code revu avant mise en production.",
     "p2": "Une petite équipe suit votre dossier de la première réunion à la mise en ligne. Vous savez qui répond aux mails et quand la prochaine livraison est prévue.",
     "page": {
       "metaTitle": "À propos — {brand}",
-      "metaDescription": "Découvrez {brand} : notre équipe, notre méthode et notre accompagnement pour votre présence digitale."
+      "metaDescription": "{brand} : l’équipe, la méthode et l’accompagnement jusqu’à la mise en ligne."
     },
     "stats": {
       "years": "Ans d'expérience",
@@ -216,12 +217,12 @@
   },
   "projects": {
     "eyebrow": "Réalisations",
-    "title": "Nos dernières",
-    "titleHighlight": "réalisations",
+    "title": "Dernières réalisations",
+    "titleHighlight": "",
     "subtitle": "Chaque fiche résume le besoin du client, ce que nous avons livré et l’URL ou la preuve disponible.",
     "openDetails": "Voir le détail du projet {title}",
     "seeMore": "Voir plus",
-    "exploreAll": "Explorer tous les projets",
+    "exploreAll": "Voir les projets",
     "availableNow": "Disponible à la reprise",
     "viewListing": "Voir l’offre",
     "viewProject": "Voir le projet",
@@ -262,11 +263,11 @@
     "thumbnail": "Miniature {index}",
     "page": {
       "metaTitle": "Projets — {brand}",
-      "metaDescription": "Découvrez les réalisations {brand} : sites vitrine, e-commerce et applications web sur-mesure.",
+      "metaDescription": "Réalisations {brand} : sites vitrine, e-commerce et applications web sur mesure.",
       "detailMetaFallback": "{title} — réalisation {brand} : contexte, périmètre et livrables.",
       "eyebrow": "Portfolio",
-      "title": "Toutes nos",
-      "titleHighlight": "réalisations",
+      "title": "Toutes les réalisations",
+      "titleHighlight": "",
       "subtitle": "Filtrez et ouvrez une étude de cas complète."
     },
     "categories": {
@@ -317,8 +318,8 @@
   },
   "reviews": {
     "eyebrow": "Témoignages",
-    "title": "Ils me font",
-    "titleHighlight": "confiance",
+    "title": "Avis clients",
+    "titleHighlight": "",
     "empty": "Aucun avis ici pour l’instant. Après une prestation, vous pouvez laisser un retour depuis le lien prévu sur la page.",
     "one": "Un avis vérifié. Chaque texte est relu avant d’être affiché.",
     "many": "avis vérifiés{suffix}.",
@@ -338,8 +339,8 @@
   },
   "contact": {
     "eyebrow": "Contact",
-    "title": "Donnons vie à",
-    "titleHighlight": "votre projet",
+    "title": "Votre projet",
+    "titleHighlight": "",
     "subtitle": "Décrivez votre besoin en 2 minutes. Nous répondons sous 48h avec une proposition claire — sans jargon.",
     "name": "Votre nom",
     "email": "Votre email",
@@ -361,8 +362,8 @@
   "reviewForm": {
     "eyebrow": "Avis client",
     "catalogRef": "CAT · RV—01 · TÉMOIGNAGE",
-    "title": "Partagez votre",
-    "titleHighlight": "expérience",
+    "title": "Votre retour",
+    "titleHighlight": "",
     "subtitle": "Vous avez travaillé avec {name} ? Décrivez ce que vous avez vécu. Publication après validation.",
     "backToReviews": "Retour aux avis",
     "stepIdentity": "Identité",

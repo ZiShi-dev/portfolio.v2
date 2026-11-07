@@ -48,20 +48,15 @@ export function ChoiceCards({
               }
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: reduceMotion ? 0.01 : 0.22,
+                duration: reduceMotion ? 0 : 0.14,
                 delay: reduceMotion ? 0 : Math.min(index, 10) * 0.04,
-                ease: [0.25, 0.1, 0.25, 1],
+                ease: [0.23, 1, 0.32, 1],
               }}
-              whileHover={
-                reduceMotion || disabled
-                  ? undefined
-                  : { y: -1 }
-              }
               whileTap={
-                reduceMotion || disabled ? undefined : { scale: 0.995 }
+                reduceMotion || disabled ? undefined : { scale: 0.97 }
               }
               className={cn(
-                "min-h-11 rounded-xl border px-4 py-3.5 text-start transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 motion-reduce:transition-none",
+                "min-h-11 rounded-xl border px-4 py-3.5 text-start transition-[border-color,background-color,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 motion-reduce:transition-none",
                 selected
                   ? "border-primary/55 bg-surface-elevated text-foreground shadow-[0_0_0_1px_rgba(201,169,106,0.12),0_12px_40px_-18px_rgba(0,0,0,0.55)]"
                   : "border-border bg-surface/60 text-foreground/85 hover:border-border-gold hover:bg-surface-elevated/80"

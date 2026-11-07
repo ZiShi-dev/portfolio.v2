@@ -68,11 +68,11 @@ async function HomeContent({ locale }: { locale: Locale }) {
 
   return (
     <>
+      <Projects projects={projects} />
       <HomePromotions services={services} />
       <Services services={services} />
       <Engagements engagements={engagements} />
       <Journey />
-      <Projects projects={projects} />
       <Testimonials reviews={reviews} />
       <About />
       <FaqSection faqs={faqs} />

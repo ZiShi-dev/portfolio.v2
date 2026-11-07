@@ -99,7 +99,7 @@ export default async function RootLayout({
       lang={locale}
       dir={dir}
       translate="no"
-      data-scroll-behavior="smooth"
+      data-scroll-behavior="auto"
       suppressHydrationWarning
       className={cn(
         fraunces.variable,

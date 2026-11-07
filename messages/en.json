@@ -4,7 +4,7 @@
     "description": "VORZIX designs custom websites, applications, online stores and other digital products. Restrained design, maintainable code, one team from first contact to go-live.",
     "jobTitle": "Technology agency",
     "reviewsTitle": "Client reviews — {brand}",
-    "reviewsDescription": "Read client reviews and testimonials about {brand}'s custom websites, e-commerce platforms and applications.",
+    "reviewsDescription": "Client reviews of {brand}: custom websites, online stores and applications.",
     "contactTitle": "Contact — {brand}",
     "contactDescription": "Contact {brand} about your website, e-commerce platform or application. We reply within 48 hours."
   },
@@ -24,8 +24,8 @@
     "about": "About",
     "reviews": "Reviews",
     "leaveReview": "Leave a review",
-    "workTogether": "Let's work together",
-    "workTogetherShort": "Start",
+    "workTogether": "Start a project",
+    "workTogetherShort": "Start a project",
     "menu": "Menu",
     "closeMenu": "Close menu"
   },
@@ -41,23 +41,24 @@
     "socialConfig": "{label} — link to configure"
   },
   "home": {
-    "contact": "Start your project",
+    "contact": "Start a project",
     "projects": "View our work",
-    "scroll": "Explore",
+    "scroll": "View the offers",
     "trustLine": "Reply within 48 hours · Quote with line items visible · Same contact on your file"
   },
   "hero": {
     "eyebrow": "Technology agency",
-    "title": "Websites, apps and platforms",
-    "titleHighlight": "measured to a tenth.",
-    "subtitle": "VORZIX builds websites, applications, online stores and internal tools. Each deliverable is named and tested, like an atlas card.",
+    "title": "Websites and applications",
+    "titleHighlight": "for your business",
+    "brandLine": "Measured to a tenth.",
+    "subtitle": "VORZIX designs the website, online store or internal tool a company needs, with a written scope and the same team through go-live.",
     "tagline": "Sites and apps built around outcomes",
     "bio": "Custom websites, apps and digital products. Approved mockups, documented stack, go-live support from the same team."
   },
   "journey": {
     "eyebrow": "Journey",
-    "title": "From idea",
-    "titleHighlight": "to a live site",
+    "title": "From the idea to go-live",
+    "titleHighlight": "",
     "subtitle": "Six numbered steps. Rotate the cube or pick a step to see what happens between first contact and what comes next."
   },
   "heroCube": {
@@ -96,12 +97,12 @@
   },
   "services": {
     "eyebrow": "Offers · Websites & apps",
-    "title": "We create",
-    "titleHighlight": "websites and applications.",
+    "title": "Websites and applications",
+    "titleHighlight": "",
     "subtitle": "Showcase site, shop, booking, blog, landing page or internal tool: pick the offer that matches your scope.",
     "homeSubtitle": "The offers clients ask for most often. The full catalogue fits on one page.",
-    "discover": "Discover",
-    "cta": "Talk about your needs",
+    "discover": "View the offer",
+    "cta": "Start a project",
     "page": {
       "metaTitle": "Websites and applications — {brand}",
       "metaDescription": "{brand} offers: showcase, e-commerce, booking, web app, blog, portfolio, landing page and custom websites."
@@ -143,7 +144,7 @@
     "empty": "Offers will be available soon.",
     "idealFor": "Who it's for",
     "included": "What you get",
-    "learnMore": "Learn more",
+    "learnMore": "View the offer",
     "ctaStart": "Start a project",
     "backToServices": "Back to offers",
     "backToCatalog": "Back to offers",
@@ -156,42 +157,42 @@
     "pricing": {
       "startingAt": "From {price}",
       "fixed": "{price}",
-      "contact": "Let's talk about your project",
+      "contact": "Start a project",
       "disclaimer": "The price depends on what you actually need. We agree on it together before we start.",
       "fixedDisclaimer": "Price for the offer as presented. Options or custom work may be quoted separately."
     },
-    "catalogTitle": "We create",
-    "catalogTitleHighlight": "websites and applications.",
+    "catalogTitle": "Websites and applications",
+    "catalogTitleHighlight": "",
     "catalogSubtitle": "Eight clear offers. Pick the one that matches your activity.",
     "viewAll": "View all offers",
     "otherOffers": "Also in the catalogue",
     "promotion": "Special offer",
-    "promotionView": "View offer"
+    "promotionView": "View the offer"
   },
   "engagements": {
     "eyebrow": "Commitments · VORZIX",
-    "title": "Our",
-    "titleHighlight": "commitments.",
+    "title": "Commitments",
+    "titleHighlight": "",
     "subtitle": "Written scope, dated milestones, acceptance criteria. After go-live, fixes and changes stay tracked."
   },
   "faq": {
     "eyebrow": "FAQ · VORZIX",
-    "title": "Frequent",
-    "titleHighlight": "questions.",
+    "title": "Frequent questions",
+    "titleHighlight": "",
     "subtitle": "Pricing, timelines, changes after launch and hosting: what clients usually ask before signing.",
-    "ctaTitle": "Still have a question?",
+    "ctaTitle": "Another question",
     "ctaSubtitle": "Send context and your target date; we reply with scope and a quote.",
     "ctaPrimary": "Start a project"
   },
   "about": {
     "eyebrow": "About",
-    "title": "A clear method for your",
-    "titleHighlight": "online presence",
+    "title": "How the work is done",
+    "titleHighlight": "",
     "p1": "VORZIX designs custom websites, applications and internal tools. Each project has a short brief, approved mockups or components, then code reviewed before production.",
     "p2": "A small team handles your file from kickoff to go-live. You know who answers email and when the next delivery is due.",
     "page": {
       "metaTitle": "About — {brand}",
-      "metaDescription": "Discover {brand}: our team, our method and our support for your digital presence."
+      "metaDescription": "{brand}: the team, the method and support through go-live."
     },
     "stats": {
       "years": "Years of experience",
@@ -216,12 +217,12 @@
   },
   "projects": {
     "eyebrow": "Work",
-    "title": "Our latest",
-    "titleHighlight": "work",
+    "title": "Latest work",
+    "titleHighlight": "",
     "subtitle": "Each case lists the client brief, what we shipped, and the URL or proof available.",
     "openDetails": "View project details for {title}",
     "seeMore": "See more",
-    "exploreAll": "Explore all projects",
+    "exploreAll": "View the projects",
     "availableNow": "Available now",
     "viewListing": "View listing",
     "viewProject": "View project",
@@ -260,11 +261,11 @@
     "thumbnail": "Thumbnail {index}",
     "page": {
       "metaTitle": "Projects — {brand}",
-      "metaDescription": "Explore {brand}'s work: showcase sites, e-commerce and custom web applications.",
+      "metaDescription": "Work by {brand}: showcase sites, online stores and web applications.",
       "detailMetaFallback": "{title} — {brand} project: context, scope and deliverables.",
       "eyebrow": "Portfolio",
-      "title": "All our",
-      "titleHighlight": "projects",
+      "title": "All projects",
+      "titleHighlight": "",
       "subtitle": "Filter and open a full case study."
     },
     "categories": {
@@ -315,8 +316,8 @@
   },
   "reviews": {
     "eyebrow": "Testimonials",
-    "title": "They trust",
-    "titleHighlight": "me",
+    "title": "Client reviews",
+    "titleHighlight": "",
     "empty": "No reviews here yet. After a project, you can leave feedback via the link on this page.",
     "one": "One verified review. Each text is read before it appears.",
     "many": "verified reviews{suffix}.",
@@ -336,8 +337,8 @@
   },
   "contact": {
     "eyebrow": "Contact",
-    "title": "Let's bring",
-    "titleHighlight": "your project to life",
+    "title": "Your project",
+    "titleHighlight": "",
     "subtitle": "Describe your needs in 2 minutes. We reply within 48h with a clear proposal — no jargon.",
     "name": "Your name",
     "email": "Your email",
@@ -359,8 +360,8 @@
   "reviewForm": {
     "eyebrow": "Client review",
     "catalogRef": "CAT · RV—01 · TESTIMONIAL",
-    "title": "Share your",
-    "titleHighlight": "experience",
+    "title": "Your review",
+    "titleHighlight": "",
     "subtitle": "Worked with {name}? Tell us how it went. We publish after a quick check.",
     "backToReviews": "Back to reviews",
     "stepIdentity": "Identity",

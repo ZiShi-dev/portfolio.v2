@@ -255,9 +255,7 @@ export function AdminServicesPanel({
       8;
     root.scrollTo({
       top: Math.max(0, offset),
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
+      behavior: "auto",
     });
   };
 

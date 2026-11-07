@@ -1,6 +1,5 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { isSafeHttpUrl } from "@/lib/review-schema";
@@ -31,7 +30,6 @@ export function ProjectCard({
   swipeFriendly = false,
 }: ProjectCardProps) {
   const t = useTranslations("projects");
-  const reduceMotion = useReducedMotion();
   const href = `${routes.projects}/${project.slug ?? project.id}`;
   const openLabel = t("openDetails", { title: project.title });
 
@@ -89,13 +87,12 @@ export function ProjectCard({
   );
 
   return (
-    <motion.div
-      whileHover={swipeFriendly || reduceMotion ? undefined : { y: -2 }}
-      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+    <div
       className={
         className ??
         cn(
           "group flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-card/80 backdrop-blur-sm transition-colors hover:border-step-accent/45",
+          !swipeFriendly && "card-feedback",
           project.featured
             ? "border-[rgba(212,175,122,0.38)] shadow-[0_0_20px_rgba(201,169,106,0.10)]"
             : "border-step-accent/20"
@@ -139,6 +136,6 @@ export function ProjectCard({
           )}
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

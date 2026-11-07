@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { Mail, Send, Check, MessageSquare } from "lucide-react";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { ContactOpenLink } from "@/components/contact-open-link";
@@ -195,8 +196,7 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
           id={CONTACT_MODAL_TITLE_ID}
           className="mt-4 font-display-serif text-2xl font-semibold tracking-tight sm:text-3xl"
         >
-          {t("title")}{" "}
-          <span className="text-primary">{t("titleHighlight")}</span>
+          <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-foreground/60">
           {t("subtitle")}
@@ -346,8 +346,7 @@ export function Contact({ contactEmail }: ContactProps) {
             id="contact-heading"
             className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
           >
-            {t("title")}{" "}
-            <span className="text-primary">{t("titleHighlight")}</span>
+            <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
             {t("subtitle")}

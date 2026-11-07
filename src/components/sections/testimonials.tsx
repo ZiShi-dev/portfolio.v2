@@ -5,6 +5,7 @@ import { PenLine, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { openLeaveReviewModal } from "@/lib/open-leave-review-modal";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
@@ -46,11 +47,7 @@ export function Testimonials({ reviews }: TestimonialsProps) {
       <SectionHeading
         id="reviews-heading"
         eyebrow={t("eyebrow")}
-        title={
-          <>
-            {t("title")} <span className="text-primary">{t("titleHighlight")}</span>
-          </>
-        }
+          title={<HeadingTitle title={t("title")} highlight={t("titleHighlight")} />}
         subtitle={subtitle}
       />
 

@@ -20,8 +20,12 @@ export function HeroHeadline() {
         <span className="text-primary">{t("titleHighlight")}</span>
       </h1>
 
+      <p className="mt-3 font-display text-sm italic text-primary drop-shadow-[0_2px_16px_rgba(7,10,18,0.9)] sm:text-base">
+        {t("brandLine")}
+      </p>
+
       <p
-        className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground drop-shadow-[0_2px_16px_rgba(7,10,18,0.9)] sm:mt-6 sm:text-lg"
+        className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground drop-shadow-[0_2px_16px_rgba(7,10,18,0.9)] sm:mt-5 sm:text-lg"
       >
         {t("subtitle")}
       </p>

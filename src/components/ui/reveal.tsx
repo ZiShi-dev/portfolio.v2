@@ -29,37 +29,6 @@ type RevealProps = {
 
 const REVEAL_EASE = [0.22, 1, 0.36, 1] as const;
 
-/**
- * Entrée au scroll via le viewport (pas via scrollYProgress global).
- * L’ancienne approche laissait scrollYProgress à 0 au premier rendu : tout le bloc
- * restait à opacity 0 pendant que le footer (hors Reveal) s’affichait seul.
- */
-function InViewReveal({
-  children,
-  delay = 0,
-  className,
-  variant = "rise",
-}: Omit<RevealProps, "trigger" | "animate">) {
-  const origin = origins[variant];
-  const stagger = Math.min(Math.max(delay, 0), 0.35);
-  return (
-    <motion.div
-      className={cn("scroll-reveal", className)}
-      data-reveal-direction={variant}
-      initial={{ opacity: 0, x: origin.x, y: origin.y }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, amount: 0.12, margin: "0px 0px -12% 0px" }}
-      transition={{
-        duration: 0.42,
-        ease: REVEAL_EASE,
-        delay: stagger,
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
 /** Stagger au premier paint uniquement (pas d’IntersectionObserver). */
 function MountReveal({
   children,
@@ -93,9 +62,9 @@ export function Reveal({
   ...props
 }: RevealProps) {
   const reduceMotion = useReducedMotion();
-  // Mount no scroll observer when the visitor requests reduced motion.
-  if (reduceMotion || !animate)
+  // Les sections restent lisibles tout de suite. Seule une entrée au montage
+  // (grille, hero) peut encore bouger, et jamais au scroll.
+  if (reduceMotion || !animate || trigger === "inView")
     return <div className={props.className}>{props.children}</div>;
-  if (trigger === "mount") return <MountReveal {...props} />;
-  return <InViewReveal {...props} />;
+  return <MountReveal {...props} />;
 }

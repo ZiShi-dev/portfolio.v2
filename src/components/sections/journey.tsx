@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
 import { CelestialAtlas } from "@/components/ui/celestial-atlas";
 import { HeroBanner3D } from "@/components/sections/hero-banner-3d";
@@ -28,8 +29,7 @@ export function Journey() {
               id="journey-heading"
               className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
             >
-              {t("title")}{" "}
-              <span className="text-primary">{t("titleHighlight")}</span>
+              <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
             </h2>
           </Reveal>
           <Reveal delay={0.1} variant="right">

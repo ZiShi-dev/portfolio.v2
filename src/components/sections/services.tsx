@@ -2,6 +2,7 @@
 
 import { MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
 import { Button } from "@/components/ui/button";
 import { CelestialAtlas } from "@/components/ui/celestial-atlas";
@@ -54,16 +55,14 @@ export function Services({ services, variant = "home" }: ServicesProps) {
                 id="services-heading"
                 className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
               >
-                {t("catalogTitle")}{" "}
-                <span className="text-primary">{t("catalogTitleHighlight")}</span>
+                <HeadingTitle title={t("catalogTitle")} highlight={t("catalogTitleHighlight")} />
               </h1>
             ) : (
               <h2
                 id="services-heading"
                 className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
               >
-                {t("title")}{" "}
-                <span className="text-primary">{t("titleHighlight")}</span>
+                <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
               </h2>
             )}
           </Reveal>

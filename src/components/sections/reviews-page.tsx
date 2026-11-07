@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight, PenLine } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { openLeaveReviewModal } from "@/lib/open-leave-review-modal";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { PageBackBar, pageShellClass } from "@/components/page-back-link";
@@ -38,12 +39,7 @@ export function ReviewsPage({ reviews }: ReviewsPageProps) {
           as="h1"
           className="mt-8"
           eyebrow={t("eyebrow")}
-          title={
-            <>
-              {t("title")}{" "}
-              <span className="text-primary">{t("titleHighlight")}</span>
-            </>
-          }
+          title={<HeadingTitle title={t("title")} highlight={t("titleHighlight")} />}
           subtitle={`${total} — ${REVIEWS_PAGE_SIZE}/page`}
         />
 

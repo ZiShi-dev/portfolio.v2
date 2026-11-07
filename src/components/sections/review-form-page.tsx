@@ -6,6 +6,7 @@ import { useForm, Controller, useWatch, type FieldErrors } from "react-hook-form
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { MessageSquareQuote, Send } from "lucide-react";
+import { HeadingTitle } from "@/components/ui/heading-title";
 import { Button } from "@/components/ui/button";
 import { PageBackBar } from "@/components/page-back-link";
 import { Reveal } from "@/components/ui/reveal";
@@ -48,12 +49,11 @@ const REVIEW_INVALID_FOCUS_SEQUENCE: { field: keyof ReviewFormValues; domId: str
 ];
 
 function focusFirstInvalidReviewField(errors: FieldErrors<ReviewFormValues>) {
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   for (const { field, domId } of REVIEW_INVALID_FOCUS_SEQUENCE) {
     if (!errors[field]) continue;
     const el = document.getElementById(domId);
     if (!el) continue;
-    el.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+    el.scrollIntoView({ block: "center", behavior: "auto" });
     el.focus();
     break;
   }
@@ -245,8 +245,7 @@ function ReviewFormBody({
                   isModal ? "text-2xl sm:text-3xl" : "text-3xl sm:text-4xl"
                 )}
               >
-                {t("title")}{" "}
-                <span className="text-primary">{t("titleHighlight")}</span>
+                <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
               </h1>
               <p
                 className={cn(

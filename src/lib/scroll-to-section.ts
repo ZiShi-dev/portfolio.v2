@@ -1,7 +1,7 @@
 /** Défile jusqu’à une ancre (`#faq`, `faq`, etc.). */
 export function scrollToSection(
   hash: string,
-  behavior: ScrollBehavior = "smooth"
+  behavior: ScrollBehavior = "auto"
 ): boolean {
   const id = hash.startsWith("#") ? hash.slice(1) : hash;
   if (!id) return false;
@@ -11,12 +11,8 @@ export function scrollToSection(
   return true;
 }
 
-export function prefersReducedMotion(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
 export function scrollBehaviorForMotion(): ScrollBehavior {
-  return prefersReducedMotion() ? "auto" : "smooth";
+  return "auto";
 }
 
 /**
