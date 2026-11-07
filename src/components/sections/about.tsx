@@ -4,6 +4,7 @@ import { getAboutStats } from "@/lib/about/store";
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { Reveal } from "@/components/ui/reveal";
 import { ProcessStepper } from "@/components/ui/process-stepper";
+import { SITE_SECTION_CLASS } from "@/lib/site-section";
 
 export async function About() {
   const t = await getTranslations("about");
@@ -13,7 +14,7 @@ export async function About() {
     <section
       id="a-propos"
       aria-labelledby="about-heading"
-      className="relative scroll-mt-28 bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className={SITE_SECTION_CLASS}
     >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">

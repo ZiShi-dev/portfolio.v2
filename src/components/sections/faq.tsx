@@ -11,6 +11,7 @@ import { CelestialAtlas } from "@/components/ui/celestial-atlas";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
 import type { LocalizedFaq } from "@/lib/faqs/store";
 import { routes } from "@/lib/routes";
+import { SITE_SECTION_CLASS } from "@/lib/site-section";
 import { cn } from "@/lib/utils";
 
 type FaqSectionProps = {
@@ -41,7 +42,7 @@ export function FaqSection({
         "relative overflow-hidden bg-background",
         compact
           ? "mt-12 scroll-mt-28"
-          : "scroll-mt-28 px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+          : SITE_SECTION_CLASS
       )}
     >
       {!compact ? <CelestialAtlas intensity="subtle" /> : null}

@@ -12,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 import { getHomeGridClass, HOME_SECTION_PREVIEW } from "@/lib/home-layout";
 import { routes, serviceDetailPath } from "@/lib/routes";
 import type { LocalizedService } from "@/lib/services/store";
+import { SITE_SECTION_CLASS } from "@/lib/site-section";
 import { cn } from "@/lib/utils";
 
 type ServicesProps = {
@@ -36,7 +37,7 @@ export function Services({ services, variant = "home" }: ServicesProps) {
       className={
         isPage
           ? "relative overflow-hidden bg-transparent px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-10 lg:pb-28"
-          : "relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+          : SITE_SECTION_CLASS
       }
     >
       {!isPage && <CelestialAtlas intensity="subtle" />}

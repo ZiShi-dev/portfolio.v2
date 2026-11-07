@@ -41,6 +41,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Taste Skill / skills CLI (réinstaller via skills-lock.json)
+.agents/skills/
+
 # Cursor / agent tooling (skills locales, hooks)
 .cursor/
 

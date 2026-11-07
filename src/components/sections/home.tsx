@@ -28,6 +28,7 @@ export function HomeSection() {
   return (
     <section
       id="accueil"
+      data-enter
       data-art-ready={artReady ? "true" : "false"}
       className="hero-with-artwork hero-cinematic relative flex w-full max-w-[100vw] flex-col overflow-x-clip bg-background"
     >
@@ -35,8 +36,8 @@ export function HomeSection() {
         <HeroBanner imageRef={imageRef} />
       </div>
 
-      <div className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-10 pt-24 sm:px-6 sm:pb-20 sm:pt-28">
-        <div className="relative z-10 mx-auto mt-[min(28vw,11rem)] flex w-full max-w-3xl flex-col items-center text-center sm:mt-[min(22vw,13rem)]">
+      <div className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-14 pt-[calc(env(safe-area-inset-top,0px)+5.5rem)] sm:px-6 sm:pb-20 sm:pt-28">
+        <div className="relative z-10 mx-auto mt-[min(22vw,8.75rem)] flex w-full max-w-3xl flex-col items-center text-center sm:mt-[min(22vw,13rem)]">
           <div className="hero-water-emergence w-full">
             <HeroHeadline />
           </div>

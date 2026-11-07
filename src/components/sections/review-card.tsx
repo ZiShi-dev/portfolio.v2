@@ -27,10 +27,11 @@ export function ReviewCard({
     <div className={cn("relative h-full", className)}>
       <article
         className={cn(
-          "flex h-full flex-col rounded-xl border bg-surface-elevated/70 p-5 transition-colors sm:p-6",
+          "flex h-full flex-col rounded-xl border bg-surface-elevated/70 p-5 transition-[border-color,transform,box-shadow] duration-300 sm:p-6 motion-reduce:hover:transform-none",
+          onOpen && "vz-card-lift",
           featured
-            ? "border-border-gold/50"
-            : "border-border hover:border-primary/30"
+            ? "border-border-gold/50 shadow-[0_0_32px_-16px_rgba(201,169,106,0.35)]"
+            : "border-border hover:border-primary/30 hover:shadow-[0_0_24px_-14px_rgba(201,169,106,0.18)]"
         )}
       >
         <div className="flex items-start justify-between gap-3">
