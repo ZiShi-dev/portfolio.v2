@@ -98,20 +98,13 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-12">
-      <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-card/75 p-6 shadow-[0_24px_80px_-48px_rgb(201_169_106/0.55)] sm:p-8">
-        <div
-          aria-hidden
-          className="absolute -end-20 -top-24 h-64 w-64 rounded-full bg-primary/8 blur-3xl"
-        />
-        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <section className="rounded-[var(--radius-xl)] border border-border-gold bg-surface-elevated p-6 sm:p-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary/75">
-              {t("signedInAs")}
-            </p>
-            <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
               {t("title")}
             </h1>
-            <p className="mt-2 max-w-xl truncate text-sm text-foreground/58">
+            <p className="mt-3 max-w-xl truncate text-sm text-muted-foreground" dir="ltr">
               {user.email}
             </p>
           </div>

@@ -522,7 +522,8 @@
       "switchTo": "Passer en {lang}"
     },
     "layout": {
-      "backToSite": "{name}"
+      "backToSite": "{name}",
+      "menu": "Menu"
     },
     "notifications": {
       "title": "Notifications",

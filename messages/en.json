@@ -520,7 +520,8 @@
       "switchTo": "Switch to {lang}"
     },
     "layout": {
-      "backToSite": "{name}"
+      "backToSite": "{name}",
+      "menu": "Menu"
     },
     "notifications": {
       "title": "Notifications",

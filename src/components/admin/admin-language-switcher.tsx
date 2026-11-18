@@ -3,13 +3,12 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { markLocaleChange, setNextLocaleCookie } from "@/lib/locale-cookie";
-import { routing, type Locale } from "@/i18n/routing";
+import { getLocaleDirection, routing, type Locale } from "@/i18n/routing";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 
 export function AdminLanguageSwitcher() {
@@ -20,22 +19,41 @@ export function AdminLanguageSwitcher() {
 
   function switchLocale(next: string) {
     if (!routing.locales.includes(next as Locale) || next === locale) return;
-    if (!setNextLocaleCookie(next as Locale)) return;
+    const nextLocale = next as Locale;
+    if (!setNextLocaleCookie(nextLocale)) return;
+    document.documentElement.lang = nextLocale;
+    document.documentElement.dir = getLocaleDirection(nextLocale);
     markLocaleChange();
     router.refresh();
   }
 
+  const current = locale as Locale;
+
   return (
-    <Select value={locale} onValueChange={switchLocale}>
+    <Select dir={getLocaleDirection(current)} value={locale} onValueChange={switchLocale}>
       <SelectTrigger
-        className="h-9 w-[7.5rem] rounded-full px-3 text-xs font-semibold uppercase"
-        aria-label={t("label")}
+        className="h-11 w-11 shrink-0 touch-manipulation justify-center gap-0 overflow-hidden rounded-[var(--radius-md)] border-border bg-transparent px-0 font-mono text-[11px] font-medium max-sm:[&>svg]:hidden sm:w-[7.5rem] sm:justify-between sm:gap-2 sm:px-3 sm:font-sans sm:text-xs"
+        aria-label={`${t("label")}, ${tLang(locale)}`}
       >
-        <SelectValue />
+        <span className="uppercase sm:!hidden" dir="ltr">
+          {locale}
+        </span>
+        <span
+          lang={current}
+          dir={getLocaleDirection(current)}
+          className="!hidden min-w-0 truncate sm:!inline"
+        >
+          {tLang(locale)}
+        </span>
       </SelectTrigger>
       <SelectContent align="end">
         {routing.locales.map((code) => (
-          <SelectItem key={code} value={code} className="uppercase">
+          <SelectItem
+            key={code}
+            value={code}
+            lang={code}
+            dir={getLocaleDirection(code)}
+          >
             {tLang(code)}
           </SelectItem>
         ))}

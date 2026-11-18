@@ -1,11 +1,19 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AdminPrefetchSite } from "@/components/admin/admin-prefetch-site";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { LocaleDocumentSync } from "@/components/locale-document-sync";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { AppToastHost } from "@/components/ui/app-toast";
 import { getAdminLocale, getAdminMessages } from "@/lib/admin/i18n";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  colorScheme: "dark",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getAdminLocale();
@@ -34,6 +42,7 @@ export default async function AdminLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
+      <LocaleDocumentSync locale={locale} />
       <AdminPrefetchSite />
       <NavigationProgress />
       <AdminShell>{children}</AdminShell>

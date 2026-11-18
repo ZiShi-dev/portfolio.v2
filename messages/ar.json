@@ -520,7 +520,8 @@
       "switchTo": "التبديل إلى {lang}"
     },
     "layout": {
-      "backToSite": "{name}"
+      "backToSite": "{name}",
+      "menu": "القائمة"
     },
     "notifications": {
       "title": "الإشعارات",

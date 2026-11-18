@@ -350,7 +350,7 @@ export function AdminPushNotifications() {
           type="button"
           variant="outline"
           size="icon"
-          className="relative"
+          className="relative h-11 w-11 shrink-0 touch-manipulation select-none"
           aria-label={t("bellLabel")}
         >
           <Icon className="h-4 w-4" aria-hidden />

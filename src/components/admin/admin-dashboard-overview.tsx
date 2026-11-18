@@ -50,18 +50,18 @@ const chartIcons = {
 } as const;
 
 const segmentToneClasses: Record<StatusTone, string> = {
-  live: "bg-emerald-400/80",
-  attention: "bg-amber-400/80",
-  info: "bg-sky-400/75",
-  danger: "bg-red-400/70",
+  live: "bg-primary/85",
+  attention: "bg-primary/45",
+  info: "bg-muted-foreground/80",
+  danger: "bg-destructive",
   muted: "bg-foreground/18",
 };
 
 const dotToneClasses: Record<StatusTone, string> = {
-  live: "bg-emerald-400",
-  attention: "bg-amber-400",
-  info: "bg-sky-400",
-  danger: "bg-red-400",
+  live: "bg-primary",
+  attention: "bg-primary/60",
+  info: "bg-muted-foreground",
+  danger: "bg-destructive",
   muted: "bg-foreground/30",
 };
 
@@ -106,13 +106,13 @@ export function AdminDashboardOverview({
                 <Link
                   href={item.href}
                   className={cn(
-                    "group flex min-h-16 items-center gap-3 rounded-2xl border bg-card/60 px-4 py-3 text-sm font-medium outline-none transition-[transform,background-color,border-color] duration-200 ease-out motion-reduce:transition-none",
-                    "hover:-translate-y-0.5 hover:bg-card motion-reduce:hover:translate-y-0 focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                    "group flex min-h-16 items-center gap-3 rounded-[var(--radius-lg)] border bg-surface-elevated px-4 py-3 text-sm font-medium outline-none transition-[background-color,border-color] duration-200 ease-out",
+                    "focus-visible:ring-2 focus-visible:ring-primary/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     item.tone === "urgent"
-                      ? "border-red-400/22 hover:border-red-400/38"
+                      ? "border-destructive/40 hover:border-destructive/65"
                       : item.tone === "attention"
-                        ? "border-amber-400/22 hover:border-amber-400/38"
-                        : "border-border/80 hover:border-primary/28"
+                        ? "border-border-gold hover:border-primary/45"
+                        : "border-border hover:border-border-gold"
                   )}
                 >
                   <span
@@ -120,9 +120,9 @@ export function AdminDashboardOverview({
                     className={cn(
                       "h-2 w-2 shrink-0 rounded-full",
                       item.tone === "urgent"
-                        ? "bg-red-400"
+                        ? "bg-destructive"
                         : item.tone === "attention"
-                          ? "bg-amber-400"
+                          ? "bg-primary/70"
                           : "bg-primary"
                     )}
                   />
@@ -138,8 +138,8 @@ export function AdminDashboardOverview({
             ))}
           </ul>
         ) : (
-          <div className="flex min-h-16 items-center gap-3 rounded-2xl border border-emerald-400/18 bg-emerald-400/[0.04] px-4 py-3">
-            <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-400" aria-hidden />
+          <div className="flex min-h-16 items-center gap-3 rounded-[var(--radius-lg)] border border-border-gold bg-primary/[0.06] px-4 py-3">
+            <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" aria-hidden />
             <p className="text-sm text-muted-foreground">{todoNone}</p>
           </div>
         )}
@@ -175,7 +175,7 @@ function StatusDistribution({
   return (
     <article
       aria-labelledby={titleId}
-      className="group min-w-0 rounded-2xl border border-border/80 bg-card/58 p-5 transition-colors hover:border-primary/25 hover:bg-card/78 sm:p-6"
+      className="group min-w-0 rounded-[var(--radius-lg)] border border-border bg-surface-elevated p-5 transition-colors hover:border-border-gold sm:p-6"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-3">
@@ -193,11 +193,11 @@ function StatusDistribution({
         </div>
 
         <div className="shrink-0 text-end">
-          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground rtl:normal-case rtl:tracking-normal">
-            {totalLabel}
-          </p>
-          <p className="mt-0.5 text-2xl font-semibold tabular-nums text-foreground">
+          <p className="text-2xl font-semibold tabular-nums text-foreground">
             {total}
+          </p>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground rtl:normal-case rtl:tracking-normal">
+            {totalLabel}
           </p>
         </div>
       </div>

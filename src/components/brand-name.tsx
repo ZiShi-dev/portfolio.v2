@@ -20,6 +20,7 @@ export function BrandName({
   return (
     <span
       translate="no"
+      dir="ltr"
       suppressHydrationWarning
       className={cn(
         "notranslate inline-block whitespace-nowrap leading-none text-foreground",
