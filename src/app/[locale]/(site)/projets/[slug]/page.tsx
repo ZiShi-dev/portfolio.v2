@@ -78,42 +78,28 @@ export default async function CaseStudyPage({ params }: PageProps) {
     `${routes.projects}/${project.slug ?? slug}`,
     locale
   );
-  const projectEntity =
-    project.categoryKey === "for_sale" && project.listingPriceCents != null
+  const projectEntity = {
+    "@type": "CreativeWork",
+    "@id": `${projectUrl}#project`,
+    name: project.title,
+    description: project.desc,
+    url: projectUrl,
+    inLanguage: locale,
+    creator: { "@id": `${absoluteUrl(routes.home)}#organization` },
+    ...(project.images.length > 0
+      ? { image: project.images.map((image) => absoluteUrl(image.src)) }
+      : {}),
+    ...(project.categoryKey === "for_sale" && project.listingPriceCents != null
       ? {
-          "@type": "Product",
-          "@id": `${projectUrl}#product`,
-          name: project.title,
-          description: project.seoDescription || project.desc,
-          url: projectUrl,
-          inLanguage: locale,
-          ...(project.images.length > 0
-            ? { image: project.images.map((image) => absoluteUrl(image.src)) }
-            : {}),
-          ...(project.listingPriceCents != null
-            ? {
-                offers: {
-                  "@type": "Offer",
-                  priceCurrency: "EUR",
-                  price: (project.listingPriceCents / 100).toFixed(2),
-                  url: projectUrl,
-                  availability: "https://schema.org/InStock",
-                },
-              }
-            : {}),
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "EUR",
+            price: (project.listingPriceCents / 100).toFixed(2),
+            url: projectUrl,
+          },
         }
-      : {
-          "@type": "CreativeWork",
-          "@id": `${projectUrl}#project`,
-          name: project.title,
-          description: project.seoDescription || project.desc,
-          url: projectUrl,
-          inLanguage: locale,
-          creator: { "@id": `${absoluteUrl(routes.home)}#organization` },
-          ...(project.images.length > 0
-            ? { image: project.images.map((image) => absoluteUrl(image.src)) }
-            : {}),
-        };
+      : {}),
+  };
   const projectJsonLd = {
     "@context": "https://schema.org",
     "@graph": [
