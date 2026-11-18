@@ -45,6 +45,7 @@ export default async function ProjetsRoute() {
       <JsonLd
         nonce={nonce}
         data={buildListingJsonLd({
+          home: { name: brand.name, url: localizedAbsoluteUrl(routes.home, locale) },
           name: t("page.title"),
           url: listingUrl,
           items: projects.map((project) => ({

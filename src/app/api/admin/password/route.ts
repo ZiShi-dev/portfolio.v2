@@ -85,9 +85,10 @@ export async function POST(request: Request) {
     const supabase = await createSupabaseServerClient();
     const {
       data: { user },
+      error: userError,
     } = await supabase.auth.getUser();
 
-    if (!user?.email || !isAllowedAdminEmail(user.email)) {
+    if (userError || !user?.email || !isAllowedAdminEmail(user.email)) {
       logAdminAuthEvent("password_change_failed", ip, { reason: "no_session" });
       return adminErrorResponse(ADMIN_ERROR_CODES.SESSION_EXPIRED, 401);
     }
@@ -130,11 +131,12 @@ export async function POST(request: Request) {
       return adminErrorResponse(code, 400);
     }
 
-    const { error: revokeError } = await supabase.auth.signOut({ scope: "global" });
-    if (revokeError) {
-      logAdminAuthEvent("password_change_session_revocation_failed", ip, {
-        code: revokeError.code ?? "unknown",
-      });
+    try {
+      const { error } = await supabase.auth.signOut({ scope: "global" });
+      if (error) throw error;
+    } catch {
+      logAdminAuthEvent("password_change_session_revocation_failed", ip);
+      return adminErrorResponse(ADMIN_ERROR_CODES.PASSWORD_CHANGED_REVOCATION_FAILED, 502);
     }
 
     logAdminAuthEvent("password_change_success", ip);

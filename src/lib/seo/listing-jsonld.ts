@@ -5,10 +5,12 @@ export type ListingJsonLdItem = {
 
 /** BreadcrumbList + ItemList pour les catalogues publics. */
 export function buildListingJsonLd({
+  home,
   name,
   url,
   items,
 }: {
+  home: ListingJsonLdItem;
   name: string;
   url: string;
   items: ListingJsonLdItem[];
@@ -20,6 +22,12 @@ export function buildListingJsonLd({
         {
           "@type": "ListItem",
           position: 1,
+          name: home.name,
+          item: home.url,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
           name,
           item: url,
         },

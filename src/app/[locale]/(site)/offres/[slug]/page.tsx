@@ -28,6 +28,7 @@ import { FaqSection } from "@/components/sections/faq";
 import { ServiceLinkedProjectCard } from "@/components/services/service-linked-project-card";
 import { JsonLd } from "@/components/json-ld";
 import { headers } from "next/headers";
+import { buildServiceOfferJsonLd } from "@/lib/seo/service-offer-jsonld";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -63,9 +64,15 @@ export async function generateMetadata({
 export default async function OffreDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const locale = (await getLocale()) as Locale;
-  const t = await getTranslations("services");
   const service = await getSiteServiceBySlug(locale, slug);
   if (!service) notFound();
+
+  const [t, linkedProjects, faqs, requestHeaders] = await Promise.all([
+    getTranslations("services"),
+    getLinkedProjectsForService(service, locale),
+    getSiteFaqsForService(locale, service.id),
+    headers(),
+  ]);
   const promotion = getServicePromotion(service);
 
   const price = resolveServicePriceDisplay({
@@ -81,14 +88,18 @@ export default async function OffreDetailPage({ params }: PageProps) {
     },
   });
 
-  const linkedProjects = await getLinkedProjectsForService(service, locale);
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
-  const faqs = await getSiteFaqsForService(locale, service.id);
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const nonce = requestHeaders.get("x-nonce") ?? undefined;
   const serviceUrl = localizedAbsoluteUrl(
     serviceDetailPath(service.slug),
     locale
   );
+  const offers = buildServiceOfferJsonLd({
+    mode: price.mode,
+    cents: promotion?.reduced ?? service.startingPriceCents,
+    currency: service.currency,
+    url: serviceUrl,
+  });
   const serviceJsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -116,18 +127,8 @@ export default async function OffreDetailPage({ params }: PageProps) {
         description: service.description || service.shortDescription,
         url: serviceUrl,
         serviceType: service.title,
-        inLanguage: locale,
         provider: { "@id": `${absoluteUrl(routes.home)}#organization` },
-        ...(service.startingPriceCents != null
-          ? {
-              offers: {
-                "@type": "Offer",
-                priceCurrency: service.currency,
-                price: ((promotion?.reduced ?? service.startingPriceCents) / 100).toFixed(2),
-                url: serviceUrl,
-              },
-            }
-          : {}),
+        ...(offers ? { offers } : {}),
       },
     ],
   };

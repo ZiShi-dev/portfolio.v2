@@ -47,6 +47,7 @@ export default async function OffresCatalogPage() {
       <JsonLd
         nonce={nonce}
         data={buildListingJsonLd({
+          home: { name: brand.name, url: localizedAbsoluteUrl(routes.home, locale) },
           name: t("catalogTitle"),
           url: listingUrl,
           items: services.map((service) => ({

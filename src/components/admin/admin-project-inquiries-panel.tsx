@@ -93,7 +93,6 @@ export function AdminProjectInquiriesPanel({
   const [saveMessage, setSaveMessage] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedIdRef = useRef<string | null>(null);
-  selectedIdRef.current = selectedId;
   const [selectedSnapshot, setSelectedSnapshot] =
     useState<ProjectInquiryRow | null>(null);
   const [editStatus, setEditStatus] = useState<ProjectInquiryStatus>("new");
@@ -181,6 +180,7 @@ export function AdminProjectInquiriesPanel({
   }, []);
 
   function closeModal() {
+    selectedIdRef.current = null;
     setSelectedId(null);
     setSelectedSnapshot(null);
     setSaveMessage("");
@@ -193,6 +193,7 @@ export function AdminProjectInquiriesPanel({
   }
 
   const openInquiry = useCallback((row: ProjectInquiryRow) => {
+    selectedIdRef.current = row.id;
     setSelectedId(row.id);
     setSelectedSnapshot(row);
     setEditStatus(row.status);
@@ -205,8 +206,11 @@ export function AdminProjectInquiriesPanel({
     if (!focusInquiryId || openedFocus.current === focusInquiryId) return;
     const row = inquiries.find((item) => item.id === focusInquiryId);
     if (!row) return;
-    openedFocus.current = focusInquiryId;
-    openInquiry(row);
+    const frame = window.requestAnimationFrame(() => {
+      openedFocus.current = focusInquiryId;
+      openInquiry(row);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [focusInquiryId, inquiries, openInquiry]);
 
   useEffect(() => {

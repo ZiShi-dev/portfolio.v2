@@ -5,7 +5,7 @@
     "jobTitle": "Technology agency",
     "reviewsTitle": "Client reviews — {brand}",
     "reviewsDescription": "Client reviews of {brand}: custom websites, online stores and applications.",
-    "contactTitle": "Contact — {brand}",
+    "contactTitle": "Contact {brand} about a website or app project",
     "contactDescription": "Contact {brand} about your website, e-commerce platform or application. We reply within 48 hours."
   },
   "nav": {
@@ -937,6 +937,7 @@
       "mfa_already_enrolled": "A TOTP factor is already active. Use the verification step.",
       "password_reauth_failed": "Unable to change password. Check your current password.",
       "password_update_failed": "Unable to save the new password. Try again shortly.",
+      "password_changed_revocation_failed": "Your password was changed. Closing other sessions could not be confirmed. Use the admin sign-out to try again.",
       "password_weak": "This password is too weak or compromised. Choose another.",
       "password_same": "The new password must be different from the current one.",
       "account_locked": "Account temporarily locked after too many failures. Try again later.",
@@ -1343,7 +1344,7 @@
     "privacyNotice": "Your information is used only to process your request. Read our <legal>privacy policy</legal>.",
     "meta": {
       "title": "Start a project — {brand}",
-      "description": "Frame your need in a few choices. VORZIX builds your project constellation."
+      "description": "Tell VORZIX about your website, online store, or app. Use the project inquiry form to share your goals, budget, and timeline."
     },
     "intro": {
       "title": "Let's map the outlines of your project.",

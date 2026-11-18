@@ -17,6 +17,7 @@ import {
   wwwToApexRedirectLocation,
 } from "@/lib/seo/url-normalization";
 import { buildListingJsonLd } from "@/lib/seo/listing-jsonld";
+import { buildServiceOfferJsonLd } from "@/lib/seo/service-offer-jsonld";
 
 describe("SEO — sitemap & robots", () => {
   it("sitemap inclut l’accueil, le catalogue offres et les pages indexables (sans /a-propos)", async () => {
@@ -206,7 +207,9 @@ describe("SEO — helpers sitemap / URLs", () => {
   });
 
   it("buildListingJsonLd ajoute ItemList seulement s’il y a des items", () => {
+    const home = { name: "VORZIX", url: "https://vorzix.com/en" };
     const empty = buildListingJsonLd({
+      home,
       name: "Offres",
       url: "https://vorzix.com/offres",
       items: [],
@@ -220,6 +223,7 @@ describe("SEO — helpers sitemap / URLs", () => {
     );
 
     const filled = buildListingJsonLd({
+      home,
       name: "Offres",
       url: "https://vorzix.com/offres",
       items: [{ name: "Vitrine", url: "https://vorzix.com/offres/vitrine" }],
@@ -228,5 +232,25 @@ describe("SEO — helpers sitemap / URLs", () => {
       (node) => node["@type"] === "ItemList"
     );
     assert.equal(list?.numberOfItems, 1);
+    const breadcrumb = filled["@graph"].find((node) => node["@type"] === "BreadcrumbList");
+    assert.deepEqual(breadcrumb?.itemListElement, [
+      { "@type": "ListItem", position: 1, name: home.name, item: home.url },
+      { "@type": "ListItem", position: 2, name: "Offres", item: "https://vorzix.com/offres" },
+    ]);
+  });
+
+  it("décrit le prix fixe et le prix minimum sans publier de prix sur devis", () => {
+    const data = { cents: 12550, currency: "EUR", url: "https://vorzix.com/en/offres/vitrine" };
+    assert.equal(buildServiceOfferJsonLd({ ...data, mode: "contact" }), undefined);
+    assert.deepEqual(buildServiceOfferJsonLd({ ...data, mode: "fixed" }), {
+      "@type": "Offer", url: data.url, price: 125.5, priceCurrency: "EUR",
+    });
+    assert.deepEqual(buildServiceOfferJsonLd({ ...data, mode: "starting_at" }), {
+      "@type": "Offer",
+      url: data.url,
+      priceSpecification: {
+        "@type": "PriceSpecification", minPrice: 125.5, priceCurrency: "EUR",
+      },
+    });
   });
 });

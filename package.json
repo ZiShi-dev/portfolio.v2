@@ -21,6 +21,7 @@
     "test:perf": "node --import tsx --test src/lib/performance.test.ts",
     "db:migrate": "tsx scripts/db/migrate.ts",
     "db:status": "tsx scripts/db/status.ts",
+    "db:audit-rls": "tsx scripts/db/audit-rls.ts",
     "db:new": "tsx scripts/db/new.ts",
     "push:vapid": "tsx scripts/push-vapid.ts",
     "typecheck": "tsc --noEmit",

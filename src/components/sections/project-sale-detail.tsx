@@ -287,7 +287,7 @@ export function ProjectSaleDetail({
             {t("eyebrow")}
           </p>
           <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">
-            {project.title}
+            {project.title}{" "}
             <span className="mt-2 block text-xl font-medium text-primary sm:text-2xl md:text-3xl">
               {isEcommerce ? t("heroKickerShop") : t("heroKicker")}
             </span>

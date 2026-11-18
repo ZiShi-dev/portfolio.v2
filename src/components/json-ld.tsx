@@ -3,7 +3,7 @@ import { absoluteUrl, routes } from "@/lib/routes";
 import { brand } from "@/lib/brand";
 import { getSiteSettings } from "@/lib/social/store";
 import { absoluteUrlWithoutSearch } from "@/lib/seo/listing-jsonld";
-import type { Locale } from "@/i18n/routing";
+import { locales, type Locale } from "@/i18n/routing";
 
 type JsonLdValue = Record<string, unknown> | Record<string, unknown>[];
 
@@ -72,25 +72,13 @@ export async function OrganizationJsonLd({ nonce }: { nonce?: string }) {
     url: homeUrl,
     name: brand.name,
     description,
-    inLanguage: ["fr", "en", "ar"],
+    inLanguage: locales,
     publisher: { "@id": `${homeUrl}#organization` },
-  };
-
-  const professionalService = {
-    "@type": "ProfessionalService",
-    "@id": `${homeUrl}#service`,
-    name: `${brand.name} — ${brand.titleSuffix}`,
-    url: homeUrl,
-    description,
-    provider: { "@id": `${homeUrl}#organization` },
-    availableLanguage: ["fr", "en", "ar"],
-    knowsAbout: KNOWS_ABOUT,
-    ...(settings.contactEmail ? { email: settings.contactEmail } : {}),
   };
 
   const schema = {
     "@context": "https://schema.org",
-    "@graph": [organization, website, professionalService],
+    "@graph": [organization, website],
   };
 
   return <JsonLd data={schema} nonce={nonce} />;

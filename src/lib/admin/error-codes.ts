@@ -19,6 +19,7 @@ export const ADMIN_ERROR_CODES = {
   MFA_ALREADY_ENROLLED: "mfa_already_enrolled",
   PASSWORD_REAUTH_FAILED: "password_reauth_failed",
   PASSWORD_UPDATE_FAILED: "password_update_failed",
+  PASSWORD_CHANGED_REVOCATION_FAILED: "password_changed_revocation_failed",
   PASSWORD_WEAK: "password_weak",
   PASSWORD_SAME: "password_same",
   ACCOUNT_LOCKED: "account_locked",
@@ -51,6 +52,8 @@ export const ADMIN_ERROR_MESSAGES: Record<AdminErrorCode, string> = {
     "Impossible de modifier le mot de passe. Vérifiez le mot de passe actuel.",
   password_update_failed:
     "Impossible d'enregistrer le nouveau mot de passe. Réessayez dans un instant.",
+  password_changed_revocation_failed:
+    "Mot de passe modifié. La fermeture des autres sessions n’a pas été confirmée. Utilisez la déconnexion de l’administration pour réessayer.",
   password_weak:
     "Ce mot de passe est trop faible ou compromis. Choisissez-en un autre.",
   password_same: "Le nouveau mot de passe doit être différent de l'actuel.",

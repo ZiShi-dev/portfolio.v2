@@ -5,7 +5,7 @@
     "jobTitle": "Agence technologique",
     "reviewsTitle": "Avis clients — {brand}",
     "reviewsDescription": "Avis clients de {brand} : sites web, e-commerce et applications sur mesure.",
-    "contactTitle": "Contact — {brand}",
+    "contactTitle": "Contacter {brand} pour votre projet web ou mobile",
     "contactDescription": "Contactez {brand} pour votre projet web, e-commerce ou application. Réponse sous 48h."
   },
   "nav": {
@@ -939,6 +939,7 @@
       "mfa_already_enrolled": "Un facteur TOTP est déjà actif. Utilisez l'étape de vérification.",
       "password_reauth_failed": "Impossible de modifier le mot de passe. Vérifiez le mot de passe actuel.",
       "password_update_failed": "Impossible d'enregistrer le nouveau mot de passe. Réessayez dans un instant.",
+      "password_changed_revocation_failed": "Mot de passe modifié. La fermeture des autres sessions n’a pas été confirmée. Utilisez la déconnexion de l’administration pour réessayer.",
       "password_weak": "Ce mot de passe est trop faible ou compromis. Choisissez-en un autre.",
       "password_same": "Le nouveau mot de passe doit être différent de l'actuel.",
       "account_locked": "Compte temporairement verrouillé après trop d'échecs. Réessayez plus tard.",
@@ -1345,7 +1346,7 @@
     "privacyNotice": "Vos informations servent uniquement à traiter votre demande. Consultez notre <legal>politique de confidentialité</legal>.",
     "meta": {
       "title": "Démarrer un projet — {brand}",
-      "description": "Cadrez votre besoin en quelques choix. VORZIX construit votre constellation de projet."
+      "description": "Décrivez votre site, boutique en ligne ou application à VORZIX. Précisez vos objectifs, votre budget et vos délais dans le formulaire de demande."
     },
     "intro": {
       "title": "Traçons les contours de votre projet.",

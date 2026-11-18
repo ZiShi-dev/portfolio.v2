@@ -69,11 +69,14 @@ export default async function CaseStudyPage({ params }: PageProps) {
   const project = await getSiteProjectBySlug(locale, slug);
   if (!project) notFound();
 
-  const all = await getSiteProjects(locale);
-  const reviews = await getPublishedReviewsForProject(project.id);
-  const relatedServices = await getLinkedServicesForProject(project.id, locale);
-  const t = await getTranslations("projects");
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const [all, reviews, relatedServices, t, requestHeaders] = await Promise.all([
+    getSiteProjects(locale),
+    getPublishedReviewsForProject(project.id),
+    getLinkedServicesForProject(project.id, locale),
+    getTranslations("projects"),
+    headers(),
+  ]);
+  const nonce = requestHeaders.get("x-nonce") ?? undefined;
   const projectUrl = localizedAbsoluteUrl(
     `${routes.projects}/${project.slug ?? slug}`,
     locale
