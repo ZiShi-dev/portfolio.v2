@@ -82,6 +82,20 @@ export function isAllowedFormOrigin(origin: string, allowed: Set<string>): boole
   return allowed.has(origin);
 }
 
+/** Les mutations admin sont effectuées par le navigateur depuis le site lui-même. */
+export function verifyAdminRequestOrigin(request: Request): boolean {
+  const fetchSite = request.headers.get("sec-fetch-site");
+  if (fetchSite !== null && fetchSite !== "same-origin") return false;
+
+  const allowed = getAllowedFormOrigins();
+  const origin = request.headers.get("origin");
+  if (origin !== null) return allowed.has(origin);
+
+  const referer = request.headers.get("referer");
+  const refererOrigin = referer && parseOrigin(referer);
+  return Boolean(refererOrigin && allowed.has(refererOrigin));
+}
+
 /**
  * Vérifie Origin ou Referer.
  * En production, rejette les requêtes sans en-tête d'origine fiable.

@@ -11,7 +11,7 @@ import { parseAdminMfaVerifyBody } from "@/lib/admin/mfa-schema";
 import { jsonResponse } from "@/lib/api/json-response";
 import { getClientIp } from "@/lib/rate-limit-core";
 import { parseJsonBody } from "@/lib/security/parse-json-body";
-import { verifyFormRequestOrigin } from "@/lib/security/request-origin";
+import { verifyAdminRequestOrigin } from "@/lib/security/request-origin";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     return adminErrorResponse(ADMIN_ERROR_CODES.UNAVAILABLE, 503);
   }
 
-  if (!verifyFormRequestOrigin(request)) {
+  if (!verifyAdminRequestOrigin(request)) {
     logAdminAuthEvent("mfa_failed", ip, { reason: "origin" });
     return adminErrorResponse(ADMIN_ERROR_CODES.UNAUTHORIZED_ORIGIN, 403);
   }

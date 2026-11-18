@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useRef } from "react";
 import { useFloatingAction } from "@/components/floating-actions-provider";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useTranslations } from "next-intl";
 import { Mail, MessageCircle, X } from "lucide-react";
 import {

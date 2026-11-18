@@ -318,7 +318,7 @@ export function AdminLoginForm({
         )}
       </Button>
 
-      <p className="flex items-center justify-center gap-1.5 text-xs text-foreground/45">
+      <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
         <Lock className="h-3.5 w-3.5" aria-hidden />
         {t("footer")}
       </p>

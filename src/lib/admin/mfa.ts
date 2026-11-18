@@ -6,89 +6,43 @@ export type AdminMfaChallenge = {
   challengeId: string;
 };
 
-type AuthClientWithSessionGuard = {
-  suppressGetSessionWarning: boolean;
-};
-
-type AalLevel = "aal1" | "aal2";
-
-/** Active le flag interne auth-js pour éviter le warning proxy session.user (serveur). */
-function suppressInsecureSessionUserWarning(supabase: SupabaseClient) {
-  (supabase.auth as unknown as AuthClientWithSessionGuard).suppressGetSessionWarning =
-    true;
-}
-
-/** Décode le claim `aal` d’un JWT déjà validé via getUser() — lecture locale, sans JWKS. */
-function readAalFromAccessToken(accessToken: string): AalLevel | null {
-  const parts = accessToken.split(".");
-  if (parts.length < 2 || !parts[1]) return null;
-  try {
-    const b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const padded = b64 + "=".repeat((4 - (b64.length % 4)) % 4);
-    const json =
-      typeof atob === "function"
-        ? atob(padded)
-        : Buffer.from(parts[1], "base64url").toString("utf8");
-    const payload = JSON.parse(json) as { aal?: unknown };
-    return payload.aal === "aal1" || payload.aal === "aal2" ? payload.aal : null;
-  } catch {
-    return null;
-  }
-}
-
-export async function getAdminMfaAssuranceLevel(
+/** Vérifie la signature du jeton utilisé pour autoriser la session admin. */
+async function getAdminMfaAssuranceLevel(
   supabase: SupabaseClient,
   knownUser?: User | null
 ) {
-  let user = knownUser ?? null;
-  if (!user) {
-    // getUser() valide auprès d'Auth — source de confiance serveur.
-    const {
-      data: { user: fetched },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !fetched) return null;
-    user = fetched;
-  }
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError || !session?.access_token) return null;
 
-  // getUser a déjà validé le token : lire aal en local (évite getClaims/JWKS lent).
-  suppressInsecureSessionUserWarning(supabase);
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const currentLevel = session?.access_token
-    ? readAalFromAccessToken(session.access_token)
-    : null;
-  if (!currentLevel) return null;
+  const token = session.access_token;
+  const { data, error } = await supabase.auth.getClaims(token);
+  if (error || !data?.claims) return null;
 
-  const hasVerifiedFactor =
-    user.factors?.some((factor) => factor.status === "verified") ?? false;
-  const nextLevel: AalLevel | null = hasVerifiedFactor
-    ? "aal2"
-    : currentLevel;
+  const identity = knownUser ? null : await supabase.auth.getUser(token);
+  const user = knownUser ?? identity?.data.user;
+  if (identity?.error || !user || data.claims.sub !== user.id) return null;
 
-  return {
-    currentLevel,
-    nextLevel,
-    currentAuthenticationMethods: [] as string[],
-  };
+  const hasVerifiedTotp = user.factors?.some(
+    (factor) => factor.factor_type === "totp" && factor.status === "verified"
+  ) ?? false;
+
+  return { level: data.claims.aal, hasVerifiedTotp };
 }
 
-/** Session admin complète (mot de passe + TOTP vérifié). */
 export async function hasAdminMfaSatisfied(
   supabase: SupabaseClient,
   knownUser?: User | null
 ): Promise<boolean> {
-  const aal = await getAdminMfaAssuranceLevel(supabase, knownUser);
-  if (!aal) return false;
-  return aal.currentLevel === "aal2";
+  const assurance = await getAdminMfaAssuranceLevel(supabase, knownUser);
+  return assurance?.level === "aal2" && assurance.hasVerifiedTotp;
 }
 
-/** Une étape TOTP est requise après le mot de passe. */
-export async function adminMfaRequired(supabase: SupabaseClient): Promise<boolean> {
-  const aal = await getAdminMfaAssuranceLevel(supabase);
-  if (!aal) return false;
-  return aal.currentLevel !== "aal2" && aal.nextLevel === "aal2";
+export async function adminMfaRequired(
+  supabase: SupabaseClient,
+  knownUser?: User | null
+): Promise<boolean> {
+  const assurance = await getAdminMfaAssuranceLevel(supabase, knownUser);
+  return assurance?.level === "aal1" && assurance.hasVerifiedTotp;
 }
 
 /** L'utilisateur doit enrôler un facteur TOTP dans Supabase. */
@@ -123,17 +77,19 @@ export async function startAdminMfaEnrollment(
   | { ok: true; data: AdminMfaEnrollment }
   | { ok: false; error: "already_enrolled" | "enroll_failed" }
 > {
-  if (await adminHasVerifiedTotp(supabase)) {
+  const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
+  if (factorsError || !factorsData) return { ok: false, error: "enroll_failed" };
+  if (factorsData.totp.length > 0) {
     return { ok: false, error: "already_enrolled" };
   }
 
-  const { data: factorsData } = await supabase.auth.mfa.listFactors();
-  const pending = (factorsData?.all ?? []).filter(
+  const pending = factorsData.all.filter(
     (factor) => factor.factor_type === "totp" && factor.status === "unverified"
   );
 
   for (const factor of pending) {
-    await supabase.auth.mfa.unenroll({ factorId: factor.id });
+    const { error } = await supabase.auth.mfa.unenroll({ factorId: factor.id });
+    if (error) return { ok: false, error: "enroll_failed" };
   }
 
   const { data, error } = await supabase.auth.mfa.enroll({

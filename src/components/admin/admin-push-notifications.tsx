@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Bell, BellOff, BellRing } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +12,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
+import {
+  INQUIRY_PUSH_EVENT,
+  isSafeAdminPath,
+  PUSH_OPEN_MESSAGE,
+} from "@/lib/admin/push/events";
 
 const SW_URL = "/admin-push-sw.js";
 const SW_SCOPE = "/admin/";
-const POLL_MS = 25_000;
 
 type UnseenInquiry = {
   id: string;
@@ -61,19 +65,22 @@ function isStandaloneDisplay() {
   );
 }
 
-function subscriptionBody(subscription: PushSubscription) {
+function subscriptionBody(subscription: PushSubscription, locale: string) {
   const json = subscription.toJSON();
+  const language = locale === "en" || locale === "ar" ? locale : "fr";
   return {
     endpoint: json.endpoint ?? subscription.endpoint,
     keys: {
       p256dh: json.keys?.p256dh ?? "",
       auth: json.keys?.auth ?? "",
     },
+    locale: language,
   };
 }
 
 export function AdminPushNotifications() {
   const t = useTranslations("admin.notifications");
+  const locale = useLocale();
   const pathname = usePathname();
   const [status, setStatus] = useState<PushStatus>("loading");
   const [busy, setBusy] = useState(false);
@@ -81,6 +88,7 @@ export function AdminPushNotifications() {
   const [newInquiries, setNewInquiries] = useState(0);
   const [items, setItems] = useState<UnseenInquiry[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const syncedEndpoint = useRef<string | null>(null);
 
   const refreshSummary = useCallback(async () => {
     try {
@@ -107,6 +115,24 @@ export function AdminPushNotifications() {
       /* polling silencieux */
     }
   }, []);
+
+  const resyncSubscription = useCallback(
+    async (subscription: PushSubscription) => {
+      if (syncedEndpoint.current === subscription.endpoint) return;
+      try {
+        const res = await fetch("/api/admin/push/subscribe", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(subscriptionBody(subscription, locale)),
+        });
+        if (res.ok) syncedEndpoint.current = subscription.endpoint;
+      } catch {
+        /* Le prochain affichage de l'admin réessaie. */
+      }
+    },
+    [locale]
+  );
 
   const syncStatus = useCallback(async () => {
     if (
@@ -146,12 +172,18 @@ export function AdminPushNotifications() {
       }
 
       const registration = await navigator.serviceWorker.getRegistration(SW_SCOPE);
+      void registration?.update().catch(() => undefined);
       const subscription = await registration?.pushManager.getSubscription();
+      if (Notification.permission === "granted" && subscription) {
+        setStatus("on");
+        void resyncSubscription(subscription);
+        return;
+      }
       setStatus(subscription ? "on" : "off");
     } catch {
       setStatus("off");
     }
-  }, []);
+  }, [resyncSubscription]);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -162,10 +194,6 @@ export function AdminPushNotifications() {
   }, [syncStatus, refreshSummary]);
 
   useEffect(() => {
-    const id = window.setInterval(() => {
-      if (document.visibilityState === "visible") void refreshSummary();
-    }, POLL_MS);
-
     function onVisible() {
       if (document.visibilityState === "visible") {
         void refreshSummary();
@@ -174,10 +202,7 @@ export function AdminPushNotifications() {
     }
 
     document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      window.clearInterval(id);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
+    return () => document.removeEventListener("visibilitychange", onVisible);
   }, [refreshSummary, syncStatus]);
 
   const markRead = useCallback(async () => {
@@ -198,6 +223,35 @@ export function AdminPushNotifications() {
       setMarking(false);
     }
   }, [refreshSummary]);
+
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+
+    function onMessage(event: MessageEvent) {
+      const data = event.data as { type?: string; url?: string; id?: string } | null;
+      if (!data || typeof data.type !== "string") return;
+      if (data.type === INQUIRY_PUSH_EVENT) {
+        window.dispatchEvent(
+          new CustomEvent(INQUIRY_PUSH_EVENT, {
+            detail: { id: typeof data.id === "string" ? data.id : null },
+          })
+        );
+        if (pathname === ADMIN_ROUTES.inquiries) void markRead();
+        else void refreshSummary();
+        return;
+      }
+      if (
+        data.type === PUSH_OPEN_MESSAGE &&
+        typeof data.url === "string" &&
+        isSafeAdminPath(data.url)
+      ) {
+        window.location.assign(data.url);
+      }
+    }
+
+    navigator.serviceWorker.addEventListener("message", onMessage);
+    return () => navigator.serviceWorker.removeEventListener("message", onMessage);
+  }, [markRead, pathname, refreshSummary]);
 
   useEffect(() => {
     if (pathname !== ADMIN_ROUTES.inquiries) return;
@@ -246,12 +300,13 @@ export function AdminPushNotifications() {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(subscriptionBody(subscription)),
+        body: JSON.stringify(subscriptionBody(subscription, locale)),
       });
       if (!res.ok) {
         setError(t("error"));
         return;
       }
+      syncedEndpoint.current = subscription.endpoint;
       setStatus("on");
       void refreshSummary();
     } catch {
@@ -276,6 +331,7 @@ export function AdminPushNotifications() {
         });
         await subscription.unsubscribe();
       }
+      syncedEndpoint.current = null;
       setStatus("off");
     } catch {
       setError(t("error"));
@@ -361,6 +417,7 @@ export function AdminPushNotifications() {
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-primary">
                 {t("enabled")}
               </p>
+              <p className="text-xs leading-relaxed text-muted-foreground">{t("activeHint")}</p>
               <Button
                 type="button"
                 size="sm"

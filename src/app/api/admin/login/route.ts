@@ -21,7 +21,7 @@ import {
 import { jsonResponse } from "@/lib/api/json-response";
 import { parseJsonBody } from "@/lib/security/parse-json-body";
 import { getTurnstileGuardFailure } from "@/lib/security/production-guards";
-import { verifyFormRequestOrigin } from "@/lib/security/request-origin";
+import { verifyAdminRequestOrigin } from "@/lib/security/request-origin";
 import { getClientIp } from "@/lib/rate-limit-core";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     return adminErrorResponse(ADMIN_ERROR_CODES.UNAVAILABLE, 503);
   }
 
-  if (!verifyFormRequestOrigin(request)) {
+  if (!verifyAdminRequestOrigin(request)) {
     logAdminAuthEvent("login_failed", ip, { reason: "origin" });
     return adminErrorResponse(ADMIN_ERROR_CODES.UNAUTHORIZED_ORIGIN, 403);
   }
@@ -127,7 +127,7 @@ export async function POST(request: Request) {
       return jsonResponse({ ok: true, mfaEnrollmentRequired: true }, 200);
     }
 
-    const needsMfa = await adminMfaRequired(supabase);
+    const needsMfa = await adminMfaRequired(supabase, data.user);
     if (needsMfa) {
       const challenge = await startAdminMfaChallenge(supabase);
       if (!challenge.ok) {

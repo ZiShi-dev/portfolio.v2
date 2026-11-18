@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isAllowedAdminEmail, isAdminConfigured } from "@/lib/admin/allowlist";
-import { ADMIN_ROUTES } from "@/lib/admin/constants";
+import { ADMIN_ROUTES, ADMIN_SESSION_COOKIE_OPTIONS } from "@/lib/admin/constants";
 import { adminHasVerifiedTotp, hasAdminMfaSatisfied } from "@/lib/admin/mfa";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
@@ -25,8 +25,16 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
   }
 
   let response = NextResponse.next({ request });
+  const redirect = (url: URL) => {
+    const redirected = NextResponse.redirect(url);
+    for (const cookie of response.cookies.getAll()) {
+      redirected.cookies.set(cookie);
+    }
+    return redirected;
+  };
 
   const supabase = createServerClient(config.config.url, config.config.anonKey, {
+    cookieOptions: ADMIN_SESSION_COOKIE_OPTIONS,
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -35,10 +43,14 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
-        response = NextResponse.next({ request });
+        const updated = NextResponse.next({ request });
+        for (const cookie of response.cookies.getAll()) {
+          updated.cookies.set(cookie);
+        }
         cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
+          updated.cookies.set(name, value, options);
         });
+        response = updated;
       },
     },
   });
@@ -59,7 +71,7 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
     const url = request.nextUrl.clone();
     url.pathname = ADMIN_ROUTES.login;
     url.searchParams.set("error", "config");
-    return { response: NextResponse.redirect(url), user: null };
+    return { response: redirect(url), user: null };
   }
 
   if (isLoginRoute) {
@@ -69,7 +81,7 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
         const url = request.nextUrl.clone();
         url.pathname = ADMIN_ROUTES.home;
         url.search = "";
-        return { response: NextResponse.redirect(url), user };
+        return { response: redirect(url), user };
       }
 
       return { response, user };
@@ -86,7 +98,7 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
     const url = request.nextUrl.clone();
     url.pathname = ADMIN_ROUTES.login;
     url.searchParams.set("next", path);
-    return { response: NextResponse.redirect(url), user: null };
+    return { response: redirect(url), user: null };
   }
 
   if (!isAdmin) {
@@ -94,7 +106,7 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
     const url = request.nextUrl.clone();
     url.pathname = ADMIN_ROUTES.login;
     url.searchParams.set("error", "unauthorized");
-    return { response: NextResponse.redirect(url), user: null };
+    return { response: redirect(url), user: null };
   }
 
   const mfaOk = await hasAdminMfaSatisfied(supabase, user);
@@ -103,7 +115,7 @@ export async function handleAdminSession(request: NextRequest): Promise<AdminSes
     url.pathname = ADMIN_ROUTES.login;
     const hasTotp = await adminHasVerifiedTotp(supabase);
     url.searchParams.set("step", hasTotp ? "mfa" : "enroll");
-    return { response: NextResponse.redirect(url), user };
+    return { response: redirect(url), user };
   }
 
   return { response, user };

@@ -156,7 +156,7 @@ export function AdminMfaEnrollForm({
   if (booting) {
     return (
       <div className="flex flex-col items-center space-y-3 text-center text-sm text-foreground/60">
-        <div className="h-40 w-40 animate-pulse rounded-xl bg-muted/50" />
+        <div className="h-40 w-40 motion-safe:animate-pulse rounded-xl bg-muted/50" />
         <p>Génération du QR TOTP…</p>
       </div>
     );

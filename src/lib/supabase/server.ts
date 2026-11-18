@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { ADMIN_SESSION_COOKIE_OPTIONS } from "@/lib/admin/constants";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { supabaseFetch } from "@/lib/supabase/fetch";
 
@@ -12,6 +13,7 @@ export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
 
   const client = createServerClient(config.config.url, config.config.anonKey, {
+    cookieOptions: ADMIN_SESSION_COOKIE_OPTIONS,
     global: { fetch: supabaseFetch },
     cookies: {
       getAll() {

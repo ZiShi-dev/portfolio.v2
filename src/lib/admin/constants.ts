@@ -44,6 +44,7 @@ export const ADMIN_PASSWORD_CHANGE_LIMITS = {
 } as const;
 
 export const ADMIN_SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
   sameSite: "lax" as const,
   secure: process.env.NODE_ENV === "production",
   path: "/",

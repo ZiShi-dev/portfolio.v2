@@ -14,6 +14,7 @@ type AdminAuditEvent =
   | "mfa_enroll_failed"
   | "password_change_success"
   | "password_change_failed"
+  | "password_change_session_revocation_failed"
   | "reviews_listed"
   | "about_stats_listed"
   | "about_stats_updated"

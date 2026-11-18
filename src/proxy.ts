@@ -52,7 +52,25 @@ function secureDocumentResponse(
     ...(isDev ? [] : ["upgrade-insecure-requests"]),
   ].join("; ");
 
-  const requestHeaders = new Headers(request.headers);
+  if (!response.headers.has("location")) {
+    forwardDocumentHeaders(request, response, nonce, csp);
+  }
+  response.headers.set(CSP_HEADER, csp);
+  return response;
+}
+
+function forwardDocumentHeaders(
+  request: NextRequest,
+  response: NextResponse,
+  nonce: string,
+  csp: string
+) {
+  const overridden = response.headers.get("x-middleware-override-headers");
+  const requestHeaders = overridden === null ? new Headers(request.headers) : new Headers();
+  for (const key of overridden?.split(",").filter(Boolean) ?? []) {
+    const value = response.headers.get(`x-middleware-request-${key}`);
+    if (value !== null) requestHeaders.set(key, value);
+  }
   requestHeaders.set("x-nonce", nonce);
   requestHeaders.set(CSP_HEADER, csp);
 
@@ -69,9 +87,6 @@ function secureDocumentResponse(
       response.headers.set(key, value);
     }
   });
-
-  response.headers.set(CSP_HEADER, csp);
-  return response;
 }
 
 type RateLimitEntry = {
@@ -294,8 +309,9 @@ export async function proxy(request: NextRequest) {
     if (rateResponse.status === 429) return rateResponse;
   }
 
-  if (path.startsWith("/admin")) {
+  if (path === "/admin" || path.startsWith("/admin/")) {
     const { response } = await handleAdminSession(request);
+    response.headers.set("Cache-Control", "private, no-store");
     return secureDocumentResponse(request, response);
   }
 

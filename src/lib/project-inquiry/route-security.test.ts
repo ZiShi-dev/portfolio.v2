@@ -32,6 +32,7 @@ describe("POST /api/project-inquiry — persistance et attribution", () => {
   let createResult: unknown;
   let lastCreateInput: unknown;
   let publishedService: { id: string; reference: string } | null;
+  let notifyImpl: () => Promise<void> = async () => undefined;
   let route: typeof import("@/app/api/project-inquiry/route");
 
   before(() => {
@@ -77,8 +78,12 @@ describe("POST /api/project-inquiry — persistance et attribution", () => {
     mock.module("@/lib/security/audit-log", {
       namedExports: { logFormSecurityEvent: () => undefined },
     });
-    mock.module("@/lib/admin/push/notify", {
-      namedExports: { notifyAdminsOfNewInquiry: async () => undefined },
+    mock.module("@/lib/admin/push/outbox", {
+      namedExports: {
+        scheduleInquiryPush: () => {
+          void notifyImpl().catch(() => undefined);
+        },
+      },
     });
   });
 
@@ -94,6 +99,7 @@ describe("POST /api/project-inquiry — persistance et attribution", () => {
     publishedService = null;
     lastCreateInput = null;
     createResult = { ok: false, reason: "persist_failed" };
+    notifyImpl = async () => undefined;
   });
 
   it("ne transforme pas un échec de persistance en faux succès au nouvel essai", async () => {
@@ -146,5 +152,25 @@ describe("POST /api/project-inquiry — persistance et attribution", () => {
     };
     assert.equal(saved.data.serviceReference, "VZ-SVC-004");
     assert.equal(saved.data.source, "service-buy");
+  });
+
+  it("conserve la demande si l'envoi push échoue", async () => {
+    notifyImpl = async () => {
+      throw new Error("push down");
+    };
+    createResult = {
+      ok: true,
+      inquiry: {
+        id: "123e4567-e89b-42d3-a456-426614174000",
+        reference: "VZ—LEAD 200",
+      },
+    };
+    const response = await route.POST(
+      new Request("http://localhost/api/project-inquiry", { method: "POST" })
+    );
+    assert.equal(response.status, 200);
+    const body = (await response.json()) as { reference?: string };
+    assert.equal(body.reference, "VZ—LEAD 200");
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import {
   PROJECT_INQUIRY_BRANCH,

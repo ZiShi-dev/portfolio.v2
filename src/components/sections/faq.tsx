@@ -1,7 +1,6 @@
 "use client";
 
 import { useId, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -28,7 +27,6 @@ export function FaqSection({
   headingId = "faq-heading",
 }: FaqSectionProps) {
   const t = useTranslations("faq");
-  const reduceMotion = useReducedMotion();
   const baseId = useId();
   const [openId, setOpenId] = useState<string | null>(faqs[0]?.id ?? null);
 
@@ -116,7 +114,7 @@ export function FaqSection({
                       <span
                         className={cn(
                           "mt-1 shrink-0 font-mono text-[10px] tracking-[0.18em]",
-                          isOpen ? "text-primary" : "text-primary/55"
+                          isOpen ? "text-primary" : "text-primary/75"
                         )}
                         aria-hidden
                       >
@@ -137,40 +135,25 @@ export function FaqSection({
 
                       <ChevronDown
                         className={cn(
-                          "mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-150 ease-out",
+                          "mt-1 h-5 w-5 shrink-0 text-muted-foreground motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-out",
                           isOpen && "rotate-180 text-primary"
                         )}
                         aria-hidden
                       />
                     </button>
 
-                    <AnimatePresence initial={false}>
-                      {isOpen ? (
-                        <motion.div
-                          id={panelId}
-                          role="region"
-                          aria-labelledby={buttonId}
-                          initial={reduceMotion ? false : { opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{
-                            opacity: reduceMotion ? 1 : 0,
-                            transition: { duration: reduceMotion ? 0 : 0.12, ease: [0.23, 1, 0.32, 1] },
-                          }}
-                          transition={
-                            reduceMotion
-                              ? { duration: 0 }
-                              : { duration: 0.16, ease: [0.23, 1, 0.32, 1] }
-                          }
-                          className="overflow-hidden"
-                        >
-                          <div className="pb-5 ps-[3.25rem] pe-2 sm:pb-6 sm:ps-16">
-                            <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">
-                              {item.answer}
-                            </p>
-                          </div>
-                        </motion.div>
-                      ) : null}
-                    </AnimatePresence>
+                    <div
+                      id={panelId}
+                      role="region"
+                      aria-labelledby={buttonId}
+                      hidden={!isOpen}
+                    >
+                      <div className="pb-5 ps-[3.25rem] pe-2 sm:pb-6 sm:ps-16">
+                        <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">
+                          {item.answer}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </li>
               );

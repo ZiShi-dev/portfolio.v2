@@ -370,11 +370,11 @@ export function AdminReviewsPanel({
               aria-hidden
             >
               <div className="flex items-start justify-between gap-2">
-                <div className="h-4 w-28 animate-pulse rounded bg-muted" />
-                <div className="h-3 w-12 animate-pulse rounded bg-muted/80" />
+                <div className="h-4 w-28 motion-safe:animate-pulse rounded bg-muted" />
+                <div className="h-3 w-12 motion-safe:animate-pulse rounded bg-muted/80" />
               </div>
-              <div className="mt-2 h-3 w-40 animate-pulse rounded bg-muted/70" />
-              <div className="mt-2 h-3 w-full max-w-[16rem] animate-pulse rounded bg-muted/60" />
+              <div className="mt-2 h-3 w-40 motion-safe:animate-pulse rounded bg-muted/70" />
+              <div className="mt-2 h-3 w-full max-w-[16rem] motion-safe:animate-pulse rounded bg-muted/60" />
             </li>
           ))
         ) : reviews.length === 0 ? (

@@ -18,7 +18,6 @@ describe("i18n — clés contact modale (FR/EN/AR)", () => {
   const requiredContactKeys = [
     "eyebrow",
     "title",
-    "titleHighlight",
     "subtitle",
     "name",
     "email",
@@ -40,6 +39,8 @@ describe("i18n — clés contact modale (FR/EN/AR)", () => {
       const messages = loadMessages(locale);
       const contact = messages.contact as Record<string, string>;
       assert.ok(contact, `contact manquant pour ${locale}`);
+      // HeadingTitle accepte un accent vide lorsque le titre se suffit à lui-même.
+      assert.equal(typeof contact.titleHighlight, "string", `${locale}.contact.titleHighlight`);
 
       for (const key of requiredContactKeys) {
         assert.equal(typeof contact[key], "string", `${locale}.contact.${key}`);

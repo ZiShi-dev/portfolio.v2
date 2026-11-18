@@ -102,7 +102,7 @@ export default async function StartProjectPage({
   }
 
   return (
-    <main id="main-content" className="min-h-dvh">
+    <main id="main-content" tabIndex={-1} className="min-h-dvh">
       <ProjectInquiryFlow
         source={source}
         fullscreen

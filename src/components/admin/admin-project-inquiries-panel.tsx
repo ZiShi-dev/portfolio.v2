@@ -45,6 +45,7 @@ import {
 } from "@/data/project-inquiry-options";
 import { PROJECT_INQUIRY_LIMITS } from "@/lib/project-inquiry/schema";
 import type { ProjectInquiryRow } from "@/lib/project-inquiry/store";
+import { INQUIRY_PUSH_EVENT } from "@/lib/admin/push/events";
 import { cn } from "@/lib/utils";
 
 type Filter = "all" | ProjectInquiryStatus;
@@ -70,11 +71,13 @@ const STATUS_FILTERS: Filter[] = ["all", ...PROJECT_INQUIRY_STATUSES];
 type AdminProjectInquiriesPanelProps = {
   initialInquiries?: ProjectInquiryRow[];
   initialConfigured?: boolean;
+  focusInquiryId?: string | null;
 };
 
 export function AdminProjectInquiriesPanel({
   initialInquiries,
   initialConfigured = true,
+  focusInquiryId = null,
 }: AdminProjectInquiriesPanelProps = {}) {
   const t = useTranslations("admin.inquiries");
   const tInquiry = useTranslations("projectInquiry");
@@ -89,6 +92,8 @@ export function AdminProjectInquiriesPanel({
   const [error, setError] = useState("");
   const [saveMessage, setSaveMessage] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedIdRef = useRef<string | null>(null);
+  selectedIdRef.current = selectedId;
   const [selectedSnapshot, setSelectedSnapshot] =
     useState<ProjectInquiryRow | null>(null);
   const [editStatus, setEditStatus] = useState<ProjectInquiryStatus>("new");
@@ -128,7 +133,11 @@ export function AdminProjectInquiriesPanel({
     t(`filters.${status}` as "filters.all");
 
   const load = useCallback(
-    async (status: Filter, opToken?: number, silent = false) => {
+    async (
+      status: Filter,
+      opToken?: number,
+      silent = false
+    ): Promise<ProjectInquiryRow[] | null> => {
       if (!silent) setLoading(true);
       setError("");
       try {
@@ -136,7 +145,7 @@ export function AdminProjectInquiriesPanel({
           `/api/admin/project-inquiries?status=${encodeURIComponent(status)}`,
           { credentials: "same-origin", cache: "no-store" }
         );
-        if (opToken !== undefined && opToken !== opRef.current) return;
+        if (opToken !== undefined && opToken !== opRef.current) return null;
         const body = (await res.json().catch(() => null)) as ListResponse | null;
         if (!res.ok) {
           setError(
@@ -144,14 +153,17 @@ export function AdminProjectInquiriesPanel({
               tErrors(key)
             )
           );
-          return;
+          return null;
         }
+        const rows = body?.inquiries ?? [];
         setConfigured(body?.configured !== false);
-        setInquiries(body?.inquiries ?? []);
+        setInquiries(rows);
+        return rows;
       } catch {
         if (opToken === undefined || opToken === opRef.current) {
           setError(tErrors("generic"));
         }
+        return null;
       } finally {
         if (opToken === undefined || opToken === opRef.current) {
           setLoading(false);
@@ -180,13 +192,35 @@ export function AdminProjectInquiriesPanel({
     void load(next);
   }
 
-  function openInquiry(row: ProjectInquiryRow) {
+  const openInquiry = useCallback((row: ProjectInquiryRow) => {
     setSelectedId(row.id);
     setSelectedSnapshot(row);
     setEditStatus(row.status);
     setEditNotes(row.admin_notes ?? "");
     setSaveMessage("");
-  }
+  }, []);
+
+  const openedFocus = useRef<string | null>(null);
+  useEffect(() => {
+    if (!focusInquiryId || openedFocus.current === focusInquiryId) return;
+    const row = inquiries.find((item) => item.id === focusInquiryId);
+    if (!row) return;
+    openedFocus.current = focusInquiryId;
+    openInquiry(row);
+  }, [focusInquiryId, inquiries, openInquiry]);
+
+  useEffect(() => {
+    function onPush(event: Event) {
+      const id = (event as CustomEvent<{ id?: string | null }>).detail?.id;
+      void load(filter, undefined, true).then((rows) => {
+        if (!id || !rows || selectedIdRef.current) return;
+        const row = rows.find((item) => item.id === id);
+        if (row) openInquiry(row);
+      });
+    }
+    window.addEventListener(INQUIRY_PUSH_EVENT, onPush);
+    return () => window.removeEventListener(INQUIRY_PUSH_EVENT, onPush);
+  }, [filter, load, openInquiry]);
 
   async function saveSelected() {
     if (!selected) return;
@@ -349,11 +383,11 @@ export function AdminProjectInquiriesPanel({
               aria-hidden
             >
               <div className="flex items-start justify-between gap-2">
-                <div className="h-4 w-28 animate-pulse rounded bg-muted" />
-                <div className="h-3 w-20 shrink-0 animate-pulse rounded bg-muted/80" />
+                <div className="h-4 w-28 motion-safe:animate-pulse rounded bg-muted" />
+                <div className="h-3 w-20 shrink-0 motion-safe:animate-pulse rounded bg-muted/80" />
               </div>
-              <div className="mt-2 h-3 w-40 animate-pulse rounded bg-muted/70" />
-              <div className="mt-2 h-3 w-full max-w-[16rem] animate-pulse rounded bg-muted/60" />
+              <div className="mt-2 h-3 w-40 motion-safe:animate-pulse rounded bg-muted/70" />
+              <div className="mt-2 h-3 w-full max-w-[16rem] motion-safe:animate-pulse rounded bg-muted/60" />
             </li>
           ))
         ) : inquiries.length === 0 ? (

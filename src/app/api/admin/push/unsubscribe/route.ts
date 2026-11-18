@@ -6,7 +6,7 @@ import {
   adminMethodNotAllowed,
 } from "@/lib/admin/error-response";
 import { jsonResponse } from "@/lib/api/json-response";
-import { deleteAdminPushSubscription } from "@/lib/admin/push/store";
+import { deleteAdminPushSubscriptionForAdmin } from "@/lib/admin/push/store";
 import { getClientIp } from "@/lib/rate-limit-core";
 import { FORM_SECURITY } from "@/lib/security/constants";
 import { parseJsonBody } from "@/lib/security/parse-json-body";
@@ -36,7 +36,12 @@ export async function POST(request: Request) {
     return adminErrorResponse(ADMIN_ERROR_CODES.INVALID_REQUEST, 400);
   }
 
-  await deleteAdminPushSubscription(parsed.data.endpoint);
+  const email = guard.user.email;
+  if (!email) {
+    return adminErrorResponse(ADMIN_ERROR_CODES.SESSION_EXPIRED, 401);
+  }
+
+  await deleteAdminPushSubscriptionForAdmin(email, parsed.data.endpoint);
   logAdminAuthEvent("push_unsubscribed", ip);
   return jsonResponse({ ok: true }, 200);
 }

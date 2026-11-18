@@ -6,7 +6,7 @@ import {
   adminMethodNotAllowed,
 } from "@/lib/admin/error-response";
 import { jsonResponse } from "@/lib/api/json-response";
-import { verifyFormRequestOrigin } from "@/lib/security/request-origin";
+import { verifyAdminRequestOrigin } from "@/lib/security/request-origin";
 import { getClientIp } from "@/lib/rate-limit-core";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -14,7 +14,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 export async function POST(request: Request) {
   const ip = getClientIp(request);
 
-  if (!verifyFormRequestOrigin(request)) {
+  if (!verifyAdminRequestOrigin(request)) {
     return adminErrorResponse(ADMIN_ERROR_CODES.UNAUTHORIZED_ORIGIN, 403);
   }
 
@@ -25,7 +25,8 @@ export async function POST(request: Request) {
   try {
     const supabase = await createSupabaseServerClient();
     // Global : invalide toutes les sessions admin (appareils inclus).
-    await supabase.auth.signOut({ scope: "global" });
+    const { error } = await supabase.auth.signOut({ scope: "global" });
+    if (error) return adminErrorResponse(ADMIN_ERROR_CODES.INTERNAL, 502);
     logAdminAuthEvent("logout", ip);
     return jsonResponse({ ok: true, redirectTo: ADMIN_ROUTES.login }, 200);
   } catch {

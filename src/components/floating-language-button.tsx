@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Globe2, X } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useFloatingAction } from "@/components/floating-actions-provider";

@@ -1,3 +1,4 @@
+import { scheduleInquiryPush } from "@/lib/admin/push/outbox";
 import { parseFormRequest } from "@/lib/api/parse-form-request";
 import { jsonResponse, serviceUnavailableResponse } from "@/lib/api/json-response";
 import { logFormSecurityEvent } from "@/lib/security/audit-log";
@@ -7,7 +8,6 @@ import {
   checkProjectInquiryEmailDailyLimit,
   checkProjectInquiryIpDailyLimit,
 } from "@/lib/security/project-inquiry-daily-limit";
-import { notifyAdminsOfNewInquiry } from "@/lib/admin/push/notify";
 import { parseProjectInquiryPayload } from "@/lib/project-inquiry/schema";
 import {
   createProjectInquiry,
@@ -140,7 +140,11 @@ export async function POST(request: Request) {
   }
 
   if (!created.duplicate) {
-    void notifyAdminsOfNewInquiry(created.inquiry).catch(() => undefined);
+    try {
+      scheduleInquiryPush(created.inquiry);
+    } catch {
+      /* La demande reste enregistrée. La file ou le prochain passage reprend l'envoi. */
+    }
   }
 
   logFormSecurityEvent(

@@ -528,6 +528,7 @@
       "enable": "Enable on this device",
       "enabling": "Enabling…",
       "enabled": "Notifications enabled on this device",
+      "activeHint": "System notification, including when the browser is closed.",
       "disable": "Disable this device",
       "disabling": "Disabling…",
       "notSupported": "This browser does not support push notifications.",

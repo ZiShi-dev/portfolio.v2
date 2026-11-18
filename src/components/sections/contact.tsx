@@ -3,7 +3,8 @@
 import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { Mail, Send, Check, MessageSquare } from "lucide-react";
 import { HeadingTitle } from "@/components/ui/heading-title";

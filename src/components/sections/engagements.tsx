@@ -1,7 +1,6 @@
 "use client";
 
 import { useId, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { HeadingTitle } from "@/components/ui/heading-title";
@@ -19,7 +18,6 @@ type EngagementsProps = {
 /** Section publique — engagements en Q/R (accordéon). */
 export function Engagements({ engagements }: EngagementsProps) {
   const t = useTranslations("engagements");
-  const reduceMotion = useReducedMotion();
   const baseId = useId();
   const [openId, setOpenId] = useState<string | null>(
     engagements[0]?.id ?? null
@@ -107,40 +105,25 @@ export function Engagements({ engagements }: EngagementsProps) {
 
                       <ChevronDown
                         className={cn(
-                          "mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-150 ease-out",
+                          "mt-1 h-5 w-5 shrink-0 text-muted-foreground motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-out",
                           isOpen && "rotate-180 text-primary"
                         )}
                         aria-hidden
                       />
                     </button>
 
-                    <AnimatePresence initial={false}>
-                      {isOpen ? (
-                        <motion.div
-                          id={panelId}
-                          role="region"
-                          aria-labelledby={buttonId}
-                          initial={reduceMotion ? false : { opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{
-                            opacity: reduceMotion ? 1 : 0,
-                            transition: { duration: reduceMotion ? 0 : 0.12, ease: [0.23, 1, 0.32, 1] },
-                          }}
-                          transition={
-                            reduceMotion
-                              ? { duration: 0 }
-                              : { duration: 0.16, ease: [0.23, 1, 0.32, 1] }
-                          }
-                          className="overflow-hidden"
-                        >
-                          <div className="border-t border-border px-4 pb-5 pt-1 sm:px-5 sm:pb-6">
-                            <p className="ps-12 text-sm leading-relaxed text-muted-foreground sm:ps-[3.25rem] sm:text-[0.95rem]">
-                              {item.description}
-                            </p>
-                          </div>
-                        </motion.div>
-                      ) : null}
-                    </AnimatePresence>
+                    <div
+                      id={panelId}
+                      role="region"
+                      aria-labelledby={buttonId}
+                      hidden={!isOpen}
+                    >
+                      <div className="border-t border-border px-4 pb-5 pt-1 sm:px-5 sm:pb-6">
+                        <p className="ps-12 text-sm leading-relaxed text-muted-foreground sm:ps-[3.25rem] sm:text-[0.95rem]">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </li>
               );

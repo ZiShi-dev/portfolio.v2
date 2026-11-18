@@ -32,7 +32,7 @@ export function StarRating({ value, onChange, error, id = "review-rating" }: Sta
         <span
           className={cn(
             "font-mono text-[10px] uppercase tracking-[0.14em]",
-            value > 0 ? "text-primary/75" : "text-muted-foreground/55"
+            value > 0 ? "text-primary/75" : "text-muted-foreground"
           )}
           aria-live="polite"
           aria-atomic="true"

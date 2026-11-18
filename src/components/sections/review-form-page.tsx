@@ -414,7 +414,7 @@ function ReviewFormBody({
                     max: REVIEW_LIMITS.messageMax,
                   })}
                   {messageLen < REVIEW_LIMITS.messageMax ? (
-                    <span className="mt-1 block text-[9px] normal-case tracking-normal text-muted-foreground/55 sm:text-[10px]">
+                    <span className="mt-1 block text-[9px] normal-case tracking-normal text-muted-foreground sm:text-[10px]">
                       {t("charsRemaining", {
                         count: REVIEW_LIMITS.messageMax - messageLen,
                       })}

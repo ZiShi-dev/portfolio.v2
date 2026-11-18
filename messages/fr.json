@@ -530,6 +530,7 @@
       "enable": "Activer sur cet appareil",
       "enabling": "Activation…",
       "enabled": "Notifications activées sur cet appareil",
+      "activeHint": "Notification du système, y compris lorsque le navigateur est fermé.",
       "disable": "Désactiver cet appareil",
       "disabling": "Désactivation…",
       "notSupported": "Ce navigateur ne prend pas en charge les notifications push.",

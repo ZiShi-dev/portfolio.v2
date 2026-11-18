@@ -48,7 +48,7 @@ async function AuthStepIndicator({
       <li
         className={
           secondActive
-            ? "rounded-full border border-border px-3 py-1 text-foreground/45"
+            ? "rounded-full border border-border px-3 py-1 text-muted-foreground"
             : "rounded-full border border-step-accent/40 bg-step-accent/10 px-3 py-1 font-medium text-step-accent"
         }
       >
@@ -61,7 +61,7 @@ async function AuthStepIndicator({
         className={
           secondActive
             ? "rounded-full border border-step-accent/40 bg-step-accent/10 px-3 py-1 font-medium text-step-accent"
-            : "rounded-full border border-border px-3 py-1 text-foreground/45"
+            : "rounded-full border border-border px-3 py-1 text-muted-foreground"
         }
       >
         {secondLabel}

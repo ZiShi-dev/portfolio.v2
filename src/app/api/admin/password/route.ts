@@ -14,7 +14,7 @@ import { parseAdminPasswordChangeBody } from "@/lib/admin/password-change-schema
 import { jsonResponse } from "@/lib/api/json-response";
 import { getClientIp } from "@/lib/rate-limit-core";
 import { parseJsonBody } from "@/lib/security/parse-json-body";
-import { verifyFormRequestOrigin } from "@/lib/security/request-origin";
+import { verifyAdminRequestOrigin } from "@/lib/security/request-origin";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createSupabaseEphemeralClient } from "@/lib/supabase/ephemeral";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     return adminErrorResponse(ADMIN_ERROR_CODES.UNAVAILABLE, 503);
   }
 
-  if (!verifyFormRequestOrigin(request)) {
+  if (!verifyAdminRequestOrigin(request)) {
     logAdminAuthEvent("password_change_failed", ip, { reason: "origin" });
     return adminErrorResponse(ADMIN_ERROR_CODES.UNAUTHORIZED_ORIGIN, 403);
   }
@@ -126,12 +126,16 @@ export async function POST(request: Request) {
       logAdminAuthEvent("password_change_failed", ip, {
         reason: "update",
         code: updateError.code ?? "unknown",
-        detail: (updateError.message ?? "unknown").slice(0, 120),
       });
       return adminErrorResponse(code, 400);
     }
 
-    await supabase.auth.signOut({ scope: "global" });
+    const { error: revokeError } = await supabase.auth.signOut({ scope: "global" });
+    if (revokeError) {
+      logAdminAuthEvent("password_change_session_revocation_failed", ip, {
+        code: revokeError.code ?? "unknown",
+      });
+    }
 
     logAdminAuthEvent("password_change_success", ip);
     return jsonResponse(

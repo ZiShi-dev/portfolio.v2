@@ -5,7 +5,7 @@ import { adminErrorResponse } from "@/lib/admin/error-response";
 import { hasAdminMfaSatisfied } from "@/lib/admin/mfa";
 import {
   requestMethodRequiresOrigin,
-  verifyFormRequestOrigin,
+  verifyAdminRequestOrigin,
 } from "@/lib/security/request-origin";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -37,9 +37,9 @@ export async function requireAdminApi(
   }
 
   const requiresOrigin =
-    options?.requireOrigin ?? requestMethodRequiresOrigin(request.method);
+    options?.requireOrigin || requestMethodRequiresOrigin(request.method);
 
-  if (requiresOrigin && !verifyFormRequestOrigin(request)) {
+  if (requiresOrigin && !verifyAdminRequestOrigin(request)) {
     return {
       ok: false,
       response: adminErrorResponse(ADMIN_ERROR_CODES.UNAUTHORIZED_ORIGIN, 403),
@@ -49,9 +49,10 @@ export async function requireAdminApi(
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
 
-  if (!user?.email || !isAllowedAdminEmail(user.email)) {
+  if (error || !user?.email || !isAllowedAdminEmail(user.email)) {
     return {
       ok: false,
       response: adminErrorResponse(ADMIN_ERROR_CODES.SESSION_EXPIRED, 401),

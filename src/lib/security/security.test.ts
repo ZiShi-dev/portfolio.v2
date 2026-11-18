@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it, beforeEach, afterEach } from "node:test";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
+import { hasAdminMfaSatisfied } from "@/lib/admin/mfa";
 import { FORM_SECURITY } from "@/lib/security/constants";
 import { parseJsonBody } from "@/lib/security/parse-json-body";
 import {
@@ -7,6 +9,7 @@ import {
   isAllowedFormOrigin,
   requestMethodRequiresOrigin,
   verifyFormRequestOrigin,
+  verifyAdminRequestOrigin,
 } from "@/lib/security/request-origin";
 import {
   createSubmissionFingerprint,
@@ -19,6 +22,37 @@ import {
   isTurnstileRequired,
 } from "@/lib/security/production-guards";
 import { verifyTurnstileToken } from "@/lib/turnstile";
+
+describe("Assurance MFA admin", () => {
+  it("exige le jeton vérifié du même utilisateur et un facteur TOTP encore actif", async () => {
+    const user = {
+      id: "admin-id",
+      factors: [{ factor_type: "totp", status: "verified" }],
+    } as User;
+    let claims: { sub: string; aal: "aal1" | "aal2" } | null = {
+      sub: user.id,
+      aal: "aal2",
+    };
+    const supabase = {
+      auth: {
+        getSession: async () => ({ data: { session: { access_token: "session-token" } } }),
+        getClaims: async (token: string) => {
+          assert.equal(token, "session-token");
+          return { data: claims && { claims } };
+        },
+      },
+    } as unknown as SupabaseClient;
+
+    assert.equal(await hasAdminMfaSatisfied(supabase, user), true);
+    assert.equal(await hasAdminMfaSatisfied(supabase, { ...user, factors: [] }), false);
+    claims = { sub: user.id, aal: "aal1" };
+    assert.equal(await hasAdminMfaSatisfied(supabase, user), false);
+    claims = { sub: "different-id", aal: "aal2" };
+    assert.equal(await hasAdminMfaSatisfied(supabase, user), false);
+    claims = null;
+    assert.equal(await hasAdminMfaSatisfied(supabase, user), false);
+  });
+});
 
 function jsonRequest(body: unknown, headers: Record<string, string> = {}): Request {
   const text = JSON.stringify(body);
@@ -208,6 +242,22 @@ describe("OWASP A01 — verifyFormRequestOrigin (CSRF / accès direct API)", () 
     for (const method of ["GET", "HEAD", "OPTIONS"]) {
       assert.equal(requestMethodRequiresOrigin(method), false, method);
     }
+  });
+
+  it("refuse les mutations admin ambiguës, y compris depuis un sous-domaine", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://zishi.dev";
+    const check = (headers: Record<string, string>) =>
+      verifyAdminRequestOrigin(new Request("https://zishi.dev/api/admin/logout", {
+        method: "POST",
+        headers,
+      }));
+
+    assert.equal(check({ origin: "https://zishi.dev", "sec-fetch-site": "same-origin" }), true);
+    assert.equal(check({ referer: "https://zishi.dev/admin" }), true);
+    assert.equal(check({}), false);
+    assert.equal(check({ origin: "null", referer: "https://zishi.dev/admin" }), false);
+    assert.equal(check({ origin: "https://zishi.dev/admin" }), false);
+    assert.equal(check({ origin: "https://www.zishi.dev", "sec-fetch-site": "same-site" }), false);
   });
 });
 

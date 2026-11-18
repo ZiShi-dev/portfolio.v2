@@ -601,17 +601,17 @@ export function AdminProjectsPanel({
   if (loading) {
     return (
       <div className="space-y-4" aria-busy="true" aria-label={t("loading")}>
-        <div className="h-10 w-36 animate-pulse rounded-full bg-muted" />
+        <div className="h-10 w-36 motion-safe:animate-pulse rounded-full bg-muted" />
         <div className="grid w-full min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }, (_, i) => (
             <div
               key={`skel-${i}`}
               className="min-w-0 overflow-hidden rounded-2xl border border-border bg-card"
             >
-              <div className="aspect-[16/10] w-full animate-pulse bg-muted" />
+              <div className="aspect-[16/10] w-full motion-safe:animate-pulse bg-muted" />
               <div className="space-y-2 p-4">
-                <div className="h-4 w-40 max-w-full animate-pulse rounded bg-muted" />
-                <div className="h-3 w-24 max-w-full animate-pulse rounded bg-muted/70" />
+                <div className="h-4 w-40 max-w-full motion-safe:animate-pulse rounded bg-muted" />
+                <div className="h-3 w-24 max-w-full motion-safe:animate-pulse rounded bg-muted/70" />
               </div>
             </div>
           ))}

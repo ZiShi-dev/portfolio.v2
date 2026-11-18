@@ -31,6 +31,8 @@ export function HashSectionScroll() {
       if (!(target instanceof Element)) return;
       const anchor = target.closest("a");
       if (!(anchor instanceof HTMLAnchorElement)) return;
+      // Laisser le navigateur déplacer le focus sur la cible du lien d’évitement.
+      if (anchor.getAttribute("href") === "#main-content") return;
       if (anchor.hasAttribute("download")) return;
       const tab = anchor.getAttribute("target");
       if (tab && tab !== "_self") return;

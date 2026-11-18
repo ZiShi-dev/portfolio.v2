@@ -141,7 +141,7 @@ export async function Footer({ contactEmail, socials }: FooterProps) {
                                 "border-step-accent/35 bg-step-accent/10 text-step-accent"
                             )}
                           >
-                            <Icon className="h-[18px] w-[18px]" />
+                            <Icon className="h-[18px] w-[18px]" aria-hidden />
                           </a>
                         );
                     })}

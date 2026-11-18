@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { AdminProjectInquiriesPanel } from "@/components/admin/admin-project-inquiries-panel";
 import { ADMIN_ROUTES } from "@/lib/admin/constants";
 import { getAdminLocale } from "@/lib/admin/i18n";
+import { isInquiryId } from "@/lib/admin/push/schema";
 import { requireAdminPageUser } from "@/lib/admin/require-admin-page";
 import {
   listProjectInquiriesForAdmin,
@@ -13,6 +14,16 @@ import {
 import { isSupabaseServiceConfigured } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
+
+type AdminInquiriesPageProps = {
+  searchParams: Promise<{ id?: string | string[] }>;
+};
+
+function readFocusId(value: string | string[] | undefined): string | null {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (!raw || !isInquiryId(raw)) return null;
+  return raw.trim().toLowerCase();
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getAdminLocale();
@@ -23,10 +34,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function AdminInquiriesPage() {
+export default async function AdminInquiriesPage({
+  searchParams,
+}: AdminInquiriesPageProps) {
   const locale = await getAdminLocale();
   setRequestLocale(locale);
   const t = await getTranslations("admin.dashboard");
+  const focusInquiryId = readFocusId((await searchParams).id);
 
   await requireAdminPageUser();
 
@@ -61,6 +75,7 @@ export default async function AdminInquiriesPage() {
       <AdminProjectInquiriesPanel
         initialInquiries={initialInquiries}
         initialConfigured={configured}
+        focusInquiryId={focusInquiryId}
       />
     </div>
   );

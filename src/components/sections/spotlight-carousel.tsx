@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { useInView, useReducedMotion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { SpotlightPlate } from "@/components/sections/spotlight-plate";

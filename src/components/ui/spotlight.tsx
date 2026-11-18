@@ -6,7 +6,7 @@ export function Spotlight({ className }: { className?: string }) {
   return (
     <svg
       className={cn(
-        "pointer-events-none absolute z-0 h-[160%] w-[140%] animate-pulse opacity-40 blur-3xl",
+        "pointer-events-none absolute z-0 h-[160%] w-[140%] opacity-40 blur-3xl",
         className
       )}
       viewBox="0 0 3787 2842"

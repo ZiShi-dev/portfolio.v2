@@ -38,7 +38,7 @@ export default async function SiteLayout({ children, params }: SiteLayoutProps) 
       <HashSectionScroll />
       <NavigationProgress />
       <Navbar key={`nav-${locale}`} />
-      <main id="main-content" className="min-h-dvh flex-1 overflow-x-clip bg-background">
+      <main id="main-content" tabIndex={-1} className="min-h-dvh flex-1 overflow-x-clip bg-background">
         <SitePageBackground>{children}</SitePageBackground>
       </main>
       <LeaveReviewModal showCallout={false} />
