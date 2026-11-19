@@ -149,7 +149,7 @@ export function FaqSection({
                       hidden={!isOpen}
                     >
                       <div className="pb-5 ps-[3.25rem] pe-2 sm:pb-6 sm:ps-16">
-                        <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">
+                        <p className="max-w-[65ch] whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">
                           {item.answer}
                         </p>
                       </div>

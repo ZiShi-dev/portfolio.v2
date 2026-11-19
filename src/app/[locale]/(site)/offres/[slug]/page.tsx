@@ -143,7 +143,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
       <div className="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
         <Link
           href={routes.services}
-          className="inline-flex min-h-10 items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-primary"
+          className="inline-flex min-h-10 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
         >
           <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden />
           {t("backToCatalog")}
@@ -192,7 +192,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
 
         {service.idealFor ? (
           <section className="mt-10 rounded-xl border border-border bg-surface-elevated/40 p-5 sm:p-6">
-            <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+            <h2 className="text-sm font-semibold text-foreground">
               {t("idealFor")}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-foreground/85 sm:text-base">
@@ -225,7 +225,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
 
         {price.mode === "starting_at" || price.mode === "fixed" ? (
           <section className="mt-10 rounded-xl border border-border-gold/40 bg-surface/60 p-5 sm:p-6">
-            <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+            <h2 className="text-sm font-semibold text-foreground">
               {t("detailPricing")}
             </h2>
             <p className="mt-2 font-mono text-base tracking-wide text-foreground sm:text-lg">

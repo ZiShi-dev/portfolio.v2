@@ -92,6 +92,7 @@ export async function notifyAdminsOfNewInquiry(
   if (!isWebPushConfigured()) return "skipped";
 
   const subscriptions = await listAdminPushSubscriptions();
+  if (subscriptions === null) return "retry";
   if (subscriptions.length === 0) return "sent";
 
   const { deliver, revoke } = selectPushRecipients(subscriptions, {

@@ -680,7 +680,7 @@ export function ProjectInquiryFlow({
             : t("intro.subtitle");
         return (
           <div className="space-y-6 text-center sm:text-start">
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
+            <p className="text-xs font-medium text-primary">
               {serviceReference ?? t("brand")}
             </p>
             <h1
@@ -1376,7 +1376,7 @@ export function ProjectInquiryFlow({
         return (
           <div className="min-w-0 space-y-5">
             <div className="space-y-2">
-              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary">
+              <p className="text-xs font-medium text-primary">
                 {t("brand")}
               </p>
               <h1
@@ -1487,7 +1487,7 @@ export function ProjectInquiryFlow({
       case "success":
         return (
           <div className="space-y-5 text-center sm:text-start">
-            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-primary">
+            <p className="text-xs font-medium text-primary">
               {reference ?? t("brand")}
             </p>
             <h1
@@ -1688,7 +1688,7 @@ export function ProjectInquiryFlow({
       </div>
 
       {fullscreen && step === "summary" ? (
-        <div className="relative z-20 shrink-0 border-t border-border/50 bg-[#070A12]/92 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-md sm:px-6">
+        <div className="relative z-20 shrink-0 border-t border-border/50 bg-background px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 sm:px-6">
           <div
             className="pointer-events-none absolute inset-x-0 -top-8 h-8 bg-gradient-to-t from-[#070A12] to-transparent"
             aria-hidden
@@ -1788,7 +1788,7 @@ function StepShell({
   return (
     <div className="space-y-5">
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="text-xs font-medium text-muted-foreground">
           {hint}
         </p>
         <h1
@@ -1846,7 +1846,7 @@ function SummaryCell({
           : "border-b border-border/60 sm:[&:nth-child(odd)]:border-e sm:[&:nth-child(odd)]:border-border/60"
       )}
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/75">
+      <p className="text-xs font-medium text-primary">
         {label}
       </p>
       <p

@@ -19,7 +19,7 @@ export function PageBackLink({ href, label, className }: PageBackLinkProps) {
     <Link
       href={href}
       className={cn(
-        "inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+        "inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
         className
       )}
     >

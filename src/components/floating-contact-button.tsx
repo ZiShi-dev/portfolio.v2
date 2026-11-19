@@ -111,7 +111,7 @@ export function FloatingContactButton({
       <AnimatePresence initial={false}>
         {open ? (
           <motion.div
-            className="pointer-events-auto mb-[4.25rem]"
+            className="pointer-events-auto max-h-[calc(100dvh-5rem-env(safe-area-inset-bottom))] overflow-y-auto p-1"
             id={menuId}
             aria-label={t("menuLabel")}
             initial={reduceMotion ? false : { opacity: 0, y: 8 }}
@@ -151,13 +151,13 @@ export function FloatingContactButton({
                         "focus-visible:ring-2 focus-visible:ring-primary/55 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       )}
                     >
-                      <span className="max-w-[min(13rem,calc(100vw-6rem))] truncate rounded-full border border-border-gold bg-surface/95 px-3 py-1.5 text-xs font-medium text-foreground/85 backdrop-blur-xl transition-colors group-hover:border-primary/45 group-hover:text-primary">
+                      <span className="max-w-[min(13rem,calc(100vw-6rem))] truncate rounded-full border border-border-gold bg-surface px-3 py-1.5 text-xs font-medium text-foreground/85 transition-colors group-hover:border-primary/45 group-hover:text-primary">
                         {item.label}
                       </span>
                       <span
                         className={cn(
                           "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-gold",
-                          "bg-surface-elevated/95 text-primary backdrop-blur-xl",
+                          "bg-surface-elevated text-primary",
                           "transition-[border-color,background-color] duration-200 group-hover:border-primary/55 group-hover:bg-surface-high",
                           "motion-reduce:transition-none",
                           item.preferred && "border-primary/45 bg-primary/10"
@@ -178,19 +178,18 @@ export function FloatingContactButton({
         ref={triggerRef}
         type="button"
         aria-expanded={open}
-        aria-controls={menuId}
+        aria-controls={open ? menuId : undefined}
         aria-label={open ? t("close") : t("open")}
         title={open ? t("close") : t("open")}
         onClick={() => setOpen((current) => !current)}
         className={cn(
-          "pointer-events-auto relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border outline-none",
-          "border-primary/45 bg-surface-elevated/95 text-primary backdrop-blur-xl",
+          "pointer-events-auto relative flex size-11 sm:size-12 shrink-0 items-center justify-center overflow-hidden rounded-full border outline-none",
+          "border-primary/45 bg-surface-elevated text-primary",
           "transition-[border-color,background-color] duration-200 hover:border-primary/70 hover:bg-surface-high",
           "focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           "motion-reduce:transition-none"
         )}
       >
-        <span className="pointer-events-none absolute inset-[5px] rounded-full border border-primary/15" />
         <AnimatePresence initial={false} mode="wait">
           <motion.span
             key={open ? "close" : "contact"}

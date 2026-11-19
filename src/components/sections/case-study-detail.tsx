@@ -64,7 +64,7 @@ export function CaseStudyDetail({
           </p>
           {businessTypeIds.length > 0 ? (
             <div className="mt-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
+              <p className="text-xs font-medium text-muted-foreground">
                 {t("applicationType")}
               </p>
               <ProjectTypeBadges
@@ -166,7 +166,7 @@ export function CaseStudyDetail({
                       />
                     </ProjectLiveImageLink>
                     {img.label ? (
-                      <figcaption className="border-t border-border px-3 py-2 font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
+                      <figcaption className="border-t border-border px-3 py-2 text-xs text-muted-foreground">
                         {img.label}
                       </figcaption>
                     ) : null}
@@ -304,7 +304,7 @@ function ProjectListingDetails({ project }: { project: LocalizedProjectItem }) {
           ) : null}
           {project.listingIntent ? (
             <div className="mt-4">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55">
+              <p className="text-xs text-muted-foreground">
                 {t("listingIntent")}
               </p>
               <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -330,7 +330,7 @@ function ProjectListingDetails({ project }: { project: LocalizedProjectItem }) {
         ) : null}
         {project.listingIntent ? (
           <div className="mt-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/55">
+            <p className="text-xs text-muted-foreground">
               {t("soldWork")}
             </p>
             <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-base">

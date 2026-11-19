@@ -118,11 +118,11 @@ export async function deleteAdminPushSubscriptionForAdmin(
 }
 
 export async function listAdminPushSubscriptions(): Promise<
-  AdminPushSubscriptionRow[]
+  AdminPushSubscriptionRow[] | null
 > {
-  if (!isSupabaseServiceConfigured()) return [];
+  if (!isSupabaseServiceConfigured()) return null;
   const supabase = createSupabaseServiceClient();
-  if (!supabase) return [];
+  if (!supabase) return null;
 
   const listed = await supabase
     .from("admin_push_subscriptions")
@@ -141,8 +141,8 @@ export async function listAdminPushSubscriptions(): Promise<
   const data = fallback ? fallback.data : listed.data;
 
   if (error) {
-    console.error("[admin-push] list", error.message);
-    return [];
+    console.error("[admin-push] list", error.code);
+    return null;
   }
 
   return (data ?? []).map((row) => mapSubscriptionRow(row));

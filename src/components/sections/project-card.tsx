@@ -64,7 +64,7 @@ export function ProjectCard({
             {project.reference}
           </p>
         ) : (
-          <p className="text-xs uppercase tracking-widest text-foreground/50">
+          <p className="text-xs text-muted-foreground">
             {project.category}
           </p>
         )}
@@ -79,7 +79,7 @@ export function ProjectCard({
           variant={swipeFriendly ? "line" : "pills"}
           className={swipeFriendly ? "mt-3 rtl:font-sans rtl:tracking-normal" : undefined}
         />
-        <p className="mt-auto pt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-primary/75 rtl:font-sans rtl:tracking-normal">
+        <p className="mt-auto pt-4 text-xs font-medium text-primary">
           {t("viewCase")}
         </p>
       </div>

@@ -412,10 +412,10 @@ export function AdminEngagementsPanel({
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
+                      <span className="text-xs font-medium text-primary">
                         {row.reference}
                       </span>
-                      <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground/70">
+                      <span className="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-foreground/70">
                         {t(`status.${row.status}`)}
                       </span>
                     </div>
@@ -622,7 +622,7 @@ export function AdminEngagementsPanel({
                     key={loc}
                     type="button"
                     onClick={() => setLocaleTab(loc)}
-                    className={`min-h-9 rounded-md border px-3 font-mono text-[10px] uppercase tracking-wider ${
+                    className={`min-h-9 rounded-md border px-3 text-xs font-medium ${
                       localeTab === loc
                         ? "border-primary/50 bg-primary/10 text-primary"
                         : "border-border text-foreground/60"

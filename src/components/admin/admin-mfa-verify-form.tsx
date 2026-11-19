@@ -209,7 +209,7 @@ export function AdminMfaVerifyForm({
       <button
         type="button"
         onClick={onCancel}
-        className="w-full text-center text-xs text-foreground/45 transition-colors hover:text-foreground/70"
+        className="w-full text-center text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
         <span aria-hidden className="inline-block rtl:rotate-180">
           ←

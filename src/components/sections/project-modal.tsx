@@ -334,7 +334,7 @@ export function ProjectCardPreview({
   return (
     <div className="relative h-40 overflow-hidden bg-muted perspective-[800px] sm:h-52 md:h-56">
       {count && count > 1 && (
-        <span className="absolute end-3 top-3 z-10 rounded-full border border-border bg-background/90 px-2.5 py-1 text-[11px] font-medium text-foreground/60 backdrop-blur-sm sm:end-6 sm:top-6 sm:text-xs">
+        <span className="absolute end-3 top-3 z-10 rounded-full border border-border bg-background/90 px-2.5 py-1 text-[11px] font-medium text-muted-foreground sm:end-6 sm:top-6 sm:text-xs">
           +<AnimatedNumber value={count} duration={800} /> {screensLabel}
         </span>
       )}

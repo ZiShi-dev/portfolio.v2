@@ -14,7 +14,7 @@ describe("envoi des notifications de demande", () => {
     p256dh: string;
     auth: string;
     locale: "fr" | "en" | "ar";
-  }> = [];
+  }> | null = [];
   let notify: typeof import("@/lib/admin/push/notify").notifyAdminsOfNewInquiry;
   const previousAllow = process.env.ADMIN_ALLOWED_EMAILS;
 
@@ -68,6 +68,14 @@ describe("envoi des notifications de demande", () => {
       locale,
     };
   }
+
+  it("réessaie si le registre des abonnements est indisponible", async () => {
+    const sender = async () => assert.fail("Un envoi requiert un abonnement");
+    rows = null;
+    assert.equal(await notify({ id: INQUIRY_ID }, sender), "retry");
+    rows = [];
+    assert.equal(await notify({ id: INQUIRY_ID }, sender), "sent");
+  });
 
   it("prévient chaque appareil autorisé une seule fois par demande", async () => {
     rows = [

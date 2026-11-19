@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Shield } from "lucide-react";
 import { AdminLoginForm } from "@/components/admin/admin-login-form";
 import { isAllowedAdminEmail, isAdminConfigured } from "@/lib/admin/allowlist";
 import { getAdminLocale } from "@/lib/admin/i18n";
@@ -107,20 +106,16 @@ export default async function AdminLoginPage({ searchParams }: AdminLoginPagePro
 
   return (
     <div className="flex w-full max-w-md flex-col py-4 sm:max-w-lg">
-      <div className="mb-6 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-step-accent/30 bg-background/60 px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-step-accent">
-          <Shield className="h-3.5 w-3.5" aria-hidden />
-          {t("secureSpace")}
-        </span>
-        <h1 className="mt-4 font-display-serif text-3xl font-semibold tracking-tight sm:text-4xl">
+      <div className="mb-6 text-start">
+        <h1 className="font-display-serif text-3xl font-semibold tracking-tight sm:text-4xl">
           {t("title")}
         </h1>
-        <p className="mt-2 text-sm text-foreground/60">{t("subtitle")}</p>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       <AuthStepIndicator step={uiStep} />
 
-      <div className="rounded-2xl border border-step-accent/20 bg-card/80 p-6 shadow-sm backdrop-blur-sm sm:p-8">
+      <div className="rounded-lg border border-border-strong bg-card p-4 sm:p-7">
         <Suspense fallback={<LoginFallback />}>
           <AdminLoginForm
             configured={configured}

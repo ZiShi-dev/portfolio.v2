@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useLocale, useTranslations } from "next-intl";
-import { Mail, Send, Check, MessageSquare } from "lucide-react";
+import { Send, Check, MessageSquare } from "lucide-react";
 import { HeadingTitle } from "@/components/ui/heading-title";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
@@ -189,17 +189,14 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
 
   return (
     <>
-      <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full border border-step-accent/30 bg-background/60 px-4 py-1 text-xs font-medium uppercase tracking-widest text-step-accent">
-          <Mail className="h-3.5 w-3.5" aria-hidden /> {t("eyebrow")}
-        </span>
+      <div className="text-start">
         <h2
           id={CONTACT_MODAL_TITLE_ID}
-          className="mt-4 font-display-serif text-2xl font-semibold tracking-tight sm:text-3xl"
+          className="font-display-serif text-2xl font-semibold tracking-tight sm:text-3xl"
         >
           <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
         </h2>
-        <p className="mt-3 text-sm leading-relaxed text-foreground/60">
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           {t("subtitle")}
         </p>
       </div>
@@ -336,16 +333,11 @@ export function Contact({ contactEmail }: ContactProps) {
       aria-labelledby="contact-heading"
       className="relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
     >
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[min(400px,80vw)] w-[min(700px,120vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--color-primary),transparent_60%)] opacity-10 blur-3xl" />
-
       <Reveal variant="fade">
-        <div className="mx-auto max-w-3xl overflow-hidden rounded-xl border border-border-gold bg-surface-elevated/90 p-5 text-center sm:p-8 md:p-12">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border-gold bg-background/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
-            <Mail className="h-3.5 w-3.5" aria-hidden /> {t("eyebrow")}
-          </span>
+        <div className="mx-auto max-w-3xl border-t border-border-gold pt-6 text-start sm:pt-9">
           <h1
             id="contact-heading"
-            className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
+            className="text-balance font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl"
           >
             <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
           </h1>
@@ -360,7 +352,7 @@ export function Contact({ contactEmail }: ContactProps) {
             </ContactOpenLink>
           </Button>
 
-          <p className="mt-6 text-xs text-foreground/50 sm:text-sm">
+          <p className="mt-6 text-xs text-muted-foreground sm:text-sm">
             {t("orEmail")}{" "}
             <GmailContactLink email={contactEmail} />
           </p>

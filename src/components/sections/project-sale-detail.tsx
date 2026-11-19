@@ -380,7 +380,7 @@ export function ProjectSaleDetail({
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {project.clientNeed ? (
                   <GlowCard interactive={false}>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                    <p className="text-xs font-medium text-primary">
                       {t("forWhom")}
                     </p>
                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -390,7 +390,7 @@ export function ProjectSaleDetail({
                 ) : null}
                 {project.solution ? (
                   <GlowCard interactive={false}>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                    <p className="text-xs font-medium text-primary">
                       {t("whatYouGet")}
                     </p>
                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -400,7 +400,7 @@ export function ProjectSaleDetail({
                 ) : null}
                 {project.result ? (
                   <GlowCard interactive={false} className="sm:col-span-2">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                    <p className="text-xs font-medium text-primary">
                       {t("insteadOfZero")}
                     </p>
                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -441,7 +441,7 @@ export function ProjectSaleDetail({
             ) : null}
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <GlowCard interactive={false}>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                <p className="text-xs font-medium text-primary">
                   {t("costsIncludedLabel")}
                 </p>
                 <p className="mt-3 font-mono text-2xl text-primary">
@@ -452,7 +452,7 @@ export function ProjectSaleDetail({
                 </p>
               </GlowCard>
               <GlowCard interactive={false}>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                <p className="text-xs font-medium text-primary">
                   {t("costsThirdLabel")}
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -547,7 +547,7 @@ export function ProjectSaleDetail({
                       />
                     </ProjectLiveImageLink>
                     {img.label ? (
-                      <figcaption className="border-t border-border px-3 py-2 font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
+                      <figcaption className="border-t border-border px-3 py-2 text-xs text-muted-foreground">
                         {img.label}
                       </figcaption>
                     ) : null}

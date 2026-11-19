@@ -175,7 +175,7 @@ export function Navbar() {
         <div className={cn(
           "flex h-16 items-center gap-3 px-3 sm:px-5"
         )}>
-          <Link href={routes.home} onClick={(e) => handleItem({ id: "home", label: t("home"), href: routes.home, icon: Home }, e)} className="min-w-0 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/50">
+          <Link href={routes.home} onClick={(e) => handleItem({ id: "home", label: t("home"), href: routes.home, icon: Home }, e)} className="min-w-0 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
             <BrandLogo />
           </Link>
           <nav className="mx-auto hidden items-center lg:flex" aria-label={t("menu")}>
@@ -183,7 +183,7 @@ export function Navbar() {
               {primary.map((item) => {
                 const active = itemIsActive(item);
                 return <li key={item.id}>
-                  <Link href={item.href} onClick={(e) => handleItem(item, e)} aria-current={active ? (item.href.includes("#") ? "location" : "page") : undefined} className={cn("relative flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50", active ? "text-primary" : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground")}>
+                  <Link href={item.href} onClick={(e) => handleItem(item, e)} aria-current={active ? (item.href.includes("#") ? "location" : "page") : undefined} className={cn("relative flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary", active ? "text-primary" : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground")}>
                     {active && <span className="h-1 w-1 rounded-full bg-primary" aria-hidden />}{item.label}
                   </Link>
                 </li>;
@@ -197,14 +197,14 @@ export function Navbar() {
             <button
               type="button"
               className={cn(
-                "flex min-h-11 items-center gap-2.5 rounded-xl border px-3 text-sm font-medium transition-[color,background-color,border-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/45",
+                "flex min-h-11 items-center gap-2.5 rounded-xl border px-3 text-sm font-medium transition-[color,background-color,border-color,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                 open
                   ? "border-border-gold/35 bg-primary/[0.09] text-primary shadow-[0_0_0_1px_rgba(201,169,106,0.08)]"
                   : "border-border/55 bg-surface/50 text-foreground/90 hover:border-border-gold/25 hover:bg-surface-elevated/70"
               )}
               aria-label={open ? t("closeMenu") : t("menu")}
               aria-expanded={open}
-              aria-controls={menuId}
+              aria-controls={open ? menuId : undefined}
               onClick={() => setOpen((value) => !value)}
             >
               <span>{t("menu")}</span>

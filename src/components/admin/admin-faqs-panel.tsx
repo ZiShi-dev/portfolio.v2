@@ -547,7 +547,7 @@ export function AdminFaqsPanel({
             key={key}
             type="button"
             onClick={() => setFilter(key)}
-            className={`min-h-9 rounded-full border px-3 font-mono text-[10px] uppercase tracking-wider transition-colors ${
+            className={`min-h-9 rounded-full border px-3 text-xs font-medium transition-colors ${
               filter === key
                 ? "border-primary/50 bg-primary/10 text-primary"
                 : "border-border text-foreground/60 hover:border-primary/30"
@@ -579,17 +579,17 @@ export function AdminFaqsPanel({
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
+                      <span className="text-xs font-medium text-primary">
                         {row.reference}
                       </span>
-                      <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground/70">
+                      <span className="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-foreground/70">
                         {t(`status.${row.status}`)}
                       </span>
-                      <span className="rounded-full border border-border-gold/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-primary/80">
+                      <span className="rounded-full border border-border-gold/40 px-2 py-0.5 text-xs font-medium text-primary/80">
                         {t(`scope.${row.scope}`)}
                       </span>
                       {row.featured ? (
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-primary">
+                        <span className="text-xs font-medium text-primary">
                           {t("featuredBadge")}
                         </span>
                       ) : null}
@@ -882,7 +882,7 @@ export function AdminFaqsPanel({
                     key={loc}
                     type="button"
                     onClick={() => setLocaleTab(loc)}
-                    className={`min-h-9 rounded-md border px-3 font-mono text-[10px] uppercase tracking-wider ${
+                    className={`min-h-9 rounded-md border px-3 text-xs font-medium ${
                       localeTab === loc
                         ? "border-primary/50 bg-primary/10 text-primary"
                         : "border-border text-foreground/60"

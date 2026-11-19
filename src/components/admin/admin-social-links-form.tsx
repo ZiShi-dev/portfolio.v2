@@ -306,7 +306,7 @@ export function AdminSocialLinksForm({
                 key={id}
                 className="flex items-center gap-3 rounded-lg border border-border bg-card px-3 py-2"
               >
-                <span className="w-5 shrink-0 text-center text-sm font-medium tabular-nums text-foreground/45">
+                <span className="w-5 shrink-0 text-center text-sm font-medium tabular-nums text-muted-foreground">
                   {index + 1}
                 </span>
                 <span className="min-w-0 flex-1">
@@ -319,7 +319,7 @@ export function AdminSocialLinksForm({
                     </span>
                   ) : null}
                   {filled ? null : (
-                    <span className="ms-2 text-[11px] text-foreground/45">
+                    <span className="ms-2 text-xs text-muted-foreground">
                       {t("priorityMissing")}
                     </span>
                   )}
@@ -354,7 +354,7 @@ export function AdminSocialLinksForm({
             );
           })}
         </ol>
-        <p className="text-xs text-foreground/45">{t("priorityEmailNote")}</p>
+        <p className="text-xs text-muted-foreground">{t("priorityEmailNote")}</p>
       </fieldset>
 
       {submitError ? <FormError message={submitError} /> : null}

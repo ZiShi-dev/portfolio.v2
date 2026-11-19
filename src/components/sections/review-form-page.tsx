@@ -5,7 +5,7 @@ import { useRouter } from "@/i18n/navigation";
 import { useForm, Controller, useWatch, type FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
-import { MessageSquareQuote, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { HeadingTitle } from "@/components/ui/heading-title";
 import { Button } from "@/components/ui/button";
 import { PageBackBar } from "@/components/page-back-link";
@@ -215,10 +215,6 @@ function ReviewFormBody({
         isModal ? "py-0" : "pb-20 sm:pb-24 lg:pb-28"
       )}
     >
-      {!isModal && (
-        <div className="pointer-events-none absolute left-1/2 top-24 -z-10 h-[320px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,var(--color-primary),transparent_60%)] opacity-10 blur-3xl" />
-      )}
-
       {!isModal && <PageBackBar href={routes.reviews} label={t("backToReviews")} />}
 
       <div className={cn("mx-auto max-w-3xl px-4 sm:px-6", isModal && "max-w-none px-0")}>
@@ -227,21 +223,14 @@ function ReviewFormBody({
             className={cn(
               isModal
                 ? "border-b border-border/45 pb-4 pt-10 sm:pb-5 sm:pt-11"
-                : "mt-8 overflow-hidden rounded-2xl border border-border-gold/25 bg-surface-elevated/50 p-5 shadow-[inset_0_1px_0_rgba(244,241,232,0.04)] backdrop-blur-sm sm:rounded-3xl sm:p-8 md:p-10"
+                : "mt-8 rounded-lg border border-border-gold bg-surface p-4 sm:p-8"
             )}
           >
-            <div className="text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary/75">
-                {t("catalogRef")}
-              </p>
-              <span className="mt-3 inline-flex items-center gap-2 rounded-full border border-border-gold/35 bg-background/55 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary sm:text-[11px]">
-                <MessageSquareQuote className="h-3.5 w-3.5" aria-hidden />
-                {t("eyebrow")}
-              </span>
+            <div className="text-start">
               <h1
                 id={isModal ? REVIEW_MODAL_TITLE_ID : undefined}
                 className={cn(
-                  "mt-4 font-display font-semibold tracking-tight text-foreground",
+                  "text-balance font-display font-semibold tracking-tight text-foreground",
                   isModal ? "text-2xl sm:text-3xl" : "text-3xl sm:text-4xl"
                 )}
               >
@@ -249,7 +238,7 @@ function ReviewFormBody({
               </h1>
               <p
                 className={cn(
-                  "mx-auto max-w-xl text-pretty text-muted-foreground",
+                  "max-w-xl text-pretty text-muted-foreground",
                   isModal ? "mt-3 text-sm leading-relaxed" : "mt-4 text-sm leading-relaxed sm:text-base"
                 )}
               >
@@ -272,11 +261,11 @@ function ReviewFormBody({
                 className={cn(
                   "space-y-4",
                   !isModal &&
-                    "rounded-2xl border border-border/55 bg-background/25 p-4 sm:p-5"
+                    "border-t border-border pt-5"
                 )}
               >
                 <h2 className="text-start">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                  <span className="text-sm font-semibold text-foreground">
                     {t("stepIdentity")}
                   </span>
                   <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
@@ -344,7 +333,7 @@ function ReviewFormBody({
 
               <section className="space-y-3">
                 <h2 className="text-start">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                  <span className="text-sm font-semibold text-foreground">
                     {t("stepRating")}
                   </span>
                   <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
@@ -371,11 +360,11 @@ function ReviewFormBody({
                 className={cn(
                   "space-y-3",
                   !isModal &&
-                    "rounded-2xl border border-border/55 bg-background/25 p-4 sm:p-5"
+                    "border-t border-border pt-5"
                 )}
               >
                 <h2 className="text-start">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/80">
+                  <span className="text-sm font-semibold text-foreground">
                     {t("stepMessage")}
                   </span>
                   <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
@@ -406,7 +395,7 @@ function ReviewFormBody({
                 </FormField>
                 <p
                   id="review-message-counter"
-                  className="text-end font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80"
+                  className="text-end text-xs tabular-nums text-muted-foreground"
                   aria-live="polite"
                 >
                   {t("messageCounter", {

@@ -395,7 +395,7 @@ export function AdminProjectInquiriesPanel({
             </li>
           ))
         ) : inquiries.length === 0 ? (
-          <li className="py-8 text-sm text-foreground/50">{t("empty")}</li>
+          <li className="py-8 text-sm text-muted-foreground">{t("empty")}</li>
         ) : (
           inquiries.map((row) => (
             <li key={row.id}>
@@ -414,7 +414,7 @@ export function AdminProjectInquiriesPanel({
                     <p className="truncate font-mono text-xs tracking-wide text-primary">
                       {row.reference || "—"}
                     </p>
-                    <time className="shrink-0 text-[11px] text-foreground/40">
+                    <time className="shrink-0 text-xs tabular-nums text-muted-foreground">
                       {new Date(row.created_at).toLocaleString()}
                     </time>
                   </div>
@@ -428,7 +428,7 @@ export function AdminProjectInquiriesPanel({
                       .filter(Boolean)
                       .join(" · ")}
                   </p>
-                  <p className="mt-1 text-[11px] uppercase tracking-wider text-foreground/45">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     {statusLabel(row.status)}
                   </p>
                 </button>
@@ -502,7 +502,7 @@ export function AdminProjectInquiriesPanel({
                 <DialogDescription asChild>
                   <div className="space-y-1 text-start">
                     <p className="text-sm text-foreground/70">{selected.name}</p>
-                    <p className="text-xs text-foreground/45">
+                    <p className="text-xs text-muted-foreground">
                       {new Date(selected.created_at).toLocaleString()} ·{" "}
                       {statusLabel(selected.status)}
                     </p>
@@ -556,7 +556,7 @@ export function AdminProjectInquiriesPanel({
                 </dl>
 
                 <div>
-                  <p className="mb-1 text-xs font-medium uppercase tracking-widest text-foreground/45">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
                     {t("fields.description")}
                   </p>
                   <div className="whitespace-pre-wrap break-words rounded-xl border border-border/60 bg-muted/20 p-3 text-sm leading-relaxed text-foreground/85">
@@ -565,7 +565,7 @@ export function AdminProjectInquiriesPanel({
                 </div>
 
                 <div>
-                  <p className="mb-2 text-xs font-medium uppercase tracking-widest text-foreground/45">
+                  <p className="mb-2 text-xs font-medium text-muted-foreground">
                     {t("fields.contact")}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -714,7 +714,7 @@ export function AdminProjectInquiriesPanel({
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[11px] uppercase tracking-widest text-foreground/45">
+      <dt className="text-xs font-medium text-muted-foreground">
         {label}
       </dt>
       <dd className="mt-0.5 text-foreground/80">{value}</dd>

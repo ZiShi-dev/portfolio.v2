@@ -346,7 +346,7 @@ export function AdminReviewsPanel({
       </div>
 
       <p className="mt-2 text-sm text-foreground/55">{t("subtitle")}</p>
-      <p className="mt-1 text-xs text-foreground/45">{t("selectHint")}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{t("selectHint")}</p>
       <p className="mt-2 text-xs leading-relaxed text-foreground/50">
         {t("moderationHint")}
       </p>
@@ -395,7 +395,7 @@ export function AdminReviewsPanel({
               >
                 <div className="flex items-start justify-between gap-2">
                   <p className="truncate text-sm font-medium">{review.name}</p>
-                  <span className="inline-flex shrink-0 items-center gap-0.5 text-[11px] text-foreground/45">
+                  <span className="inline-flex shrink-0 items-center gap-0.5 text-xs text-muted-foreground">
                     <Star
                       className="h-3 w-3 fill-current text-primary"
                       aria-hidden
@@ -441,7 +441,7 @@ export function AdminReviewsPanel({
                     {selected.role ? (
                       <p className="text-sm text-foreground/55">{selected.role}</p>
                     ) : null}
-                    <p className="text-xs text-foreground/45">
+                    <p className="text-xs text-muted-foreground">
                       {new Date(selected.created_at).toLocaleString()} ·{" "}
                       {selected.status} ·{" "}
                       {t("ratingLabel", { rating: selected.rating })}

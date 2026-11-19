@@ -41,13 +41,13 @@ export function FloatingLanguageButton() {
 
   return <div ref={root} onBlur={(event) => {
     if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
-  }} className="fixed bottom-[calc(max(1rem,env(safe-area-inset-bottom))+4.25rem)] end-[max(1rem,env(safe-area-inset-right))] z-[45] flex max-w-[calc(100vw-2rem)] flex-col items-end gap-3 sm:bottom-[calc(max(1.5rem,env(safe-area-inset-bottom))+4.25rem)] sm:end-[max(1.5rem,env(safe-area-inset-right))]">
+  }} className="fixed bottom-[calc(max(1rem,env(safe-area-inset-bottom))+3.5rem)] end-[max(1rem,env(safe-area-inset-right))] z-[45] flex max-w-[calc(100vw-2rem)] flex-col items-end gap-3 sm:bottom-[calc(max(1.5rem,env(safe-area-inset-bottom))+3.75rem)] sm:end-[max(1.5rem,env(safe-area-inset-right))]">
     <AnimatePresence initial={false}>
     {open && <motion.div ref={panel} id={id} role="dialog" aria-label={label}
       initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
       transition={{ duration: reduceMotion ? 0 : 0.18, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl border border-primary/25 bg-surface/95 p-2 backdrop-blur-xl">
+      className="rounded-2xl border border-primary/25 bg-surface-elevated p-2">
       <LanguageSwitcher embedded onNavigate={(navigate) => {
         setOpen(false);
         trigger.current?.focus({ preventScroll: true });
@@ -55,8 +55,7 @@ export function FloatingLanguageButton() {
       }} />
     </motion.div>}
     </AnimatePresence>
-    <button ref={trigger} type="button" aria-label={label} title={label} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => setOpen((value) => !value)} className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-primary/45 bg-surface-elevated/95 text-primary backdrop-blur-xl transition-[border-color,background-color] duration-200 hover:border-primary/75 hover:bg-surface-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none">
-      <span className="pointer-events-none absolute inset-[5px] rounded-full border border-primary/15" />
+    <button ref={trigger} type="button" aria-label={label} title={label} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => setOpen((value) => !value)} className="relative flex size-11 sm:size-12 shrink-0 items-center justify-center rounded-full border border-primary/45 bg-surface-elevated text-primary transition-[border-color,background-color] duration-200 hover:border-primary/75 hover:bg-surface-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none">
       <AnimatePresence initial={false} mode="wait">
         <motion.span key={open ? "close" : "language"}
           initial={reduceMotion ? false : { opacity: 0, rotate: -25, scale: 0.72 }} animate={{ opacity: 1, rotate: 0, scale: 1 }}

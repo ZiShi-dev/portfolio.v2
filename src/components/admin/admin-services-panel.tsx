@@ -528,7 +528,7 @@ export function AdminServicesPanel({
         <h2 className="text-sm font-semibold text-foreground/80 sm:text-base">
           {t("listTitle")}
           {services.length > 0 ? (
-            <span className="ms-2 text-foreground/45">({services.length})</span>
+            <span className="ms-2 text-muted-foreground">({services.length})</span>
           ) : null}
         </h2>
         <Button type="button" onClick={openCreate} className="w-full sm:w-auto">
@@ -544,7 +544,7 @@ export function AdminServicesPanel({
             type="button"
             onClick={() => setStatusFilter(key)}
             className={cn(
-              "min-h-9 rounded-full border px-3 font-mono text-[10px] uppercase tracking-wider transition-colors",
+              "min-h-9 rounded-full border px-3 text-xs font-medium transition-colors",
               statusFilter === key
                 ? "border-primary/50 bg-primary/10 text-primary"
                 : "border-border text-foreground/60 hover:border-primary/30"
@@ -580,7 +580,7 @@ export function AdminServicesPanel({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/75">
+                      <span className="text-xs font-medium text-primary">
                         {row.reference}
                       </span>
                       <StatusBadge status={row.status} t={t} />
@@ -620,13 +620,13 @@ export function AdminServicesPanel({
 
                 <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs text-foreground/60">
                   <div>
-                    <dt className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("cols.pricing")}
                     </dt>
                     <dd className="mt-0.5 text-foreground/75">{pricingLabel}</dd>
                   </div>
                   <div>
-                    <dt className="font-mono text-[10px] uppercase tracking-wider text-foreground/40">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("cols.updated")}
                     </dt>
                     <dd className="mt-0.5 text-foreground/75">
@@ -780,7 +780,7 @@ export function AdminServicesPanel({
                   <button
                     type="button"
                     onClick={() => jumpToSection(section.id)}
-                    className="rounded-full border border-border bg-background/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
+                    className="rounded-full border border-border bg-background/70 px-3 py-1.5 text-xs font-medium text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary"
                   >
                     {t(`sections.${section.key}`)}
                   </button>
@@ -794,7 +794,7 @@ export function AdminServicesPanel({
             className="scrollbar-overlay min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6"
           >
             <section id="svc-sec-identity" className="space-y-3 scroll-mt-2">
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+              <h3 className="text-sm font-semibold text-foreground">
                 {t("sections.identity")}
               </h3>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -884,7 +884,7 @@ export function AdminServicesPanel({
             </section>
 
             <section id="svc-sec-commerce" className="space-y-3 scroll-mt-2">
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+              <h3 className="text-sm font-semibold text-foreground">
                 {t("sections.commerce")}
               </h3>
               <label className="flex min-h-10 items-center gap-2 text-sm text-foreground/85">
@@ -903,7 +903,7 @@ export function AdminServicesPanel({
             </section>
 
             <section id="svc-sec-pricing" className="space-y-3 scroll-mt-2">
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+              <h3 className="text-sm font-semibold text-foreground">
                 {t("sections.pricing")}
               </h3>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -1012,7 +1012,7 @@ export function AdminServicesPanel({
             </section>
 
             <section id="svc-sec-texts" className="space-y-3 scroll-mt-2">
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+              <h3 className="text-sm font-semibold text-foreground">
                 {t("sections.texts")}
               </h3>
               <div className="flex gap-2 border-b border-border pb-2">
@@ -1131,7 +1131,7 @@ export function AdminServicesPanel({
 
             <section id="svc-sec-features" className="space-y-3 scroll-mt-2">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+                <h3 className="text-sm font-semibold text-foreground">
                   {t("sections.features")}
                 </h3>
                 <Button
@@ -1219,7 +1219,7 @@ export function AdminServicesPanel({
             </section>
 
             <section id="svc-sec-caseStudies" className="space-y-3 scroll-mt-2">
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+              <h3 className="text-sm font-semibold text-foreground">
                 {t("sections.caseStudies")}
               </h3>
               <p className="text-xs text-foreground/50">{t("caseStudiesHint")}</p>

@@ -43,6 +43,7 @@ export function ServiceOfferCard({
   const startLabel = service.ctaLabel.trim() || t("ctaStart");
   const detailHref = serviceDetailPath(service.slug);
   const showStart = service.showCtaStart && !compact;
+  const Heading = compact ? "h3" : "h2";
 
   return (
     <GlowCard className="h-full overflow-hidden p-0">
@@ -61,21 +62,16 @@ export function ServiceOfferCard({
           </div>
         </div>
 
-        <h3 className="mt-4 font-display text-lg font-semibold leading-snug text-foreground sm:text-xl">
+        <Heading className="mt-4 font-display text-lg font-semibold leading-snug text-foreground sm:text-xl">
           <Link
             href={detailHref}
-            className="transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            className="transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             {service.title}
           </Link>
-        </h3>
+        </Heading>
 
-        <p
-          className={cn(
-            "mt-2 text-sm leading-relaxed text-muted-foreground",
-            compact ? "line-clamp-2" : "line-clamp-3"
-          )}
-        >
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           {service.shortDescription}
         </p>
 
@@ -103,7 +99,7 @@ export function ServiceOfferCard({
           ) : null}
           <Link
             href={detailHref}
-            className="inline-flex min-h-10 items-center justify-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-primary/80 transition-colors hover:text-primary"
+            className="inline-flex min-h-10 items-center justify-center gap-1.5 text-xs font-medium text-primary transition-colors hover:text-primary"
           >
             {t("learnMore")}
             <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />

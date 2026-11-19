@@ -43,31 +43,26 @@ export function Services({ services, variant = "home" }: ServicesProps) {
       {!isPage && <CelestialAtlas intensity="subtle" />}
 
       <div className="relative z-10 mx-auto max-w-6xl">
-        <div className="mx-auto max-w-3xl text-center">
-          <Reveal variant={isPage ? "fade" : "down"}>
-            <span className="inline-block rounded-full border border-border-gold bg-surface-elevated/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
-              {t("eyebrow")}
-            </span>
-          </Reveal>
+        <div className="grid gap-3 text-start md:grid-cols-[1fr_0.75fr] md:items-end md:gap-10">
           <Reveal delay={0.05} variant={isPage ? "fade" : "left"}>
             {isPage ? (
               <h1
                 id="services-heading"
-                className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
+                className="text-balance font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl"
               >
                 <HeadingTitle title={t("catalogTitle")} highlight={t("catalogTitleHighlight")} />
               </h1>
             ) : (
               <h2
                 id="services-heading"
-                className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
+                className="text-balance font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl"
               >
                 <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
               </h2>
             )}
           </Reveal>
           <Reveal delay={0.1} variant={isPage ? "fade" : "right"}>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
+            <p className="max-w-[52ch] text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               {isPage
                 ? t("catalogSubtitle")
                 : t.has("homeSubtitle")

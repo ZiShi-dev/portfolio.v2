@@ -63,7 +63,7 @@ function AdminNavigation({ onNavigate }: { onNavigate?: () => void }) {
   const t = useTranslations("admin.dashboard");
 
   return (
-    <nav aria-label={t("title")} className="flex flex-col gap-2">
+    <nav aria-label={t("title")} className="flex flex-col gap-1">
       {NAV_ITEMS.map((item) => {
         const active = isActiveRoute(pathname, item.href);
         const Icon = item.icon;
@@ -83,18 +83,8 @@ function AdminNavigation({ onNavigate }: { onNavigate?: () => void }) {
                 : "border-transparent text-foreground/70 hover:border-border hover:bg-surface-elevated/70 hover:text-foreground"
             )}
           >
-            <span
-              aria-hidden
-              className={cn(
-                "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-colors",
-                active
-                  ? "border-primary/25 bg-primary/10"
-                  : "border-transparent bg-transparent group-hover:border-border group-hover:bg-background/60"
-              )}
-            >
-              <Icon className="h-4 w-4" />
-            </span>
-            <span className="min-w-0 truncate">{t(item.label)}</span>
+            <Icon className="size-4 shrink-0" aria-hidden />
+            <span className="min-w-0 py-2 [overflow-wrap:anywhere]">{t(item.label)}</span>
           </Link>
         );
       })}
@@ -124,7 +114,7 @@ export function AdminShell({ children }: AdminShellProps) {
       <DirectionProvider dir={dir}>
       <div className="relative min-h-dvh overflow-x-clip bg-background text-foreground">
         <div aria-hidden className="admin-ambient-bg absolute inset-0 -z-10" />
-        <header className="border-b border-border bg-background/92 pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] backdrop-blur-xl">
+        <header className="border-b border-border bg-background pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
           <div className="mx-auto flex h-14 max-w-5xl min-w-0 items-center gap-2 px-3 sm:h-16 sm:gap-3 sm:px-6">
             <Link
               href="/"
@@ -135,7 +125,7 @@ export function AdminShell({ children }: AdminShellProps) {
             </Link>
             <div className="ms-auto flex shrink-0 items-center gap-2">
               <AdminLanguageSwitcher />
-              <span className="hidden rounded-[var(--radius-sm)] border border-border-gold px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-primary md:inline-flex">
+              <span className="hidden rounded-[var(--radius-sm)] border border-border-gold px-2.5 py-1 text-xs font-medium text-primary md:inline-flex">
                 {t("badge")}
               </span>
             </div>
@@ -157,7 +147,7 @@ export function AdminShell({ children }: AdminShellProps) {
     <div className="relative min-h-dvh overflow-x-clip bg-background text-foreground">
       <div aria-hidden className="admin-ambient-bg fixed inset-0 -z-10" />
 
-      <header className="sticky top-0 z-40 w-full border-b border-border bg-background/92 pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
+      <header className="sticky top-0 z-40 w-full border-b border-border bg-background pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
         <div className="flex h-14 w-full min-w-0 items-center gap-2 px-3 sm:h-16 sm:gap-3 sm:px-6">
           <Dialog open={mobileNavigationOpen} onOpenChange={setMobileNavigationOpen}>
             <DialogTrigger asChild>
@@ -198,7 +188,7 @@ export function AdminShell({ children }: AdminShellProps) {
           >
             <BrandLogo className="min-w-0 [&>div:last-child]:max-sm:sr-only" />
             <span className="hidden h-5 w-px shrink-0 bg-border lg:block" aria-hidden />
-            <span className="hidden shrink-0 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-primary lg:block">
+            <span className="hidden shrink-0 text-xs font-medium text-primary lg:block">
               {t("badge")}
             </span>
           </Link>
@@ -227,7 +217,7 @@ export function AdminShell({ children }: AdminShellProps) {
             <AdminNavigation />
           </div>
           <div className="border-t border-border/70 bg-background/35 p-4">
-            <div className="mb-3 flex items-center gap-2 px-1 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            <div className="mb-3 flex items-center gap-2 px-1 text-xs font-medium text-muted-foreground">
               <Settings className="h-3.5 w-3.5" aria-hidden />
               {t("dashboard.openSettings")}
             </div>

@@ -43,6 +43,7 @@ next-env.d.ts
 
 # Cursor / agent tooling (skills locales, hooks)
 .cursor/
+/.agents/skills/
 
 # Sorties locales / artefacts
 output/

@@ -12,8 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Skills / agents Cursor (Impeccable) — tiers, hors périmètre app
+    // Outils de conception tiers.
     ".cursor/**",
+    ".agents/skills/**",
   ]),
 ]);
 

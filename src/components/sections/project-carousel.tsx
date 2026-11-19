@@ -114,7 +114,7 @@ export function ProjectCarousel({
       </div>
 
       {projects.length > 1 && (
-        <div className="mx-auto mt-5 flex w-fit max-w-full items-center justify-center gap-3 rounded-full border border-border-gold bg-surface-elevated/70 px-2 py-1.5 backdrop-blur-sm sm:mt-6 sm:px-3">
+        <div className="mx-auto mt-5 flex w-fit max-w-full items-center justify-center gap-3 rounded-full border border-border-gold bg-surface-elevated px-2 py-1.5 sm:mt-6 sm:px-3">
           <button
             type="button"
             onClick={scrollPrev}

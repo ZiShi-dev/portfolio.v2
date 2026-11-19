@@ -19,7 +19,7 @@ export async function About() {
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <Reveal variant="down">
-            <span className="inline-block rounded-full border border-border-gold bg-background/70 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
+            <span className="inline-block rounded-full border border-border-gold bg-background px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
               {t("eyebrow")}
             </span>
           </Reveal>
@@ -55,7 +55,7 @@ export async function About() {
             {stats.map((s) => (
               <div
                 key={s.id}
-                className="rounded-2xl border border-step-accent/20 bg-background/70 p-4 text-center backdrop-blur-sm transition-colors hover:border-step-accent/40 sm:p-6"
+                className="rounded-2xl border border-step-accent/20 bg-background p-4 text-center transition-colors hover:border-step-accent/40 sm:p-6"
               >
                 <div className="font-display text-3xl font-semibold text-primary sm:text-4xl">
                   <AnimatedNumber

@@ -12,6 +12,8 @@ Document de référence pour agents et outils de design (Impeccable, etc.). La c
 - **Thème** : Nuit Céleste uniquement (pas de light mode). Fond `#070A12` → surfaces `#0A0E1A` / `#0D1322` / `#101828`.
 - **Accent** : laiton `#C9A96A` (CTA, focus, détails), pas comme remplissage large.
 - **Texte** : ivoire `#F4F1E8`, secondaire gris bleutés tokenisés.
+- **Texte secondaire discret** : `subtle-foreground` (`#8993A7`) et `faint-foreground` (`#808CA0`) gardent un contraste d’au moins 5,2:1 sur la surface opaque la plus claire (`#101828`). Vérifier séparément les opacités et fonds photographiques.
+- **Champs** : le contour `border-control` (`#606C80`) distingue les zones de saisie des filets décoratifs. Le focus laiton et le rouge d’erreur gardent leur rôle. Les boutons destructifs utilisent un libellé sombre sur fond brique.
 
 ## Typographie
 
@@ -23,10 +25,21 @@ Document de référence pour agents et outils de design (Impeccable, etc.). La c
 
 - Court, discret, `prefers-reduced-motion` respecté.
 - Pas d’animations sur actions ultra-répétées sans besoin fonctionnel.
+- Le titre d’accueil est lisible dès le premier rendu. Son léger déplacement à l’arrivée ne dépend ni du décodage de l’image ni de l’hydratation. Il est supprimé en mouvement réduit.
+- Réserver le flou aux voiles qui isolent une interaction ouverte. Les en-têtes administratifs, le pied du parcours et les commandes sur image utilisent des surfaces stables et opaques.
+
+## Composition des pages
+
+- **Accueil** : l’image Atlas reste le premier plan visuel. Fraunces donne la hiérarchie au titre, avec le laiton réservé à la signature et à l’action principale.
+- **Offres et aperçu de l’accueil** : introduction alignée sur le début de la grille. Titre et texte sur deux colonnes à partir de 768 px, puis empilés sur mobile. L’alignement logique suit la direction du document.
+- **Administration** : connexion lisible comme un formulaire, avec un titre aligné au début, les étapes existantes et une seule surface opaque. La navigation associe un pictogramme à un libellé qui peut revenir à la ligne.
+- **Erreur générale** : une icône de statut, un titre et deux actions de récupération. Les pages de contenu gardent les styles de formulaire et de focus communs.
+- **Commandes flottantes** : cibles de 44 px sur mobile et 48 px dès `sm`. Panneaux compacts et opaques, espaces réguliers, marges de zone sûre.
+- **Libellés opérationnels** : utiliser la police de lecture pour les filtres, les sous-sections et les légendes. Réserver la chasse fixe aux identifiants, unités et références catalogue.
 
 ## Formulaire avis client (`ReviewFormPage` + modale)
 
-- **Page** : carte type **fiche catalogue** (`border-border-gold`, `surface-elevated`), référence mono `CAT · RV—01`, titres **Fraunces** (`font-display`).
+- **Page** : fiche sur une seule surface opaque avec un titre Fraunces. Des filets séparent les groupes de champs.
 - **Modale** : un seul panneau (`max-w-xl` → `sm:max-w-2xl`) — pas de **carte dans la carte** sur l’en-tête ; titre et formulaire sur la même surface, séparés par un simple `border-b`.
 - **Trois blocs** : identité (nom, email obligatoire, activité), appréciation (étoiles + magnitude mono **en direct** dès la sélection + revalidation champ), récit (textarea + compteur caractères).
 - **Note** : puces étoiles en cadres `rounded-xl` border hairline ; pas d’ombre lourde sur la modale (ombre sombre douce + `border-gold` léger).

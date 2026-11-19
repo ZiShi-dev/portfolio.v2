@@ -19,18 +19,16 @@ export default function Error({
 
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center px-4">
-      <div className="mx-auto max-w-md text-center">
-        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-primary">
-          <AlertTriangle className="h-7 w-7" aria-hidden />
-        </span>
-        <h1 className="mt-6 text-2xl font-bold tracking-tight sm:text-3xl">
+      <div className="w-full max-w-md border-t border-border-gold pt-6 text-start">
+        <AlertTriangle className="size-6 text-danger" aria-hidden />
+        <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight sm:text-3xl">
           Une erreur est survenue
         </h1>
-        <p className="mt-3 text-sm leading-relaxed text-foreground/60 sm:text-base">
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
           Le site a rencontré un problème inattendu. Vous pouvez réessayer ou
           revenir à l&apos;accueil.
         </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Button type="button" onClick={reset}>
             Réessayer
           </Button>

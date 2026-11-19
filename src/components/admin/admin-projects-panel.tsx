@@ -656,7 +656,7 @@ export function AdminProjectsPanel({
         <h2 className="text-sm font-semibold text-foreground/80">
           {t("listTitle")}
           {projects.length > 0 ? (
-            <span className="ms-2 text-foreground/45">({projects.length})</span>
+            <span className="ms-2 text-muted-foreground">({projects.length})</span>
           ) : null}
         </h2>
         <Button type="button" size="sm" onClick={openNew}>
@@ -692,7 +692,7 @@ export function AdminProjectsPanel({
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-xs text-foreground/40">
+                      <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
                         {t("noCover")}
                       </div>
                     )}
@@ -850,7 +850,7 @@ export function AdminProjectsPanel({
                         setEditor({ ...editor, slug: e.target.value });
                       }}
                     />
-                    <p className="text-xs text-foreground/45">{t("slugHint")}</p>
+                    <p className="text-xs text-muted-foreground">{t("slugHint")}</p>
                   </FormField>
                   <FormField id="proj-kind" label={t("fields.kind")} required>
                     <Select
@@ -1101,7 +1101,7 @@ export function AdminProjectsPanel({
                   />
                   {t("fields.featured")}
                 </label>
-                <p className="-mt-2 text-xs text-foreground/45">
+                <p className="-mt-2 text-xs text-muted-foreground">
                   {t("featuredHint")}
                 </p>
 
@@ -1110,7 +1110,7 @@ export function AdminProjectsPanel({
                     {t("fields.reference")}: {editor.reference}
                   </p>
                 ) : (
-                  <p className="text-xs text-foreground/45">{t("referenceHint")}</p>
+                  <p className="text-xs text-muted-foreground">{t("referenceHint")}</p>
                 )}
 
                 <FormField
@@ -1349,7 +1349,7 @@ export function AdminProjectsPanel({
                   <p className="mb-1 text-sm font-medium">
                     {t("fields.businessTypes")}
                   </p>
-                  <p className="mb-2 text-xs text-foreground/45">
+                  <p className="mb-2 text-xs text-muted-foreground">
                     {t("businessTypesHint", {
                       max: PROJECT_LIMITS.maxBusinessTypes,
                     })}

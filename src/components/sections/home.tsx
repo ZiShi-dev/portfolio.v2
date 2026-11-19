@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,28 +10,14 @@ import { homeAnchors, routes } from "@/lib/routes";
 
 export function HomeSection() {
   const t = useTranslations("home");
-  const imageRef = useRef<HTMLImageElement>(null);
-  const [artReady, setArtReady] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    const ready = () => { if (active) setArtReady(true); };
-    const image = imageRef.current;
-    if (image) void image.decode().then(ready, ready);
-    else ready();
-    // Keep the page usable even if the artwork is slow or unavailable.
-    const timeout = window.setTimeout(ready, 700);
-    return () => { active = false; window.clearTimeout(timeout); };
-  }, []);
 
   return (
     <section
       id="accueil"
-      data-art-ready={artReady ? "true" : "false"}
       className="hero-with-artwork hero-cinematic relative flex w-full max-w-[100vw] flex-col overflow-x-clip bg-background"
     >
       <div className="hero-responsive-visual pointer-events-none absolute inset-x-0 top-0 z-0 w-full">
-        <HeroBanner imageRef={imageRef} />
+        <HeroBanner />
       </div>
 
       <div className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-10 pt-24 sm:px-6 sm:pb-20 sm:pt-28">
@@ -56,10 +41,6 @@ export function HomeSection() {
           </div>
 
           <p className="hero-arrival-trust mt-4 max-w-lg text-center text-xs leading-relaxed text-muted-foreground sm:mt-5 lg:text-sm">
-            <span className="font-mono text-[10px] tracking-[0.18em] text-primary/70">
-              CAT. VZ—HOME
-            </span>
-            <span className="mx-2 text-border-gold">·</span>
             {t("trustLine")}
           </p>
         </div>
@@ -70,7 +51,7 @@ export function HomeSection() {
             className="mx-auto mt-8 flex min-h-11 flex-col items-center justify-center gap-1 text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:mt-10"
             aria-label={t("scroll")}
           >
-            <span className="font-mono text-[10px] uppercase tracking-[0.22em]">
+            <span className="text-sm font-medium">
               {t("scroll")}
             </span>
             <ArrowDown className="h-4 w-4" aria-hidden />

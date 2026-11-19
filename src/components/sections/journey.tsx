@@ -27,7 +27,7 @@ export function Journey() {
           <Reveal delay={0.05} variant="left">
             <h2
               id="journey-heading"
-              className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+              className="mt-4 text-balance font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
             >
               <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
             </h2>
