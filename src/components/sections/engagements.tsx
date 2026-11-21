@@ -5,8 +5,6 @@ import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
-import { CelestialAtlas } from "@/components/ui/celestial-atlas";
-import { CelestialDivider } from "@/components/ui/celestial-divider";
 import { EngagementIcon } from "@/lib/engagements/icons";
 import type { LocalizedEngagement } from "@/lib/engagements/store";
 import { cn } from "@/lib/utils";
@@ -29,33 +27,24 @@ export function Engagements({ engagements }: EngagementsProps) {
     <section
       id="engagements"
       aria-labelledby="engagements-heading"
-      className="relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-20"
     >
-      <CelestialAtlas intensity="subtle" />
-
       <div className="relative z-10 mx-auto max-w-3xl">
-        <div className="mx-auto max-w-3xl text-center">
-          <Reveal variant="down">
-            <span className="inline-block rounded-full border border-border-gold bg-surface-elevated/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
-              {t("eyebrow")}
-            </span>
-          </Reveal>
+        <div className="text-start">
           <Reveal delay={0.05} variant="left">
             <h2
               id="engagements-heading"
-              className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
+              className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl"
             >
               <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
             </h2>
           </Reveal>
           <Reveal delay={0.1} variant="right">
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
+            <p className="mt-4 max-w-[52ch] text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
               {t("subtitle")}
             </p>
           </Reveal>
         </div>
-
-        <CelestialDivider className="mt-10 sm:mt-12" />
 
         <Reveal delay={0.12} variant="left">
           <ul className="mt-10 space-y-3 sm:mt-12" role="list">
@@ -84,18 +73,14 @@ export function Engagements({ engagements }: EngagementsProps) {
                       }
                       className="pressable flex w-full min-h-14 items-start gap-3 px-4 py-4 text-start transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:px-5 sm:py-5"
                     >
-                      <div
-                        className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-primary"
+                      <EngagementIcon
+                        name={item.icon}
+                        className="mt-1 h-4 w-4 shrink-0 text-primary"
                         aria-hidden
-                      >
-                        <EngagementIcon
-                          name={item.icon}
-                          className="h-4 w-4"
-                        />
-                      </div>
+                      />
 
                       <span className="min-w-0 flex-1">
-                        <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-primary/70">
+                        <span className="block font-mono text-xs tracking-[0.12em] text-primary/80">
                           {item.reference}
                         </span>
                         <span className="mt-1.5 block font-display text-base font-semibold leading-snug text-foreground sm:text-lg">
@@ -119,7 +104,7 @@ export function Engagements({ engagements }: EngagementsProps) {
                       hidden={!isOpen}
                     >
                       <div className="border-t border-border px-4 pb-5 pt-1 sm:px-5 sm:pb-6">
-                        <p className="ps-12 text-sm leading-relaxed text-muted-foreground sm:ps-[3.25rem] sm:text-[0.95rem]">
+                        <p className="ps-7 text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">
                           {item.description}
                         </p>
                       </div>

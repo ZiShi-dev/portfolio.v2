@@ -34,15 +34,29 @@ export function HomeSection() {
               asChild
               size="lg"
               variant="outline"
-              className="min-h-12 w-full sm:w-auto"
+              className="min-h-12 w-full bg-background/75 sm:w-auto"
             >
               <Link href={routes.projects}>{t("projects")}</Link>
             </Button>
           </div>
 
-          <p className="hero-arrival-trust mt-4 max-w-lg text-center text-xs leading-relaxed text-muted-foreground sm:mt-5 lg:text-sm">
-            {t("trustLine")}
-          </p>
+          <ul className="hero-arrival-trust mt-5 flex max-w-3xl flex-col items-center gap-1.5 text-sm text-foreground/90 drop-shadow-[0_2px_16px_rgba(7,10,18,0.9)] sm:flex-row sm:flex-wrap sm:justify-center sm:gap-0">
+            {t("trustLine")
+              .split(" · ")
+              .map((fact) => fact.trim())
+              .filter(Boolean)
+              .map((fact, index) => (
+                <li key={fact} className="flex items-center">
+                  {index > 0 ? (
+                    <span
+                      className="mx-3 hidden h-3 w-px bg-foreground/30 sm:block"
+                      aria-hidden
+                    />
+                  ) : null}
+                  {fact}
+                </li>
+              ))}
+          </ul>
         </div>
 
         <div className="hero-arrival-scroll relative z-10">

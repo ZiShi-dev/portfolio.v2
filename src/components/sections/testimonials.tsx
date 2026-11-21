@@ -42,12 +42,11 @@ export function Testimonials({ reviews }: TestimonialsProps) {
     <section
       id="avis"
       aria-labelledby="reviews-heading"
-      className="relative scroll-mt-28 bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 bg-background px-4 py-16 sm:px-6 sm:py-20"
     >
       <SectionHeading
         id="reviews-heading"
-        eyebrow={t("eyebrow")}
-          title={<HeadingTitle title={t("title")} highlight={t("titleHighlight")} />}
+        title={<HeadingTitle title={t("title")} highlight={t("titleHighlight")} />}
         subtitle={subtitle}
       />
 

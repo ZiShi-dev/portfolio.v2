@@ -4,7 +4,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { ArrowLeft, Check, MessageSquare } from "lucide-react";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { Button } from "@/components/ui/button";
-import { CelestialAtlas } from "@/components/ui/celestial-atlas";
 import { CelestialDivider } from "@/components/ui/celestial-divider";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -138,12 +137,11 @@ export default async function OffreDetailPage({ params }: PageProps) {
       className="relative min-h-dvh overflow-hidden bg-background"
     >
       <JsonLd data={serviceJsonLd} nonce={nonce} />
-      <CelestialAtlas intensity="subtle" />
 
       <div className="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
         <Link
           href={routes.services}
-          className="inline-flex min-h-10 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+          className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden />
           {t("backToCatalog")}
@@ -151,7 +149,7 @@ export default async function OffreDetailPage({ params }: PageProps) {
 
         <header className="mt-8 flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
+            <p className="font-mono text-xs tracking-[0.12em] text-primary/80">
               {service.reference}
             </p>
             <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl">

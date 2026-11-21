@@ -33,6 +33,8 @@ type NavItem = {
   label: string;
   href: string;
   icon: LucideIcon;
+  /** Section d’accueil que cette entrée représente. */
+  sectionId?: string;
   openReview?: boolean;
 };
 
@@ -46,10 +48,25 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   "leave-review": PenLine,
 };
 
+/** Ordre réel des sections sur l’accueil. Avis est avant À propos. */
+const HOME_SECTION_ORDER = ["projets", "services", "engagements", "avis", "a-propos", "faq"] as const;
+
 function isActiveHref(href: string, pathname: string) {
   if (href.includes("#")) return false;
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** Section dont le haut a passé le bas du menu. Vide = hero, donc Accueil. */
+function sectionUnderHeader() {
+  const header = document.querySelector("header");
+  const line = (header?.getBoundingClientRect().bottom ?? 96) + 8;
+  let current = "";
+  for (const id of HOME_SECTION_ORDER) {
+    const section = document.getElementById(id);
+    if (section && section.getBoundingClientRect().top <= line) current = id;
+  }
+  return current;
 }
 
 /**
@@ -61,6 +78,7 @@ export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const pendingAction = useRef<(() => void) | null>(null);
+  const chosenSection = useRef<string | null>(null);
   const menuId = useId();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -70,20 +88,21 @@ export function Navbar() {
   useModalA11y(open, panelRef);
 
   const primary: NavItem[] = [
-    { id: "services", label: t("services"), href: routes.services, icon: NAV_ICONS.services },
-    { id: "projects", label: t("projects"), href: routes.projects, icon: NAV_ICONS.projects },
+    { id: "services", label: t("services"), href: routes.services, sectionId: "services", icon: NAV_ICONS.services },
+    { id: "projects", label: t("projects"), href: routes.projects, sectionId: "projets", icon: NAV_ICONS.projects },
     {
       id: "engagements",
       label: t("engagements"),
       href: homeSectionUrl("engagements"),
+      sectionId: "engagements",
       icon: NAV_ICONS.engagements,
     },
-    { id: "faq", label: t("faq"), href: homeSectionUrl("faq"), icon: NAV_ICONS.faq },
+    { id: "faq", label: t("faq"), href: homeSectionUrl("faq"), sectionId: "faq", icon: NAV_ICONS.faq },
   ];
 
   const more: NavItem[] = [
-    { id: "about", label: t("about"), href: homeSectionUrl("about"), icon: NAV_ICONS.about },
-    { id: "reviews", label: t("reviews"), href: routes.reviews, icon: NAV_ICONS.reviews },
+    { id: "about", label: t("about"), href: homeSectionUrl("about"), sectionId: "a-propos", icon: NAV_ICONS.about },
+    { id: "reviews", label: t("reviews"), href: routes.reviews, sectionId: "avis", icon: NAV_ICONS.reviews },
   ];
 
   /** Entrées du menu déployé — une seule colonne « fiche catalogue » (charte VORZIX). */
@@ -107,18 +126,37 @@ export function Navbar() {
         setOpen(false);
         return;
       }
-      if (item.href === routes.home && pathname === routes.home && !e.defaultPrevented
-        && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+      const hashAt = item.href.indexOf("#");
+      const hash = hashAt >= 0 ? item.href.slice(hashAt) : "";
+      const plainClick = e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+      const samePageSection = hash.length > 1
+        && pathname === routes.home
+        && (hashAt === 0 || item.href.slice(0, hashAt) === routes.home);
+
+      if (item.href === routes.home && pathname === routes.home && !e.defaultPrevented && plainClick) {
         e.preventDefault();
         const goHome = () => {
           window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+          chosenSection.current = null;
+          setActiveSection("");
           waitAndScrollToHash("#main-content");
         };
         if (open) pendingAction.current = goHome;
         else goHome();
-      }
-      if (open && !e.defaultPrevented && e.button === 0
-        && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+      } else if (samePageSection && plainClick) {
+        const sectionId = item.sectionId ?? hash.slice(1);
+        chosenSection.current = sectionId;
+        setActiveSection(sectionId);
+        if (open && !e.defaultPrevented) {
+          e.preventDefault();
+          pendingAction.current = () => {
+            if (window.location.hash !== hash) {
+              window.history.pushState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
+            }
+            waitAndScrollToHash(hash);
+          };
+        }
+      } else if (open && !e.defaultPrevented && plainClick) {
         e.preventDefault();
         pendingAction.current = () => router.push(item.href);
       }
@@ -128,26 +166,51 @@ export function Navbar() {
   );
 
   useEffect(() => {
+    const releaseChosen = () => {
+      chosenSection.current = null;
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable]")) return;
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) releaseChosen();
+    };
+    window.addEventListener("wheel", releaseChosen, { passive: true });
+    window.addEventListener("touchmove", releaseChosen, { passive: true });
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("wheel", releaseChosen);
+      window.removeEventListener("touchmove", releaseChosen);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
+  useEffect(() => {
     const onScroll = () => {
-      if (document.body.style.position === "fixed") return;
+      const locked = document.body.style.position === "fixed"
+        || Number(document.documentElement.dataset.scrollLockCount ?? "0") > 0;
+      if (locked) return;
       setScrolled(window.scrollY > 16);
-      let current = "";
-      if (pathname === routes.home) {
-        for (const id of ["engagements", "a-propos", "faq"]) {
-          const section = document.getElementById(id);
-          if (section && section.getBoundingClientRect().top <= 180) current = id;
-        }
+      if (pathname === routes.home && chosenSection.current) {
+        setActiveSection(chosenSection.current);
+        return;
       }
-      setActiveSection(current);
+      setActiveSection(pathname === routes.home ? sectionUnderHeader() : "");
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("hashchange", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("hashchange", onScroll);
+    };
   }, [pathname]);
 
-  const itemIsActive = (item: NavItem) => item.href.includes("#")
-    ? pathname === routes.home && item.href.split("#")[1] === activeSection
-    : isActiveHref(item.href, pathname) && !(item.href === routes.home && activeSection);
+  const itemIsActive = (item: NavItem) => {
+    if (pathname === routes.home) {
+      if (!item.sectionId) return activeSection === "";
+      return item.sectionId === activeSection;
+    }
+    return item.sectionId ? isActiveHref(item.href, pathname) : false;
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -205,7 +268,12 @@ export function Navbar() {
               aria-label={open ? t("closeMenu") : t("menu")}
               aria-expanded={open}
               aria-controls={open ? menuId : undefined}
-              onClick={() => setOpen((value) => !value)}
+              onClick={() => {
+                if (!open && pathname === routes.home && !chosenSection.current) {
+                  setActiveSection(sectionUnderHeader());
+                }
+                setOpen((value) => !value);
+              }}
             >
               <span>{t("menu")}</span>
               <span className="relative flex h-4 w-4 items-center justify-center" aria-hidden>
@@ -230,7 +298,7 @@ export function Navbar() {
               <div className="min-h-0 overflow-y-auto overscroll-contain">
                 <nav aria-label={t("menu")} className="p-1.5">
                   <ul className="flex flex-col gap-0.5">
-                    {drawerLinkItems.map((item, index) => {
+                    {drawerLinkItems.map((item) => {
                       const Icon = item.icon;
                       const active = itemIsActive(item);
                       return (
@@ -238,7 +306,7 @@ export function Navbar() {
                           <Link
                             href={item.href}
                             onClick={(e) => handleItem(item, e)}
-                            data-modal-initial-focus={index === 0 ? true : undefined}
+                            data-modal-initial-focus={active ? true : undefined}
                             aria-current={
                               active
                                 ? item.href.includes("#")

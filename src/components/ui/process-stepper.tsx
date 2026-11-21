@@ -24,7 +24,7 @@ export function ProcessStepper({ className }: ProcessStepperProps) {
         aria-hidden
       />
 
-      <ol className="space-y-10 sm:space-y-12">
+      <ol className="space-y-8 sm:space-y-9">
         {processSteps.map((step) => (
           <li key={step.number} className="relative ps-12 sm:ps-14">
             <span

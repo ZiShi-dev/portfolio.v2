@@ -34,9 +34,8 @@ export function HeroBanner({ imageRef }: Pick<HeroImageProps, "imageRef">) {
       <div className="hero-image-layer absolute inset-0 opacity-45">
         <HeroImage imageRef={imageRef} priority />
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[40%] bg-gradient-to-t from-[rgba(201,169,106,0.12)] to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-24 bg-gradient-to-b from-background/70 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-28 bg-gradient-to-t from-background/80 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[58%] bg-gradient-to-t from-background via-background/88 to-transparent" />
     </div>
   );
 }

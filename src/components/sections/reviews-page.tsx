@@ -13,7 +13,7 @@ import { ReviewCard } from "@/components/sections/review-card";
 import { ReviewDetailModal } from "@/components/sections/review-detail-modal";
 import type { ReviewItem } from "@/data/reviews";
 import { routes } from "@/lib/routes";
-import { paginateReviews, REVIEWS_PAGE_SIZE } from "@/lib/reviews-config";
+import { paginateReviews } from "@/lib/reviews-config";
 import { cn } from "@/lib/utils";
 
 type ReviewsPageProps = {
@@ -37,10 +37,15 @@ export function ReviewsPage({ reviews }: ReviewsPageProps) {
       <div className={pageShellClass}>
         <SectionHeading
           as="h1"
-          className="mt-8"
-          eyebrow={t("eyebrow")}
+          className="mt-8 max-w-none"
           title={<HeadingTitle title={t("title")} highlight={t("titleHighlight")} />}
-          subtitle={`${total} — ${REVIEWS_PAGE_SIZE}/page`}
+          subtitle={
+            total === 0
+              ? t("nonePublished")
+              : total === 1
+                ? t("one")
+                : `${total} ${t("many", { suffix: "" })}`
+          }
         />
 
         <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 md:grid-cols-2 lg:mt-16 lg:grid-cols-3">
@@ -125,7 +130,7 @@ export function ReviewsPage({ reviews }: ReviewsPageProps) {
         )}
 
         <Reveal delay={0.15}>
-          <div className="mt-10 flex justify-center sm:mt-12">
+          <div className="mt-10 flex justify-start sm:mt-12">
             <Button
               variant="outline"
               size="lg"

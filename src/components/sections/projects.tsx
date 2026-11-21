@@ -20,16 +20,13 @@ export function Projects({ projects }: ProjectsProps) {
     <section
       id="projets"
       aria-labelledby="projects-heading"
-      className="relative flex min-h-[100dvh] scroll-mt-28 flex-col justify-center overflow-x-clip bg-background py-16 sm:py-24 lg:py-28"
+      className="relative flex scroll-mt-28 flex-col justify-center overflow-x-clip bg-background px-4 py-16 sm:px-6 sm:py-20 lg:py-20"
     >
-      <div className="px-4 sm:px-6">
-        <SectionHeading
-          id="projects-heading"
-          eyebrow={t("eyebrow")}
-          title={<HeadingTitle title={t("title")} highlight={t("titleHighlight")} />}
-          subtitle={t("subtitle")}
-        />
-      </div>
+      <SectionHeading
+        id="projects-heading"
+        title={<HeadingTitle title={t("title")} highlight={t("titleHighlight")} />}
+        subtitle={t("subtitle")}
+      />
 
       <Reveal variant="rise">
         <ProjectHomeShowcase projects={projects} />

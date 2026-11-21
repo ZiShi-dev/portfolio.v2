@@ -1,4 +1,8 @@
-/** Défile jusqu’à une ancre (`#faq`, `faq`, etc.). */
+function isHtmlElement(value: unknown): value is HTMLElement {
+  return typeof HTMLElement !== "undefined" && value instanceof HTMLElement;
+}
+
+/** Défile jusqu’à une ancre (`#faq`, `faq`, etc.), sous le menu fixe. */
 export function scrollToSection(
   hash: string,
   behavior: ScrollBehavior = "auto"
@@ -7,7 +11,28 @@ export function scrollToSection(
   if (!id) return false;
   const el = document.getElementById(id);
   if (!el) return false;
-  el.scrollIntoView({ behavior, block: "start" });
+
+  const heading = typeof el.querySelector === "function"
+    ? el.querySelector("h1, h2, h3")
+    : null;
+  const anchor = isHtmlElement(heading) ? heading : el;
+  const header = document.querySelector?.("header");
+  const canMeasure = typeof anchor.getBoundingClientRect === "function"
+    && typeof window.scrollTo === "function"
+    && isHtmlElement(header);
+
+  if (canMeasure) {
+    const offset = header.getBoundingClientRect().height + 12;
+    const top = anchor.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior });
+  } else {
+    el.scrollIntoView({ behavior, block: "start" });
+  }
+
+  if (isHtmlElement(anchor) && typeof anchor.focus === "function") {
+    if (!anchor.hasAttribute("tabindex")) anchor.tabIndex = -1;
+    anchor.focus({ preventScroll: true });
+  }
   return true;
 }
 

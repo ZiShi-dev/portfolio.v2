@@ -22,7 +22,7 @@ export function HomePromotions({ services }: { services: LocalizedService[] }) {
         {offers.map(({ service, promotion }) => (
           <article
             key={service.id}
-            className="card-feedback rounded-2xl border border-border-gold/40 bg-surface-elevated p-6 hover:border-border-gold"
+            className="card-feedback rounded-[var(--radius-lg)] border border-border-gold/40 bg-surface-elevated p-6 hover:border-border-gold"
           >
             <p className="flex items-center gap-2 text-sm font-medium text-primary">
               {t("promotion")}{" "}

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { Button } from "@/components/ui/button";
@@ -51,15 +51,10 @@ export function ServiceOfferCard({
         className={cn("flex h-full flex-col", compact ? "p-5" : "p-5 sm:p-6")}
       >
         <div className="flex items-center justify-between gap-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-primary/70">
+          <span className="font-mono text-xs tracking-[0.12em] text-primary/80">
             {service.reference}
           </span>
-          <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-primary"
-            aria-hidden
-          >
-            <ServiceIcon name={service.icon} className="h-4 w-4" />
-          </div>
+          <ServiceIcon name={service.icon} className="h-4 w-4 shrink-0 text-primary/80" aria-hidden />
         </div>
 
         <Heading className="mt-4 font-display text-lg font-semibold leading-snug text-foreground sm:text-xl">
@@ -84,7 +79,12 @@ export function ServiceOfferCard({
 
         <div className="mt-auto flex flex-col gap-2 pt-5">
           {showStart ? (
-            <Button asChild size="default" className="min-h-11 w-full">
+            <Button
+              asChild
+              variant="outline"
+              size="default"
+              className="min-h-11 w-full border-border-gold hover:border-primary hover:bg-primary/10"
+            >
               <ContactOpenLink
                 serviceSlug={service.slug}
                 serviceId={service.id}
@@ -99,10 +99,9 @@ export function ServiceOfferCard({
           ) : null}
           <Link
             href={detailHref}
-            className="inline-flex min-h-10 items-center justify-center gap-1.5 text-xs font-medium text-primary transition-colors hover:text-primary"
+            className="inline-flex min-h-11 items-center justify-center text-sm font-medium text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             {t("learnMore")}
-            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
           </Link>
         </div>
       </article>

@@ -5,8 +5,6 @@ import { useTranslations } from "next-intl";
 import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
 import { Button } from "@/components/ui/button";
-import { CelestialAtlas } from "@/components/ui/celestial-atlas";
-import { CelestialDivider } from "@/components/ui/celestial-divider";
 import { ContactOpenLink } from "@/components/contact-open-link";
 import { ServiceOfferCard } from "@/components/services/service-offer-card";
 import { Link } from "@/i18n/navigation";
@@ -37,11 +35,9 @@ export function Services({ services, variant = "home" }: ServicesProps) {
       className={
         isPage
           ? "relative overflow-hidden bg-transparent px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-10 lg:pb-28"
-          : "relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+          : "relative scroll-mt-28 overflow-hidden bg-background px-4 py-16 sm:px-6 sm:py-20"
       }
     >
-      {!isPage && <CelestialAtlas intensity="subtle" />}
-
       <div className="relative z-10 mx-auto max-w-6xl">
         <div className="grid gap-3 text-start md:grid-cols-[1fr_0.75fr] md:items-end md:gap-10">
           <Reveal delay={0.05} variant={isPage ? "fade" : "left"}>
@@ -72,8 +68,6 @@ export function Services({ services, variant = "home" }: ServicesProps) {
           </Reveal>
         </div>
 
-        <CelestialDivider className="mt-10 sm:mt-12" />
-
         {services.length === 0 ? (
           <p className="mt-10 text-center text-sm text-muted-foreground">
             {t("empty")}
@@ -97,27 +91,16 @@ export function Services({ services, variant = "home" }: ServicesProps) {
 
             {hasMore ? (
               <Reveal delay={0.16}>
-                <div className="mx-auto mt-8 max-w-3xl text-center sm:mt-10">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary/70">
+                <div className="mx-auto mt-8 max-w-3xl text-start sm:mt-10">
+                  <p className="text-sm text-muted-foreground">
                     {t.has("otherOffers") ? t("otherOffers") : t("viewAll")}
                   </p>
-                  <ul className="mt-3 flex flex-wrap items-center justify-center gap-x-1 gap-y-2">
-                    {rest.map((service, i) => (
-                      <li
-                        key={service.id}
-                        className="flex items-center text-muted-foreground"
-                      >
-                        {i > 0 ? (
-                          <span
-                            className="mx-2 text-border-gold/80"
-                            aria-hidden
-                          >
-                            ·
-                          </span>
-                        ) : null}
+                  <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+                    {rest.map((service) => (
+                      <li key={service.id}>
                         <Link
                           href={serviceDetailPath(service.slug)}
-                          className="font-mono text-[11px] tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                          className="text-sm text-foreground/85 underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                         >
                           {service.title}
                         </Link>

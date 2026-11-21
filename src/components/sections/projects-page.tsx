@@ -100,8 +100,7 @@ export function ProjectsPage({ projects }: ProjectsPageProps) {
       <div className={pageShellClass}>
         <SectionHeading
           as="h1"
-          className="mt-8"
-          eyebrow={t("page.eyebrow")}
+          className="mt-8 max-w-none"
           title={<HeadingTitle title={t("page.title")} highlight={t("page.titleHighlight")} />}
           subtitle={t("page.subtitle")}
         />

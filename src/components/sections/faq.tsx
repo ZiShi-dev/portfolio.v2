@@ -7,8 +7,6 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { HeadingTitle } from "@/components/ui/heading-title";
 import { Reveal } from "@/components/ui/reveal";
-import { CelestialAtlas } from "@/components/ui/celestial-atlas";
-import { CelestialDivider } from "@/components/ui/celestial-divider";
 import type { LocalizedFaq } from "@/lib/faqs/store";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils";
@@ -40,31 +38,24 @@ export function FaqSection({
         "relative overflow-hidden bg-background",
         compact
           ? "mt-12 scroll-mt-28"
-          : "scroll-mt-28 px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+          : "scroll-mt-28 px-4 py-16 sm:px-6 sm:py-20"
       )}
     >
-      {!compact ? <CelestialAtlas intensity="subtle" /> : null}
-
       <div
         className={cn(
           "relative z-10",
           compact ? "mx-auto max-w-3xl" : "mx-auto max-w-3xl"
         )}
       >
-        <div className={cn(!compact && "text-center")}>
-          <Reveal variant="down">
-            <span className="inline-block rounded-full border border-border-gold bg-surface-elevated/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
-              {t("eyebrow")}
-            </span>
-          </Reveal>
+        <div className="text-start">
           <Reveal delay={0.05} variant="left">
             <h2
               id={headingId}
               className={cn(
-                "mt-4 font-display font-semibold tracking-tight text-foreground",
+                "font-display font-semibold tracking-tight text-foreground",
                 compact
                   ? "text-2xl sm:text-3xl"
-                  : "text-3xl sm:mt-5 sm:text-4xl md:text-5xl"
+                  : "text-3xl sm:text-4xl md:text-5xl"
               )}
             >
               <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
@@ -72,21 +63,19 @@ export function FaqSection({
           </Reveal>
           {!compact ? (
             <Reveal delay={0.1} variant="right">
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
+              <p className="mt-4 max-w-[52ch] text-base leading-relaxed text-muted-foreground sm:mt-5 sm:text-lg">
                 {t("subtitle")}
               </p>
             </Reveal>
           ) : null}
         </div>
 
-        {!compact ? <CelestialDivider className="mt-10 sm:mt-12" /> : null}
-
         <Reveal delay={0.12} variant="right">
           <ul
             className={cn("space-y-0", compact ? "mt-6" : "mt-10 sm:mt-12")}
             role="list"
           >
-            {faqs.map((item, index) => {
+            {faqs.map((item) => {
               const isOpen = openId === item.id;
               const panelId = `${baseId}-panel-${item.id}`;
               const buttonId = `${baseId}-btn-${item.id}`;
@@ -111,16 +100,16 @@ export function FaqSection({
                       }
                       className="pressable flex w-full min-h-14 items-start gap-3 py-4 text-start transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:gap-4 sm:py-5"
                     >
-                      <span
-                        className={cn(
-                          "mt-1 shrink-0 font-mono text-[10px] tracking-[0.18em]",
-                          isOpen ? "text-primary" : "text-primary/75"
-                        )}
-                        aria-hidden
-                      >
-                        {item.reference ||
-                          String(index + 1).padStart(2, "0")}
-                      </span>
+                      {item.reference ? (
+                        <span
+                          className={cn(
+                            "mt-1 shrink-0 font-mono text-xs tracking-[0.08em]",
+                            isOpen ? "text-primary" : "text-muted-foreground"
+                          )}
+                        >
+                          {item.reference}
+                        </span>
+                      ) : null}
 
                       <span className="min-w-0 flex-1">
                         <span

@@ -19,15 +19,10 @@ export function Journey() {
 
       <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-7 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12">
         <div className="mx-auto w-full max-w-xl text-start">
-          <Reveal variant="down">
-            <span className="inline-block rounded-full border border-border-gold bg-surface-elevated/60 px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
-              {t("eyebrow")}
-            </span>
-          </Reveal>
           <Reveal delay={0.05} variant="left">
             <h2
               id="journey-heading"
-              className="mt-4 text-balance font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+              className="text-balance font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
             >
               <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
             </h2>

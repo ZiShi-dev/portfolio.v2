@@ -14,19 +14,14 @@ export async function About() {
     <section
       id="a-propos"
       aria-labelledby="about-heading"
-      className="relative scroll-mt-28 bg-background px-4 py-16 sm:px-6 sm:py-24 lg:py-28"
+      className="relative scroll-mt-28 bg-background px-4 py-16 sm:px-6 sm:py-20"
     >
       <div className="mx-auto max-w-6xl">
-        <div className="mx-auto max-w-3xl text-center">
-          <Reveal variant="down">
-            <span className="inline-block rounded-full border border-border-gold bg-background px-4 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-primary sm:text-[11px]">
-              {t("eyebrow")}
-            </span>
-          </Reveal>
+        <div className="mx-auto max-w-3xl text-start">
           <Reveal delay={0.05} variant="left">
             <h2
               id="about-heading"
-              className="mt-4 font-display text-3xl font-semibold tracking-tight text-foreground sm:mt-5 sm:text-4xl md:text-5xl"
+              className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl"
             >
               <HeadingTitle title={t("title")} highlight={t("titleHighlight")} />
             </h2>
@@ -44,27 +39,27 @@ export async function About() {
         </div>
 
         <Reveal delay={0.15} variant="right">
-          <div className="mx-auto mt-12 max-w-2xl sm:mt-16 lg:mt-20">
+          <div className="mx-auto mt-10 max-w-2xl sm:mt-12">
             <ProcessStepper />
           </div>
         </Reveal>
 
         {stats.length > 0 ? (
         <Reveal delay={0.2}>
-          <div className="mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-3 sm:mt-16 sm:gap-4 lg:mt-20">
+          <div className="mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-3 sm:mt-12 sm:grid-cols-4 sm:gap-4">
             {stats.map((s) => (
               <div
                 key={s.id}
-                className="rounded-2xl border border-step-accent/20 bg-background p-4 text-center transition-colors hover:border-step-accent/40 sm:p-6"
+                className="rounded-[var(--radius-lg)] border border-border bg-surface-elevated px-4 py-5 text-start"
               >
-                <div className="font-display text-3xl font-semibold text-primary sm:text-4xl">
+                <div className="font-display text-3xl font-semibold text-foreground sm:text-4xl">
                   <AnimatedNumber
                     value={s.value}
                     decimals={s.decimals}
                     suffix={s.suffix ?? ""}
                   />
                 </div>
-                <div className="mt-2 text-sm text-foreground/60">
+                <div className="mt-2 text-sm text-muted-foreground">
                   {t(`stats.${s.id}`)}
                 </div>
               </div>

@@ -1550,7 +1550,7 @@ export function ProjectInquiryFlow({
   );
 
   return (
-    <motion.div
+    <div
       ref={flowRef}
       className={cn(
         "relative overflow-hidden bg-background",
@@ -1558,13 +1558,6 @@ export function ProjectInquiryFlow({
           ? "fixed inset-0 z-[80] flex min-h-dvh flex-col"
           : "mx-auto max-w-2xl overflow-x-clip px-4 pb-20 pt-28 sm:px-6 sm:pb-28 sm:pt-32"
       )}
-      initial={
-        fullscreen && !reduceMotion
-          ? { opacity: 0 }
-          : false
-      }
-      animate={{ opacity: 1 }}
-      transition={{ duration: reduceMotion ? 0.01 : 0.35 }}
     >
       <div
         className="pointer-events-none absolute inset-0 celestial-vault opacity-35"
@@ -1658,7 +1651,7 @@ export function ProjectInquiryFlow({
           {stepLabel}
         </p>
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={step}
             initial={
@@ -1698,7 +1691,7 @@ export function ProjectInquiryFlow({
           </div>
         </div>
       ) : null}
-    </motion.div>
+    </div>
   );
 }
 

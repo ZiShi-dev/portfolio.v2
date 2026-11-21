@@ -23,7 +23,7 @@ export function ProjectHomeShowcase({ projects }: ProjectHomeShowcaseProps) {
   if (!lead) return null;
 
   return (
-    <div className="mx-auto mt-8 max-w-6xl px-4 sm:mt-10 sm:px-6">
+    <div className="mx-auto mt-8 w-full max-w-6xl sm:mt-10">
       <SpotlightPlate project={lead} priority featured />
 
       <div className="mt-9 flex justify-center sm:mt-10">

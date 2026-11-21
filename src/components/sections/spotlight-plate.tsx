@@ -54,7 +54,7 @@ export function SpotlightPlate({ project, priority, featured = false }: Spotligh
     <article ref={plateRef} className="card-feedback h-full min-w-0 overflow-hidden rounded-[var(--radius-xl)] border border-border-gold bg-surface-elevated">
       <div className="grid h-full min-w-0 grid-cols-1 lg:grid-cols-2">
         <figure
-          className={`work-curtain relative m-0 aspect-[4/3] min-w-0 overflow-hidden bg-[#0A0E1A] sm:aspect-[16/10] lg:aspect-auto ${featured ? "lg:min-h-[70vh]" : "lg:min-h-[22rem]"}`}
+          className={`work-curtain relative m-0 aspect-[4/3] min-w-0 overflow-hidden bg-[#0A0E1A] sm:aspect-[16/10] lg:aspect-auto ${featured ? "lg:min-h-[30rem]" : "lg:min-h-[22rem]"}`}
         >
           {cover ? (
             <Image
@@ -78,7 +78,7 @@ export function SpotlightPlate({ project, priority, featured = false }: Spotligh
         </figure>
 
         <div className="flex min-w-0 flex-col p-5 text-start sm:p-8 lg:justify-center lg:p-10">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary rtl:font-sans rtl:tracking-normal">
+          <p className="font-mono text-xs tracking-[0.12em] text-primary/80 rtl:font-sans rtl:tracking-normal">
             {forSale ? t("availableNow") : project.reference ?? t("eyebrow")}
           </p>
           <h3 className="mt-2.5 break-words font-display text-2xl font-semibold leading-tight tracking-tight text-foreground rtl:tracking-normal sm:mt-3 sm:text-3xl">
