@@ -166,8 +166,8 @@ export function HeroDepthField({ onLive, onFallback }: HeroDepthFieldProps) {
 
     let colorTex: WebGLTexture | null = null;
     let depthTex: WebGLTexture | null = null;
-    let imageW = HERO_ARTWORK.desktop.width;
-    let imageH = HERO_ARTWORK.desktop.height;
+    let imageW: number = HERO_ARTWORK.desktop.width;
+    let imageH: number = HERO_ARTWORK.desktop.height;
     let ready = false;
     let visible = true;
     let announced = false;
