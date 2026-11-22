@@ -6,9 +6,7 @@ import { Footer } from "@/components/footer";
 import { NavigationProgress } from "@/components/navigation-progress";
 import { HashSectionScroll } from "@/components/hash-section-scroll";
 import { SkipToContent } from "@/components/skip-to-content";
-import { FloatingContactButton } from "@/components/floating-contact-button";
-import { FloatingLanguageButton } from "@/components/floating-language-button";
-import { FloatingActionsProvider } from "@/components/floating-actions-provider";
+import { NavContactProvider, PublishNavContact } from "@/components/nav-contact";
 import { LeaveReviewModal } from "@/components/sections/leave-review-modal";
 import { ContactModal } from "@/components/sections/contact-modal";
 import { AppToastHost } from "@/components/ui/app-toast";
@@ -37,15 +35,14 @@ export default async function SiteLayout({ children, params }: SiteLayoutProps) 
       <SkipToContent />
       <HashSectionScroll />
       <NavigationProgress />
-      <Navbar key={`nav-${locale}`} />
-      <main id="main-content" tabIndex={-1} className="min-h-dvh flex-1 overflow-x-clip bg-background">
-        <SitePageBackground>{children}</SitePageBackground>
-      </main>
-      <LeaveReviewModal showCallout={false} />
-      <FloatingActionsProvider key={`actions-${locale}`}>
-        <FloatingLanguageButton />
+      <NavContactProvider key={`nav-${locale}`}>
+        <Navbar />
+        <main id="main-content" tabIndex={-1} className="min-h-dvh flex-1 overflow-x-clip bg-background">
+          <SitePageBackground>{children}</SitePageBackground>
+        </main>
+        <LeaveReviewModal showCallout={false} />
         <Suspense fallback={null}><SiteContactChrome settings={settings} /></Suspense>
-      </FloatingActionsProvider>
+      </NavContactProvider>
       <AppToastHost />
     </>
   );
@@ -57,6 +54,6 @@ async function SiteContactChrome({ settings: pending }: { settings: Promise<Site
   return <>
     <Footer contactEmail={settings.contactEmail} socials={socials} />
     <ContactModal showCallout={false} contactEmail={settings.contactEmail} />
-    <FloatingContactButton contactEmail={settings.contactEmail} socials={socials} />
+    <PublishNavContact contactEmail={settings.contactEmail} socials={socials} />
   </>;
 }

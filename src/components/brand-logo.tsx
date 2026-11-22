@@ -52,7 +52,7 @@ export function BrandLogo({
   const t = useTranslations("hero");
 
   return (
-    <div className={cn("notranslate flex min-w-0 items-center gap-2.5 sm:gap-3", className)}>
+    <div dir="ltr" className={cn("notranslate flex min-w-0 items-center gap-2.5 sm:gap-3", className)}>
       {showMark && <VorzixMark priority className="h-8 w-8 sm:h-9 sm:w-9" />}
 
       <div className="min-w-0 leading-none">
@@ -76,7 +76,7 @@ export function BrandLogoFooter() {
   const t = useTranslations("hero");
 
   return (
-    <div className="notranslate flex items-center gap-2.5">
+    <div dir="ltr" className="notranslate flex items-center gap-2.5">
       <VorzixMark className="h-9 w-9" />
       <div className="min-w-0 leading-none">
         <BrandName variant="modern" className="text-sm" />
